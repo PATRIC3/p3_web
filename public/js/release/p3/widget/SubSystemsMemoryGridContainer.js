@@ -50,9 +50,9 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 
 	return declare([GridContainer], {
 		gridCtor: SubSystemsGrid,
-		containerType: "pathway_data",
-		defaultFilter: "eq(annotation,%22PATRIC%22)",
-		facetFields: ["annotation"],
+		containerType: "subsystem_data",
+		//defaultFilter: "",
+		//facetFields: ["annotation"],
 		enableFilterPanel: true,
 		apiServer: window.App.dataServiceURL,
 		store: null,
@@ -62,9 +62,9 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 		primaryKey: "id",
 		maxDownloadSize: 25000,
 		typeMap: {
-			"subsystem": "subsystem_id",
+			"subsystems": "subsystem_id",
 			"role_id": "role_id",
-			"gene": "feature_id"
+			"genes": "feature_id"
 		},
 		_setQueryAttr: function(query){
 			// override _setQueryAttr since we're going to build query inside PathwayMemoryStore
@@ -154,27 +154,75 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 					var headers, content = [], filename;
 
 					switch(this.type){
-						case "pathway":
-							headers = ["Pathway ID", "Pathway Name", "Pathway Class", "Annotation", "Unique Genome Count", "Unique Gene Count", "Unique EC Count", "EC Conservation", "Gene Conservation"];
+
+						case "subsystems":
+							headers = [
+									"Class", 
+									"Subclass", 
+									"Subsystem Id", 
+									"Subsystem Name",
+									"Genome Count",
+									"Gene Count",
+									"Role Count",
+									"Role ID", 
+									"Role Name", 
+									"Active",  
+									"Patric ID", 
+									"Gene", 
+									"Product"
+								]
+
 							data.forEach(function(row){
-								content.push([row.pathway_id, JSON.stringify(row.pathway_name), JSON.stringify(row.pathway_class), row.annotation, row.genome_count, row.gene_count, row.ec_count, row.ec_cons, row.gene_cons]);
+								content.push([
+									row.class, 
+									JSON.stringify(row.subclass), 
+									row.subsystem_id, 
+									JSON.stringify(row.subsystem_name), 
+									row.genome_count,
+									row.gene_count,
+									row.role_count,
+									row.role_id,
+									row.role_name, 
+									row.active,
+									row.patric_id, 
+									row.gene,
+									row.product	
+								]);
 							});
-							filename = "PATRIC_pathways";
+							filename = "PATRIC_subsystems";
 							break;
-						case "ec_number":
-							headers = ["Pathway ID", "Pathway Name", "Pathway Class", "Annotation", "EC Number", "Description", "Genome Count", "Unique Gene Count"];
+
+						case "genes":
+							headers = [
+									"Class", 
+									"Subclass", 
+									"Subsystem Id", 
+									"Subsystem Name", 
+									"Role ID", 
+									"Role Name", 
+									"Active",  
+									"Patric ID", 
+									"Gene", 
+									"Product"
+								]
+
 							data.forEach(function(row){
-								content.push([row.pathway_id, JSON.stringify(row.pathway_name), JSON.stringify(row.pathway_class), row.annotation, row.ec_number, JSON.stringify(row.ec_description), row.genome_count, row.gene_count]);
+								content.push([
+									row.class, 
+									JSON.stringify(row.subclass), 
+									row.subsystem_id, 
+									JSON.stringify(row.subsystem_name), 
+									row.role_id,
+									row.role_name, 
+									row.active,
+									row.patric_id, 
+									row.gene,
+									row.product	
+								]);
 							});
-							filename = "PATRIC_pathways_ecnumbers";
+							filename = "PATRIC_subsystems";
 							break;
-						case "gene":
-							headers = ["Genome Name", "Accession", "PATRIC ID", "Refseq Locus Tag", "Alt Locus Tag", "Gene", "Product", "Annotation", "Pathway Name", "EC Description"];
-							data.forEach(function(row){
-								content.push([row.genome_name, row.accession, row.patric_id, row.refseq_locus_tag, row.alt_locus_tag, row.gene, JSON.stringify(row.product), row.annotation, JSON.stringify(row.pathway_name), JSON.stringify(row.ec_description)]);
-							});
-							filename = "PATRIC_pathways_genes";
-							break;
+	
 						default:
 							break;
 					}
@@ -201,7 +249,7 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 					validTypes: ["genome_feature"],
 					multiple: false,
 					tooltip: "Switch to Feature View. Press and Hold for more options.",
-					validContainerTypes: ["pathway_data"],
+					validContainerTypes: ["subsystem_data"],
 					pressAndHold: function(selection, button, opts, evt){
 						console.log("PressAndHold");
 						console.log("Selection: ", selection, selection[0])
@@ -226,14 +274,14 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 				false
 			],
 			[
-				"ViewPathwayMap",
+				"ViewSubsystemMap",
 				"fa icon-map-o fa-2x",
 				{
 					label: "Map",
 					multiple: false,
 					validTypes: ["*"],
-					tooltip: "View PathwayMap",
-					validContainerTypes: ["pathway_data"]
+					tooltip: "View SubsystemMap",
+					validContainerTypes: ["subsystem_data"]
 				},
 				function(selection){
 					// console.log(selection, this.type, this.state);
@@ -249,15 +297,15 @@ define("p3/widget/SubSystemsMemoryGridContainer", [
 					}
 
 					switch(this.type){
-						case "pathway":
-							url['pathway_id'] = selection[0].pathway_id;
+						case "subsystems":
+							url['subsystem_id'] = selection[0].pathway_id;
 							break;
-						case "ec_number":
-							url['pathway_id'] = selection[0].pathway_id;
-							url['ec_number'] = selection[0].ec_number;
+						case "role_id":
+							url['subsystem_id'] = selection[0].pathway_id;
+							url['role_id'] = selection[0].ec_number;
 							break;
 						case "gene":
-							url['pathway_id'] = selection[0].pathway_id;
+							url['subsystem_id'] = selection[0].pathway_id;
 							url['feature_id'] = selection[0].feature_id;
 							break;
 						default:

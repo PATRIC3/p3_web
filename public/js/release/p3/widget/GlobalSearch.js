@@ -62,6 +62,10 @@ define("p3/widget/GlobalSearch", [
 						Topic.publish("/navigate", {href: "/view/PathwayList/?" + q});
 						clear = true;
 						break;
+					case "subsystems":
+						Topic.publish("/navigate", {href: "/view/SubSystemList/?" + q});
+						clear = true;
+						break;
 					case "sp_genes":
 						Topic.publish("/navigate", {href: "/view/SpecialtyGeneList/?" + q});
 						clear = true;

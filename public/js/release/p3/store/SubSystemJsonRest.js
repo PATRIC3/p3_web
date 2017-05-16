@@ -6,9 +6,9 @@ define("p3/store/SubSystemJsonRest", [
 			Store, QueryResults,
 			when, lang){
 	return declare([Store], {
-		dataModel: "pathway",
-		idProperty: "pathway_id",
-		facetFields: ["annotation", "gene", "pathway_class"],
+		dataModel: "subsystem",
+		idProperty: "subsystem_id",
+		facetFields: ["class", "subclass", "active"],
 		init: function(){
 			this.headers = {
 				"accept": "application/solr+json",

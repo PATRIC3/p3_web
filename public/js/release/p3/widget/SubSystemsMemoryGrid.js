@@ -13,25 +13,25 @@ define("p3/widget/SubSystemsMemoryGrid", [
 		apiToken: window.App.authorizationToken,
 		apiServer: window.App.dataServiceURL,
 		store: null,
-		dataModel: "pathway",
-		primaryKey: "idx",
+		dataModel: "subsystem",
+		primaryKey: "id",
 		selectionModel: "extended",
 		loadingMessage: "Loading subsystems.  This may take several minutes...",
 		deselectOnRefresh: true,
 		fullSelectAll: true,
 		columns: {
 			"Selection Checkboxes": selector({unhidable: true}),
-			subsystem_id: {label: 'Subsystem ID', field: 'subsystem_id'},
-			subsystem_name: {label: 'Subsystem Name', field: 'subsystem_name'},
 			class: {label: "Class", field: "class"},
-			subclass: {label: 'Subsystem Class', field: 'subclass'},
-			role_id: {label: "Role ID", field: "role_id"},
+			subclass: {label: 'Subclass', field: 'subclass'},
+			subsystem_id: {label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+			subsystem_name: {label: 'Subsystem Name', field: 'subsystem_name'},
+			role_id: {label: "Role ID", field: "role_id", hidden: true},
 			role_name: {label: "Role Name", field: "role_name"},
 			active: {label: "Active", field: "active"},
-			gene: {label: "Gene", field: "gene"},
-			product: {label: "Product", field: "product"},
 			patric_id: {label: "Patric ID", field: "patric_id"},
-			feature_id: {label: "Feature ID", field: "feature_id"}
+			gene: {label: "Gene", field: "gene"},
+			product: {label: "Product", field: "product"}
+			
 		},
 
 		startup: function(){
