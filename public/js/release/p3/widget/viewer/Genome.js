@@ -145,15 +145,13 @@ define("p3/widget/viewer/Genome", [
 
 		onSetState: function(attr, oldState, state){
 
-			if(!state){
-				return;
-			}
-
 			var parts = state.pathname.split("/");
 			this.set("genome_id", parts[parts.length - 1]);
 			state.genome_id = parts[parts.length - 1];
 			state.genome_ids = [state.genome_id];
-			
+			if(!state){
+				return;
+			}
 
 			// console.log("Genome: ", state.genome, state.genome_id)
 
@@ -197,12 +195,8 @@ define("p3/widget/viewer/Genome", [
 				}
 			}
 
-			if(!oldState){
-				return;
-			} else {
-				this.setActivePanelState();
-			}
-			
+			this.setActivePanelState();
+
 			// console.log("viewer/Genome onSetState() after set genome_id")
 		},
 
@@ -263,12 +257,14 @@ define("p3/widget/viewer/Genome", [
 			this.pathways = new PathwaysContainer({
 				apiServer: this.apiServiceUrl,
 				title: "Pathways",
-				id: this.viewer.id + "_" + "pathways"
+				id: this.viewer.id + "_" + "pathways",
+				state: this.state
 			});
 
 			this.subsystems = new SubSystemsContainer({
 				title: "Subsystems",
-				id: this.viewer.id + "_" + "subsystems"
+				id: this.viewer.id + "_" + "subsystems",
+				state: this.state
 			})
 
 			this.proteinFamilies = new ProteinFamiliesContainer({

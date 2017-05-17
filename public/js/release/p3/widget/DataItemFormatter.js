@@ -585,39 +585,42 @@ define("p3/widget/DataItemFormatter", [
 			return div;
 		},
 
-		"subsystem_data": function(item, options){
+		"subsystems_data": function(item, options){
 			options = options || {};
 
-			var columns = [
-
-			{
-				name: 'Class',
-				text: 'class'
-			}, {
-				name: 'Subclass',
-				text: 'subclass'
+			var columns = [{
+				name: 'Subsystem ID',
+				text: 'subsystem_id'
 			}, {
 				name: 'Subsystem Name',
 				text: 'subsystem_name'
 			}, {
-				name: 'Role Name',
-				text: 'role_name'
+				name: 'Subsystem Class',
+				text: 'subsystem_class'
 			}, {
-				name: 'Active',
-				text: 'active'
-			}, {
-				name: 'Patric ID',
-				text: 'patric_id'
-			}, {
-				name: 'Gene',
-				text: 'gene'
-			}, {
-				name: 'Product',
-				text: 'product'
-			}];
+				name: 'Annotation',
+				text: 'annotation'
+			}
+			// {
+			// 	name: 'Unique Genome Count',
+			// 	text: 'genome_count'
+			// }, {
+			// 	name: 'Unique Gene Count',
+			// 	text: 'gene_count'
+			// }, {
+			// 	name: 'Unique EC Count',
+			// 	text: 'ec_count'
+			// }, {
+			// 	name: 'EC Conservation',
+			// 	text: 'ec_cons'
+			// }, {
+			// 	name: 'Gene Conservation',
+			// 	text: 'gene_cons'
+			// }
+			];
 
 			var div = domConstruct.create("div");
-			displayHeader(div, item.subsystem_name, "fa icon-git-pull-request fa-2x", "/view/Subsystems/" + item.subsystem_id, options);
+			displayHeader(div, item.pathway_name, "fa icon-git-pull-request fa-2x", "/view/Subsystems/" + item.subsystem_id, options);
 			displayDetail(item, columns, div, options);
 
 			return div;

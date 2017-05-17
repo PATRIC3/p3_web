@@ -19,7 +19,7 @@ define("p3/store/SubSystemMemoryStore", [
 		idProperty: "id",
 		apiServer: window.App.dataServiceURL,
 		state: null,
-		genome_ids: null, 
+		genome_ids: null,
 		type: "subsystem",
 		onSetState: function(attr, oldVal, state){
 
@@ -107,8 +107,7 @@ define("p3/store/SubSystemMemoryStore", [
 		},
 
 		queryTypes: {
-
-			subsystems: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
+			subsystem: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
 			"&json(facet," + encodeURIComponent(JSON.stringify({
 				stat: {
 					field: {
@@ -117,15 +116,40 @@ define("p3/store/SubSystemMemoryStore", [
 						facet: {
 							genome_count: "unique(genome_id)",
 							gene_count: "unique(feature_id)",
-							role_count: "unique(role_id)"
+							role_id: "unique(role_id)"
 						}
 					}
 				}
 			})) + ")",
 
-			genes: "&group((field,subsystem_id),(format,simple),(ngroups,false),(limit,25000),(facet,false))"
-			
-
+			roleId: "&group((field,role_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
+			"&json(facet," + encodeURIComponent(JSON.stringify({
+				stat: {
+					field: {
+						field: "ec_number",
+						limit: -1,
+						facet: {
+							genome_count: "unique(genome_id)",
+							gene_count: "unique(feature_id)",
+							role_id: "unique(role_id)"
+						}
+					}
+				}
+			})) + ")",
+			genes: "&group((field,feature_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
+			"&json(facet," + encodeURIComponent(JSON.stringify({
+				stat: {
+					field: {
+						field: "feature_id",
+						limit: -1,
+						facet: {
+							genome_count: "unique(genome_id)",
+							gene_count: "unique(feature_id)",
+							role_id: "unique(role_id)"
+						}
+					}
+				}
+			})) + ")"
 		},
 		buildQuery: function(){
 			var q = [];
@@ -196,53 +220,63 @@ define("p3/store/SubSystemMemoryStore", [
 
 				var docs = [];
 				var props = {
-					"subsystems": "subsystem_id",
+					"subsystem": "subsystem_id",
 					"roleid": "role_id",
 					"genes": 'feature_id'
 				};
+				if(response && response.grouped && response.grouped[props[this.type]]){
+					var ds = response.grouped[props[this.type]].doclist.docs;
+					var buckets = response.facets.stat.buckets;
+					var map = {};
+					buckets.forEach(function(b){
+						map[b["val"]] = b;
+						delete b["val"];
+					});
+					docs = ds;
+/*
+					docs = ds.map(function(doc){
+						var p = props[this.type];
+						var pv = doc[p];
+						lang.mixin(doc, map[pv] || {});
+						if(doc.genome_ec && doc.genome_count){
+							doc.ec_cons = Math.round(doc.genome_ec / doc.genome_count / doc.ec_count * 10000) / 100;
+						}else{
+							doc.ec_cons = 0;
+						}
+						if(doc.gene_count && doc.genome_count){
+							doc.gene_cons = Math.round(doc.gene_count / doc.genome_count / doc.ec_count * 100) / 100;
+						}else{
+							doc.gene_cons = 0;
+						}
 
-				//flat queries return a different data format
-				if ( response && response.grouped && response.facets ) {
-					//subsystems tab
-					if ( response.grouped[props[this.type]] ){
-						var ds = response.grouped[props[this.type]].doclist.docs;
-						var buckets = response.facets.stat.buckets;
-						var map = {};
-						buckets.forEach(function(b){
-							map[b["val"]] = b;
-							delete b["val"];
-						});
-						docs = ds.map(function(doc){
-							var p = props[this.type];
-							var pv = doc[p];
-							lang.mixin(doc, map[pv] || {});
-						
-							return doc;
-						}, this);
-
-						_self.setData(docs);
-						_self._loaded = true;
-						return true;
-
-					} else {
-						console.error("Unable to Process Response: ", response);
-						_self.setData([]);
-						_self._loaded = true;
-						return false;
-					}
-
-				} else if ( response ) {
-					// genes tab
-					_self.setData(response.grouped.subsystem_id.doclist.docs);
+						// compose index key
+						switch(this.type){
+							case "pathway":
+								doc.idx = doc.pathway_id;
+								break;
+							case "ecnumber":
+								doc.idx = doc.pathway_id + "_" + doc.ec_number;
+								break;
+							case "genes":
+								doc.idx = doc.feature_id;
+								doc.document_type = "genome_feature";
+								break;
+							default:
+								break;
+						}
+						return doc;
+					}, this);
+*/
+					_self.setData(docs);
 					_self._loaded = true;
 					return true;
-				} else {
+
+				}else{
 					console.error("Unable to Process Response: ", response);
 					_self.setData([]);
 					_self._loaded = true;
 					return false;
 				}
-				
 			}), lang.hitch(this, function(err){
 				console.error("Error Loading Data: ", err);
 				_self.setData([]);
@@ -252,7 +286,5 @@ define("p3/store/SubSystemMemoryStore", [
 
 			return this._loadingDeferred;
 		}
-
-		
 	})
 });

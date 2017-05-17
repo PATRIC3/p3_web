@@ -26,7 +26,6 @@ define("p3/widget/SubSystemsGrid", [
 		fullSelectAll: false,
 		columns: {
 			"Selection Checkboxes": selector({unhidable: true}),
-			id: {label: 'ID', field: 'id'},
 			subsystem_id: {label: 'Subsystem ID', field: 'subsystem_id'},
 			subsystem_name: {label: 'Subsystem Name', field: 'subsystem_name'},
 			gene: {label: 'Gene', field: 'gene'},
