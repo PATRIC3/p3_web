@@ -192,6 +192,10 @@ define([
 				page.set('state', this.state);
 			}));
 
+			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
+				this.subsystemsGrid.set('state', this.state);
+			}));
+
 			this._firstView = true;
 		}
 	})
