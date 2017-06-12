@@ -3,13 +3,13 @@ define([
 	"dojo/dom-class", "dojo/query", "dojo/dom-style", "dojo/text!./templates/GenomeOverview.html", "dojo/dom-construct",
 	"dijit/_WidgetBase", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin", "dijit/Dialog",
 	"../util/PathJoin", "./SelectionToGroup", "./GenomeFeatureSummary", "./DataItemFormatter",
-	"./ExternalItemFormatter", "./AdvancedDownload"
+	"./ExternalItemFormatter", "./AdvancedDownload", "dijit/form/TextBox", "./Confirmation",
 
 ], function(declare, lang, on, xhr, Topic,
 			domClass, domQuery, domStyle, Template, domConstruct,
 			WidgetBase, Templated, _WidgetsInTemplateMixin, Dialog,
 			PathJoin, SelectionToGroup, GenomeFeatureSummary, DataItemFormatter,
-			ExternalItemFormatter, AdvancedDownload){
+			ExternalItemFormatter, AdvancedDownload, TextBox, Confirmation){
 
 	return declare([WidgetBase, Templated, _WidgetsInTemplateMixin], {
 		baseClass: "GenomeOverview",
@@ -53,10 +53,20 @@ define([
 		},
 
 		"createSummary": function(genome){
+			var self = this;
 			domConstruct.empty(this.genomeSummaryNode);
 			domConstruct.place(DataItemFormatter(genome, "genome_data", {}), this.genomeSummaryNode, "first");
 			domConstruct.empty(this.pubmedSummaryNode);
 			domConstruct.place(ExternalItemFormatter(genome, "pubmed_data", {}), this.pubmedSummaryNode, "first");
+
+			var editBtn = domConstruct.toDom('<a style="float:right">Edit</a>');
+			on(editBtn, 'click', function(){
+				var tableNames = DataItemFormatter(genome, "genome_meta_table_names", {}),
+					spec = DataItemFormatter(genome, "genome_meta_spec", {});
+
+				self.editMeta(tableNames, spec, genome);
+			})
+			domConstruct.place(editBtn, this.genomeSummaryNode, "first");
 		},
 
 		onAddGenome: function(){
@@ -66,7 +76,7 @@ define([
 				return;
 			}
 
-			var dlg = new Dialog({title: "Add This Genome To Group"});
+			//var dlg = new Dialog({title: "Add This Genome To Group"});
 			var stg = new SelectionToGroup({
 				selection: [this.genome],
 				type: 'genome_group'
@@ -89,6 +99,61 @@ define([
 			var advDn = new AdvancedDownload({selection: [this.genome], containerType: "genome_data"});
 			domConstruct.place(advDn.domNode, dialog.containerNode);
 			dialog.show();
+		},
+
+		editMeta: function(tableNames, spec, genome){
+			/**
+			 * Create form
+			 */
+			var dom = domConstruct;
+			var form = dom.toDom('<form>');
+
+			var tableSpecs = tableNames.map(function(name){ return spec[name] });
+
+			tableSpecs.forEach(function(tableSpec, i) {
+				var tableName = tableNames[i];
+
+				dom.place('<h5 class="DataItemSectionHead" style="margin: 10px 0 0 0;">'+tableName+'</h5>', form)
+
+				var table = dom.toDom('<table>'),
+					tbody = dom.place('<tbody>', table);
+				tableSpec.forEach(function(item){
+					var textBox = new TextBox({
+						id: item.text,
+						name: item.text,
+						value: genome[item.text],
+						style: {width: '275px'},
+						placeHolder: item.editable ? "Enter a " + item.name : '-',
+						disabled: item.editable ? false : true
+					});
+					var tr = dom.place('<tr>', tbody);
+					dom.place('<td style="width: 100%">'+item.name, tr);
+					dom.place(textBox.domNode, tr);
+				})
+
+				dom.place(table, form)
+			})
+
+			dom.place('<br><br>', form)
+
+
+			/**
+			 * put form in dialog
+			 */
+			var dlg = new Confirmation({
+				title: "Edit Metadata",
+				okLabel: "Save",
+				style: {width: '600px', height: '80%', overflow: 'scroll'},
+				content: form,
+				onConfirm: function(){
+					this.hideAndDestroy();
+				},
+				onCancel: function(){
+					this.hideAndDestroy();
+				}
+			});
+
+			dlg.show();
 		},
 
 		startup: function(){
