@@ -1,16 +1,17 @@
 define([
     "dojo", "dojo/_base/declare", "dijit/_WidgetBase", "dojo/dom-construct",
-    "dijit/form/TextBox", "dijit/form/Button", "dojo/on", "dojo/query", "dojo/NodeList-traverse"
+    "dijit/form/TextBox", "dijit/form/SimpleTextarea", "dijit/form/Button", "dojo/on", "dojo/query", "dojo/NodeList-traverse"
 ],function(
     dojo, declare, WidgetBase, dom,
-    TextBox, Button, on, query
+    TextBox, TextArea, Button, on, query
 ){
 	return declare([WidgetBase], {
 		options: {                                // options for form
             width: '275px'
-        },                              // options for form
+        },                                        // options for form
         values: [],                               // initial list of items
         placeHolder: 'Enter an item to add...',   // add item placeholder text
+        type: 'text',                          // type of input (text|textarea)
  		constructor: function(){
 			this._listItems = [];
             this._listContainer = dom.toDom('<div class="list-container">');
@@ -43,13 +44,26 @@ define([
              */
             var line = dom.toDom('<div class data-num="'+ this._listItems.length +'"></div>')
 
-            var textBox = new TextBox({
-                value: item,
-                style: {
-                    width: self.options.width,
-                    margin: '2px 5px 2px 0'
-                }
-            });
+            var textBox;
+            if(self.type == 'textarea'){
+                textBox = new TextArea({
+                    intermediateChanges: true,
+                    value: item,
+                    style: {
+                        width: self.options.width,
+                        //height: '75px',
+                        margin: '2px 5px 2px 0'
+                    }
+                });
+            }else{
+                textBox = new TextBox({
+                    value: item,
+                    style: {
+                        width: self.options.width,
+                        margin: '2px 5px 2px 0'
+                    }
+                });
+            }
             dom.place(textBox.domNode, line)
 
             var rmBtn = dom.toDom('<i class="fa icon-remove"></i>');
@@ -74,15 +88,30 @@ define([
             var self = this;
 
             var line = dom.toDom('<div>');
-            var textBox = new TextBox({
-                intermediateChanges: true,
-                style: { width: self.options.width },
-                placeHolder: self.placeHolder
-            });
+
+            var textBox;
+            if(self.type == 'textarea'){
+                textBox = new TextArea({
+                    intermediateChanges: true,
+                    style: {
+                        width: self.options.width,
+                        height: '25px',
+                        margin: '2px 5px 2px 0'
+                    },
+                    placeHolder: self.placeHolder
+                });
+            }else{
+                textBox = new TextBox({
+                    intermediateChanges: true,
+                    style: {width: self.options.width},
+                    placeHolder: self.placeHolder
+                });
+            }
+
             dom.place(textBox.domNode, line);
 
 			var addBtn = new Button({
-				label: '<i class="fa icon-add"></i> Add',
+				label: '<i class="icon-plus"></i> Add',
                 disabled: true,
 				onClick: function(e){
                     var value = textBox.get('value');

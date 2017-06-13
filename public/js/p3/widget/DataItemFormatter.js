@@ -1224,7 +1224,8 @@ define([
 					}, {
 						name: 'Other Typing',
 						text: 'other_typing',
-						editable: true
+						editable: true,
+						multiValued: true
 					}, {
 						name: 'Culture Collection',
 						text: 'culture_collection',
@@ -1236,11 +1237,13 @@ define([
 					}, {
 						name: 'Antimicrobial Resistance',
 						text: 'antimicrobial_resistance',
-						editable: true
+						editable: true,
+						multiValued: true
 					}, {
 						name: 'Antimicrobial Resistance Evidence',
 						text: 'antimicrobial_resistance_evidence',
-						editable: true
+						editable: true,
+						multiValued: true
 					}, {
 						name: 'Reference Genome',
 						text: 'reference_genome'
@@ -1252,7 +1255,8 @@ define([
 					}, {
 						name: 'Completion Date',
 						text: 'completion_date',
-						editable: true
+						editable: true,
+						type: 'date'
 					}, {
 						name: 'Publication',
 						text: 'publication',
@@ -1350,7 +1354,8 @@ define([
 					}, {
 						name: 'Isolation Source',
 						text: 'isolation_source',
-						editable: true
+						editable: true,
+						type: 'textarea',
 					}, {
 						name: 'Isolation Comments',
 						text: 'isolation_comments',
@@ -1362,7 +1367,8 @@ define([
 					}, {
 						name: 'Collection Date',
 						text: 'collection_date',
-						editable: true
+						editable: true,
+						type: 'date'
 					}, {
 						name: 'Isolation Country',
 						text: 'isolation_country',
@@ -1390,7 +1396,8 @@ define([
 					}, {
 						name: 'Other Environmental',
 						text: 'other_environmental',
-						editable: true
+						editable: true,
+						multiValued: true
 					}],
 
 				'Host Info': [{
@@ -1420,7 +1427,8 @@ define([
 					}, {
 						name: 'Other Clinical',
 						text: 'other_clinical',
-						editable: true
+						editable: true,
+						multiValued: true
 					}],
 
 				'Phenotype Info': [{
@@ -1462,17 +1470,22 @@ define([
 					}, {
 						name: 'Disease',
 						text: 'disease',
-						editable: true
+						editable: true,
+						multiValued: true
 					}],
 
 				'Others': [{
 						name: 'Comments',
 						text: 'comments',
-						editable: true
+						editable: true,
+						type: 'textarea',
+						multiValued: true
 					}, {
 						name: 'Additional Metadata',
 						text: 'additional_metadata',
-						editable: true
+						editable: true,
+						type: 'textarea',
+						multiValued: true
 					}]
 			}
 
