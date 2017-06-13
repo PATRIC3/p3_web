@@ -422,7 +422,7 @@ define([
 
 		]),
 		_setState: function(state){
-			//console.log("from _setState", state)
+			console.log("from _setState", state)
 		},
 		onSetState: function(attr, oldState, state){
 			if(!state){

@@ -211,9 +211,9 @@ define([
 				
 				var newState = lang.mixin(this.state, {'hash': keyword, 'href': baseHref});
 
-				if (this.state.hashParams.filter != searchHashParam) {
-					newState.search += "," + searchHashParam;
-				} 
+				//if (this.state.hashParams.filter != searchHashParam) {
+					newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
+				//} 
 
 				newState.hashParams.filter = searchHashParam;
 				
