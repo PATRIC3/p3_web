@@ -52,11 +52,11 @@ define([
     },
 
     //subsystemData is returned in descending order by count. This code depends on that. 
-    scrubSubSystemData: function(subsystemData) {
+    applyMaxLimitToSubsystemPieCharts: function(subsystemData) {
       if (this.subsystemMaxNumToDisplay >= subsystemData.length) {
         return subsystemData;
       } else {
-        var scrubbedSubsystemData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
+        var maxLimitedPieChartData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
         var subsystemsOtherCategory = {};
         subsystemsOtherCategory.val = "Other";
         subsystemsOtherCategory.count = 0;
@@ -65,8 +65,8 @@ define([
           subsystemsOtherCategory.count += subsystemData[i].count;
         };
 
-        scrubbedSubsystemData.push(subsystemsOtherCategory);
-        return scrubbedSubsystemData;
+        maxLimitedPieChartData.push(subsystemsOtherCategory);
+        return maxLimitedPieChartData;
       }
     },
 
@@ -76,7 +76,7 @@ define([
 
       var that = this;
 
-      var scrubbedSubsystemData = this.scrubSubSystemData(subsystemData);
+      var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
       var width = 1300;
       var height = 800;
@@ -111,7 +111,7 @@ define([
         .sort(null);
 
       var path = svg.selectAll('path')
-        .data(pie(scrubbedSubsystemData))
+        .data(pie(maxLimitedPieChartData))
         .enter()
         .append('path')
         .attr('d', arc)

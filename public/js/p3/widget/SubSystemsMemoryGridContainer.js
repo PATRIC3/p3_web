@@ -421,6 +421,9 @@ define([
 			]
 
 		]),
+		_setState: function(state){
+			//console.log("from _setState", state)
+		},
 		onSetState: function(attr, oldState, state){
 			if(!state){
 				console.log("!state in grid container; return;")

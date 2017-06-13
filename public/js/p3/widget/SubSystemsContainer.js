@@ -164,7 +164,7 @@ define([
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					role_id: 			{label: "Role ID", field: "role_id", hidden: true},
@@ -193,7 +193,34 @@ define([
 			}));
 
 			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
-				this.subsystemsGrid.set('state', this.state);
+				
+
+				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
+
+				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
+				var hrefParams = "filter=" + searchHashParam;
+				var keyword;
+				//prevent multiple filters from being added
+				if (this.state.hashParams.filter != searchHashParam) {
+					keyword = "viewtab=subsystems&" + hrefParams;
+				} else {
+					keyword = "viewtab=subsystems&" + this.state.hashParams.filter;
+				}
+				
+				var baseHref = this.state.pathname + "#" + keyword;
+				
+				var newState = lang.mixin(this.state, {'hash': keyword, 'href': baseHref});
+
+				if (this.state.hashParams.filter != searchHashParam) {
+					newState.search += "," + searchHashParam;
+				} 
+
+				newState.hashParams.filter = searchHashParam;
+				
+				this.subsystemsGrid.set('state', newState);
+				this.tabContainer.selectChild(this.subsystemsGrid)
+
+				// this.tabContainer.selectedChildWidget.set('state', newState);
 			}));
 
 			this._firstView = true;
