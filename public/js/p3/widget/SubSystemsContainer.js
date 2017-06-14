@@ -130,14 +130,14 @@ define([
 				type: "subsystems",
 				// state: this.state,
 				apiServer: this.apiServer,
-				// defaultFilter: this.defaultFilter,
+				defaultFilter: this.defaultFilter,
 				store: subsystemsStore,
 				facetFields: ["class", "subclass", "active"],
 				columns: {
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					genome_count: 		{label: 'Genome Count', field: 'genome_count'},
@@ -212,15 +212,17 @@ define([
 				var newState = lang.mixin(this.state, {'hash': keyword, 'href': baseHref});
 
 				//if (this.state.hashParams.filter != searchHashParam) {
-					newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
+				newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
 				//} 
 
 				newState.hashParams.filter = searchHashParam;
-				
-				this.subsystemsGrid.set('state', newState);
-				this.tabContainer.selectChild(this.subsystemsGrid)
+				newState.refreshFilter = true;
 
-				// this.tabContainer.selectedChildWidget.set('state', newState);
+				this.subsystemsGrid.set('state', newState);
+				this.tabContainer.selectChild(this.subsystemsGrid);
+
+				this.tabContainer.selectedChildWidget.set('state', newState);
+				//this.tabContainer.selectedChildWidget.refresh();
 			}));
 
 			this._firstView = true;

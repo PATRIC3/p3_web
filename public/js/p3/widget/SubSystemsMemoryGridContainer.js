@@ -435,7 +435,18 @@ define([
 				q.push(state.search);
 			}
 
-			if(state.hashParams && state.hashParams.filter && state.hashParams.filter == "false"){
+			if (state.refreshFilter) {
+				// on.emit(this.domNode, "UpdateHash", {
+				// 	bubbles: true,
+				// 	cancelable: true,
+				// 	hashProperty: "filter",
+				// 	value: newVal,
+				// 	oldValue: oldVal
+				// })
+				this.filterPanel.set("state", state);
+			}
+
+			else if(state.hashParams && state.hashParams.filter && state.hashParams.filter == "false"){
 				//console.log("filter set to false, no filtering");
 
 			}else if(state.hashParams){
