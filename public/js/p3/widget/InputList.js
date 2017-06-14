@@ -11,11 +11,14 @@ define([
         },                                        // options for form
         values: [],                               // initial list of items
         placeHolder: 'Enter an item to add...',   // add item placeholder text
-        type: 'text',                          // type of input (text|textarea)
+        type: 'text',                             // type of input (text|textarea)
+        name: null,                               // name of collections of inputs
+        _currentNewValue: '',       // value of new item to be added
  		constructor: function(){
 			this._listItems = [];
             this._listContainer = dom.toDom('<div class="list-container">');
 		},
+
 		postCreate: function(){
             var self = this;
 			self.inherited(arguments);
@@ -31,12 +34,24 @@ define([
             // add "add item" row
             self._addNewItemRow()
 		},
+
 		startup: function(){
             // startup
 		},
+
         _getValue: function(){
-            return this._listItems;
+            // return list of all input data, plus whatever is in "new item" input
+            return this._listItems.concat(this._currentNewValue);
         },
+
+        _getName: function(){
+            // return list of all input data, plus whatever is in "new item" input
+            return this.name;
+        },
+
+        /**
+         * add row of input
+         */
         _addRow: function(item){
             var self = this;
             /**
@@ -84,14 +99,18 @@ define([
              */
             this._listItems.push(item);
         },
+
+        /**
+         * adds input for new item with "add" button
+         */
         _addNewItemRow: function(){
             var self = this;
 
             var line = dom.toDom('<div>');
 
-            var textBox;
+            var newItemInput;
             if(self.type == 'textarea'){
-                textBox = new TextArea({
+                newItemInput = new TextArea({
                     intermediateChanges: true,
                     style: {
                         width: self.options.width,
@@ -101,29 +120,33 @@ define([
                     placeHolder: self.placeHolder
                 });
             }else{
-                textBox = new TextBox({
+                newItemInput = new TextBox({
                     intermediateChanges: true,
                     style: {width: self.options.width},
                     placeHolder: self.placeHolder
                 });
             }
 
-            dom.place(textBox.domNode, line);
+            dom.place(newItemInput.domNode, line);
 
 			var addBtn = new Button({
 				label: '<i class="icon-plus"></i> Add',
                 disabled: true,
 				onClick: function(e){
-                    var value = textBox.get('value');
+                    var value = newItemInput.get('value');
                     self._addRow(value);
-                    var value = textBox.set('value', '');
+                    var value = newItemInput.set('value', '');
 				}
 			});
             dom.place(addBtn.domNode, line);
 
-            dojo.connect(textBox, 'onChange', function(value){
+            dojo.connect(newItemInput, 'onChange', function(value){
+                // enable "add" button
                 if(value.length) addBtn.setDisabled(false);
                 else addBtn.setDisabled(true);
+
+                // save current value
+                self._currentNewValue = newItemInput.get('value');
             });
             dom.place(line, this.domNode);
         }
