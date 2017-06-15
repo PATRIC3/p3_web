@@ -1,9 +1,9 @@
 define([
-	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang",
+	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", "dojo/on", 
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
 	"../store/SubSystemMemoryStore", "../store/SubsystemPieChartMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsPieGraphContainer"
-], function(declare, BorderContainer, on, lang,
+], function(declare, BorderContainer, on, lang, on,
 			ActionBar, ContainerActionBar, TabContainer, StackController,
 			SubSystemsGridContainer, ContentPane, GridContainer, TooltipDialog,
 			SubSystemMemoryStore, SubSystemPieChartMemoryStore, domConstruct, topic, selector, SubSystemsPieGraphContainer){
@@ -189,8 +189,22 @@ define([
 			this.tabContainer.addChild(this.genesGrid);
 			
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
+				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
+					this.state.hashParams.filter = "false";
+
+				}
 				page.set('state', this.state);
 			}));
+
+			//go to subsystems overview strip off any filter param of hashparams
+			//add subtab into hashparams maybe
+
+			//topic.publish (/navigate) to change URL
+
+			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
+				console.log(page);
+			}));
+
 
 			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
 				
@@ -202,12 +216,14 @@ define([
 				var keyword;
 				//prevent multiple filters from being added
 				if (this.state.hashParams.filter != searchHashParam) {
-					keyword = "viewtab=subsystems&" + hrefParams;
+					keyword = "view_tab=subsystems&" + hrefParams;
 				} else {
-					keyword = "viewtab=subsystems&" + this.state.hashParams.filter;
+					keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
 				}
 				
 				var baseHref = this.state.pathname + "#" + keyword;
+
+				var relativeHref = "/view" + baseHref;
 				
 				var newState = lang.mixin(this.state, {'hash': keyword, 'href': baseHref});
 
@@ -219,10 +235,21 @@ define([
 				newState.refreshFilter = true;
 
 				this.subsystemsGrid.set('state', newState);
+
+				
+				// url update here 
+				topic.publish("/navigate", {href: relativeHref});
 				this.tabContainer.selectChild(this.subsystemsGrid);
 
-				this.tabContainer.selectedChildWidget.set('state', newState);
-				//this.tabContainer.selectedChildWidget.refresh();
+				on.emit(this.subsystemsOverviewGrid, "UpdateHash", {
+						bubbles: true,
+						cancelable: true,
+						hashProperty: "filter",
+						value: searchHashParam,
+						oldValue: searchHashParam
+					});
+
+				//this.tabContainer.selectedChildWidget.set('state', newState);
 			}));
 
 			this._firstView = true;
