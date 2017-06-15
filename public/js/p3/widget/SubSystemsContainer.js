@@ -191,20 +191,20 @@ define([
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
 					this.state.hashParams.filter = "false";
+					var newUrlHash = "view_tab=subsystems&filter=false";
+					var href = "/view" + this.state.pathname + "#" + newUrlHash
+					this.state.hash = newUrlHash;
+					topic.publish("/navigate", {href: href});
 
+				} else {
+					page.set('state', this.state);
 				}
-				page.set('state', this.state);
+				
 			}));
-
-			//go to subsystems overview strip off any filter param of hashparams
-			//add subtab into hashparams maybe
-
-			//topic.publish (/navigate) to change URL
 
 			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
 				console.log(page);
 			}));
-
 
 			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
 				
@@ -221,11 +221,8 @@ define([
 					keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
 				}
 				
-				var baseHref = this.state.pathname + "#" + keyword;
-
-				var relativeHref = "/view" + baseHref;
-				
-				var newState = lang.mixin(this.state, {'hash': keyword, 'href': baseHref});
+				var relativeHref = "/view" + this.state.pathname + "#" + keyword;
+				var newState = lang.mixin(this.state, {'hash': keyword, 'href': relativeHref});
 
 				//if (this.state.hashParams.filter != searchHashParam) {
 				newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
@@ -236,7 +233,6 @@ define([
 
 				this.subsystemsGrid.set('state', newState);
 
-				
 				// url update here 
 				topic.publish("/navigate", {href: relativeHref});
 				this.tabContainer.selectChild(this.subsystemsGrid);
@@ -248,8 +244,6 @@ define([
 						value: searchHashParam,
 						oldValue: searchHashParam
 					});
-
-				//this.tabContainer.selectedChildWidget.set('state', newState);
 			}));
 
 			this._firstView = true;

@@ -47,7 +47,10 @@ define([
       var that = this;
 
       Deferred.when(this.store.query(), function(data) {
-        that.drawGraphAndLegend(data);
+        if (!oldState) {
+          that.drawGraphAndLegend(data);
+        }
+        
       });
     },
 
