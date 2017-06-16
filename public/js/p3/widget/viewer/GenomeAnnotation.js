@@ -2,11 +2,11 @@ define([
 	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on",
 	"dojo/dom-class", "dijit/layout/ContentPane", "dojo/dom-construct",
 	"../PageGrid", "../formatter", "../../WorkspaceManager", "dojo/_base/lang",
-	"dojo/dom-attr"
+	"dojo/dom-attr","../WorkspaceExplorerView"
 ], function(declare, BorderContainer, on,
 			domClass, ContentPane, domConstruct,
 			Grid, formatter, WorkspaceManager, lang,
-			domAttr){
+			domAttr, WorkspaceExplorerView){
 	return declare([BorderContainer], {
 		"baseClass": "ExperimentViewer",
 		"disabled": false,
@@ -18,7 +18,7 @@ define([
 			"start_time": {"label": "Start time", "format": formatter.epochDate},
 			"elapsed_time": {"label": "Run time", "format": formatter.runTime},
 			"end_time": {"label": "End time", "format": formatter.epochDate},
-			"parameters": {"label": "Parameters", "format": JSON.stringify}
+			"parameters": {"label": "Parameters", "format": function(d){ return '<pre style="font-size:.8em;">' + JSON.stringify(d,null,2) + "</pre>"}}
 		},
 		_jobOrder: ["start_time", "end_time", "elapsed_time", "parameters"],
 		_appLabel: "",
@@ -43,6 +43,7 @@ define([
 		_setDataAttr: function(data){
 			this.data = data;
 			console.log("job result viewer data: ", data);
+			this._hiddenPath = data.path + "." + data.name;
 			var paths = this.data.autoMeta.output_files.map(function(o){
 				return o[0];
 			});
@@ -104,57 +105,8 @@ define([
 					}, this);
 				}
 
-				var result_output = [];
-				if(this._resultObjects){
-					result_output.push('<div><h3 class="section-title-plain close2x">Downloads</h3>');
-					result_output.push('<table class="p3basic striped far2x"><tbody>');
-					result_output.push('<tr><th></th><th>Filename</th><th>Type</th><th>File size</th>')
-					var header_row = result_output.length - 1;
-					result_output.push('</tr>');
-					this._resultObjects.forEach(function(obj){
-						if (obj.name === "load_files") return;
-
-						result_output.push('<tr class="alt">');
-						result_output.push('<th scope="row"><i class="fa icon-download fa" rel="' + obj.path + "/" + obj.name + '" /></th>');
-						result_output.push('<td class="last">' + obj.name + "</td>");
-						result_output.push('<td class="last">' + obj.type + "</td>");
-						result_output.push('<td class="last">' + formatter.humanFileSize(obj.size, 1) + "</td>");
-						var subRecord = [];
-						if(!this._resultMetaTypes.hasOwnProperty(obj.type)){
-							Object.keys(obj.autoMeta).forEach(function(prop){
-								if(!obj.autoMeta[prop] || prop == "inspection_started"){
-									return;
-								}
-								var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
-								subRecord.push(label + " (" + obj.autoMeta[prop] + ")");
-								result_output.push(label + ": " + obj.autoMeta[prop]);
-								result_output.push("</td>");
-							}, this);
-							//_resultMetaTypes contain information for the Job Result table
-							if(subRecord.length){
-								result_output[header_row] = result_output[header_row] + '<th>Metadata</th>';
-								result_output.push('<td class="last">' + subRecord.join(", ") + '</td>');
-							}
-							result_output.push("</tr>");
-						}
-						else{
-							var subRecord = [];
-							Object.keys(obj.autoMeta).forEach(function(prop){
-								if(!obj.autoMeta[prop] || prop == "inspection_started"){
-									return;
-								}
-								var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
-								subRecord.push(label + " (" + obj.autoMeta[prop] + ")");
-							}, this);
-							job_output.unshift('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[obj.type]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
-						}
-					}, this);
-					result_output.push("</tbody></table></div>");
-				}
-
 				output.push.apply(output, job_output);
 				output.push("</tbody></table></div>");
-				output.push.apply(output, result_output);
 
 				if(this.data.userMeta){
 					Object.keys(this.data.userMeta).forEach(function(prop){
@@ -163,7 +115,8 @@ define([
 				}
 
 				output.push("</div>");
-				this.viewer.set("content", output.join(""));
+				this.viewHeader.set("content", output.join(""));
+ 				this.resize();
 			}
 		},
 		startup: function(){
@@ -171,9 +124,11 @@ define([
 				return;
 			}
 			this.inherited(arguments);
-			this.viewer = new ContentPane({content: "Loading Job Results...", region: "center"});
+			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;"});
 			//this.viewer= new ContentPane({content: "", region: "center"});
-			//this.addChild(this.viewHeader);
+			this.viewer = new WorkspaceExplorerView({region: "center", path: this._hiddenPath});
+			console.log("WSV: ", this.viewer);
+			this.addChild(this.viewHeader);
 			this.addChild(this.viewer);
 
 			this.on("i:click", function(evt){
