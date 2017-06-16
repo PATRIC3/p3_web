@@ -26,43 +26,33 @@ define([
 		_autoLabels: {},
 		_setDataAttr: function(data){
 			this.data = data;
-			console.log("job result viewer data: ", data);
+			console.log("[JobResult] data: ", data);
 			this._hiddenPath = data.path + "." + data.name;
-			console.log("JOB Result Output Files: ", this.data.autoMeta.output_files);
+			console.log("[JobResult] Output Files: ", this.data.autoMeta.output_files);
 			var paths = this.data.autoMeta.output_files.map(function(o){
 				return o[0];
 			});
 
-			console.log("JobResult Viewer getObjects(): ", paths);
+			console.log("[JobResult] getObjects(): ", paths);
 			WorkspaceManager.getObjects(paths, true).then(lang.hitch(this, function(objs){
 				this._resultObjects = objs;
-				console.log("got objects: ", objs);
+				console.log("[JobResult] got objects: ", objs);
 				this.setupResultType();
 				this.refresh();
 			}));
 
 		},
 		setupResultType: function(){
-			console.log("JobResult setupResultType()");
+			console.log("[JobResult] setupResultType()");
 			if(this.data.autoMeta.app.id){
 				this._resultType = this.data.autoMeta.app.id;
-			}
-			if(this._resultType == "GenomeAnnotation"){
-				this._resultMetaTypes = {"genome": {"label": "Genome"}};
-				this._appLabel = "Genome Annotation";
-				this._autoLabels = {
-					"scientific_name": {"label": "Organism"},
-					"domain": {"label": "Domain"},
-					"num_features": {"label": "Feature count"},
-					"genome_id": {"label": "Annotation ID"}
-				};
 			}
 			if(this._resultType == "GenomeAssembly"){
 				this._appLabel = "Genome Assembly";
 			}
 		},
 		refresh: function(){
-			console.log("Refresh() JobResult Viewer");
+			console.log("[JobResult] refresh()");
 			if(this.data){
 				var jobHeader = '<div style="width:100%"><div style="width:100%;" ><h3 style="color:#888;font-size:1.3em;font-weight:normal;" class="normal-case close2x"><span style="" class="wrap">';
 				if(this.data.autoMeta && this.data.autoMeta.app){
@@ -76,6 +66,29 @@ define([
 				var job_output = [];
 
 				if(this.data.autoMeta){
+
+					// add the extra metadata lines
+					Object.keys(this._resultMetaTypes).forEach(function(metaType){
+						console.log("[JobResult] _resultMetaTypes:",metaType);
+
+						var subRecord = [];
+							Object.keys(this._autoLabels).forEach(function(prop){
+								console.log("[JobResult] _autoLabels:",prop);
+
+								//XXX the actual content isn't in autoMeta... have to find out why
+								if(!this.data.autoMeta[prop] || prop == "inspection_started"){
+										return;
+									}
+								var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
+								subRecord.push(label + " (" + this.data.autoMeta[prop] + ")");
+							}, this);
+
+						console.log("[JobResult] subRecord:",subRecord.join(","));
+						job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+
+					}, this);
+
+
 					this._jobOrder.forEach(function(prop){
 						/*if (prop=="output_files") { return; }
 						if (prop=="app") { return; }
@@ -84,6 +97,7 @@ define([
 						if(!this.data.autoMeta[prop]){
 							return;
 						}
+
 						if(this._jobOut.hasOwnProperty(prop)){
 							//this._jobOut[prop]["value"]=this.data.autoMeta[prop];
 							var tableLabel = this._jobOut[prop].hasOwnProperty("label") ? this._jobOut[prop]["label"] : prop;
@@ -115,7 +129,7 @@ define([
 			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;"});
 			//this.viewer= new ContentPane({content: "", region: "center"});
 			this.viewer = new WorkspaceExplorerView({region: "center", path: this._hiddenPath});
-			console.log("WSV: ", this.viewer);
+			console.log("[JobResult] WSV: ", this.viewer);
 			this.addChild(this.viewHeader);
 			this.addChild(this.viewer);
 
