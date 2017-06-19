@@ -7,9 +7,9 @@ define([
 			var id;
 			this._resultObjects.some(function(o){
 				if(o.type == "genome"){
-					console.log("[GenomeAnnotation] GENOME OBJECT: ", o);
+					console.log("[GenomeAnnotation] Genome Object: ", o);
 					id = o.autoMeta.genome_id;
-					console.log("Id: ", id);
+					console.log("[GenomeAnnotation] Id: ", id);
 					return true;
 				}
 				return false;
@@ -24,9 +24,9 @@ define([
 			this._resultMetaTypes = {"genome": {"label": "Genome"}};
 			this._appLabel = "Genome Annotation";
 			this._autoLabels = {
+				"num_features": {"label": "Feature count"},
 				"scientific_name": {"label": "Organism"},
 				"domain": {"label": "Domain"},
-				"num_features": {"label": "Feature count"},
 				"genome_id": {"label": "Annotation ID"}
 			};
 		}

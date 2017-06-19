@@ -65,26 +65,39 @@ define([
 				output.push(jobHeader + '<table style="width:90%" class="p3basic striped far2x" id="data-table"><tbody>');
 				var job_output = [];
 
-				if(this.data.autoMeta){
-
-					// add the extra metadata lines
+					// add extra metadata header lines
 					Object.keys(this._resultMetaTypes).forEach(function(metaType){
 						console.log("[JobResult] _resultMetaTypes:",metaType);
 
-						var subRecord = [];
-							Object.keys(this._autoLabels).forEach(function(prop){
-								console.log("[JobResult] _autoLabels:",prop);
+						// add additional types to bubble up to the header
+						if (metaType == 'genome') {
 
-								//XXX the actual content isn't in autoMeta... have to find out why
-								if(!this.data.autoMeta[prop] || prop == "inspection_started"){
-										return;
-									}
-								var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
-								subRecord.push(label + " (" + this.data.autoMeta[prop] + ")");
-							}, this);
+							var bubbleUpMeta;
+							this._resultObjects.some(function(o){
+								if(o.type == metaType){
+									bubbleUpMeta = o.autoMeta;
+									return true;
+								}
+								return false;
+							});
 
-						console.log("[JobResult] subRecord:",subRecord.join(","));
-						job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+							if (bubbleUpMeta) {
+								var subRecord = [];
+									Object.keys(this._autoLabels).forEach(function(prop){
+										console.log("[JobResult] _autoLabels:",prop);
+
+										//XXX the actual content isn't in autoMeta... have to find out why
+										if(!bubbleUpMeta[prop] || prop == "inspection_started"){
+												return;
+											}
+										var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
+										subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
+									}, this);
+
+								console.log("[JobResult] subRecord:",subRecord.join(","));
+								job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+							}
+						}
 
 					}, this);
 
