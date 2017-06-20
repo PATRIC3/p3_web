@@ -1,9 +1,9 @@
 define([
-	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang",
+	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", "dojo/on", 
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
 	"../store/SubSystemMemoryStore", "../store/SubsystemPieChartMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsPieGraphContainer"
-], function(declare, BorderContainer, on, lang,
+], function(declare, BorderContainer, on, lang, on,
 			ActionBar, ContainerActionBar, TabContainer, StackController,
 			SubSystemsGridContainer, ContentPane, GridContainer, TooltipDialog,
 			SubSystemMemoryStore, SubSystemPieChartMemoryStore, domConstruct, topic, selector, SubSystemsPieGraphContainer){
@@ -130,14 +130,14 @@ define([
 				type: "subsystems",
 				// state: this.state,
 				apiServer: this.apiServer,
-				// defaultFilter: this.defaultFilter,
+				defaultFilter: this.defaultFilter,
 				store: subsystemsStore,
 				facetFields: ["class", "subclass", "active"],
 				columns: {
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					genome_count: 		{label: 'Genome Count', field: 'genome_count'},
@@ -164,7 +164,7 @@ define([
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					role_id: 			{label: "Role ID", field: "role_id", hidden: true},
@@ -189,7 +189,61 @@ define([
 			this.tabContainer.addChild(this.genesGrid);
 			
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
-				page.set('state', this.state);
+				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
+					this.state.hashParams.filter = "false";
+					var newUrlHash = "view_tab=subsystems&filter=false";
+					var href = "/view" + this.state.pathname + "#" + newUrlHash
+					this.state.hash = newUrlHash;
+					topic.publish("/navigate", {href: href});
+
+				} else {
+					page.set('state', this.state);
+				}
+				
+			}));
+
+			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
+				console.log(page);
+			}));
+
+			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
+				
+
+				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
+
+				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
+				var hrefParams = "filter=" + searchHashParam;
+				var keyword;
+				//prevent multiple filters from being added
+				if (this.state.hashParams.filter != searchHashParam) {
+					keyword = "view_tab=subsystems&" + hrefParams;
+				} else {
+					keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
+				}
+				
+				var relativeHref = "/view" + this.state.pathname + "#" + keyword;
+				var newState = lang.mixin(this.state, {'hash': keyword, 'href': relativeHref});
+
+				//if (this.state.hashParams.filter != searchHashParam) {
+				newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
+				//} 
+
+				newState.hashParams.filter = searchHashParam;
+				newState.refreshFilter = true;
+
+				this.subsystemsGrid.set('state', newState);
+
+				// url update here 
+				topic.publish("/navigate", {href: relativeHref});
+				this.tabContainer.selectChild(this.subsystemsGrid);
+
+				on.emit(this.subsystemsOverviewGrid, "UpdateHash", {
+						bubbles: true,
+						cancelable: true,
+						hashProperty: "filter",
+						value: searchHashParam,
+						oldValue: searchHashParam
+					});
 			}));
 
 			this._firstView = true;

@@ -1239,3 +1239,7 @@ body footer.main-footer ul.left {
     width: 80px;
     z-index: 10;
 }
+
+#subsystemspiechart {
+    cursor: pointer;
+}

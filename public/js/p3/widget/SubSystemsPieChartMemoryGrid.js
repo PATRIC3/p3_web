@@ -17,7 +17,7 @@ define([
     },
 
     // x + "Other" as aggregation of what is left over
-    subsystemMaxNumToDisplay: 8,
+    subsystemMaxNumToDisplay: 5,
 
     onSetState: function(attr, oldState, state){
 
@@ -47,16 +47,19 @@ define([
       var that = this;
 
       Deferred.when(this.store.query(), function(data) {
-        that.drawGraphAndLegend(data);
+        if (!oldState) {
+          that.drawGraphAndLegend(data);
+        }
+        
       });
     },
 
     //subsystemData is returned in descending order by count. This code depends on that. 
-    scrubSubSystemData: function(subsystemData) {
+    applyMaxLimitToSubsystemPieCharts: function(subsystemData) {
       if (this.subsystemMaxNumToDisplay >= subsystemData.length) {
         return subsystemData;
       } else {
-        var scrubbedSubsystemData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
+        var maxLimitedPieChartData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
         var subsystemsOtherCategory = {};
         subsystemsOtherCategory.val = "Other";
         subsystemsOtherCategory.count = 0;
@@ -65,8 +68,8 @@ define([
           subsystemsOtherCategory.count += subsystemData[i].count;
         };
 
-        scrubbedSubsystemData.push(subsystemsOtherCategory);
-        return scrubbedSubsystemData;
+        maxLimitedPieChartData.push(subsystemsOtherCategory);
+        return maxLimitedPieChartData;
       }
     },
 
@@ -76,10 +79,10 @@ define([
 
       var that = this;
 
-      var scrubbedSubsystemData = this.scrubSubSystemData(subsystemData);
+      var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
-      var width = 1300;
-      var height = 800;
+      var width = 1100;
+      var height = 600;
       var radius = Math.min(width, height) / 2 - 50;
 
       var legendRectSize = 18;
@@ -88,110 +91,94 @@ define([
       var color = d3.scale.category20();
 
       var svg = d3.select('#subsystemspiechart')
-            .append('svg')
-            .attr('width', width)
-            .attr('height', height)
-            .append('g')
-            .attr('transform', 'translate(' + (height / 2 + 100) +
-              ',' + (height / 2 + 50) + ')');
+        .append('svg')
+        .attr('width', width)
+        .attr('height', height)
+        .append('g')
+        .attr('transform', 'translate(' + (height / 2 + 100) +
+          ',' + (height / 2 + 50) + ')');
 
-          d3.select('#subsystemspiechart svg')
+      d3.select('#subsystemspiechart svg')
         .append("text")
-        .attr("x", 500)             
+        .attr("x", width / 2.75)             
         .attr("y", 50)
         .attr("text-anchor", "middle")
         .text(this.state.genome.genome_name);
 
-          var arc = d3.svg.arc()
-            .innerRadius(0)
-            .outerRadius(radius);
+      var arc = d3.svg.arc()
+        .innerRadius(0)
+        .outerRadius(radius);
 
-          var pie = d3.layout.pie()
-            .value(function(d) { return d.count; })
-            .sort(null);
+      var pie = d3.layout.pie()
+        .value(function(d) { return d.count; })
+        .sort(null);
 
-          var path = svg.selectAll('path')
-            .data(pie(scrubbedSubsystemData))
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .on("mouseover", function(d) {
-              return tooltip.style("visibility", "visible").text(d.data.val);
-            })
-            .on("click", function(d) {
-              that.navigateToSubsystemsSubTab(d);
-            })
+      var path = svg.selectAll('path')
+        .data(pie(maxLimitedPieChartData))
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .on("mouseover", function(d) {
+          return tooltip.style("visibility", "visible").text(d.data.val);
+        })
+        .on("click", function(d) {
+          that.navigateToSubsystemsSubTab(d);
+        })
         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
-            .attr('fill', function(d) {
-              return color(d.data.val + " (" + d.data.count + ")");
-          });
+        .attr('fill', function(d) {
+          return color(d.data.val + " (" + d.data.count + ")");
+      });
 
-          var margin = {left: 60};
+      var margin = {left: 60};
 
       var legendHolder = svg.append('g')
         .attr('transform', "translate(" + (margin.left + radius) + ",0)")
 
-          var subsystemslegend = legendHolder.selectAll('.subsystemslegend')
-              .data(color.domain())
-              .enter()
-              .append('g')
-              .attr('class', 'subsystemslegend')
-              .attr('transform', function(d, i) {
-                var height = legendRectSize + legendSpacing;
-                var offset =  height * color.domain().length / 2;
-                var horz = -2 * legendRectSize;
-                var vert = i * height - offset;
-                return 'translate(' + horz + ',' + vert + ')';
-            });
+      var subsystemslegend = legendHolder.selectAll('.subsystemslegend')
+          .data(color.domain())
+          .enter()
+          .append('g')
+          .attr('class', 'subsystemslegend')
+          .attr('transform', function(d, i) {
+            var height = legendRectSize + legendSpacing;
+            var offset =  height * color.domain().length / 2;
+            var horz = -2 * legendRectSize;
+            var vert = i * height - offset;
+            return 'translate(' + horz + ',' + vert + ')';
+        });
 
-            subsystemslegend.append('rect')
-              .attr("x", 0)
-              .attr('width', legendRectSize)
-              .attr('height', legendRectSize)                                   
-              .style('fill', color)
-              .style('stroke', color);
-            
-            subsystemslegend.append('text')
-              .attr('x', legendRectSize + legendSpacing)
-              .attr('y', legendRectSize - legendSpacing)
-              .text(function(d) { return d; });
+      subsystemslegend.append('rect')
+          .attr("x", 0)
+          .attr('width', legendRectSize)
+          .attr('height', legendRectSize)                                   
+          .style('fill', color)
+          .style('stroke', color);
+        
+      subsystemslegend.append('text')
+          .attr('x', legendRectSize + legendSpacing)
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { return d; });
 
-          var tooltip = d3.select("body")
-        .append("div")
-        .style("position", "absolute")
-        .style("z-index", "10")
-        .style("visibility", "hidden")
-        //.style("cursor", "pointer")
+      var tooltip = d3.select("body")
+          .append("div")
+          .style("position", "absolute")
+          .style("z-index", "10")
+          .style("visibility", "hidden")
 
-          this.setSubsystemPieGraph();
+      this.setSubsystemPieGraph();
     },
 
     navigateToSubsystemsSubTab: function(d) {
-        console.log(d.data);
 
-        // Topic.subscribe(this.topicId, lang.hitch(this, function(){
-        // // console.log("ProteinFamiliesHeatmapContainer:", arguments);
-        //   var key = arguments[0], value = arguments[1];
-
-        //   switch(key){
-        //     case "showMainGrid":
-        //       this.tabContainer.selectChild(this.mainGridContainer);
-        //       break;
-        //     case "updatePfState":
-        //       this.pfState = value;
-        //       this.updateFilterPanel(value);
-        //       break;
-        //     case "showLoadingMask":
-        //       this.loadingMask.show();
-        //       break;
-        //     case "hideLoadingMask":
-        //       this.loadingMask.hide();
-        //       break;
-        //     default:
-        //       break;
-        //     }
-        // }));
+        switch (d.data.val) {
+          case "Other":
+            //do nothing
+            break;
+          default:
+            Topic.publish("navigateToSubsystemsSubTab", d.data);
+            break;
+        }
     },
 
     setSubsystemPieGraph: function () {
