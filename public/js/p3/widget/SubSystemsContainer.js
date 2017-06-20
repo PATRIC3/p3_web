@@ -2,11 +2,11 @@ define([
 	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang",
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
-	"../store/SubSystemMemoryStore", "../store/SubsystemPieChartMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsPieGraphContainer"
+	"../store/SubSystemMemoryStore", "../store/SubsystemsOverviewMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsOverview"
 ], function(declare, BorderContainer, on, lang,
 			ActionBar, ContainerActionBar, TabContainer, StackController,
 			SubSystemsGridContainer, ContentPane, GridContainer, TooltipDialog,
-			SubSystemMemoryStore, SubSystemPieChartMemoryStore, domConstruct, topic, selector, SubSystemsPieGraphContainer){
+			SubSystemMemoryStore, SubsystemsOverviewMemoryStore, domConstruct, topic, selector, SubSystemsOverview){
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
 		content: vfc, onMouseLeave: function(){
@@ -37,8 +37,6 @@ define([
 		maxGenomeCount: 500,
 		tooltip: 'The "Subsystems" tab contains a list of subsystems for genomes associated with the current view',
 		apiServer: window.App.dataServiceURL,
-
-		//defaultFilter: "eq(subclass,%22*%22)",
 
 		postCreate: function(){
 			this.inherited(arguments);
@@ -83,9 +81,7 @@ define([
 
 		visible: false,
 		_setVisibleAttr: function(visible){
-
 			this.visible = visible;
-
 			if(this.visible && !this._firstView){
 				this.onFirstView();
 			}
@@ -101,7 +97,7 @@ define([
 			}
 			this.tabContainer = new TabContainer({region: "center", id: this.id + "_TabContainer"});
 
-			var subsystemsOverviewStore = this.subsystemsStore = new SubSystemPieChartMemoryStore({type: "subsystems_overview"});
+			var subsystemsOverviewStore = this.subsystemsStore = new SubsystemsOverviewMemoryStore({type: "subsystems_overview"});
 			var subsystemsStore = this.subsystemsStore = new SubSystemMemoryStore({type: "subsystems"});
 			var geneSubsystemsStore = this.geneSubsystemsStore = new SubSystemMemoryStore({type: "genes"});
 
@@ -111,10 +107,9 @@ define([
 				"class": "TextTabButtons"
 			});
 
-			this.subsystemsOverviewGrid = new SubSystemsPieGraphContainer({
+			this.subsystemsOverviewGrid = new SubSystemsOverview({
 				title: "Subsystems Overview",
 				type: "subsystems_overview",
-				// state: this.state,
 				apiServer: this.apiServer,
 				store: subsystemsOverviewStore,
 				facetFields: ["class"],
@@ -128,16 +123,15 @@ define([
 			this.subsystemsGrid = new SubSystemsGridContainer({
 				title: "Subsystems",
 				type: "subsystems",
-				// state: this.state,
 				apiServer: this.apiServer,
-				// defaultFilter: this.defaultFilter,
+				defaultFilter: this.defaultFilter,
 				store: subsystemsStore,
 				facetFields: ["class", "subclass", "active"],
 				columns: {
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					genome_count: 		{label: 'Genome Count', field: 'genome_count'},
@@ -164,7 +158,7 @@ define([
 					"Selection Checkboxes": selector({unhidable: true}),
 					id: 				{label: 'ID', field: 'id', hidden: true},
 					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 				{label: "Class", field: "class"},
+					"class": 			{label: "Class", field: "class"},
 					subclass: 			{label: 'Subclass', field: 'subclass'},
 					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 					role_id: 			{label: "Role ID", field: "role_id", hidden: true},
@@ -187,9 +181,30 @@ define([
 			this.tabContainer.addChild(this.subsystemsOverviewGrid);
 			this.tabContainer.addChild(this.subsystemsGrid);
 			this.tabContainer.addChild(this.genesGrid);
-			
+
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
-				page.set('state', this.state);
+				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
+					//do nothing
+				} else {
+					page.set('state', this.state);
+				}
+			}));
+
+			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
+				console.log(page);
+			}));
+
+			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
+
+				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
+				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
+
+				var newState = lang.mixin({}, this.state, {hashParams:
+					lang.mixin({}, {filter: searchHashParam})
+				});
+
+				this.state = newState;
+				this.tabContainer.selectChild(this.subsystemsGrid);
 			}));
 
 			this._firstView = true;
