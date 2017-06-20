@@ -1503,7 +1503,9 @@ define([
 	function displayHeader(parent, label, iconClass, url, options){
 		var linkTitle = options && options.linkTitle || false;
 
-		var titleDiv = domConstruct.create("div", {"class": "DataItemHeader"}, parent);
+		var titleDiv = domConstruct.create("div", {
+			"class": "DataItemHeader"
+		}, parent);
 
 		// span icon
 		domConstruct.create("span", {"class": iconClass}, titleDiv);

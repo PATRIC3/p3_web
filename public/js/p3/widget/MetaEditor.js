@@ -66,7 +66,7 @@ define([
 		/**
 		 * Opens the editor (in dialog)
 		 */
-		open: function(){
+		show: function(){
             var self = this
             var tableNames = self.tableNames,
                 spec = self.spec,
@@ -90,7 +90,7 @@ define([
 					'<h5 class="DataItemSectionHead" style="margin: 10px 0 0 0;">'
 						+ tableName +
 					'</h5>'
-				, form.domNode)
+				, form.domNode);
 
 				var table = dom.toDom('<table>'),
 					tbody = dom.place('<tbody>', table);
@@ -134,22 +134,21 @@ define([
 					dom.place(input.domNode, tr);
 				})
 
-				dom.place(table, form.domNode)
+				dom.place(table, form.domNode);
 			})
 
-			dom.place('<br><br>', form.domNode)
+			dom.place('<br><br>', form.domNode);
 
 
 			/**
 			 * put form in dialog
 			 */
-			var dlg = new Confirmation({
+			self.dialog = new Confirmation({
 				title: "Edit Metadata",
 				okLabel: "Save",
 				style: {width: '800px', height: '80%', overflow: 'scroll'},
 				content: form,
 				onConfirm: function(){
-					console.log('valid?', form.validate());
 					this.hideAndDestroy();
 					self.onSave(inputs)
 				},
@@ -157,8 +156,13 @@ define([
 					this.hideAndDestroy();
 				}
 			})
-			dlg.startup();
-			dlg.show();
+
+			self.dialog.startup();
+			self.dialog.show();
+		},
+
+		hide: function(){
+			self.dialog.hideAndDestroy();
 		},
 
 		/**

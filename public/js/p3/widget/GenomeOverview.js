@@ -60,21 +60,28 @@ define([
 			domConstruct.empty(this.pubmedSummaryNode);
 			domConstruct.place(ExternalItemFormatter(genome, "pubmed_data", {}), this.pubmedSummaryNode, "first");
 
-			//domConstruct.place(inputList.domNode, this.genomeSummaryNode, "first");
+			// domConstruct.place(inputList.domNode, this.genomeSummaryNode, "first");
 
-			var editBtn = domConstruct.toDom('<a style="float:right">Edit</a>');
-			on(editBtn, 'click', function(){
-				var tableNames = DataItemFormatter(genome, "genome_meta_table_names", {}),
-					spec = DataItemFormatter(genome, "genome_meta_spec", {});
+			if(genome.owner == window.App.user.id){
+				var editBtn = domConstruct.toDom(
+					'<a style="float: right; margin-top: 15px;">'+
+						'<i class="icon-pencil"></i> Edit'+
+					'</a>');
 
-				var editor = new MetaEditor({
-					tableNames: tableNames,
-					spec: spec,
-					data: genome
+				on(editBtn, 'click', function(){
+					var tableNames = DataItemFormatter(genome, "genome_meta_table_names", {}),
+						spec = DataItemFormatter(genome, "genome_meta_spec", {});
+
+					var editor = new MetaEditor({
+						tableNames: tableNames,
+						spec: spec,
+						data: genome
+					})
+					editor.startup();
+					editor.show();
 				})
-				editor.open();
-			})
-			domConstruct.place(editBtn, this.genomeSummaryNode, "first");
+				domConstruct.place(editBtn, this.genomeSummaryNode, "first");
+			}
 		},
 
 		onAddGenome: function(){
