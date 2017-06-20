@@ -87,12 +87,6 @@ define([
 
 		_setState: function(state){
 
-			// if(!state){
-			// 	return;
-			// }
-			// this.store.set('state', state);
-			// this.refresh();
-
 			var oldState = this.get('state');
 
 			var ov, nv;
@@ -113,8 +107,6 @@ define([
 			this.state = state;
 
 			if(ov != nv){
-				//console.log("New State in subsystems Memory Grid: ", nv);
-
 				if(!this.store){
 					this.set('store', this.createStore(this.apiServer, this.apiToken || window.App.authorizationToken, state));
 				}else{
@@ -125,12 +117,10 @@ define([
 			}else{
 				this.refresh()
 			}
-
 		},
 
 		refresh: function(){
 			this.inherited(arguments);
-
 		},
 
 		createStore: function(server, token, state){
