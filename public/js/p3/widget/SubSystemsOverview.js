@@ -3,11 +3,11 @@ define([
 	"dojo/_base/declare", "dojo/_base/lang", "dojo/on", "dojo/topic", 
 	"dojo/query", "dojo/request", "dojo/dom-construct", "dojo/dom-style", 
 	"dojo/dom-class", "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "./ContainerActionBar",
-	"./GridContainer", "./SubSystemsPieChartMemoryGrid", "FileSaver"
+	"./GridContainer", "./SubSystemsOverviewMemoryGrid", "FileSaver"
 ], function(declare, lang, on, Topic, 
 			query, request, domConstruct, domStyle, 
 			domClass, BorderContainer, ContentPane, ContainerActionBar,
-			GridContainer, SubSystemsPieChartMemoryGrid, saveAs){
+			GridContainer, SubSystemsOverviewMemoryGrid, saveAs){
 
 	return declare([BorderContainer], {
 		gutters: false,
@@ -15,22 +15,7 @@ define([
 		state: null,
 
 		constructor: function(){
-			Topic.subscribe("subsystemsPieChartGraph", lang.hitch(this, function(){
-				// console.log("ProteinFamiliesHeatmapContainer:", arguments);
-				var key = arguments[0], value = arguments[1];
 
-				switch(key){
-					case "other":
-						console.log("foo");
-						//this.tabContainer.selectChild(this.mainGridContainer);
-						break;
-					
-					default:
-						console.log("foo");
-						//this.tabContainer.selectChild(this.mainGridContainer);
-						break;
-				}
-			}));
 		},
 
 		containerActions: [
@@ -89,7 +74,7 @@ define([
 			});
 
 			this.addChild(this.piechartviewer);
-			this.chart = new SubSystemsPieChartMemoryGrid();
+			this.chart = new SubSystemsOverviewMemoryGrid();
 
 			this.watch("state", lang.hitch(this, "onSetState"));
 

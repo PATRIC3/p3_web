@@ -1,12 +1,12 @@
 define([
-	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", "dojo/on",
+	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang",
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
-	"../store/SubSystemMemoryStore", "../store/SubsystemPieChartMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsPieGraphContainer"
-], function(declare, BorderContainer, on, lang, on,
+	"../store/SubSystemMemoryStore", "../store/SubsystemsOverviewMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsOverview"
+], function(declare, BorderContainer, on, lang,
 			ActionBar, ContainerActionBar, TabContainer, StackController,
 			SubSystemsGridContainer, ContentPane, GridContainer, TooltipDialog,
-			SubSystemMemoryStore, SubSystemPieChartMemoryStore, domConstruct, topic, selector, SubSystemsPieGraphContainer){
+			SubSystemMemoryStore, SubsystemsOverviewMemoryStore, domConstruct, topic, selector, SubSystemsOverview){
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
 		content: vfc, onMouseLeave: function(){
@@ -37,8 +37,6 @@ define([
 		maxGenomeCount: 500,
 		tooltip: 'The "Subsystems" tab contains a list of subsystems for genomes associated with the current view',
 		apiServer: window.App.dataServiceURL,
-
-		//defaultFilter: "eq(subclass,%22*%22)",
 
 		postCreate: function(){
 			this.inherited(arguments);
@@ -83,9 +81,7 @@ define([
 
 		visible: false,
 		_setVisibleAttr: function(visible){
-
 			this.visible = visible;
-
 			if(this.visible && !this._firstView){
 				this.onFirstView();
 			}
@@ -101,7 +97,7 @@ define([
 			}
 			this.tabContainer = new TabContainer({region: "center", id: this.id + "_TabContainer"});
 
-			var subsystemsOverviewStore = this.subsystemsStore = new SubSystemPieChartMemoryStore({type: "subsystems_overview"});
+			var subsystemsOverviewStore = this.subsystemsStore = new SubsystemsOverviewMemoryStore({type: "subsystems_overview"});
 			var subsystemsStore = this.subsystemsStore = new SubSystemMemoryStore({type: "subsystems"});
 			var geneSubsystemsStore = this.geneSubsystemsStore = new SubSystemMemoryStore({type: "genes"});
 
@@ -111,10 +107,9 @@ define([
 				"class": "TextTabButtons"
 			});
 
-			this.subsystemsOverviewGrid = new SubSystemsPieGraphContainer({
+			this.subsystemsOverviewGrid = new SubSystemsOverview({
 				title: "Subsystems Overview",
 				type: "subsystems_overview",
-				// state: this.state,
 				apiServer: this.apiServer,
 				store: subsystemsOverviewStore,
 				facetFields: ["class"],
@@ -128,7 +123,6 @@ define([
 			this.subsystemsGrid = new SubSystemsGridContainer({
 				title: "Subsystems",
 				type: "subsystems",
-				// state: this.state,
 				apiServer: this.apiServer,
 				defaultFilter: this.defaultFilter,
 				store: subsystemsStore,
@@ -190,16 +184,10 @@ define([
 
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
-					// this.state.hashParams.filter = "false";
-					// var newUrlHash = "view_tab=subsystems";//&filter=false";
-					// var href = "/view" + this.state.pathname + "#" + newUrlHash
-					// this.state.hash = newUrlHash;
-					// topic.publish("/navigate", {href: href});
-
+					//do nothing
 				} else {
 					page.set('state', this.state);
 				}
-
 			}));
 
 			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
@@ -208,47 +196,15 @@ define([
 
 			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
 
-
 				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
-
 				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
-				// var hrefParams = "filter=" + searchHashParam;
-				// var keyword;
-				// //prevent multiple filters from being added
-				// if (this.state.hashParams.filter != searchHashParam) {
-				// 	keyword = "view_tab=subsystems&" + hrefParams;
-				// } else {
-				// 	keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
-				// }
 
-				// var relativeHref = "/view" + this.state.pathname + "#" + keyword;
-				// var newState = lang.mixin(this.state, {'hash': keyword, 'href': relativeHref});
 				var newState = lang.mixin({}, this.state, {hashParams:
 					lang.mixin({}, {filter: searchHashParam})
 				});
 
-				// if (this.state.hashParams.filter != searchHashParam) {
-				// newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
-				//}
-
-				// newState.hashParams.filter = searchHashParam;
-				// newState.refreshFilter = true;
-
 				this.state = newState;
-				// this.subsystemsGrid.set('state', newState);
-				// this.genesGrid.set('state', newState)
-
-				// url update here
-				// topic.publish("/navigate", {href: relativeHref});
 				this.tabContainer.selectChild(this.subsystemsGrid);
-
-				// on.emit(this.subsystemsOverviewGrid, "UpdateHash", {
-				// 		bubbles: true,
-				// 		cancelable: true,
-				// 		hashProperty: "filter",
-				// 		value: searchHashParam,
-				// 		oldValue: searchHashParam
-				// 	});
 			}));
 
 			this._firstView = true;
