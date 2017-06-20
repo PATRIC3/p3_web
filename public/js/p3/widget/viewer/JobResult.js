@@ -65,74 +65,73 @@ define([
 				output.push(jobHeader + '<table style="width:90%" class="p3basic striped far2x" id="data-table"><tbody>');
 				var job_output = [];
 
-					// add extra metadata header lines
-					Object.keys(this._resultMetaTypes).forEach(function(metaType){
-						console.log("[JobResult] _resultMetaTypes:",metaType);
+				// add extra metadata header lines
+				Object.keys(this._resultMetaTypes).forEach(function(metaType){
+					console.log("[JobResult] _resultMetaTypes:",metaType);
 
-						// add additional types to bubble up to the header
-						if (metaType == 'genome') {
+					// add additional types to bubble up to the header
+					if (metaType == 'genome') {
 
-							var bubbleUpMeta;
-							this._resultObjects.some(function(o){
-								if(o.type == metaType){
-									bubbleUpMeta = o.autoMeta;
-									return true;
-								}
-								return false;
-							});
-
-							if (bubbleUpMeta) {
-								var subRecord = [];
-									Object.keys(this._autoLabels).forEach(function(prop){
-										console.log("[JobResult] _autoLabels:",prop);
-
-										//XXX the actual content isn't in autoMeta... have to find out why
-										if(!bubbleUpMeta[prop] || prop == "inspection_started"){
-												return;
-											}
-										var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
-										subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
-									}, this);
-
-								console.log("[JobResult] subRecord:",subRecord.join(","));
-								job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+						var bubbleUpMeta;
+						this._resultObjects.some(function(o){
+							if(o.type == metaType){
+								bubbleUpMeta = o.autoMeta;
+								return true;
 							}
+							return false;
+						});
+
+						if (bubbleUpMeta) {
+							var subRecord = [];
+								Object.keys(this._autoLabels).forEach(function(prop){
+									console.log("[JobResult] _autoLabels:",prop);
+
+									//XXX the actual content isn't in autoMeta... have to find out why
+									if(!bubbleUpMeta[prop] || prop == "inspection_started"){
+											return;
+										}
+									var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
+									subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
+								}, this);
+
+							console.log("[JobResult] subRecord:",subRecord.join(","));
+							job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
 						}
+					}
 
-					}, this);
+				}, this);
 
 
-					this._jobOrder.forEach(function(prop){
-						/*if (prop=="output_files") { return; }
-						if (prop=="app") { return; }
-						if (prop=="job_output") { return; }
-						if (prop=="hostname") { return; }*/
-						if(!this.data.autoMeta[prop]){
-							return;
-						}
+				this._jobOrder.forEach(function(prop){
+					/*if (prop=="output_files") { return; }
+					if (prop=="app") { return; }
+					if (prop=="job_output") { return; }
+					if (prop=="hostname") { return; }*/
+					if(!this.data.autoMeta[prop]){
+						return;
+					}
 
-						if(this._jobOut.hasOwnProperty(prop)){
-							//this._jobOut[prop]["value"]=this.data.autoMeta[prop];
-							var tableLabel = this._jobOut[prop].hasOwnProperty("label") ? this._jobOut[prop]["label"] : prop;
-							var tableValue = this._jobOut[prop].hasOwnProperty("format") ? this._jobOut[prop]["format"](this.data.autoMeta[prop]) : this.data.autoMeta[prop];
-							job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._jobOut[prop]["label"] + '</b></th><td class="last">' + tableValue + "</td></tr>");
-						}
-					}, this);
-				}
-
-				output.push.apply(output, job_output);
-				output.push("</tbody></table></div>");
-
-				if(this.data.userMeta){
-					Object.keys(this.data.userMeta).forEach(function(prop){
-						output.push("<div>" + prop + ": " + this.data.userMeta[prop] + "</div>");
-					}, this);
-				}
-
-				output.push("</div>");
-				this.viewHeader.set("content", output.join(""));
-				this.resize();
+					if(this._jobOut.hasOwnProperty(prop)){
+						//this._jobOut[prop]["value"]=this.data.autoMeta[prop];
+						var tableLabel = this._jobOut[prop].hasOwnProperty("label") ? this._jobOut[prop]["label"] : prop;
+						var tableValue = this._jobOut[prop].hasOwnProperty("format") ? this._jobOut[prop]["format"](this.data.autoMeta[prop]) : this.data.autoMeta[prop];
+						job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._jobOut[prop]["label"] + '</b></th><td class="last">' + tableValue + "</td></tr>");
+					}
+				}, this);
 			}
+
+			output.push.apply(output, job_output);
+			output.push("</tbody></table></div>");
+
+			if(this.data.userMeta){
+				Object.keys(this.data.userMeta).forEach(function(prop){
+					output.push("<div>" + prop + ": " + this.data.userMeta[prop] + "</div>");
+				}, this);
+			}
+
+			output.push("</div>");
+			this.viewHeader.set("content", output.join(""));
+			this.resize();
 		},
 		startup: function(){
 			if(this._started){
