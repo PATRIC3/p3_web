@@ -1,11 +1,11 @@
 define([
   "dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/Deferred",
   "dojo/dom-class", "dijit/layout/ContentPane", "dojo/dom-construct",
-  "dojo/_base/xhr", "dojo/_base/lang", "./PageGrid", "./formatter", "../store/SubsystemPieChartMemoryStore", "dojo/request",
+  "dojo/_base/xhr", "dojo/_base/lang", "./PageGrid", "./formatter", "../store/SubsystemsOverviewMemoryStore", "dojo/request",
   "dojo/aspect", "./GridSelector", "dojo/when", "d3/d3", "dojo/Stateful", "dojo/topic"
 ], function(declare, BorderContainer, on, Deferred,
       domClass, ContentPane, domConstruct,
-      xhr, lang, Grid, formatter, Store, request,
+      xhr, lang, Grid, formatter, SubsystemsOverviewMemoryStore, request,
       aspect, selector, when, d3, Stateful, Topic){
   return declare([Stateful], {
     store: null,
@@ -200,7 +200,7 @@ define([
         return this.store
       }
 
-      return new Store({
+      return new SubsystemsOverviewMemoryStore({
         token: window.App.authorizationToken,
         apiServer: window.App.dataServiceURL,
         state: this.state,

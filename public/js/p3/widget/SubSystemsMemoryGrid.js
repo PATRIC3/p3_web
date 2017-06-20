@@ -31,7 +31,7 @@ define([
 			patric_id: 			{label: "Patric ID", field: "patric_id"},
 			gene: 				{label: "Gene", field: "gene"},
 			product: 			{label: "Product", field: "product"}
-			
+
 		},
 
 		startup: function(){
@@ -107,8 +107,6 @@ define([
 			this.state = state;
 
 			if(ov != nv){
-				//console.log("New State in subsystems Memory Grid: ", nv);
-
 				if(!this.store){
 					this.set('store', this.createStore(this.apiServer, this.apiToken || window.App.authorizationToken, state));
 				}else{
@@ -119,12 +117,10 @@ define([
 			}else{
 				this.refresh()
 			}
-
 		},
 
 		refresh: function(){
 			this.inherited(arguments);
-
 		},
 
 		createStore: function(server, token, state){
