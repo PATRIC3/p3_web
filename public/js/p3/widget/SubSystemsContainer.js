@@ -1,5 +1,5 @@
 define([
-	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", "dojo/on", 
+	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", "dojo/on",
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
 	"../store/SubSystemMemoryStore", "../store/SubsystemPieChartMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsPieGraphContainer"
@@ -187,19 +187,19 @@ define([
 			this.tabContainer.addChild(this.subsystemsOverviewGrid);
 			this.tabContainer.addChild(this.subsystemsGrid);
 			this.tabContainer.addChild(this.genesGrid);
-			
+
 			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
-					this.state.hashParams.filter = "false";
-					var newUrlHash = "view_tab=subsystems&filter=false";
-					var href = "/view" + this.state.pathname + "#" + newUrlHash
-					this.state.hash = newUrlHash;
-					topic.publish("/navigate", {href: href});
+					// this.state.hashParams.filter = "false";
+					// var newUrlHash = "view_tab=subsystems";//&filter=false";
+					// var href = "/view" + this.state.pathname + "#" + newUrlHash
+					// this.state.hash = newUrlHash;
+					// topic.publish("/navigate", {href: href});
 
 				} else {
 					page.set('state', this.state);
 				}
-				
+
 			}));
 
 			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
@@ -207,43 +207,48 @@ define([
 			}));
 
 			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
-				
+
 
 				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
 
 				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
-				var hrefParams = "filter=" + searchHashParam;
-				var keyword;
-				//prevent multiple filters from being added
-				if (this.state.hashParams.filter != searchHashParam) {
-					keyword = "view_tab=subsystems&" + hrefParams;
-				} else {
-					keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
-				}
-				
-				var relativeHref = "/view" + this.state.pathname + "#" + keyword;
-				var newState = lang.mixin(this.state, {'hash': keyword, 'href': relativeHref});
+				// var hrefParams = "filter=" + searchHashParam;
+				// var keyword;
+				// //prevent multiple filters from being added
+				// if (this.state.hashParams.filter != searchHashParam) {
+				// 	keyword = "view_tab=subsystems&" + hrefParams;
+				// } else {
+				// 	keyword = "view_tab=subsystems&" + this.state.hashParams.filter;
+				// }
 
-				//if (this.state.hashParams.filter != searchHashParam) {
-				newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
-				//} 
+				// var relativeHref = "/view" + this.state.pathname + "#" + keyword;
+				// var newState = lang.mixin(this.state, {'hash': keyword, 'href': relativeHref});
+				var newState = lang.mixin({}, this.state, {hashParams:
+					lang.mixin({}, {filter: searchHashParam})
+				});
 
-				newState.hashParams.filter = searchHashParam;
-				newState.refreshFilter = true;
+				// if (this.state.hashParams.filter != searchHashParam) {
+				// newState.search =  "eq(genome_id," + newState.genome_id + ")," + searchHashParam;
+				//}
 
-				this.subsystemsGrid.set('state', newState);
+				// newState.hashParams.filter = searchHashParam;
+				// newState.refreshFilter = true;
 
-				// url update here 
-				topic.publish("/navigate", {href: relativeHref});
+				this.state = newState;
+				// this.subsystemsGrid.set('state', newState);
+				// this.genesGrid.set('state', newState)
+
+				// url update here
+				// topic.publish("/navigate", {href: relativeHref});
 				this.tabContainer.selectChild(this.subsystemsGrid);
 
-				on.emit(this.subsystemsOverviewGrid, "UpdateHash", {
-						bubbles: true,
-						cancelable: true,
-						hashProperty: "filter",
-						value: searchHashParam,
-						oldValue: searchHashParam
-					});
+				// on.emit(this.subsystemsOverviewGrid, "UpdateHash", {
+				// 		bubbles: true,
+				// 		cancelable: true,
+				// 		hashProperty: "filter",
+				// 		value: searchHashParam,
+				// 		oldValue: searchHashParam
+				// 	});
 			}));
 
 			this._firstView = true;

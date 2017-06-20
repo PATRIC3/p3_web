@@ -31,7 +31,7 @@ define([
 			patric_id: 			{label: "Patric ID", field: "patric_id"},
 			gene: 				{label: "Gene", field: "gene"},
 			product: 			{label: "Product", field: "product"}
-			
+
 		},
 
 		startup: function(){
@@ -86,6 +86,12 @@ define([
 		},
 
 		_setState: function(state){
+
+			// if(!state){
+			// 	return;
+			// }
+			// this.store.set('state', state);
+			// this.refresh();
 
 			var oldState = this.get('state');
 

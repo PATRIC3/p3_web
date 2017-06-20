@@ -19,7 +19,7 @@ define([
 		idProperty: "id",
 		apiServer: window.App.dataServiceURL,
 		state: null,
-		genome_ids: null, 
+		genome_ids: null,
 		type: "subsystem",
 		onSetState: function(attr, oldVal, state){
 
@@ -132,11 +132,11 @@ define([
 					q.push("in(genome_id,(" + this.state.genome_ids.map(encodeURIComponent).join(",") + "))");
 				}
 
-				if(this.state.hashParams && this.state.hashParams.filter){
-					if(this.state.hashParams.filter != "false"){
-						q.push(this.state.hashParams.filter);
-					}
-				}
+				// if(this.state.hashParams && this.state.hashParams.filter){
+				// 	if(this.state.hashParams.filter != "false"){
+				// 		q.push(this.state.hashParams.filter);
+				// 	}
+				// }
 				if(q.length < 1){
 					q = "";
 				}
@@ -198,7 +198,7 @@ define([
 
 				//flat queries return a different data format
 				if ( response && response.grouped && response.facets ) {
-					
+
 					//var ds = response.grouped[props[this.type]].doclist.docs;
 					var buckets = response.facets.stat.buckets;
 					//var map = {};
@@ -218,7 +218,7 @@ define([
 					// 		default:
 					// 			break;
 					// 	}
-					
+
 					// 	return doc;
 					// }, this);
 
@@ -228,7 +228,7 @@ define([
 
 
 				}
-				
+
 			}), lang.hitch(this, function(err){
 				console.error("Error Loading Data: ", err);
 				_self.setData([]);
@@ -239,6 +239,6 @@ define([
 			return this._loadingDeferred;
 		}
 
-		
+
 	})
 });

@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare", "./GridContainer", "dojo/on",
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
-	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin", 
+	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
 	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip"
 
 ], function(declare, GridContainer, on,
@@ -181,36 +181,36 @@ define([
 
 						case "subsystems":
 							headers = [
-									"Class", 
-									"Subclass", 
-									"Subsystem Id", 
+									"Class",
+									"Subclass",
+									"Subsystem Id",
 									"Subsystem Name",
 									"Genome Count",
 									"Gene Count",
 									"Role Count",
-									"Role ID", 
-									"Role Name", 
-									"Active",  
-									"Patric ID", 
-									"Gene", 
+									"Role ID",
+									"Role Name",
+									"Active",
+									"Patric ID",
+									"Gene",
 									"Product"
 								]
 
 							data.forEach(function(row){
 								content.push([
-									row['class'], 
-									JSON.stringify(row.subclass), 
-									row.subsystem_id, 
-									JSON.stringify(row.subsystem_name), 
+									row['class'],
+									JSON.stringify(row.subclass),
+									row.subsystem_id,
+									JSON.stringify(row.subsystem_name),
 									row.genome_count,
 									row.gene_count,
 									row.role_count,
 									row.role_id,
-									row.role_name, 
+									row.role_name,
 									row.active,
-									row.patric_id, 
+									row.patric_id,
 									row.gene,
-									row.product	
+									row.product
 								]);
 							});
 							filename = "PATRIC_subsystems";
@@ -218,35 +218,35 @@ define([
 
 						case "genes":
 							headers = [
-									"Class", 
-									"Subclass", 
-									"Subsystem Id", 
-									"Subsystem Name", 
-									"Role ID", 
-									"Role Name", 
-									"Active",  
-									"Patric ID", 
-									"Gene", 
+									"Class",
+									"Subclass",
+									"Subsystem Id",
+									"Subsystem Name",
+									"Role ID",
+									"Role Name",
+									"Active",
+									"Patric ID",
+									"Gene",
 									"Product"
 								]
 
 							data.forEach(function(row){
 								content.push([
-									row['class'], 
-									JSON.stringify(row.subclass), 
-									row.subsystem_id, 
-									JSON.stringify(row.subsystem_name), 
+									row['class'],
+									JSON.stringify(row.subclass),
+									row.subsystem_id,
+									JSON.stringify(row.subsystem_name),
 									row.role_id,
-									row.role_name, 
+									row.role_name,
 									row.active,
-									row.patric_id, 
+									row.patric_id,
 									row.gene,
-									row.product	
+									row.product
 								]);
 							});
 							filename = "PATRIC_subsystems";
 							break;
-	
+
 						default:
 							break;
 					}
@@ -265,7 +265,7 @@ define([
 			]
 		]),
 		selectionActions: GridContainer.prototype.selectionActions.concat([
-			
+
 			[
 				"ViewFeatureItems",
 				"MultiButton fa icon-selection-FeatureList fa-2x",
@@ -310,12 +310,12 @@ define([
 								return x.feature_id;
 							}).join(",") + "))#view_tab=features", target: "blank"});
 						});
-					} 
+					}
 					//gene tab - selection has id already
 					else if (selection[0].document_type === "subsystems_gene") {
 						Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + selection[0].feature_id + "))#view_tab=features", target: "blank"});
 					}
-					
+
 				},
 				false
 			], [
@@ -421,9 +421,14 @@ define([
 			]
 
 		]),
-		_setState: function(state){
-			console.log("from _setState", state)
-		},
+		_setStateAttr: function(state){
+			this._set("state", state);
+			// console.log("from _setState", state)
+			this.filterPanel.set("state", lang.mixin({}, state));
+			if(this.grid){
+				this.grid.set("state", lang.mixin({}, state, {hashParams: lang.mixin({}, state.hashParams)}));
+			}
+		}/*,
 		onSetState: function(attr, oldState, state){
 			if(!state){
 				console.log("!state in grid container; return;")
@@ -435,18 +440,6 @@ define([
 				q.push(state.search);
 			}
 
-			// if (state.refreshFilter) {
-			// 	// on.emit(this.domNode, "UpdateHash", {
-			// 	// 	bubbles: true,
-			// 	// 	cancelable: true,
-			// 	// 	hashProperty: "filter",
-			// 	// 	value: newVal,
-			// 	// 	oldValue: oldVal
-			// 	// })
-			// 	this.filterPanel.set("state", state);
-			// }
-
-			// else 
 			if(state.hashParams && state.hashParams.filter && state.hashParams.filter == "false"){
 				//console.log("filter set to false, no filtering");
 
@@ -499,6 +492,6 @@ define([
 				this.grid.set("state", lang.mixin({}, state, {hashParams: lang.mixin({}, state.hashParams)}));
 			}
 
-		}
+		}*/
 	});
 });
