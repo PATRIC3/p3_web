@@ -459,6 +459,19 @@ define([
 				Topic.publish("/openDialog", {type: "CreateFolder", params: selection[0].path + selection[0].name});
 			}, true);
 
+			//XXX add new blue button actions here
+			this.browserHeader.addAction("ViewExperiment", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "View Experiment"
+			}, function(selection){
+				console.log("View Experiment: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				Topic.publish("/navigate", {href: "/view/TranscriptomicsExperiment/?&wsExpId=" + eid});
+
+			}, false);
+
 			var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><divi class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
 			var viewFASTATT = new TooltipDialog({
 				content: vfc, onMouseLeave: function(){
@@ -873,14 +886,15 @@ define([
 						if(obj && obj.autoMeta && obj.autoMeta.app){
 							var id = obj.autoMeta.app.id || obj.autoMeta.app;
 							switch(id){
+								// XXX redirect / route here
 								case "DifferentialExpression":
 									// console.log("Using Experiement Viewer");
-									d = "p3/widget/viewer/Experiment";
+									d = "p3/widget/viewer/DifferentialExpression";
 									break;
-								case "GenomeComparison":
-									// console.log("SeqComparison Viewer");
-									d = "p3/widget/viewer/SeqComparison";
-									break;
+								// case "GenomeComparison":
+								// 	// console.log("SeqComparison Viewer");
+								// 	d = "p3/widget/viewer/SeqComparison";
+								// 	break;
 								case "GenomeAnnotation":
 									// console.log("GenomeAnnotation Viewer");
 									d = "p3/widget/viewer/GenomeAnnotation";

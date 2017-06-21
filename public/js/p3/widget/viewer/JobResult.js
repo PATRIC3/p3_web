@@ -51,6 +51,9 @@ define([
 				this._appLabel = "Genome Assembly";
 			}
 		},
+		getExtraMetaDataForHeader: function(job_output){
+			return job_output;
+		},
 		refresh: function(){
 			console.log("[JobResult] refresh()");
 			if(this.data){
@@ -66,41 +69,7 @@ define([
 				var job_output = [];
 
 				// add extra metadata header lines
-				Object.keys(this._resultMetaTypes).forEach(function(metaType){
-					console.log("[JobResult] _resultMetaTypes:",metaType);
-
-					// add additional types to bubble up to the header
-					if (metaType == 'genome') {
-
-						var bubbleUpMeta;
-						this._resultObjects.some(function(o){
-							if(o.type == metaType){
-								bubbleUpMeta = o.autoMeta;
-								return true;
-							}
-							return false;
-						});
-
-						if (bubbleUpMeta) {
-							var subRecord = [];
-								Object.keys(this._autoLabels).forEach(function(prop){
-									console.log("[JobResult] _autoLabels:",prop);
-
-									//XXX the actual content isn't in autoMeta... have to find out why
-									if(!bubbleUpMeta[prop] || prop == "inspection_started"){
-											return;
-										}
-									var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
-									subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
-								}, this);
-
-							console.log("[JobResult] subRecord:",subRecord.join(","));
-							job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
-						}
-					}
-
-				}, this);
-
+				job_output = this.getExtraMetaDataForHeader(job_output)
 
 				this._jobOrder.forEach(function(prop){
 					/*if (prop=="output_files") { return; }

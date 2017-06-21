@@ -29,6 +29,42 @@ define([
 				"domain": {"label": "Domain"},
 				"genome_id": {"label": "Annotation ID"}
 			};
+		},
+		getExtraMetaDataForHeader: function(job_output){
+			Object.keys(this._resultMetaTypes).forEach(function(metaType){
+				console.log("[GenomeAnnotation] _resultMetaTypes:",metaType);
+
+				// add additional types to bubble up to the header
+				if (metaType == 'genome') {
+
+					var bubbleUpMeta;
+					this._resultObjects.some(function(o){
+						if(o.type == metaType){
+							bubbleUpMeta = o.autoMeta;
+							return true;
+						}
+						return false;
+					});
+
+					if (bubbleUpMeta) {
+						var subRecord = [];
+							Object.keys(this._autoLabels).forEach(function(prop){
+								console.log("[GenomeAnnotation] _autoLabels:",prop);
+								if(!bubbleUpMeta[prop] || prop == "inspection_started"){
+										return;
+									}
+								var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
+								subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
+							}, this);
+
+						console.log("[GenomeAnnotation] subRecord:",subRecord.join(","));
+						job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+					}
+				}
+
+			}, this);
+
+			return job_output;
 		}
 	});
 });
