@@ -460,8 +460,22 @@ define([
 			}, true);
 
 			//XXX add new blue button actions here
-			this.browserHeader.addAction("ViewExperiment", "fa icon-eye fa-2x", {
+			this.browserHeader.addAction("ViewExperimentSummary", "fa icon-eye fa-2x", {
 				label: "VIEW",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "View Experiment Summary"
+			}, function(selection){
+				console.log("View Experiment Summary: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				//XXX Need to direct this at a different widget vs URL
+				//panelCtor = window.App.getConstructor("p3/widget/viewer/Experiment")
+				Topic.publish("/navigate", {href: "/workspace/" + eid});
+
+			}, false);
+
+			this.browserHeader.addAction("ViewExperiment", "fa icon-experiments fa-2x", {
+				label: "EXP",
 				multiple: false,
 				validTypes: ["DifferentialExpression"],
 				tooltip: "View Experiment"

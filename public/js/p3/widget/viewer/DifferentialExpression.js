@@ -1,10 +1,14 @@
 define([
-	"dojo/_base/declare", "./JobResult"
-], function(declare, JobResult){
+	"dojo/_base/declare", "../../WorkspaceManager", "dojo/_base/lang",
+  "./Experiment", "./JobResult",
+], function(declare, WorkspaceManager, lang, Experiment, JobResult){
 	return declare([JobResult], {
 		containerType: "DifferentialExpression",
 		getExperimentId: function(){
 			return (this.data.path + this.data.name);
+		},
+    getExperimentName: function(){
+			return this.data.name;
 		},
 		setupResultType: function(){
 			console.log("[DifferentialExpression] setupResultType()");
@@ -24,65 +28,53 @@ define([
 				// add additional types to bubble up to the header
 				if (metaType == 'experiment') {
 
+          // get the paths for the files we want
+          var paths = []
           this._resultObjects.forEach(function(o){
             if(o.type == 'diffexp_experiment' || o.type == 'diffexp_sample'){
-              console.log("[DifferentialExpression] _resultObject:",o);
+              paths.push(o.path+o.name)
             }
 					});
+          console.log("[DifferentialExpression] paths:",paths);
 
-    			// var paths = this.data.autoMeta.output_files.filter(function(f){
-    			// 	console.log("[DifferentialExpression] Filtering f: ", f);
-    			// 	if(f instanceof Array){
-    			// 		var path = f[0];
-    			// 	}else{
-    			// 		path = f;
-    			// 	}
-    			// 	if(path.match("sample.json")){
-    			// 		return true
-    			// 	}
-    			// 	if(path.match("experiment.json")){
-    			// 		return true
-    			// 	}
-    			// 	return false;
-    			// }).map(function(f){
-    			// 	if(f instanceof Array){
-    			// 		return f[0];
-    			// 	}
-    			// 	return f;
-    			// });
-    			// paths.sort();
-          //
-    			// console.log("[DifferentialExpression] Experiment Sub Paths: ", paths);
-          //
-          // var bubbleUpMeta;
-          // Object.keys(this._resultObjects).forEach(function(o){
-          //   if(typeof o.data == 'string'){
-          //     o.data = JSON.parse(o.data);
-          //   }
-					// });
-          //
-    			// WorkspaceManager.getObjects(paths).then(lang.hitch(this, function(objs){
-    			// 	objs.forEach(function(obj){
-    			// 		if(typeof obj.data == 'string'){
-    			// 			obj.data = JSON.parse(obj.data);
-    			// 		}
-    			// 	});
-    			// 	var experiment = objs[0].data;
-    			// 	var samples = objs[1].data.sample;
-          //
-          //   bubbleUpMeta = {
-      		// 		"scientific_name": (experiment.organism || "Undefined"),
-          //     "pubmed_id": (experiment.pubmed || "Undefined"),
-      		// 		"genes": (experiment.geneTotal - experiment.genesMissed) + "/" + experiment.geneTotal,
-      		// 		"samples": experiment.samples
-      		// 	};
-          //
-    			// }));
+          // get the actual files and pull the data we want
+          WorkspaceManager.getObjects(paths).then(lang.hitch(this, function(objs){
+    				objs.forEach(function(obj){
+    					if(typeof obj.data == 'string'){
+    						obj.data = JSON.parse(obj.data);
+    					}
+    				});
+            this.experiment = objs[0].data;
+          }));
 
-				}
+          if (this.experiment) {
+            // put it in a nice format
+            bubbleUpMeta = {
+              "scientific_name": (this.experiment.organism || "Undefined"),
+              "pubmed_id": (this.experiment.pubmed || "Undefined"),
+              "genes": (this.experiment.geneTotal - this.experiment.genesMissed) + "/" + this.experiment.geneTotal,
+              "samples": this.experiment.samples
+            };
 
+            // create the lines for the table
+            var subRecord = [];
+            Object.keys(this._autoLabels).forEach(function(prop){
+              console.log("[DifferentialExpression] _autoLabels:",prop);
+              if(!bubbleUpMeta[prop] || prop == "inspection_started"){
+                  return;
+                }
+              var label = this._autoLabels.hasOwnProperty(prop) ? this._autoLabels[prop]["label"] : prop;
+              subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
+            }, this);
+
+            console.log("[DifferentialExpression] subRecord:",subRecord.join(","));
+            job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
+
+  				}
+        }
 			}, this);
 
+      console.log("[DifferentialExpression] job_output:",job_output);
 			return job_output;
 		}
 	});
