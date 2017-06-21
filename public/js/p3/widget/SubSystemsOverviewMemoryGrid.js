@@ -101,7 +101,7 @@ define([
 
       d3.select('#subsystemspiechart svg')
         .append("text")
-        .attr("x", width / 5)             
+        .attr("x", height / 2 + 100)             
         .attr("y", 50)
         .attr("text-anchor", "middle")
         .text(this.state.genome.genome_name);
