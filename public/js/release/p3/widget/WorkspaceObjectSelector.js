@@ -447,8 +447,10 @@ define("p3/widget/WorkspaceObjectSelector", [
 					owner: {
 						label: "Owner",
 						field: "owner_id",
-						className: "wsItemOwnerId",
-						formatter: formatter.baseUsername,
+						className: "wsItemCreationTime",
+						formatter: function(blah) {
+							return blah.split('@')[0];
+						},
 						hidden: false
 					},
 					creation_time: {

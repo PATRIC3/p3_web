@@ -102,7 +102,7 @@ define("p3/widget/viewer/Antibiotic", [
 
 			this.amrGenes = new SpecialtyGeneGridContainer({
 				title: "AMR Genes",
-				facetFields: ["source", "evidence", "classification", "antibiotics_class", "antibiotics"],
+				facetFields: ["property", "source", "evidence", "classification"],
 				id: this.viewer.id + "_" + "amrGenes"
 			});
 

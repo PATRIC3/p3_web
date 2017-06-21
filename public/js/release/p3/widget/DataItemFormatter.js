@@ -338,12 +338,6 @@ define("p3/widget/DataItemFormatter", [
 				name: 'Classification',
 				text: 'classification'
 			}, {
-				name: 'Antibiotics Class',
-				text: 'antibiotics_class'
-			}, {
-				name: 'Antibiotics',
-				text: 'antibiotics'
-			}, {
 				name: 'Assertion',
 				text: 'assertion'
 			}, {
