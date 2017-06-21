@@ -17,7 +17,7 @@ define([
     },
 
     // x + "Other" as aggregation of what is left over
-    subsystemMaxNumToDisplay: 5,
+    subsystemMaxNumToDisplay: 10,
 
     onSetState: function(attr, oldState, state){
 
@@ -81,12 +81,13 @@ define([
 
       var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
-      var width = 1100;
-      var height = 600;
+      var width = $( window ).width() * .85;
+      var height = $( window ).height() * .5;
+
       var radius = Math.min(width, height) / 2 - 50;
 
       var legendRectSize = 18;
-          var legendSpacing = 4;
+      var legendSpacing = 4;
 
       var color = d3.scale.category20();
 
@@ -100,7 +101,7 @@ define([
 
       d3.select('#subsystemspiechart svg')
         .append("text")
-        .attr("x", width / 2.75)             
+        .attr("x", width / 3.5)             
         .attr("y", 50)
         .attr("text-anchor", "middle")
         .text(this.state.genome.genome_name);
