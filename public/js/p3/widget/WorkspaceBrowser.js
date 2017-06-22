@@ -357,6 +357,18 @@ define([
 				}
 			});
 
+			this.browserHeader.addAction("ViewSeqComparison", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: ["GenomeComparison"],
+				tooltip: "View Genome Comparison"
+			}, function(selection){
+				console.log("View Genome Comparison: ", selection[0]);
+				var cname = self.actionPanel.currentContainerWidget.getComparisonName();
+				Topic.publish("/navigate", {href: "/view/SeqComparison/" + cname});
+
+			}, false);
+
 			this.browserHeader.addAction("SelectDownloadSeqComparison", "fa icon-download fa-2x", {
 				label: "DWNLD",
 				multiple: false,
@@ -459,7 +471,6 @@ define([
 				Topic.publish("/openDialog", {type: "CreateFolder", params: selection[0].path + selection[0].name});
 			}, true);
 
-			//XXX add new blue button actions here
 			this.browserHeader.addAction("ViewExperimentSummary", "fa icon-eye fa-2x", {
 				label: "VIEW",
 				multiple: false,
@@ -467,15 +478,13 @@ define([
 				tooltip: "View Experiment Summary"
 			}, function(selection){
 				console.log("View Experiment Summary: ", selection[0]);
-				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
-				//XXX Need to direct this at a different widget vs URL
-				//panelCtor = window.App.getConstructor("p3/widget/viewer/Experiment")
-				Topic.publish("/navigate", {href: "/workspace/" + eid});
+				var ename = self.actionPanel.currentContainerWidget.getExperimentName();
+				Topic.publish("/navigate", {href: "/view/Experiment/" + ename});
 
 			}, false);
 
 			this.browserHeader.addAction("ViewExperiment", "fa icon-experiments fa-2x", {
-				label: "EXP",
+				label: "EXPRMNT",
 				multiple: false,
 				validTypes: ["DifferentialExpression"],
 				tooltip: "View Experiment"
@@ -900,17 +909,13 @@ define([
 						if(obj && obj.autoMeta && obj.autoMeta.app){
 							var id = obj.autoMeta.app.id || obj.autoMeta.app;
 							switch(id){
-								// XXX redirect / route here
 								case "DifferentialExpression":
-									// console.log("Using Experiement Viewer");
 									d = "p3/widget/viewer/DifferentialExpression";
 									break;
-								// case "GenomeComparison":
-								// 	// console.log("SeqComparison Viewer");
-								// 	d = "p3/widget/viewer/SeqComparison";
-								// 	break;
+								case "GenomeComparison":
+									d = "p3/widget/viewer/GenomeComparison";
+									break;
 								case "GenomeAnnotation":
-									// console.log("GenomeAnnotation Viewer");
 									d = "p3/widget/viewer/GenomeAnnotation";
 									break;
 							}
