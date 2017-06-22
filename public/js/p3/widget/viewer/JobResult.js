@@ -48,9 +48,13 @@ define([
 			console.log("[JobResult] setupResultType()");
 			if(this.data.autoMeta.app.id){
 				this._resultType = this.data.autoMeta.app.id;
+				console.log("[JobResult] _resultType:",this._resultType);
 			}
 			if(this._resultType == "GenomeAssembly"){
 				this._appLabel = "Genome Assembly";
+			}
+			else{
+				this._appLabel = this._resultType;
 			}
 		},
 		getExtraMetaDataForHeader: function(job_output){
