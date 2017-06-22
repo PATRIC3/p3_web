@@ -11,6 +11,12 @@ define([
 		"query": null,
 		data: null,
 		containerType: "experiment",
+		getExperimentId: function(){
+			return (this.data.path + this.data.name);
+		},
+		isSummaryView: function(){
+			return true;
+		},
 		_setDataAttr: function(data){
 			this.data = data;
 			var paths = this.data.autoMeta.output_files.filter(function(f){

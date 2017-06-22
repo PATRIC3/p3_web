@@ -361,12 +361,16 @@ define([
 				label: "VIEW",
 				multiple: false,
 				validTypes: ["GenomeComparison"],
-				tooltip: "View Genome Comparison"
+				tooltip: "Toggle Summary View"
 			}, function(selection){
 				console.log("View Genome Comparison: ", selection[0]);
-				var cname = self.actionPanel.currentContainerWidget.getComparisonName();
-				Topic.publish("/navigate", {href: "/view/SeqComparison/" + cname});
-
+				console.log("currentContainerWidget: ", typeof self.actionPanel.currentContainerWidget);
+				var cid = self.actionPanel.currentContainerWidget.getComparisonId();
+				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
+					Topic.publish("/navigate", {href: "/workspace" + cid});
+				} else {
+					Topic.publish("/navigate", {href: "/workspace" + cid + "#summary"});
+				}
 			}, false);
 
 			this.browserHeader.addAction("SelectDownloadSeqComparison", "fa icon-download fa-2x", {
@@ -475,12 +479,15 @@ define([
 				label: "VIEW",
 				multiple: false,
 				validTypes: ["DifferentialExpression"],
-				tooltip: "View Experiment Summary"
+				tooltip: "Toggle Summary View"
 			}, function(selection){
 				console.log("View Experiment Summary: ", selection[0]);
-				var ename = self.actionPanel.currentContainerWidget.getExperimentName();
-				Topic.publish("/navigate", {href: "/view/Experiment/" + ename});
-
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
+					Topic.publish("/navigate", {href: "/workspace" + eid});
+				} else {
+					Topic.publish("/navigate", {href: "/workspace" + eid + "#summary"});
+				}
 			}, false);
 
 			this.browserHeader.addAction("ViewExperiment", "fa icon-experiments fa-2x", {
@@ -859,12 +866,23 @@ define([
 
 		_setPathAttr: function(val){
 			// console.log("WorkspaceBrowser setPath()", val)
+
+			// extract extra URL parameters
+			var components = val.split("#");
+			val = components[0];
 			this.path = decodeURIComponent(val);
+			var uriParams = [];
+			if (components[1]) {
+				uriParams = decodeURIComponent(components[1]);
+			}
+			//console.log("[WorkspaceBrowser] uriParams:",uriParams)
+
 			var parts = this.path.split("/").filter(function(x){
 				return x != "";
 			}).map(function(c){
 				return decodeURIComponent(c)
 			});
+			//console.log("[WorkspaceBrowser] parts:",parts)
 			var workspace = parts[0] + "/" + parts[1];
 			var obj;
 
@@ -910,17 +928,24 @@ define([
 							var id = obj.autoMeta.app.id || obj.autoMeta.app;
 							switch(id){
 								case "DifferentialExpression":
-									d = "p3/widget/viewer/DifferentialExpression";
+									if (uriParams === "summary") {
+										d = "p3/widget/viewer/Experiment"
+									} else {
+										d = "p3/widget/viewer/DifferentialExpression";
+									}
 									break;
 								case "GenomeComparison":
+								if (uriParams === "summary") {
+									d = "p3/widget/viewer/SeqComparison"
+								} else {
 									d = "p3/widget/viewer/GenomeComparison";
+								}
 									break;
 								case "GenomeAnnotation":
 									d = "p3/widget/viewer/GenomeAnnotation";
 									break;
 							}
 						}
-						// console.log("LOAD VIEWER: ", d, params);
 						panelCtor = window.App.getConstructor(d);
 						params.data = obj;
 						//params.query="?&in(feature_id,FeatureGroup("+encodeURIComponent(this.path)+"))";

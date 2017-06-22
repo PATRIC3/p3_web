@@ -40,7 +40,9 @@ define([
 				this.setupResultType();
 				this.refresh();
 			}));
-
+		},
+		isSummaryView: function(){
+			return false;
 		},
 		setupResultType: function(){
 			console.log("[JobResult] setupResultType()");

@@ -24,6 +24,12 @@ define([
 		_appLabel: "",
 		_resultMetaTypes: {},
 		_autoLabels: {},
+		getComparisonId: function(){
+			return (this.data.path + this.data.name);
+		},
+		isSummaryView: function(){
+			return true;
+		},
 		_setDataAttr: function(data){
 			this.data = data;
 			console.log("job result viewer data: ", data);

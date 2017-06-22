@@ -3,6 +3,9 @@ define([
 ], function(declare, JobResult){
 	return declare([JobResult], {
 		containerType: "GenomeComparison",
+    getComparisonId: function(){
+			return (this.data.path + this.data.name);
+		},
     getComparisonName: function(){
 			return this.data.name;
 		},
