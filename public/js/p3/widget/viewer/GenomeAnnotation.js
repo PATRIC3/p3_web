@@ -7,9 +7,9 @@ define([
 			var id;
 			this._resultObjects.some(function(o){
 				if(o.type == "genome"){
-					console.log("[GenomeAnnotation] Genome Object: ", o);
+					// console.log("[GenomeAnnotation] Genome Object: ", o);
 					id = o.autoMeta.genome_id;
-					console.log("[GenomeAnnotation] Id: ", id);
+					// console.log("[GenomeAnnotation] Id: ", id);
 					return true;
 				}
 				return false;
@@ -20,7 +20,7 @@ define([
 			throw Error("Missing ID");
 		},
 		setupResultType: function(){
-			console.log("[GenomeAnnotation] setupResultType()");
+			// console.log("[GenomeAnnotation] setupResultType()");
 			this._resultMetaTypes = {"genome": {"label": "Genome"}};
 			this._appLabel = "Genome Annotation";
 			this._autoLabels = {
@@ -32,7 +32,7 @@ define([
 		},
 		getExtraMetaDataForHeader: function(job_output){
 			Object.keys(this._resultMetaTypes).forEach(function(metaType){
-				console.log("[GenomeAnnotation] _resultMetaTypes:",metaType);
+				// console.log("[GenomeAnnotation] _resultMetaTypes:",metaType);
 
 				// add additional types to bubble up to the header
 				if (metaType == 'genome') {
@@ -49,7 +49,7 @@ define([
 					if (bubbleUpMeta) {
 						var subRecord = [];
 						Object.keys(this._autoLabels).forEach(function(prop){
-							console.log("[GenomeAnnotation] _autoLabels:",prop);
+							// console.log("[GenomeAnnotation] _autoLabels:",prop);
 							if(!bubbleUpMeta[prop] || prop == "inspection_started"){
 									return;
 								}
@@ -57,7 +57,7 @@ define([
 							subRecord.push(label + " (" + bubbleUpMeta[prop] + ")");
 						}, this);
 
-						console.log("[GenomeAnnotation] subRecord:",subRecord.join(","));
+						// console.log("[GenomeAnnotation] subRecord:",subRecord.join(","));
 						job_output.push('<tr class="alt"><th scope="row" style="width:20%"><b>' + this._resultMetaTypes[metaType]["label"] + '</b></th><td class="last">' + subRecord.join(", ") + "</td></tr>");
 					}
 				}

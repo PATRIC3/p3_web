@@ -20,7 +20,7 @@ define([
 		_setDataAttr: function(data){
 			this.data = data;
 			var paths = this.data.autoMeta.output_files.filter(function(f){
-				console.log("Filtering f: ", f);
+				// console.log("Filtering f: ", f);
 				if(f instanceof Array){
 					var path = f[0];
 				}else{
@@ -41,7 +41,7 @@ define([
 			});
 			paths.sort();
 
-			console.log("Experiment Sub Paths: ", paths);
+			// console.log("Experiment Sub Paths: ", paths);
 
 			WorkspaceManager.getObjects(paths).then(lang.hitch(this, function(objs){
 				objs.forEach(function(obj){
@@ -52,7 +52,7 @@ define([
 				this.experiment = objs[0].data;
 				this.samples = objs[1].data.sample;
 				//	this.samples.forEach(function(s){ s.type="experiment_sample" });
-				console.log("Got sample Data: ", objs[1]);
+				ProteomeComparison("Got sample Data: ", objs[1]);
 				var content = ["Platform Organism: " + (this.experiment.organism || "Undefined") + " Pubmed ID: " + (this.experiment.pubmed || "Undefined") + " <br>"];
 				content.push("Genes Mapped/Genes Total: " + (this.experiment.geneTotal - this.experiment.genesMissed) + "/" + this.experiment.geneTotal + " Samples: " + this.experiment.samples + "<br>");
 				content.push(this.experiment.description);

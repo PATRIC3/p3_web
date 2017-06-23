@@ -26,17 +26,17 @@ define([
 		_autoLabels: {},
 		_setDataAttr: function(data){
 			this.data = data;
-			console.log("[JobResult] data: ", data);
+			// console.log("[JobResult] data: ", data);
 			this._hiddenPath = data.path + "." + data.name;
-			console.log("[JobResult] Output Files: ", this.data.autoMeta.output_files);
+			// console.log("[JobResult] Output Files: ", this.data.autoMeta.output_files);
 			var paths = this.data.autoMeta.output_files.map(function(o){
 				return o[0];
 			});
 
-			console.log("[JobResult] getObjects(): ", paths);
+			// console.log("[JobResult] getObjects(): ", paths);
 			WorkspaceManager.getObjects(paths, true).then(lang.hitch(this, function(objs){
 				this._resultObjects = objs;
-				console.log("[JobResult] got objects: ", objs);
+				// console.log("[JobResult] got objects: ", objs);
 				this.setupResultType();
 				this.refresh();
 			}));
@@ -45,10 +45,10 @@ define([
 			return false;
 		},
 		setupResultType: function(){
-			console.log("[JobResult] setupResultType()");
+			// console.log("[JobResult] setupResultType()");
 			if(this.data.autoMeta.app.id){
 				this._resultType = this.data.autoMeta.app.id;
-				console.log("[JobResult] _resultType:",this._resultType);
+				// console.log("[JobResult] _resultType:",this._resultType);
 			}
 			if(this._resultType == "GenomeAssembly"){
 				this._appLabel = "Genome Assembly";
@@ -61,7 +61,7 @@ define([
 			return job_output;
 		},
 		refresh: function(){
-			console.log("[JobResult] refresh()");
+			// console.log("[JobResult] refresh()");
 			if(this.data){
 				var jobHeader = '<div style="width:100%"><div style="width:100%;" ><h3 style="color:#888;font-size:1.3em;font-weight:normal;" class="normal-case close2x"><span style="" class="wrap">';
 				if(this.data.autoMeta && this.data.autoMeta.app){
@@ -116,7 +116,7 @@ define([
 			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;"});
 			//this.viewer= new ContentPane({content: "", region: "center"});
 			this.viewer = new WorkspaceExplorerView({region: "center", path: this._hiddenPath});
-			console.log("[JobResult] WSV: ", this.viewer);
+			// console.log("[JobResult] WSV: ", this.viewer);
 			this.addChild(this.viewHeader);
 			this.addChild(this.viewer);
 

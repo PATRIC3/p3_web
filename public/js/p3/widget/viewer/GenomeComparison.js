@@ -10,7 +10,7 @@ define([
 			return this.data.name;
 		},
 		setupResultType: function(){
-			console.log("[GenomeComparison] setupResultType()");
+			// console.log("[GenomeComparison] setupResultType()");
 			this._resultMetaTypes = {};
 			this._appLabel = "Proteome Comparison";
 			this._autoLabels = {};

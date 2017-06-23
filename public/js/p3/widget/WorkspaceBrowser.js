@@ -363,8 +363,8 @@ define([
 				validTypes: ["GenomeComparison"],
 				tooltip: "Toggle Summary View"
 			}, function(selection){
-				console.log("View Genome Comparison: ", selection[0]);
-				console.log("currentContainerWidget: ", typeof self.actionPanel.currentContainerWidget);
+				// console.log("View Genome Comparison: ", selection[0]);
+				// console.log("currentContainerWidget: ", typeof self.actionPanel.currentContainerWidget);
 				var cid = self.actionPanel.currentContainerWidget.getComparisonId();
 				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
 					Topic.publish("/navigate", {href: "/workspace" + cid});
@@ -496,7 +496,7 @@ define([
 				validTypes: ["DifferentialExpression"],
 				tooltip: "View Experiment"
 			}, function(selection){
-				console.log("View Experiment: ", selection[0]);
+				// console.log("View Experiment: ", selection[0]);
 				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
 				Topic.publish("/navigate", {href: "/view/TranscriptomicsExperiment/?&wsExpId=" + eid});
 

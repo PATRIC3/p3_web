@@ -10,7 +10,7 @@ define([
 			return this.data.name;
 		},
 		setupResultType: function(){
-			console.log("[DifferentialExpression] setupResultType()");
+			// console.log("[DifferentialExpression] setupResultType()");
 			this._resultMetaTypes = {"experiment": {"label": "Experiment"}};
 			this._appLabel = "Differential Expression";
 			this._autoLabels = {};
