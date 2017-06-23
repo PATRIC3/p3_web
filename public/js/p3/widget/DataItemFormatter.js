@@ -1361,7 +1361,7 @@ define([
 						name: 'Isolation Source',
 						text: 'isolation_source',
 						editable: true,
-						type: 'textarea',
+						type: 'textarea'
 					}, {
 						name: 'Isolation Comments',
 						text: 'isolation_comments',
