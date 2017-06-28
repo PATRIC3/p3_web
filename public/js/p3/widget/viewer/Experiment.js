@@ -52,7 +52,7 @@ define([
 				this.experiment = objs[0].data;
 				this.samples = objs[1].data.sample;
 				//	this.samples.forEach(function(s){ s.type="experiment_sample" });
-				ProteomeComparison("Got sample Data: ", objs[1]);
+				console.log("Got sample Data: ", objs[1]);
 				var content = ["Platform Organism: " + (this.experiment.organism || "Undefined") + " Pubmed ID: " + (this.experiment.pubmed || "Undefined") + " <br>"];
 				content.push("Genes Mapped/Genes Total: " + (this.experiment.geneTotal - this.experiment.genesMissed) + "/" + this.experiment.geneTotal + " Samples: " + this.experiment.samples + "<br>");
 				content.push(this.experiment.description);

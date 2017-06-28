@@ -935,11 +935,11 @@ define([
 									}
 									break;
 								case "GenomeComparison":
-								if (uriParams === "summary") {
-									d = "p3/widget/viewer/SeqComparison"
-								} else {
-									d = "p3/widget/viewer/GenomeComparison";
-								}
+									if (uriParams === "summary") {
+										d = "p3/widget/viewer/SeqComparison"
+									} else {
+										d = "p3/widget/viewer/GenomeComparison";
+									}
 									break;
 								case "GenomeAnnotation":
 									d = "p3/widget/viewer/GenomeAnnotation";
