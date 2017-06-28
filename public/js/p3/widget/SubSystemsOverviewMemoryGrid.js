@@ -17,7 +17,7 @@ define([
     },
 
     // x + "Other" as aggregation of what is left over
-    subsystemMaxNumToDisplay: 10,
+    subsystemMaxNumToDisplay: 19,
 
     onSetState: function(attr, oldState, state){
 
@@ -79,10 +79,20 @@ define([
 
       var that = this;
 
+      var titleText; 
+
+      if (this.state.genome) {
+        titleText = this.state.genome.genome_name
+      } else if (this.state.taxonomy) {
+        titleText = this.state.taxonomy.taxon_name
+      } else {
+        titleText = "";
+      }
+
       var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
       var width = $( window ).width() * .85;
-      var height = $( window ).height() * .5;
+      var height = $( window ).height() * .6;
 
       var radius = Math.min(width, height) / 2 - 50;
 
@@ -104,7 +114,7 @@ define([
         .attr("x", height / 2 + 100)             
         .attr("y", 50)
         .attr("text-anchor", "middle")
-        .text(this.state.genome.genome_name);
+        .text(titleText);
 
       var arc = d3.svg.arc()
         .innerRadius(0)
