@@ -113,7 +113,7 @@ define([
 				return;
 			}
 			this.inherited(arguments);
-			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;"});
+			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;height:30%;"});
 			//this.viewer= new ContentPane({content: "", region: "center"});
 			this.viewer = new WorkspaceExplorerView({region: "center", path: this._hiddenPath});
 			// console.log("[JobResult] WSV: ", this.viewer);
