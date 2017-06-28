@@ -1,7 +1,7 @@
 define([
 	"dojo/_base/declare", "./_GenomeList", "dojo/on",
 	"dojo/dom-class", "dijit/layout/ContentPane", "dojo/dom-construct",
-	"../GenomeOverview", "../SubSystemsContainer",
+	"../GenomeOverview",
 	"dojo/request", "dojo/_base/lang", "../FeatureGridContainer", "../SpecialtyGeneGridContainer",
 	"../ActionBar", "../ContainerActionBar", "../PathwaysContainer", "../ProteinFamiliesContainer",
 	"../DiseaseContainer", "../PublicationGridContainer", "../CircularViewerContainer",
@@ -9,7 +9,7 @@ define([
 	"../TaxonomyTreeGridContainer", "../TaxonomyOverview", "dojo/topic", "../../util/QueryToEnglish"
 ], function(declare, GenomeList, on,
 			domClass, ContentPane, domConstruct,
-			GenomeOverview, SubSystemsContainer,
+			GenomeOverview,
 			xhr, lang, FeatureGridContainer, SpecialtyGeneGridContainer,
 			ActionBar, ContainerActionBar, PathwaysContainer, ProteinFamiliesContainer,
 			DiseaseContainer, PublicationGridContainer, CircularViewerContainer,
@@ -37,15 +37,8 @@ define([
 				state: this.state
 			});
 
-			this.subsystems = new SubSystemsContainer({
-				title: "Subsystems",
-				id: this.viewer.id + "_" + "subsystems"
-			});
-
-
 			this.viewer.addChild(this.phylogeny, 1);
 			this.viewer.addChild(this.taxontree, 2);
-			this.viewer.addChild(this.subsystems, 10);
 
 			this.watch("taxonomy", lang.hitch(this, "onSetTaxonomy"));
 		},
