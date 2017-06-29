@@ -490,7 +490,7 @@ define([
 				}
 			}, false);
 
-			this.browserHeader.addAction("ViewExperiment", "fa icon-experiments fa-2x", {
+			this.browserHeader.addAction("ViewExperiment", "fa icon-selection-Experiment fa-2x", {
 				label: "EXPRMNT",
 				multiple: false,
 				validTypes: ["DifferentialExpression"],
