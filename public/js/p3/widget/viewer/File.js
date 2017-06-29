@@ -65,6 +65,10 @@ define([
 					content += ' <i class="fa icon-download pull-left fa-2x" rel="' + this.filepath + '"></i>';
 				}
 
+				if(WS.viewableTypes.indexOf(fileMeta.type) >= 0){
+					content += ' <i class="fa icon-eye pull-left fa-2x" rel="' + this.filepath + '"></i>';
+				}
+
 				var formatLabels = formatter.autoLabel("fileView", fileMeta);
 				content += formatter.keyValueTable(formatLabels);
 				content += "</tbody></table></div>";
@@ -83,6 +87,8 @@ define([
 				return;
 			}
 
+			console.log('[File] file:', this.file);
+
 			if(!this.file.data && this.file.metadata.size && (this.file.metadata.size > 1000000)){
 				var content = this.formatFileMetaData();
 				this.file.data = 'Unloaded Content';
@@ -96,6 +102,7 @@ define([
 			}
 
 			if(this.file && this.file.metadata){
+
 				if(this.file.metadata.type == "unspecified"){
 
 					if(this.file.metadata.name.match(/\.json/)){

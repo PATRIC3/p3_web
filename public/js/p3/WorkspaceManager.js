@@ -19,6 +19,7 @@ define([
 			"genbank_file", "gff", "feature_protein_fasta", "feature_dna_fasta",
 			"feature_table", "genome", "bam", "diffexp_input_data", "wig",
 			"genome_comparison_table", "html", "svg"],
+		viewableTypes: ["txt", "html", "pdf", "string"],
 
 		getDefaultFolder: function(type){
 			switch(type){

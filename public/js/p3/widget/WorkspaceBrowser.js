@@ -18,7 +18,9 @@ define([
 		disabled: false,
 		path: "/",
 		gutters: false,
-		navigableTypes: ["parentfolder", "folder", "job_result", "experiment_group", "experiment", "unspecified", "contigs", "reads", "model"],
+		navigableTypes: ["parentfolder", "folder", "job_result", "experiment_group",
+			"experiment", "unspecified", "contigs", "reads", "model", "txt", "html",
+			"pdf", "string"],
 		design: "sidebar",
 		splitter: false,
 		startup: function(){
@@ -356,6 +358,16 @@ define([
 					popup.close(downloadTTSelect);
 				}
 			});
+
+			this.actionPanel.addAction("ViewItem", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: WorkspaceManager.viewableTypes,
+				tooltip: "View in Browser"
+			}, function(selection){
+				console.log("[WorkspaceBrowser] View Item Action", selection);
+				Topic.publish("/navigate", {href: "/workspace" + selection[0].path});
+			}, false);
 
 			this.browserHeader.addAction("ViewSeqComparison", "fa icon-eye fa-2x", {
 				label: "VIEW",
