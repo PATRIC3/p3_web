@@ -20,6 +20,7 @@ define([
 			"feature_table", "genome", "bam", "diffexp_input_data", "wig",
 			"genome_comparison_table", "html", "svg"],
 		viewableTypes: ["txt", "html", "pdf", "string"],
+		//XXX should we go with viewableExtensions?  .tar.gz files are sometimes 'string'... i think we should fix that instead
 
 		getDefaultFolder: function(type){
 			switch(type){
@@ -366,6 +367,8 @@ define([
 				if(!results || !results[0] || !results[0][0] || !results[0][0][0] || !results[0][0][0][4]){
 					throw new Error("Object not found: ");
 				}
+
+				console.log('[WorkspaceManager] results:', results);
 				// console.log("results[0]", results[0]);
 				var meta = {
 					name: results[0][0][0][0],
@@ -389,6 +392,29 @@ define([
 					metadata: meta,
 					data: results[0][0][1]
 				};
+
+				if(meta.link_reference){
+					var headers = {
+						"X-Requested-With": null
+					};
+					if(window.App.authorizationToken){
+						headers.Authorization = "OAuth " + window.App.authorizationToken;
+					}
+
+					var d = xhr.get(meta.link_reference + "?download", {
+						headers: headers
+					});
+
+					return Deferred.when(d, function(data){
+						return {
+							metadata: meta,
+							data: data
+						}
+					}, function(err){
+						console.error("Error Retrieving data object from shock :", err, meta.link_reference);
+					});
+				}
+
 				// console.log("getObjects() res", res);
 				return res;
 			});

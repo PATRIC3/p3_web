@@ -65,10 +65,6 @@ define([
 					content += ' <i class="fa icon-download pull-left fa-2x" rel="' + this.filepath + '"></i>';
 				}
 
-				if(WS.viewableTypes.indexOf(fileMeta.type) >= 0){
-					content += ' <i class="fa icon-eye pull-left fa-2x" rel="' + this.filepath + '"></i>';
-				}
-
 				var formatLabels = formatter.autoLabel("fileView", fileMeta);
 				content += formatter.keyValueTable(formatLabels);
 				content += "</tbody></table></div>";
@@ -88,42 +84,28 @@ define([
 			}
 
 			console.log('[File] file:', this.file);
+			var viewable = false;
+			if(WS.viewableTypes.indexOf(this.file.metadata.type) >= 0 && this.file.metadata.name.match(/\.txt/))){
+				viewable = true;
+			}
+			console.log('[File] viewable?:', viewable);
 
-			if(!this.file.data && this.file.metadata.size && (this.file.metadata.size > 1000000)){
-				var content = this.formatFileMetaData();
-				this.file.data = 'Unloaded Content';
-				this.viewer.set('content', content);
-				return;
-			}else if(!this.file.data){
+			if(!this.file.data && viewable){
 				this.viewer.set("Content", "<div>Loading file content...</div>");
 				return Deferred.when(WS.getObject(this.filepath, false), function(obj){
+					console.log('[File] obj:', obj);
 					_self.set("file", obj);
 				});
 			}
 
 			if(this.file && this.file.metadata){
-
-				if(this.file.metadata.type == "unspecified"){
-
-					if(this.file.metadata.name.match(/\.json/)){
-
-						if(typeof this.file.data != "string"){
-							this.file.data = JSON.stringify(this.file.data, null, 4);
-						}else{
-							this.file.data = JSON.stringify(JSON.parse(this.file.data), null, 4)
-						}
-
-						this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
-						return;
-					}
-					if(this.file.metadata.name.match(/\.txt/)){
-
-						this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
-						return;
-					}
+				if (viewable) {
+					//this.viewer.set('content', this.formatFileMetaData() + "<pre>" + this.file.data + "</pre>");
+					this.viewer.set('content', this.formatFileMetaData());
+					this.viewer.addChild(new ContentPane({content: "<pre>" + this.file.data + "</pre>", region: "center"}));
+				} else {
+					this.viewer.set('content', this.formatFileMetaData());
 				}
-				this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
-
 			}
 		}
 	});
