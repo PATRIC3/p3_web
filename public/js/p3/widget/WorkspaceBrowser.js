@@ -366,7 +366,7 @@ define([
 				validTypes: WorkspaceManager.viewableTypes,
 				tooltip: "View in Browser"
 			}, function(selection){
-				console.log("[WorkspaceBrowser] View Item Action", selection);
+				//console.log("[WorkspaceBrowser] View Item Action", selection);
 				Topic.publish("/navigate", {href: "/workspace" + selection[0].path});
 			}, false);
 
@@ -504,36 +504,6 @@ define([
 				else
 					domAttr.set(text, "textContent", "SHOW HIDDEN");
 
-<<<<<<< HEAD
-			this.browserHeader.addAction("ViewExperimentSummary", "fa icon-eye fa-2x", {
-				label: "VIEW",
-				multiple: false,
-				validTypes: ["DifferentialExpression"],
-				tooltip: "Toggle Summary View"
-			}, function(selection){
-				console.log("View Experiment Summary: ", selection[0]);
-				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
-				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
-					Topic.publish("/navigate", {href: "/workspace" + eid});
-				} else {
-					Topic.publish("/navigate", {href: "/workspace" + eid + "#summary"});
-				}
-			}, false);
-
-			this.browserHeader.addAction("ViewExperiment", "fa icon-selection-Experiment fa-2x", {
-				label: "EXPRMNT",
-				multiple: false,
-				validTypes: ["DifferentialExpression"],
-				tooltip: "View Experiment"
-			}, function(selection){
-				// console.log("View Experiment: ", selection[0]);
-				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
-				Topic.publish("/navigate", {href: "/view/TranscriptomicsExperiment/?&wsExpId=" + eid});
-
-			}, false);
-
-			var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><divi class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
-=======
 				Topic.publish("/refreshWorkspace", {});
 			}, self.path.split('/').length > 3);
 
@@ -550,7 +520,7 @@ define([
 
 			var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div>'+
 					  '<div class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
->>>>>>> upstream/preview
+
 			var viewFASTATT = new TooltipDialog({
 				content: vfc, onMouseLeave: function(){
 					popup.close(viewFASTATT);
@@ -569,6 +539,34 @@ define([
 
 				Topic.publish("/navigate", {href: "/view/FASTA/" + rel + "/?in(" + idType + ",(" + ids.map(encodeURIComponent).join(",") + "))"});
 			});
+
+			this.actionPanel.addAction("ViewExperimentSummary", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "Toggle Summary View"
+			}, function(selection){
+				console.log("View Experiment Summary: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
+					Topic.publish("/navigate", {href: "/workspace" + eid});
+				} else {
+					Topic.publish("/navigate", {href: "/workspace" + eid + "#summary"});
+				}
+			}, false);
+
+			this.actionPanel.addAction("ViewExperiment", "fa icon-selection-Experiment fa-2x", {
+				label: "EXPRMNT",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "View Experiment"
+			}, function(selection){
+				// console.log("View Experiment: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				Topic.publish("/navigate", {href: "/view/TranscriptomicsExperiment/?&wsExpId=" + eid});
+
+			}, false);
+
 
 			this.actionPanel.addAction("ViewFASTA", "fa icon-fasta fa-2x", {
 				label: "FASTA",
