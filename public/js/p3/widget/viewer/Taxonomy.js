@@ -36,6 +36,7 @@ define([
 				id: this.viewer.id + "_" + "taxontree",
 				state: this.state
 			});
+
 			this.viewer.addChild(this.phylogeny, 1);
 			this.viewer.addChild(this.taxontree, 2);
 

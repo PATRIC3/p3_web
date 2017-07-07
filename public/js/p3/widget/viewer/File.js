@@ -21,7 +21,12 @@ define([
 			if(typeof val == "string"){
 				this.set("filepath", val);
 			}else{
-				this.filepath = val.metadata.path + ((val.metadata.path.charAt(val.metadata.path.length - 1) == "/") ? "" : "/") + val.metadata.name;
+				this.filepath =
+					'path' in val.metadata ?
+						val.metadata.path +
+						((val.metadata.path.charAt(val.metadata.path.length - 1) == "/") ? "" : "/")
+					 	+ val.metadata.name : '/'
+
 				this.file = val;
 				this.refresh();
 			}
@@ -120,10 +125,6 @@ define([
 						case "html":
 							//console.log('[File] type: html');
 							childContent = this.file.data;
-							break;
-						case "pdf":
-							//console.log('[File] type: pdf');
-							childContent = '<pre style="font-size:.8em; background-color:#ffffff;">PDF Coming Soon...</pre>';
 							break;
 						case "json":
 						case "diffexp_experiment":
