@@ -28,7 +28,6 @@ define([
 		viewableTypes: ["txt", "html", "pdf", "json", "csv", "diffexp_experiment",
 		"diffexp_expression", "diffexp_mapping", "diffexp_sample",
 		"diffexp_input_data", "diffexp_input_metadata", "svg", "gif", "png", "jpg"],
-		imageTypes: ["svg", "gif", "png", "jpg"],
 
 		getDefaultFolder: function(type){
 			switch(type){

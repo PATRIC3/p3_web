@@ -87,12 +87,8 @@ define([
 
 			console.log('[File] file:', this.file);
 			var viewable = false;
-			//var isImage = false;
 			if(WS.viewableTypes.indexOf(this.file.metadata.type) >= 0){
 				viewable = true;
-				//if(WS.imageTypes.indexOf(this.file.metadata.type) >= 0){
-				//	isImage = true;
-				//}
 			}
 			console.log('[File] viewable?:', viewable);
 			//console.log('[File] isImage?:', isImage);
@@ -105,14 +101,14 @@ define([
 					console.log('[File] obj:', obj);
 					_self.set("file", obj);
 				});
+			}
 
+			if(!this.url && viewable){
 				// get the download url
-				//if(isImage){
 				Deferred.when(WS.getDownloadUrls(this.filepath), function(url){
 					console.log('[File] url:', url);
 					_self.set("url", url);
 				});
-				//}
 			}
 
 			if(this.file && this.file.metadata){
@@ -126,13 +122,6 @@ define([
 							console.log('[File] type: html');
 							childPane = new ContentPane({content: this.file.data, region: "center"});
 							break;
-						case "svg":
-						case "gif":
-						case "png":
-						case "jpg":
-							console.log('[File] type: image');
-							childPane = new ContentPane({content: '<img src="'+this.url+'">', region: "center"});
-							break;
 						case "pdf":
 							console.log('[File] type: pdf');
 							childPane = new ContentPane({content: '<pre style="font-size:.8em;">PDF Coming Soon...</pre>', region: "center"});
@@ -143,12 +132,16 @@ define([
 						case "diffexp_mapping":
 						case "diffexp_sample":
 							console.log('[File] type: json');
-							childPane = new ContentPane({content: '<pre style="font-size:.8em;">' + JSON.stringify(JSON.parse(this.file.data),null,2)  + "</pre>", region: "center"});
+							childPane = new ContentPane({content: '<pre style="font-size:.8em;">' + JSON.stringify(JSON.parse(this.file.data || null),null,2)  + "</pre>", region: "center"});
 							break;
+						case "svg":
+						case "gif":
+						case "png":
+						case "jpg":
 						case "txt":
 						default:
-							console.log('[File] type: txt');
-							childPane = new ContentPane({content: '<pre style="font-size:.8em;">' + this.file.data + "</pre>", region: "center"});
+							console.log('[File] type: txt/img');
+							childPane = new ContentPane({content: '<pre style="font-size:.8em;">' + this.file.data + '</pre>', region: "center"});
 					}
 					this.viewer.addChild(childPane);
 				} else {
