@@ -5,8 +5,8 @@ define([
 	"../GenomeOverview", "../AMRPanelGridContainer", "../Phylogeny",
 	"../GenomeBrowser", "../CircularViewerContainer", "../SequenceGridContainer",
 	"../FeatureGridContainer", "../SpecialtyGeneGridContainer", "../ProteinFamiliesContainer",
-	"../PathwaysContainer", "../TranscriptomicsContainer", "../InteractionContainer", 
-	"../../util/PathJoin"
+	"../PathwaysContainer", "../TranscriptomicsContainer", "../InteractionContainer",
+	"../SubSystemsContainer","../../util/PathJoin"
 ], function(declare, lang,
 			domConstruct, xhr,
 			TabViewerBase,
@@ -14,7 +14,7 @@ define([
 			GenomeBrowser, CircularViewerContainer, SequenceGridContainer,
 			FeatureGridContainer, SpecialtyGeneGridContainer, ProteinFamiliesContainer,
 			PathwaysContainer, TranscriptomicsContainer, InteractionsContainer,
-			PathJoin){
+			SubSystemsContainer, PathJoin){
 	return declare([TabViewerBase], {
 		"baseClass": "GenomeGroup",
 		"disabled": false,
@@ -69,37 +69,23 @@ define([
 					}
 					break;
 				case "features":
-					//console.log("this.state ", this.state);
-					if(this.state && this.state.genome_ids){
-						var q = "?in(genome_id,(" + this.state.genome_ids.join(",") + "))";
-						//console.log("q = ", q, "this.apiServiceUrl=", this.apiServiceUrl, "PathJoin", PathJoin(this.apiServiceUrl, "genome", q));
-						xhr.get(PathJoin(this.apiServiceUrl, "genome", q), {
-							headers: {
-								accept: "application/json",
-								'X-Requested-With': null,
-								'Authorization': (window.App.authorizationToken || "")
-							},
-							handleAs: "json"
-						}).then(lang.hitch(this, function(genome_data){
-							//console.log("genome_data = ", genome_data);
-							var i=0;
-							var filter = ""; 
-							for (i=0; i<genome_data.length; i++){							
-								if (genome_data[i].taxon_lineage_ids.length>2 && genome_data[i].taxon_lineage_ids[1] == "2759"){
-									filter = 'eq(feature_type,%22CDS%22)';
-								}
+					// check whether genome is a host genome and set default filter condition
+					if(this.state.genome){
+						if(!this.state.hashParams.filter){
+							var taxon_lineage_ids = this.state.genome.taxon_lineage_ids;
+							if (taxon_lineage_ids.indexOf("2759") > -1){
+
+								activeQueryState = lang.mixin({}, this.state, {
+									search: "eq(genome_id," + this.state.genome.genome_id + ")",
+									hashParams: lang.mixin({}, this.state.hashParams, {
+										filter: 'eq(feature_type,%22CDS%22)'
+									})
+								});
 							}
-							activeQueryState = lang.mixin({}, this.state, {
-								search: "in(genome_id,(" + this.state.genome_ids.join(",") + "))",
-								hashParams: lang.mixin({}, this.state.hashParams, {
-									filter: filter
-								})
-							});
-							if(activeQueryState){
-								activeTab.set("state", activeQueryState);
-							}
-						}));
-					}					
+						}
+
+						activeTab.set("state", activeQueryState);
+					}
 					break;
 
 				case "transcriptomics":
@@ -168,7 +154,7 @@ define([
 
 			// check host genomes. remove the circular viewer tab if it's a host genome
 			if(genome && genome.taxon_lineage_ids){
-			    // console.log("this genome: ", genome);
+				// console.log("this genome: ", genome);
 				if (genome.taxon_lineage_ids.length>1 && genome.taxon_lineage_ids[1] == "2759"){
 					this.viewer.removeChild(this.circular);
 				}
@@ -180,13 +166,15 @@ define([
 
 		onSetState: function(attr, oldState, state){
 
+			if(!state){
+				return;
+			}
+
 			var parts = state.pathname.split("/");
 			this.set("genome_id", parts[parts.length - 1]);
 			state.genome_id = parts[parts.length - 1];
 			state.genome_ids = [state.genome_id];
-			if(!state){
-				return;
-			}
+			
 
 			// console.log("Genome: ", state.genome, state.genome_id)
 
@@ -230,8 +218,12 @@ define([
 				}
 			}
 
-			this.setActivePanelState();
-
+			if(!oldState){
+				return;
+			} else {
+				this.setActivePanelState();
+			}
+			
 			// console.log("viewer/Genome onSetState() after set genome_id")
 		},
 
@@ -266,8 +258,7 @@ define([
 
 			this.features = new FeatureGridContainer({
 				title: "Features",
-				id: this.viewer.id + "_" + "features",
-				state: lang.mixin({}, this.state, {search: "?eq(genome_id," + this.genome_id + ")"})
+				id: this.viewer.id + "_" + "features"
 			});
 
 			this.browser = new GenomeBrowser({
@@ -292,9 +283,13 @@ define([
 			this.pathways = new PathwaysContainer({
 				apiServer: this.apiServiceUrl,
 				title: "Pathways",
-				id: this.viewer.id + "_" + "pathways",
-				state: this.state
+				id: this.viewer.id + "_" + "pathways"
 			});
+
+			this.subsystems = new SubSystemsContainer({
+				title: "Subsystems",
+				id: this.viewer.id + "_" + "subsystems"
+			})
 
 			this.proteinFamilies = new ProteinFamiliesContainer({
 				title: "Protein Families",
@@ -324,6 +319,7 @@ define([
 			this.viewer.addChild(this.specialtyGenes);
 			this.viewer.addChild(this.proteinFamilies);
 			this.viewer.addChild(this.pathways);
+			this.viewer.addChild(this.subsystems);
 			this.viewer.addChild(this.transcriptomics);
 			this.viewer.addChild(this.interactions);
 		}
