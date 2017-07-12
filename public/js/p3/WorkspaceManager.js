@@ -13,7 +13,12 @@ define([
 		token: "",
 		apiUrl: "",
 		userId: "",
-		downloadTypes: ["contigs", "reads", "unspecified", "diffexp_experiment", "diffexp_mapping", "diffexp_sample", "diffexp_expression", "diffexp_input_data"],
+		downloadTypes: ["contigs", "reads", "unspecified", "diffexp_experiment",
+			"diffexp_mapping", "diffexp_sample", "diffexp_expression",
+			"diffexp_input_data", "json", "zip", "txt", "string", "embl",
+			"genbank_file", "gff", "feature_protein_fasta", "feature_dna_fasta",
+			"feature_table", "genome", "bam", "diffexp_input_data", "wig",
+			"genome_comparison_table", "html", "svg"],
 
 		getDefaultFolder: function(type){
 			switch(type){

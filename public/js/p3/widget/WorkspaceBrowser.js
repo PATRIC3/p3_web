@@ -357,6 +357,22 @@ define([
 				}
 			});
 
+			this.browserHeader.addAction("ViewSeqComparison", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: ["GenomeComparison"],
+				tooltip: "Toggle Summary View"
+			}, function(selection){
+				// console.log("View Genome Comparison: ", selection[0]);
+				// console.log("currentContainerWidget: ", typeof self.actionPanel.currentContainerWidget);
+				var cid = self.actionPanel.currentContainerWidget.getComparisonId();
+				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
+					Topic.publish("/navigate", {href: "/workspace" + cid});
+				} else {
+					Topic.publish("/navigate", {href: "/workspace" + cid + "#summary"});
+				}
+			}, false);
+
 			this.browserHeader.addAction("SelectDownloadSeqComparison", "fa icon-download fa-2x", {
 				label: "DWNLD",
 				multiple: false,
@@ -458,6 +474,33 @@ define([
 				// console.log("CREATE FOLDER", selection[0].path);
 				Topic.publish("/openDialog", {type: "CreateFolder", params: selection[0].path + selection[0].name});
 			}, true);
+
+			this.browserHeader.addAction("ViewExperimentSummary", "fa icon-eye fa-2x", {
+				label: "VIEW",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "Toggle Summary View"
+			}, function(selection){
+				console.log("View Experiment Summary: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				if (self.actionPanel.currentContainerWidget.isSummaryView()) {
+					Topic.publish("/navigate", {href: "/workspace" + eid});
+				} else {
+					Topic.publish("/navigate", {href: "/workspace" + eid + "#summary"});
+				}
+			}, false);
+
+			this.browserHeader.addAction("ViewExperiment", "fa icon-selection-Experiment fa-2x", {
+				label: "EXPRMNT",
+				multiple: false,
+				validTypes: ["DifferentialExpression"],
+				tooltip: "View Experiment"
+			}, function(selection){
+				// console.log("View Experiment: ", selection[0]);
+				var eid = self.actionPanel.currentContainerWidget.getExperimentId();
+				Topic.publish("/navigate", {href: "/view/TranscriptomicsExperiment/?&wsExpId=" + eid});
+
+			}, false);
 
 			var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><divi class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
 			var viewFASTATT = new TooltipDialog({
@@ -823,12 +866,23 @@ define([
 
 		_setPathAttr: function(val){
 			// console.log("WorkspaceBrowser setPath()", val)
+
+			// extract extra URL parameters
+			var components = val.split("#");
+			val = components[0];
 			this.path = decodeURIComponent(val);
+			var uriParams = [];
+			if (components[1]) {
+				uriParams = decodeURIComponent(components[1]);
+			}
+			//console.log("[WorkspaceBrowser] uriParams:",uriParams)
+
 			var parts = this.path.split("/").filter(function(x){
 				return x != "";
 			}).map(function(c){
 				return decodeURIComponent(c)
 			});
+			//console.log("[WorkspaceBrowser] parts:",parts)
 			var workspace = parts[0] + "/" + parts[1];
 			var obj;
 
@@ -874,20 +928,24 @@ define([
 							var id = obj.autoMeta.app.id || obj.autoMeta.app;
 							switch(id){
 								case "DifferentialExpression":
-									// console.log("Using Experiement Viewer");
-									d = "p3/widget/viewer/Experiment";
+									if (uriParams === "summary") {
+										d = "p3/widget/viewer/Experiment"
+									} else {
+										d = "p3/widget/viewer/DifferentialExpression";
+									}
 									break;
 								case "GenomeComparison":
-									// console.log("SeqComparison Viewer");
-									d = "p3/widget/viewer/SeqComparison";
+									if (uriParams === "summary") {
+										d = "p3/widget/viewer/SeqComparison"
+									} else {
+										d = "p3/widget/viewer/GenomeComparison";
+									}
 									break;
 								case "GenomeAnnotation":
-									// console.log("GenomeAnnotation Viewer");
 									d = "p3/widget/viewer/GenomeAnnotation";
 									break;
 							}
 						}
-						// console.log("LOAD VIEWER: ", d, params);
 						panelCtor = window.App.getConstructor(d);
 						params.data = obj;
 						//params.query="?&in(feature_id,FeatureGroup("+encodeURIComponent(this.path)+"))";
