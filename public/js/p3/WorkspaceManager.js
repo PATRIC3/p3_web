@@ -25,7 +25,7 @@ define([
 		"pptx", "proteomics_experiment", "reads", "rxnprobs", "string", "svg",
 		"tar_gz", "transcriptomics_experiment", "transcripts", "txt", "unspecified",
 		"vcf", "wig", "xls", "xlsx", "zip", "contigset"],
-		viewableTypes: ["txt", "html", "pdf", "json", "csv", "diffexp_experiment",
+		viewableTypes: ["txt", "html", "json", "csv", "diffexp_experiment",
 		"diffexp_expression", "diffexp_mapping", "diffexp_sample",
 		"diffexp_input_data", "diffexp_input_metadata", "svg", "gif", "png", "jpg"],
 
@@ -375,7 +375,7 @@ define([
 					throw new Error("Object not found: ");
 				}
 
-				console.log('[WorkspaceManager] results:', results);
+				//console.log('[WorkspaceManager] results:', results);
 				// console.log("results[0]", results[0]);
 				var meta = {
 					name: results[0][0][0][0],

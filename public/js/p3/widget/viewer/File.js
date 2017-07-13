@@ -92,9 +92,7 @@ define([
 			}
 			//console.log('[File] viewable?:', viewable);
 
-			if(!this.file.data && viewable){
-				this.viewer.set("Content", "<div>Loading file content...</div>");
-
+			if(!this.file.data && viewable && this.file.metadata.size <= 10000000) {
 				// get the object to display
 				Deferred.when(WS.getObject(this.filepath, false), function(obj){
 					//console.log('[File] obj:', obj);
@@ -115,34 +113,33 @@ define([
 					//this.viewer.set('content', this.formatFileMetaData() + "<pre>" + this.file.data + "</pre>");
 					this.viewer.set('content', this.formatFileMetaData());
 
-					var childContent = '</br>';
-					switch(this.file.metadata.type){
-						case "html":
-							//console.log('[File] type: html');
-							childContent = this.file.data;
-							break;
-						case "pdf":
-							//console.log('[File] type: pdf');
-							childContent = '<pre style="font-size:.8em; background-color:#ffffff;">PDF Coming Soon...</pre>';
-							break;
-						case "json":
-						case "diffexp_experiment":
-						case "diffexp_expression":
-						case "diffexp_mapping":
-						case "diffexp_sample":
-							//console.log('[File] type: json');
-							childContent = '<pre style="font-size:.8em; background-color:#ffffff;">' + JSON.stringify(JSON.parse(this.file.data || null),null,2)  + "</pre>";
-							break;
-						case "svg":
-						case "gif":
-						case "png":
-						case "jpg":
-						case "txt":
-						default:
-							//console.log('[File] type: txt/img');
-							childContent = '<pre style="font-size:.8em; background-color:#ffffff;">' + this.file.data + '</pre>';
+					if (this.file.data) {
+						var childContent = '</br>';
+						switch(this.file.metadata.type){
+							case "html":
+								//console.log('[File] type: html');
+								childContent = this.file.data;
+								break;
+							case "json":
+							case "diffexp_experiment":
+							case "diffexp_expression":
+							case "diffexp_mapping":
+							case "diffexp_sample":
+								//console.log('[File] type: json');
+								childContent = '<pre style="font-size:.8em; background-color:#ffffff;">' + JSON.stringify(JSON.parse(this.file.data || null),null,2)  + "</pre>";
+								break;
+							case "svg":
+							case "gif":
+							case "png":
+							case "jpg":
+							case "txt":
+							default:
+								//console.log('[File] type: txt/img');
+								childContent = '<pre style="font-size:.8em; background-color:#ffffff;">' + this.file.data + '</pre>';
+								break;
+						}
+						this.viewer.addChild(new ContentPane({content: childContent, region: "center"}));
 					}
-					this.viewer.addChild(new ContentPane({content: childContent, region: "center"}));
 				} else {
 					this.viewer.set('content', this.formatFileMetaData());
 				}

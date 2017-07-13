@@ -20,7 +20,9 @@ define([
 		gutters: false,
 		navigableTypes: ["parentfolder", "folder", "job_result", "experiment_group",
 			"experiment", "unspecified", "contigs", "reads", "model", "txt", "html",
-			"pdf", "string"],
+			"pdf", "string", "json", "csv", "diffexp_experiment",
+			"diffexp_expression", "diffexp_mapping", "diffexp_sample",
+			"diffexp_input_data", "diffexp_input_metadata", "svg", "gif", "png", "jpg"],
 		design: "sidebar",
 		splitter: false,
 		startup: function(){
@@ -1028,7 +1030,7 @@ define([
 									this.actionPanel.set("selection", []);
 									this.itemDetailPanel.set("selection", []);
 									// console.log("SHOW LOADING STATUS SOMEHOW");
-									newPanel.clearSelection();
+									//newPanel.clearSelection();
 								}else{
 									console.log("non-navigable type, todo: show info panel when dblclick");
 								}
