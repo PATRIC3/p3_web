@@ -32,6 +32,7 @@ define([
               jBrowseStoreType = "JBrowse/Store/SeqFeature/GFF3";
               break;
           }
+          // XXX this is picking up bai files as well, we need to add that as a proper type
   				if(o.type == "bam"){
             var record = {'path':o.path+o.name, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
   		      streamables.push(record);
@@ -44,11 +45,55 @@ define([
 			}
 			throw Error("No streamable files found");
 		},
-    getData: function(){
-      console.log("[RNASeq] data: ", this.data);
-      console.log("[RNASeq] genomeId: ", this.getGenomeId());
-      console.log("[RNASeq] resultObjects: ", this._resultObjects);
+    getJBrowseURLQueryParams: function(){
+      var streamables = this.getStreamableFiles();
       console.log("[RNASeq] streamables: ", this.getStreamableFiles());
+
+      var tracks = [];
+      var stores = new Object;
+      streamables.forEach(function(t){
+
+        var track;
+        // the first track gets some extra fields
+        if (tracks.length < 1) {
+          track = {
+            'style': {'height':200},
+            'scale':'log',
+            'variance_band': 'true',
+            'label': t.keyAndLabel,
+            'key': t.keyAndLabel,
+            'type': t.trackType,
+            'store': t.store
+          };
+        } else {
+          track = {
+            'label': t.keyAndLabel,
+            'key': t.keyAndLabel,
+            'type': t.trackType,
+            'store': t.store
+          };
+        }
+        tracks.push(track);
+
+        var store = new Object;
+        store.type = t.storeType;
+        store.urlTemplate = t.path;
+        if(t.baiPath){
+          store.baiUrlTemplate = t.baiPath;
+        }
+        stores[t.store] = store;
+      }, this);
+
+      console.log("[RNASeq] tracks: ", tracks);
+      console.log("[RNASeq] stores: ", stores);
+
+      var url =
+        'view_tab=browser&addTracks=' + encodeURIComponent(JSON.stringify(tracks))
+        + '&addStores=' + encodeURIComponent(JSON.stringify(stores))
+        + '&tracks=PATRICGenes,RefSeqGenes';
+
+      console.log("[RNASeq] url params: ", url);
+      return url;
 
       /*
       ==========================================================================

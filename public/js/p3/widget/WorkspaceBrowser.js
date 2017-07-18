@@ -516,29 +516,30 @@ define([
 
 			}, false);
 
-			this.browserHeader.addAction("ViewTracks", "fa icon-eye fa-2x", {
-				// XXX
-				label: "STREAM",
+			this.browserHeader.addAction("ViewTracks", "fa icon-genome-browser fa-2x", {
+				label: "BROWSER",
 				multiple: false,
-				validTypes: ["RNASeq"],
-				tooltip: "Stream / View Tracks.  Press and hold for more options.",
-				pressAndHold: function(selection, button, opts, evt){
+				validTypes: ["RNASeq", "TnSeq"],
+				tooltip: "View in genome browser.  Press and hold for more options.",
 
-					popup.open({
-						popup: new PerspectiveToolTipDialog({
-							perspective: "Feature",
-							perspectiveUrl: "/view/Feature/" + selection[0].feature_id
-						}),
-						around: button,
-						orient: ["below"]
-					});
-				}
+				// XXX update to select tracks
+				// pressAndHold: function(selection, button, opts, evt){
+				//
+				// 	popup.open({
+				// 		popup: new PerspectiveToolTipDialog({
+				// 			perspective: "Feature",
+				// 			perspectiveUrl: "/view/Feature/" + selection[0].feature_id
+				// 		}),
+				// 		around: button,
+				// 		orient: ["below"]
+				// 	});
+				// }
 
 			}, function(selection){
 				console.log("View Tracks: ", selection[0]);
-				var data = self.actionPanel.currentContainerWidget.getData();
-				// encodeURIComponent(sel.path)
-				Topic.publish("/navigate", {href: "/"});
+				var genomeId = self.actionPanel.currentContainerWidget.getGenomeId();
+				var urlQueryParams = self.actionPanel.currentContainerWidget.getJBrowseURLQueryParams();
+				Topic.publish("/navigate", {href: "/view/Genome/"+genomeId+"#"+urlQueryParams});
 
 			}, false);
 
