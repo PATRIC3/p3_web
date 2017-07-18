@@ -516,6 +516,32 @@ define([
 
 			}, false);
 
+			this.browserHeader.addAction("ViewTracks", "fa icon-eye fa-2x", {
+				// XXX
+				label: "STREAM",
+				multiple: false,
+				validTypes: ["RNASeq"],
+				tooltip: "Stream / View Tracks.  Press and hold for more options.",
+				pressAndHold: function(selection, button, opts, evt){
+
+					popup.open({
+						popup: new PerspectiveToolTipDialog({
+							perspective: "Feature",
+							perspectiveUrl: "/view/Feature/" + selection[0].feature_id
+						}),
+						around: button,
+						orient: ["below"]
+					});
+				}
+
+			}, function(selection){
+				console.log("View Tracks: ", selection[0]);
+				var data = self.actionPanel.currentContainerWidget.getData();
+				// encodeURIComponent(sel.path)
+				Topic.publish("/navigate", {href: "/"});
+
+			}, false);
+
 			var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><divi class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
 			var viewFASTATT = new TooltipDialog({
 				content: vfc, onMouseLeave: function(){
@@ -957,6 +983,10 @@ define([
 									break;
 								case "GenomeAnnotation":
 									d = "p3/widget/viewer/GenomeAnnotation";
+									break;
+								case "RNASeq":
+								case "TnSeq":
+									d = "p3/widget/viewer/Seq";
 									break;
 							}
 						}
