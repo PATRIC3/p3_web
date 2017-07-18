@@ -1,12 +1,14 @@
 define([
-	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang",
+	"dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/lang", 
 	"./ActionBar", "./ContainerActionBar", "dijit/layout/StackContainer", "dijit/layout/TabController",
 	"./SubSystemsMemoryGridContainer", "dijit/layout/ContentPane", "./GridContainer", "dijit/TooltipDialog",
-	"../store/SubSystemMemoryStore", "../store/SubsystemsOverviewMemoryStore", "dojo/dom-construct", "dojo/topic", "./GridSelector", "./SubSystemsOverview"
+	"../store/SubSystemMemoryStore", "../store/SubsystemsOverviewMemoryStore", "dojo/dom-construct", "dojo/topic", 
+	"./GridSelector", "./SubSystemsOverview", "dojox/widget/Standby"
 ], function(declare, BorderContainer, on, lang,
 			ActionBar, ContainerActionBar, TabContainer, StackController,
 			SubSystemsGridContainer, ContentPane, GridContainer, TooltipDialog,
-			SubSystemMemoryStore, SubsystemsOverviewMemoryStore, domConstruct, topic, selector, SubSystemsOverview){
+			SubSystemMemoryStore, SubsystemsOverviewMemoryStore, domConstruct, Topic, 
+			selector, SubSystemsOverview, Standby){
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
 		content: vfc, onMouseLeave: function(){
@@ -38,9 +40,45 @@ define([
 		tooltip: 'The "Subsystems" tab contains a list of subsystems for genomes associated with the current view',
 		apiServer: window.App.dataServiceURL,
 
+		constructor: function(options){
+			// console.log(options);
+			this.topicId = "SubsystemMap_" + options.id.split('_subsystems')[0];
+
+			Topic.subscribe(this.topicId, lang.hitch(this, function(){
+				// console.log("ProteinFamiliesHeatmapContainer:", arguments);
+				var key = arguments[0], value = arguments[1];
+
+				switch(key){
+					case "showMainGrid":
+						this.tabContainer.selectChild(this.mainGridContainer);
+						break;
+					case "updatePfState":
+						this.pfState = value;
+						//this.updateFilterPanel(value);
+						break;
+					case "showLoadingMask":
+						this.loadingMask.show();
+						break;
+					case "hideLoadingMask":
+						this.loadingMask.hide();
+						break;
+					default:
+						break;
+				}
+			}));
+		},
+
 		postCreate: function(){
 			this.inherited(arguments);
 			this.watch("state", lang.hitch(this, "onSetState"));
+
+			this.loadingMask = new Standby({
+				target: this.id,
+				image: "/public/js/p3/resources/images/spin.svg",
+				color: "#efefef"
+			});
+			this.addChild(this.loadingMask);
+			this.loadingMask.startup();
 		},
 
 		onSetState: function(attr, oldVal, state){
@@ -51,6 +89,10 @@ define([
 
 			if(this.tabContainer && this.tabContainer.selectedChildWidget && this._firstView && this.tabContainer.selectedChildWidget.state != state){
 				this.tabContainer.selectedChildWidget.set('state', state);
+			}
+
+			if(this.mainGridContainer){
+				this.mainGridContainer.set('state', state);
 			}
 
 			if(state.autoFilterMessage){
@@ -85,10 +127,13 @@ define([
 			if(this.visible && !this._firstView){
 				this.onFirstView();
 			}
+			if(this.mainGridContainer){
+				this.mainGridContainer.set('visible', true);
+			}
 		},
 
 		selectChild: function(child){
-			topic.publish(this.id + "-selectChild", child);
+			Topic.publish(this.id + "-selectChild", child);
 		},
 
 		onFirstView: function(){
@@ -146,6 +191,13 @@ define([
 				visible: true
 			});
 
+			// this.mainGridContainer = new MainGridContainer({
+			// 	title: "Subsystems Heatmap",
+			// 	topicId: this.topicId,
+			// 	content: "Heatmap",
+			// 	type: "subsystems_heatmap"
+			// });
+
 			this.genesGrid = new SubSystemsGridContainer({
 				title: "Genes",
 				type: "genes",
@@ -180,21 +232,24 @@ define([
 
 			this.tabContainer.addChild(this.subsystemsOverviewGrid);
 			this.tabContainer.addChild(this.subsystemsGrid);
+			//this.tabContainer.addChild(this.subsystemMapHeatmapContainer);
 			this.tabContainer.addChild(this.genesGrid);
 
-			topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
+			Topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
 					//do nothing
+				} else if (this.tabContainer.selectedChildWidget.type === "subsystems_heatmap") {
+					Topic.publish(this.topicId, "showMainGrid");
 				} else {
 					page.set('state', this.state);
 				}
 			}));
 
-			topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
+			Topic.subscribe(this.subsystemsOverviewGrid.id, lang.hitch(this, function(page){
 				console.log(page);
 			}));
 
-			topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
+			Topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
 
 				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
 				var searchHashParam = "eq(class," + encodedClassKeyword + ")"

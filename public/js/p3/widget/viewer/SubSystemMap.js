@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare", "dojo/_base/lang", "dojo/when", "dojo/request", "dojo/dom-construct",
 	"dijit/layout/ContentPane",
-	"./Base", "../../util/PathJoin", "../PathwayMapContainer"
+	"./Base", "../../util/PathJoin", "../SubsystemMapContainer"
 ], function(declare, lang, when, request, domConstruct,
 			ContentPane,
-			ViewerBase, PathJoin, PathwayMapContainer){
+			ViewerBase, PathJoin, SubsystemMapContainer){
 	return declare([ViewerBase], {
 		"disabled": false,
 		"query": null,
@@ -12,7 +12,7 @@ define([
 		apiServiceUrl: window.App.dataAPI,
 
 		onSetState: function(attr, oldVal, state){
-			// console.log("PathwayMap onSetState", state);
+			// console.log("subsystemMap onSetState", state);
 
 			if(!state){
 				return;
@@ -26,7 +26,7 @@ define([
 			});
 			state = lang.mixin(state, params);
 
-			if(!state.pathway_id) return;
+			// if(!state.taxon_id) return;
 
 			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
 			if(state.hasOwnProperty('genome_id')){
@@ -36,22 +36,24 @@ define([
 			else if(state.hasOwnProperty('genome_ids')){
 				this.viewer.set('visible', true);
 			}
-			else if(state.hasOwnProperty('taxon_id')){
-				var self = this;
-				when(this.getGenomeIdsByTaxonId(state.taxon_id), function(genomeIds){
-					state.genome_ids = genomeIds;
-					self.viewer.set('visible', true);
-				});
-			}
+			
+			// var self = this;
+			// when(this.getGenomeIdsByFeatureId(state.taxon_id), function(genomeIds){
+			// 	state.genome_ids = genomeIds;
+			// 	self.viewer.set('visible', true);
+			// });
 
 			// update header
-			this.buildHeaderContent(state.pathway_id);
+			this.buildHeaderContent(state.subsystem_id);
 
 			// update page title
-			window.document.title = 'Pathway Map';
+			window.document.title = 'Subsystem Map';
 		},
 
-		getGenomeIdsByTaxonId: function(taxon_id){
+	// $ curl -X POST -H 'Content-Type: application/jsonrpc+json' 
+	// -d '{"id”:1,"method":"subSystem","params":[{"genomeIds":["83332.12"]},{"token":""}],
+	//"jsonrpc":"2.0"}' 'https://www.alpha.patricbrc.org/api/‘
+		getGenomeIdsByFeatureId: function(taxon_id){
 
 			var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
 			return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
@@ -67,10 +69,26 @@ define([
 			});
 		},
 
+		// getGenomeIdsByTaxonId: function(taxon_id){
+
+		// 	var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
+		// 	return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
+		// 		headers: {
+		// 			'Accept': "application/json",
+		// 			'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+		// 		},
+		// 		handleAs: "json"
+		// 	}), function(response){
+		// 		return response.map(function(d){
+		// 			return d.genome_id;
+		// 		});
+		// 	});
+		// },
+
 		buildHeaderContent: function(mapId){
 			var self = this;
-			var query = "?eq(pathway_id," + mapId + ")&limit(1)";
-			return when(request.get(PathJoin(this.apiServiceUrl, "pathway_ref", query), {
+			var query = "?eq(Subsystem_id," + mapId + ")&limit(1)";
+			return when(request.get(PathJoin(this.apiServiceUrl, "Subsystem_ref", query), {
 				headers: {
 					'Accept': "application/json",
 					'Content-Type': "application/rqlquery+x-www-form-urlencoded"
@@ -79,7 +97,7 @@ define([
 			}), function(response){
 				var p = response[0];
 
-				self.queryNode.innerHTML = "<b>" + p.pathway_id + " | " + p.pathway_name + "</b>";
+				self.queryNode.innerHTML = "<b>" + p.Subsystem_id + " | " + p.Subsystem_name + "</b>";
 			});
 		},
 
@@ -90,7 +108,7 @@ define([
 
 			this.inherited(arguments);
 
-			this.viewer = new PathwayMapContainer({
+			this.viewer = new SubsystemMapContainer({
 				region: "center",
 				state: this.state,
 				apiServer: this.apiServiceUrl
@@ -105,7 +123,7 @@ define([
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				innerHTML: "Pathway View"
+				innerHTML: "Subsystem View"
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
