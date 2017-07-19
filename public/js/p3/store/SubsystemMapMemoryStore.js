@@ -44,6 +44,8 @@ define([
 						break;
 				}
 			});
+
+			this.loadData();
 		},
 
 		reload: function(){
@@ -112,11 +114,10 @@ define([
 				return def.promise;
 			}
 
-			(this.state.subsystem_id) ? _self.pmState.subsystem_id = this.state.subsystem_id : {};
+			(this.state.subsystem_id) ? _self.pmState.subsystem_id = this.state.subsystem_id[0] : {};
 			(this.state.ec_number) ? _self.pmState.ec_number = this.state.ec_number : {};
 			(this.state.feature_id) ? _self.pmState.feature_id = this.state.feature_id : {};
 			(this.state.taxon_id) ? _self.pmState.taxon_id = this.state.taxon_id : {};
-			(this.state.annotation) ? _self.pmState.annotation = this.state.annotation : {};
 
 			this._loadingDeferred = when(request.post(_self.apiServer + '/genome/', {
 				handleAs: 'json',
@@ -146,10 +147,9 @@ define([
 				// sub query - genome distribution
 				var query = {
 					q: "genome_id:(" + _self.pmState.genomeIds.join(' OR ') + ") AND subsystem_id:" + _self.pmState.subsystem_id,
-					fq: "annotation:" + _self.pmState.annotation,
 					rows: 0,
 					facet: true,
-					'json.facet': '{stat:{type:field,field:ec_number,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
+					'json.facet': '{stat:{type:field,field:role_id,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
 				};
 
 				var q = Object.keys(query).map(function(p){
@@ -167,26 +167,26 @@ define([
 					data: q
 				}), function(response){
 
-					var ecGenomeDist = response.facets.stat.buckets;
-					var ecNumbers = [];
+					var roleGenomeDist = response.facets.stat.buckets;
+					var roleIDs = [];
 
-					ecGenomeDist.forEach(function(el){
+					roleGenomeDist.forEach(function(el){
 						if(el.val != ""){
-							ecNumbers.push(el.val);
+							roleIDs.push(el.val);
 						}
 					});
 
 					// var ecGenomeCount = {};
-					var ecGenomeIdCountMap = {};
-					var ecGenomeIdSet = {};
+					var roleGenomeIdCountMap = {};
+					var roleGenomeIdSet = {};
 					var genomePosMap = {};
 					var genome_ids = _self.pmState.genomeIds;
 					genome_ids.forEach(function(genomeId, idx){
 						genomePosMap[genomeId] = idx;
 					});
 
-					ecGenomeDist.forEach(function(el){
-						var ec = el.val;
+					roleGenomeDist.forEach(function(el){
+						var role = el.val;
 						var buckets = el.families.buckets;
 
 						buckets.forEach(function(bucket){
@@ -195,22 +195,22 @@ define([
 							var genomeCount = bucket.count.toString(16);
 							if(genomeCount.length < 2) genomeCount = '0' + genomeCount;
 
-							if(ec in ecGenomeIdCountMap){
-								ecGenomeIdCountMap[ec][genomePosMap[genomeId]] = genomeCount;
+							if(role in roleGenomeIdCountMap){
+								roleGenomeIdCountMap[role][genomePosMap[genomeId]] = genomeCount;
 							}
 							else{
 								var genomeIdCount = new Array(genome_ids.length).fill('00');
 								genomeIdCount[genomePosMap[genomeId]] = genomeCount;
-								ecGenomeIdCountMap[ec] = genomeIdCount;
+								roleGenomeIdCountMap[role] = genomeIdCount;
 							}
 
-							if(ec in ecGenomeIdSet){
-								ecGenomeIdSet[ec].push(genomeId);
+							if(role in roleGenomeIdSet){
+								roleGenomeIdSet[role].push(genomeId);
 							}
 							else{
 								var genomeIds = [];
 								genomeIds.push(genomeId);
-								ecGenomeIdSet[ec] = genomeIds;
+								roleGenomeIdSet[role] = genomeIds;
 							}
 						});
 					});
@@ -224,34 +224,31 @@ define([
 							'Authorization': _self.token ? _self.token : (window.App.authorizationToken || "")
 						},
 						data: {
-							q: 'subsystem_id:' + _self.pmState.subsystem_id + ' AND ec_number:(' + ecNumbers.join(' OR ') + ')',
-							fl: 'ec_number,ec_description,occurrence',
-							sort: 'ec_number asc',
-							rows: ecNumbers.length
+							q: 'subsystem_id:' + _self.pmState.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
+							fl: 'role_id,role_name',
+							sort: 'role_id asc',
+							rows: roleIDs.length
 						}
 					}), function(res){
 
 						var ecRefHash = {};
-						var ecOccurrenceHash = {};
 						res.forEach(function(el){
-							ecRefHash[el['ec_number']] = el['ec_description'];
-							ecOccurrenceHash[el['ec_number']] = el['occurrence'];
+							ecRefHash[el['role_id']] = el['role_name'];
 						});
 
 						var data = [];
-						ecGenomeDist.forEach(function(element){
-							var ec = element.val;
-							if(ec != ""){
+						roleGenomeDist.forEach(function(element){
+							var role = element.val;
+							if(role != ""){
 								var featureCount = element.count;
 
 								var row = {
-									ec_number: ec,
+									role_id: role,
 									feature_count: featureCount,
-									genome_count: ecGenomeIdSet[ec].length,
-									genome_missing: (genome_ids.length - ecGenomeIdSet[ec].length),
-									description: ecRefHash[ec],
-									occurrence: ecOccurrenceHash[ec],
-									genomes: ecGenomeIdCountMap[ec].join("")
+									genome_count: roleGenomeIdSet[role].length,
+									genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
+									description: ecRefHash[role],
+									genomes: roleGenomeIdCountMap[role].join("")
 								};
 								data.push(row);
 							}
