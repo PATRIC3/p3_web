@@ -1,6 +1,7 @@
 define([
-	"dojo/_base/declare", "./JobResult", "../../WorkspaceManager", "dojo/_base/Deferred"
-], function(declare, JobResult, WS, Deferred){
+	"dojo/_base/declare", "./JobResult", "../../WorkspaceManager",
+  "dojo/_base/Deferred", "dojo/_base/lang"
+], function(declare, JobResult, WS, Deferred, lang){
 	return declare([JobResult], {
 		containerType: "Seq",
     streamables: null,
@@ -9,7 +10,8 @@ define([
 				this._resultType = this.data.autoMeta.app.id;
 			}
 			this._appLabel = this._resultType;
-      this.getStreamableFiles();
+      this.urls = [];
+      this.getDownloadUrlsForFiles();
 		},
     getGenomeId: function(){
 			var id = this.data.autoMeta.parameters.reference_genome_id;
@@ -18,26 +20,44 @@ define([
 			}
 			throw Error("Missing ID");
 		},
+    getPartnerFile: function(name) {
+      var partner;
+      this._resultObjects.some(function(o){
+        if (o.name == name+'.bai') {
+          partner = o;
+          return true;
+        }
+        else return false;
+      });
+      if (partner) {
+        return partner;
+      }
+      throw Error("Missing partner file");
+    },
+    getDownloadUrlsForFiles: function() {
+
+      var paths = [];
+      this._resultObjects.forEach(function(o){
+        paths.push(o.path+o.name);
+      });
+
+      var _self = this;
+      return WS.getDownloadUrls(paths)
+        .then(function(urls){
+          for(var i = 0; i < _self._resultObjects.length; i++)
+            _self._resultObjects[i].url = urls[i];
+          return _self._resultObjects;
+        })
+    },
     getStreamableFiles: function(){
       if (this.streamables) {
         return this.streamables;
       }
 
-      /*
-
-      return WorkspaceManager.getDownloadUrls(paths)
-        .then(function(urls){
-          for(var i = 0; i < downloads.length; i++)
-            downloads[i].url = urls[i];
-          return downloads;
-        })
-
-      */
-
       this.streamables = [];
       var streamableTypes = ["bam", "gff", "vcf", "bigwig"];
-			this._resultObjects.some(function(o){
-        if (streamableTypes.indexOf(o.type) >= 0 && !o.name.endsWith(".bai")) {
+			this._resultObjects.forEach(function(o){
+          if (streamableTypes.indexOf(o.type) >= 0 && !o.name.endsWith(".bai")) {
           var jBrowseTrackType;
           var jBrowseStoreType;
           var record;
@@ -45,17 +65,18 @@ define([
             case "bam":
               jBrowseTrackType = "JBrowse/View/Track/Alignments2";
               jBrowseStoreType = "JBrowse/Store/SeqFeature/BAM";
-              record = {'path':o.path+o.name, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType, 'baiPath':o.path+o.name+'.bai'};
+              var partner = this.getPartnerFile(o.name);
+              record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType, 'baiPath':partner.url};
               break;
             case "bigwig":
               jBrowseTrackType = "JBrowse/Store/BigWig";
               jBrowseStoreType = "JBrowse/View/Track/Wiggle/XYPlot";
-              record = {'path':o.path+o.name, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
+              record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
               break;
             case "gff":
               jBrowseTrackType = "JBrowse/Store/SeqFeature/GFF3";
               jBrowseStoreType = "JBrowse/View/Track/CanvasFeatures";
-              record = {'path':o.path+o.name, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
+              record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
               break;
           }
           this.streamables.push(record);
@@ -65,6 +86,8 @@ define([
 			return this.streamables;
 		},
     getJBrowseURLQueryParams: function(){
+      console.log('[Seq] resultObjects', this._resultObjects);
+      this.getStreamableFiles();
       //console.log("[Seq] streamables: ", this.streamables);
 
       var tracks = [];
