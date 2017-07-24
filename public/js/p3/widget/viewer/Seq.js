@@ -86,7 +86,7 @@ define([
 			return this.streamables;
 		},
     getJBrowseURLQueryParams: function(){
-      console.log('[Seq] resultObjects', this._resultObjects);
+      //console.log('[Seq] resultObjects', this._resultObjects);
       this.getStreamableFiles();
       //console.log("[Seq] streamables: ", this.streamables);
 
@@ -135,7 +135,7 @@ define([
         + '&addStores=' + encodeURIComponent(JSON.stringify(stores))
         + '&tracks=PATRICGenes,RefSeqGenes,' + labels.join(",");
 
-      console.log("[Seq] url params: ", url);
+      //console.log("[Seq] url params: ", url);
       return url;
 		}
 	});

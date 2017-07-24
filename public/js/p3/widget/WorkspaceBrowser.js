@@ -519,7 +519,7 @@ define([
 			this.browserHeader.addAction("ViewTracks", "fa icon-genome-browser fa-2x", {
 				label: "BROWSER",
 				multiple: false,
-				validTypes: ["RNASeq", "TnSeq"],
+				validTypes: ["TnSeq"],
 				tooltip: "View in genome browser.  Press and hold for more options.",
 
 				// XXX update to select tracks
