@@ -119,8 +119,6 @@ define([
 			this.addChild(this.viewHeader);
 			this.addChild(this.viewer);
 
-			"the .ecoli/ folder for this job_result appears to be missing.  If you have moved your job result, please ensure you have also moved the .ecoli/ folder to this directory as well"
-
 			this.on("i:click", function(evt){
 				var rel = domAttr.get(evt.target, 'rel');
 				if(rel){
