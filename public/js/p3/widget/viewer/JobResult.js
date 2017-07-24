@@ -34,20 +34,9 @@ define([
 			WorkspaceManager.getFolderContents(this._hiddenPath, true, true)
 				.then(function(objs){
 					//console.log("[JobResult] objects: ", objs);
-					var paths = [];
-					for(var i = 0; i < objs.length; i++){
-						var obj = objs[i];
-						paths.push(obj.path);
-					}
-					return paths;
-				}).then(function(paths) {
-					//console.log("[JobResult] paths: ", paths);
-					WorkspaceManager.getObjects(paths, true).then(lang.hitch(this, function(objs){
 						_self._resultObjects = objs;
 						_self.setupResultType();
 						_self.refresh();
-					}));
-
 				});
 
 		},
