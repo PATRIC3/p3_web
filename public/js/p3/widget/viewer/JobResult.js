@@ -123,12 +123,14 @@ define([
 				return;
 			}
 			this.inherited(arguments);
-			this.viewHeader = new ContentPane({content: "View Header", region: "top", style:"width:90%;height:40%;"});
+			this.viewHeader = new ContentPane({content: "Loading data from "+this.data.name+" job file.  If you have moved your job result, please ensure you have also moved the ."+this.data.name+" folder to this directory as well.", region: "top", style:"width:90%;height:40%;"});
 			//this.viewer= new ContentPane({content: "", region: "center"});
 			this.viewer = new WorkspaceExplorerView({region: "center", path: this._hiddenPath});
 			// console.log("[JobResult] WSV: ", this.viewer);
 			this.addChild(this.viewHeader);
 			this.addChild(this.viewer);
+
+			"the .ecoli/ folder for this job_result appears to be missing.  If you have moved your job result, please ensure you have also moved the .ecoli/ folder to this directory as well"
 
 			this.on("i:click", function(evt){
 				var rel = domAttr.get(evt.target, 'rel');
