@@ -26,20 +26,30 @@ define([
 		_autoLabels: {},
 		_setDataAttr: function(data){
 			this.data = data;
-			// console.log("[JobResult] data: ", data);
+			//console.log("[JobResult] data: ", data);
 			this._hiddenPath = data.path + "." + data.name;
 			// console.log("[JobResult] Output Files: ", this.data.autoMeta.output_files);
-			var paths = this.data.autoMeta.output_files.map(function(o){
-				return o[0];
-			});
+			var _self = this;
 
-			// console.log("[JobResult] getObjects(): ", paths);
-			WorkspaceManager.getObjects(paths, true).then(lang.hitch(this, function(objs){
-				this._resultObjects = objs;
-				// console.log("[JobResult] got objects: ", objs);
-				this.setupResultType();
-				this.refresh();
-			}));
+			WorkspaceManager.getFolderContents(this._hiddenPath, true, true)
+				.then(function(objs){
+					//console.log("[JobResult] objects: ", objs);
+					var paths = [];
+					for(var i = 0; i < objs.length; i++){
+						var obj = objs[i];
+						paths.push(obj.path);
+					}
+					return paths;
+				}).then(function(paths) {
+					//console.log("[JobResult] paths: ", paths);
+					WorkspaceManager.getObjects(paths, true).then(lang.hitch(this, function(objs){
+						_self._resultObjects = objs;
+						_self.setupResultType();
+						_self.refresh();
+					}));
+
+				});
+
 		},
 		isSummaryView: function(){
 			return false;
