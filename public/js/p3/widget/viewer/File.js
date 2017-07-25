@@ -63,6 +63,7 @@ define([
 		formatFileMetaData: function(){
 			var output = [];
 			var fileMeta = this.file.metadata;
+
 			if(this.file && fileMeta){
 				var content = '<div><h3 class="section-title-plain close2x pull-left"><b>' + fileMeta.type + " file</b>: " + fileMeta.name + '</h3>';
 
@@ -83,12 +84,14 @@ define([
 			if(!this._started){
 				return;
 			}
+
 			if(!this.file || !this.file.metadata){
 				this.viewer.set("content", "<div class='error'>Unable to load file</div>");
 				return;
 			}
 
 			if(!this.file.data && this.file.metadata.size && (this.file.metadata.size > 1000000)){
+
 				var content = this.formatFileMetaData();
 				this.file.data = 'Unloaded Content';
 				this.viewer.set('content', content);
@@ -111,16 +114,16 @@ define([
 							this.file.data = JSON.stringify(JSON.parse(this.file.data), null, 4)
 						}
 
-						this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
+						this.viewer.set('content', this.formatFileMetaData() + "<pre>" + this.file.data + "</pre>");
 						return;
 					}
 					if(this.file.metadata.name.match(/\.txt/)){
 
-						this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
+						this.viewer.set('content', this.formatFileMetaData() + "<pre>" + this.file.data + "</pre>");
 						return;
 					}
 				}
-				this.viewer.set('content', this.formatFileMetaData + "<pre>" + this.file.data + "</pre>");
+				this.viewer.set('content', this.formatFileMetaData() + "<pre>" + this.file.data + "</pre>");
 
 			}
 		}
