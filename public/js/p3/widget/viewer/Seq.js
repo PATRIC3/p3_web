@@ -145,7 +145,7 @@ define([
       this.jbrowseUrl =
         'view_tab=browser&addTracks=' + encodeURIComponent(JSON.stringify(tracks))
         + '&addStores=' + encodeURIComponent(JSON.stringify(stores))
-        + '&tracks=PATRICGenes,RefSeqGenes,' + labels.join(",");
+        + '&tracks=PATRICGenes,RefSeqGenes';
 
       //console.log("[Seq] url params: ", url);
       return this.jbrowseUrl;
