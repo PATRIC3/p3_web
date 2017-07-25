@@ -11,7 +11,11 @@ define([
 			}
 			this._appLabel = this._resultType;
       this.urls = [];
-      this.getDownloadUrlsForFiles();
+			this.jbrowseUrl;
+			var _self = this;
+      this.getDownloadUrlsForFiles().then(function(objs){
+				_self.getJBrowseURLQueryParams()
+			});
 		},
     getGenomeId: function(){
 			var id = this.data.autoMeta.parameters.reference_genome_id;
@@ -35,7 +39,6 @@ define([
       throw Error("Missing partner file");
     },
     getDownloadUrlsForFiles: function() {
-
       var paths = [];
       this._resultObjects.forEach(function(o){
         paths.push(o.path+o.name);
@@ -65,8 +68,12 @@ define([
             case "bam":
               jBrowseTrackType = "JBrowse/View/Track/Alignments2";
               jBrowseStoreType = "JBrowse/Store/SeqFeature/BAM";
-              var partner = this.getPartnerFile(o.name);
-              record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType, 'baiPath':partner.url};
+							try {
+              	var partner = this.getPartnerFile(o.name)
+              	record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType, 'baiPath':partner.url};
+							} catch (err) {
+								console.log('Missing .bai file; no track can be read');
+							}
               break;
             case "bigwig":
               jBrowseTrackType = "JBrowse/Store/BigWig";
@@ -79,13 +86,18 @@ define([
               record = {'path':o.url, 'keyAndLabel':o.name, 'store':o.id, 'trackType':jBrowseTrackType, 'storeType':jBrowseStoreType};
               break;
           }
-          this.streamables.push(record);
+					if (record) this.streamables.push(record);
         }
 			}, this);
 
 			return this.streamables;
 		},
     getJBrowseURLQueryParams: function(){
+
+			if (this.jbrowseUrl) {
+				return this.jbrowseUrl;
+			}
+
       //console.log('[Seq] resultObjects', this._resultObjects);
       this.getStreamableFiles();
       //console.log("[Seq] streamables: ", this.streamables);
@@ -130,13 +142,13 @@ define([
       //console.log("[Seq] tracks: ", tracks);
       //console.log("[Seq] stores: ", stores);
 
-      var url =
+      this.jbrowseUrl =
         'view_tab=browser&addTracks=' + encodeURIComponent(JSON.stringify(tracks))
         + '&addStores=' + encodeURIComponent(JSON.stringify(stores))
         + '&tracks=PATRICGenes,RefSeqGenes,' + labels.join(",");
 
       //console.log("[Seq] url params: ", url);
-      return url;
+      return this.jbrowseUrl;
 		}
 	});
 });
