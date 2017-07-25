@@ -848,6 +848,9 @@ define([
 				var dlg = new Confirmation({
 					content: conf,
 					onConfirm: function(evt){
+						this.okButton.set('disabled', true);
+						this.okButton.set('label', 'saving...');
+
 						var prom = WorkspaceManager.deleteObjects(objs, true, true);
 						Deferred.when(prom, function(){
 							self.activePanel.clearSelection();
@@ -937,6 +940,8 @@ define([
 						return;
 					}
 
+					this.okButton.set('disabled', true);
+					this.okButton.set('label', 'copying...');
 					var prom = WorkspaceManager.copy(paths, destPath);
 					Deferred.when(prom, function(){
 						self.activePanel.clearSelection();
@@ -949,9 +954,12 @@ define([
 
 						new Dialog({
 							content: msg,
-							title: "Move failed",
+							title: "Copy failed",
 							style: "width: 250px;"
 						}).show();
+
+						this.okButton.set('disabled', false);
+						this.okButton.set('label', 'OK');
 					})
 				}
 
@@ -1007,6 +1015,8 @@ define([
 						return;
 					}
 
+					this.okButton.set('disabled', true);
+					this.okButton.set('label', 'moving...');
 					var prom = WorkspaceManager.move(paths, destPath);
 					Deferred.when(prom, function(){
 						self.activePanel.clearSelection();
@@ -1022,6 +1032,9 @@ define([
 							title: "Move failed",
 							style: "width: 250px;"
 						}).show();
+
+						this.okButton.set('disabled', false);
+						this.okButton.set('label', 'OK');
 					})
 				}
 
@@ -1078,6 +1091,8 @@ define([
 							prom = WorkspaceManager.rename(path, nameInput.get('value'))
 						}
 
+						_self.okButton.set('disabled', true);
+						_self.okButton.set('label', 'saving...');
 						Deferred.when(prom, function(res){
 							Topic.publish("/refreshWorkspace", {});
 							Topic.publish("/Notification", {message: "File renamed", type: "message"});
@@ -1091,6 +1106,9 @@ define([
 								title: "Sorry!",
 								style: "width: 400px;"
 							}).show();
+
+							_self.okButton.set('disabled', false);
+							_self.okButton.set('label', 'Rename');
 						})
 					}catch(error){
 						new Dialog({
@@ -1098,6 +1116,9 @@ define([
 							title: "Sorry!",
 							style: "width: 400px !important;"
 						}).show();
+
+						_self.okButton.set('disabled', false);
+						_self.okButton.set('label', 'Rename');
 					}
 				}
 			})

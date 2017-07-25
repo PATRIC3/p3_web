@@ -412,7 +412,7 @@ define([
 				function(res){
 					Topic.publish("/refreshWorkspace", {});
 					Topic.publish("/Notification", {
-						message: "Copied contents of "+ paths.length + (paths.length > 1 ? " items" : 'item'),
+						message: "Copied contents of "+ paths.length + (paths.length > 1 ? " items" : ' item'),
 						type: "message"
 					});
 					return res;
@@ -457,7 +457,7 @@ define([
 				function(res){
 					Topic.publish("/refreshWorkspace", {});
 					Topic.publish("/Notification", {
-						message: "Moved contents of "+ paths.length + (paths.length > 1 ? " items" : 'item'),
+						message: "Moved contents of "+ paths.length + (paths.length > 1 ? " items" : ' item'),
 						type: "message"
 					});
 					return res;
