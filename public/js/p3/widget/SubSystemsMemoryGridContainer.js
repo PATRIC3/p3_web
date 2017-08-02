@@ -424,9 +424,9 @@ define([
 					}else if(this.state.hasOwnProperty('genome')){
 						url['genome_id'] = this.state.genome.genome_id;
 					}
-					if(this.state.hasOwnProperty('genome_ids')){
-						url['genome_ids'] = this.state.genome_ids;
-					}
+					// if(this.state.hasOwnProperty('genome_ids')){
+					// 	url['genome_ids'] = this.state.genome_ids;
+					// }
 
 					url['feature_id'] = selection[0].feature_id;
 					url['subsystem_id'] = selection[0].subsystem_id;

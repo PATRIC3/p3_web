@@ -215,7 +215,7 @@ define([
 						});
 					});
 
-					return when(request.post(_self.apiServer + '/subsystem_ref/', {
+					return when(request.post(_self.apiServer + 'subsystem_ref/', {
 						handleAs: 'json',
 						headers: {
 							'Accept': "application/json",
@@ -240,11 +240,11 @@ define([
 						roleGenomeDist.forEach(function(element){
 							var role = element.val;
 							if(role != ""){
-								var featureCount = element.count;
+								var roleCount = element.count;
 
 								var row = {
 									role_id: role,
-									feature_count: featureCount,
+									role_count: roleCount,
 									genome_count: roleGenomeIdSet[role].length,
 									genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
 									description: ecRefHash[role],
@@ -339,7 +339,7 @@ define([
 				});
 			}else{
 				data.forEach(function(family, idx){
-					familyOrderMap[family.ec_number] = idx;
+					familyOrderMap[family.role_count] = idx;
 				})
 			}
 
@@ -351,8 +351,8 @@ define([
 				if(genomeOrderChangeMap.length > 0){
 					family.genomes = distributionTransformer(family.genomes, genomeOrderChangeMap);
 				}
-				var order = familyOrderMap[family.ec_number];
-				cols[order] = createColumn(order, family.ec_number, family.ec_number + ' - ' + family.description, family.genomes, meta);
+				var order = familyOrderMap[family.role_count];
+				cols[order] = createColumn(order, family.role_count, family.role_count + ' - ' + family.description, family.genomes, meta);
 			});
 
 			// colorStop
@@ -371,7 +371,7 @@ define([
 				'columns': cols,
 				'colorStops': colorStop,
 				'rowLabel': 'Genomes',
-				'colLabel': 'Protein Families',
+				'colLabel': 'Roles	',
 				'rowTrunc': 'mid',
 				'colTrunc': 'end',
 				'offset': 1,

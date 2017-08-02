@@ -33,18 +33,24 @@ define([
 				state.genome_ids = [state.genome_id];
 				this.viewer.set('visible', true);
 			}
-			else if(state.hasOwnProperty('genome_ids')){
-				this.viewer.set('visible', true);
-			}
+			// else if(state.hasOwnProperty('genome_ids')){
+			// 	this.viewer.set('visible', true);
+			// }
+
 			
-			// var self = this;
-			// when(this.getGenomeIdsByFeatureId(state.taxon_id), function(genomeIds){
-			// 	state.genome_ids = genomeIds;
-			// 	self.viewer.set('visible', true);
-			// });
+			// if(state.hasOwnProperty('feature_id')){
+			// 	this.viewer.set('visible', true);
+			// }
+			
+			var self = this;
+			when(this.getGenomeIdsByFeatureId(state.taxon_id), function(genomeIds){
+				state.genome_ids = genomeIds;
+				self.viewer.set('visible', true);
+			});
+
 
 			// update header
-			this.buildHeaderContent(state.subsystem_id);
+			this.buildHeaderContent(state.subsystem_id[0]);
 
 			// update page title
 			window.document.title = 'Subsystem Map';
@@ -88,17 +94,17 @@ define([
 		buildHeaderContent: function(mapId){
 			var self = this;
 			var query = "?eq(Subsystem_id," + mapId + ")&limit(1)";
-			return when(request.get(PathJoin(this.apiServiceUrl, "Subsystem_ref", query), {
-				headers: {
-					'Accept': "application/json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-				},
-				handleAs: "json"
-			}), function(response){
-				var p = response[0];
+			// return when(request.get(PathJoin(this.apiServiceUrl, "Subsystem_ref", query), {
+			// 	headers: {
+			// 		'Accept': "application/json",
+			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+			// 	},
+			// 	handleAs: "json"
+			// }), function(response){
+			// 	var p = response[0];
 
-				self.queryNode.innerHTML = "<b>" + p.Subsystem_id + " | " + p.Subsystem_name + "</b>";
-			});
+			// 	self.queryNode.innerHTML = "<b>" + p.Subsystem_id + " | " + p.Subsystem_name + "</b>";
+			// });
 		},
 
 		postCreate: function(){
