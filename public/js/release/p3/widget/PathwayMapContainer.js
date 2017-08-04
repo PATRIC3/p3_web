@@ -49,8 +49,8 @@ define("p3/widget/PathwayMapContainer", [
 			});
 
 			this.heatmapContainer = new HeatmapContainer({
-				title: "Heatmap",
-				content: "Heatmap"
+				title: "Pathway Heatmap",
+				content: "Pathway Heatmap"
 			});
 
 			// this.watch("state", lang.hitch(this, "onSetState"));
