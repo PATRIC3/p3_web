@@ -116,7 +116,8 @@ define([
 			var roleNumber = originalAxis.columnIds;
 			var genomeId = originalAxis.rowIds;
 
-			var query = "?and(eq(role_id," + roleNumber + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
+			var query = "and(eq(role_id," + roleNumber + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
+			//var query = 'and(eq(role_id,LongChaiFattAcid),eq(genome_id,83332.12))&limit(25000,0)';
 
 			Topic.publish("SubsystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "Subsystem", query), {
@@ -124,7 +125,8 @@ define([
 				headers: {
 					'Accept': "application/json",
 					'X-Requested-With': null,
-					'Authorization': (window.App.authorizationToken || "")
+					'Authorization': (window.App.authorizationToken || ""),
+					'Content-Type': 'application/rqlquery+x-www-form-urlencoded'
 				}
 			}).then(lang.hitch(this, function(response){
 				Topic.publish("SubsystemMap", "hideLoadingMask");

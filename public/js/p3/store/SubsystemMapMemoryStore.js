@@ -339,7 +339,7 @@ define([
 				});
 			}else{
 				data.forEach(function(family, idx){
-					familyOrderMap[family.role_count] = idx;
+					familyOrderMap[family.role_id] = idx;
 				})
 			}
 
@@ -351,8 +351,8 @@ define([
 				if(genomeOrderChangeMap.length > 0){
 					family.genomes = distributionTransformer(family.genomes, genomeOrderChangeMap);
 				}
-				var order = familyOrderMap[family.role_count];
-				cols[order] = createColumn(order, family.role_count, family.role_count + ' - ' + family.description, family.genomes, meta);
+				var order = familyOrderMap[family.role_id];
+				cols[order] = createColumn(order, family.role_id, family.role_id + ' - ' + family.description, family.genomes, meta);
 			});
 
 			// colorStop
