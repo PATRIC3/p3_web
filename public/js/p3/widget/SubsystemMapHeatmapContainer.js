@@ -113,14 +113,14 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colID, rowID);
 
-			var roleNumber = originalAxis.columnIds;
+			var roleId = originalAxis.columnIds;
 			var genomeId = originalAxis.rowIds;
 
-			var query = "and(eq(role_id," + roleNumber + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
+			var query = "and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
 			//var query = 'and(eq(role_id,LongChaiFattAcid),eq(genome_id,83332.12))&limit(25000,0)';
 
 			Topic.publish("SubsystemMap", "showLoadingMask");
-			request.get(PathJoin(window.App.dataServiceURL, "Subsystem", query), {
+			request.get(PathJoin(window.App.dataServiceURL, "subsystem", query), {
 				handleAs: 'json',
 				headers: {
 					'Accept': "application/json",
@@ -140,14 +140,15 @@ define([
 				});
 				var features = Object.keys(featureSet);
 
-				this.dialog.set('content', this._buildPanelCellClicked(isTransposed, roleNumber, genomeId, features));
-				var actionBar = this._buildPanelButtons(colID, rowID, roleNumber, genomeId, features);
+				this.dialog.set('content', this._buildPanelCellClicked(isTransposed, roleId, genomeId, features));
+				var actionBar = this._buildPanelButtons(colID, rowID, roleId, genomeId, features);
 				domConstruct.place(actionBar, this.dialog.containerNode, "last");
 
 				this.dialog.show();
 			}));
 
 		},
+		//TODO - fix query here
 		flashCellsSelected: function(flashObjectID, colIDs, rowIDs){
 			//console.log("flashCellsSelected is called", colIDs, rowIDs);
 			if(rowIDs.length == 0) return;
