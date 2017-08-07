@@ -407,7 +407,7 @@ define([
 				false
 			],
 			[
-				"ViewPathwayMap",
+				"ViewSubsystemMap",
 				"fa icon-map-o fa-2x",
 				{
 					label: "Map",
@@ -426,9 +426,9 @@ define([
 					// else if(this.state.hasOwnProperty('genome')){
 					// 	url['genome_id'] = this.state.genome.genome_id;
 					// }
-					// if(this.state.hasOwnProperty('genome_ids')){
-					// 	url['genome_ids'] = this.state.genome_ids;
-					// }
+					if(this.state.hasOwnProperty('genome_ids')){
+						url['genome_ids'] = this.state.genome_ids;
+					}
 
 					url['genome_id'] = selection[0].genome_id;
 					url['feature_id'] = selection[0].feature_id;
