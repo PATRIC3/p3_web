@@ -116,7 +116,7 @@ define([
 			var roleId = originalAxis.columnIds;
 			var genomeId = originalAxis.rowIds;
 
-			var query = "and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
+			var query = "?and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
 			//var query = 'and(eq(role_id,LongChaiFattAcid),eq(genome_id,83332.12))&limit(25000,0)';
 
 			Topic.publish("SubsystemMap", "showLoadingMask");
@@ -155,10 +155,10 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colIDs, rowIDs);
 
-			var ecNumbers = originalAxis.columnIds;
+			var roleIds = originalAxis.columnIds;
 			var genomeIds = originalAxis.rowIds;
 
-			var query = "and(in(ec_number,(" + ecNumbers + ")),in(genome_id,(" + genomeIds + ")),eq(annotation,PATRIC))&limit(25000,0)";
+			var query = "?and(in(role_id,(" + roleIds + ")),in(genome_id,(" + genomeIds + "))&limit(25000,0)";
 
 			Topic.publish("SubsystemMap", "showLoadingMask");
 			request.post(PathJoin(window.App.dataServiceURL, "subsystem"), {
@@ -182,8 +182,8 @@ define([
 				});
 				var features = Object.keys(featureSet);
 
-				this.dialog.set('content', this._buildPanelCellsSelected(isTransposed, ecNumbers, genomeIds, features));
-				var actionBar = this._buildPanelButtons(colIDs, rowIDs, ecNumbers, genomeIds, features);
+				this.dialog.set('content', this._buildPanelCellsSelected(isTransposed, roleIds, genomeIds, features));
+				var actionBar = this._buildPanelButtons(colIDs, rowIDs, roleIds, genomeIds, features);
 				domConstruct.place(actionBar, this.dialog.containerNode, "last");
 
 				this.dialog.show();
