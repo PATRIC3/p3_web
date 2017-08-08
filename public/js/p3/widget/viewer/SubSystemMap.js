@@ -29,11 +29,14 @@ define([
 			// if(!state.taxon_id) return;
 
 			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
-			if(state.hasOwnProperty('genome_id')){
+			if(state.hasOwnProperty('genome_ids')){
+				state.genome_ids = state.genome_ids;
+				this.viewer.set('visible', true);
+			} else if(state.hasOwnProperty('genome_id')){
 				state.genome_ids = [state.genome_id];
 				this.viewer.set('visible', true);
 			}
-			// else if(state.hasOwnProperty('genome_ids')){
+						// else if(state.hasOwnProperty('genome_ids')){
 			// 	this.viewer.set('visible', true);
 			// }
 

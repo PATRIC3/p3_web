@@ -115,8 +115,9 @@ define([
 			}
 
 			(this.state.subsystem_id) ? _self.pmState.subsystem_id = this.state.subsystem_id[0] : {};
-			(this.state.ec_number) ? _self.pmState.ec_number = this.state.ec_number : {};
-			(this.state.feature_id) ? _self.pmState.feature_id = this.state.feature_id : {};
+			(this.state.genome_ids) ? _self.pmState.genome_ids = this.state.genome_ids : {};
+			//(this.state.genome_id) ? _self.pmState.genome_id = this.state.genome_id : {};
+			//(this.state.feature_id) ? _self.pmState.feature_id = this.state.feature_id : {};
 			(this.state.taxon_id) ? _self.pmState.taxon_id = this.state.taxon_id : {};
 
 			this._loadingDeferred = when(request.post(_self.apiServer + '/genome/', {

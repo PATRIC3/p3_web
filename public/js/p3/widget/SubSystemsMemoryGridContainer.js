@@ -426,18 +426,20 @@ define([
 					// else if(this.state.hasOwnProperty('genome')){
 					// 	url['genome_id'] = this.state.genome.genome_id;
 					// }
-					if(this.state.hasOwnProperty('genome_ids')){
-						url['genome_ids'] = this.state.genome_ids;
-					}
+					// if(this.state.hasOwnProperty('genome_ids')){
+					// 	url['genome_ids'] = this.state.genome_ids;
+					// } else {
+					// 	url['genome_id'] = selection[0].genome_id;
+					// }
 
-					url['genome_id'] = selection[0].genome_id;
+					url['genome_ids'] = this.state.genome_ids;
 					url['feature_id'] = selection[0].feature_id;
 					url['subsystem_id'] = selection[0].subsystem_id;
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]
 					}).join("&");
 
-					Topic.publish("/navigate", {href: "/view/SubsystemMap/?" + params, target: "blank"});
+					Topic.publish("/navigate", {href: "/view/SubsystemMap/?" + params, target: "blank", genomeIds: this.state.genome_ids});
 				},
 				false
 			]
