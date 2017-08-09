@@ -5,7 +5,7 @@ define([
 	"dojo/request", "dojo/_base/lang", "dojo/when",
 	"../ActionBar", "../FilterContainerActionBar", "phyloview/PhyloTree",
 	"d3/d3", "phyloview/TreeNavSVG", "../../util/PathJoin", "dijit/form/Button",
-	"dijit/MenuItem", "dijit/TooltipDialog", "dijit/popup", "../SelectionToGroup",
+	"dijit/MenuItem", "dijit/TooltipDialog", "dijit/popup", "../SelectionToGroup", "../PerspectiveToolTip",
 	"dijit/Dialog", "../ItemDetailPanel", "dojo/query", "FileSaver"
 ], function(declare, Base, on, Topic,
 			domClass, ContentPane, domConstruct,
@@ -14,11 +14,12 @@ define([
 			ActionBar, ContainerActionBar, PhyloTree,
 			d3, d3Tree, PathJoin, Button,
 			MenuItem, TooltipDialog, popup,
-			SelectionToGroup, Dialog, ItemDetailPanel, query, saveAs){
+			SelectionToGroup, PerspectiveToolTipDialog, Dialog, ItemDetailPanel, query, saveAs){
 
 	var schemes = [{
-		name: "Zappo", id: "zappo"
-	},
+			name: "Zappo", 
+			id: "zappo"
+		},
 		{
 			name: "Taylor",
 			id: "taylor"
@@ -80,6 +81,54 @@ define([
 			id: "foo"
 		}];
 
+
+	var filters = [{
+			name: "Hide columns by % conservation (>=)", 
+			id: "hide_col_threshold_greater"
+		},
+		{
+			name: "Hide columns by % conservation (<=)",
+			id: "hide_col_threshold_less"
+		},
+		{
+			name: "Hide columns by % conservation (between)",
+			id: "hide_col_threshold_between"
+		},
+		{
+			name: "Hide columns by % gaps (>=)",
+			id: "hide_col_gaps_greater"
+		},
+		{
+			name: "Hide columns by % gaps (<=)",
+			id: "hide_col_gaps_less"
+		},
+		{
+			name: "Hide columns by % gaps (between)",
+			id: "hide_col_gaps_between"
+		},
+		/* to be implemented in the future
+		{
+			name: "Hide seqs by identity (>=)",
+			id: "hide_seq_identity_greater"
+		},
+		{
+			name: "Hide seqs by identity (<=)",
+			id: "hide_seq_identity_less"
+		},
+		{
+			name: "Hide seqs by gaps (>=)",
+			id: "hide_seq_gaps_greater"
+		},
+		{
+			name: "Hide seqs by gaps (<=)",
+			id: "hide_seq_gaps_less"
+		},
+		*/
+		{
+			name: "Reset",
+			id: "reset"
+		}];
+
 	//var noMenu = ["10_import", "15_ordering", "20_filter", "30_selection","40_vis", "70_extra", "90_help", "95_debug"];
 	//noMenu.forEach(function(toRemove){delete defMenu.views[toRemove];});
 	//m.addView("menu", defMenu);
@@ -89,6 +138,11 @@ define([
 
 	schemes.forEach(lang.hitch(this, function(scheme){
 		colorMenuDivs.push('<div class="wsActionTooltip"  rel="' + scheme.id + '">' + scheme.name + '</div>');
+	}));
+
+	var filterMenuDivs = [];
+	filters.forEach(lang.hitch(this, function(filters){
+		filterMenuDivs.push('<div class="wsActionTooltip"  rel="' + filters.id + '">' + filters.name + '</div>');
 	}));
 
 	var colorMenu = new TooltipDialog({
@@ -112,6 +166,13 @@ define([
 		}
 	});
 
+	var filterMenu = new TooltipDialog({
+		content: filterMenuDivs.join(""),
+		onMouseLeave: function(){
+			popup.close(filterMenu);
+		}
+	});
+
 	var snapMenu = new TooltipDialog({
 		content: "",
 		onMouseLeave: function(){
@@ -129,8 +190,10 @@ define([
 		dataStats: {"_formatterType": "msa_details"},
 		tree: null,
 		phylogram: false,
+        alignType: "protein",
 		maxSequences: 500,
 		numSequences: 0,
+		featureData: null,
 		selection: null,
 		onSetLoading: function(attr, oldVal, loading){
 			if(loading){
@@ -138,7 +201,7 @@ define([
 			}
 		},
 		checkSequenceCount: function(query){
-			var q = query + "&limit(1)";
+			var q = query + "&limit(500)";
 			var def = new Deferred();
 			var url = PathJoin(this.apiServiceUrl, "genome_feature") + "/";
 			console.log("CheckSeqCount URL: ", url);
@@ -152,10 +215,12 @@ define([
 				},
 				handleAs: "json"
 			}).then(lang.hitch(this, function(res){
-				console.log("Check Res: ", res.response.numFound)
-				if(res && res.response && (typeof res.response.numFound != 'undefined') && (res.response.numFound < this.maxSequences)){
+				// console.log("Check Res: ", res.response)
+				// console.log("Check Res: ", res.response.numFound)
+				if(res && res.response && res.response.docs && (typeof res.response.numFound != 'undefined') && (res.response.numFound < this.maxSequences)){
 					console.log("  Amount OK")
 					this.numSequences = res.response.numFound;
+					this.featureData = res.response.docs;
 					def.resolve(res.response.numFound);
 					return;
 				}
@@ -194,7 +259,27 @@ define([
 			var cur = this.selection.map(lang.hitch(this, function(selected){
 				return this.dataMap[selected.id];
 			}));
+			// console.log("dataMap", this.dataMap);
+			// console.log("data", this.data);
+			// console.log("cur", cur);
+			// console.log("this.itemDetailPanel", this.itemDetailPanel);
 			this.selectionActionBar._setSelectionAttr(cur);
+			var self = this;
+			if (cur.length==1){
+				var curr_selection = cur[0].feature_id;
+				// console.log("curr_selection", curr_selection);
+				this.featureData.forEach(function(sel){
+					// console.log("sel", sel);
+					// console.log("this.itemDetailPanel", self.itemDetailPanel);
+					if (sel.feature_id == curr_selection) {
+						self.itemDetailPanel.set('containerWidget', {containerType: 'feature_data'});
+						self.itemDetailPanel.set('selection', [sel]);	
+					}
+				})
+
+			} else {
+				this.itemDetailPanel.set('selection', cur);
+			}
 		},
 
 		createDataMap: function(){
@@ -311,6 +396,12 @@ define([
 			opts.seqs = msa_models.seqs;
 			opts.el = msaDiv;
 			opts.bootstrapMenu = false;
+            if (this.alignType == "protein"){
+                opts.colorscheme = {"scheme":"taylor"};
+            }
+            else if (this.alignType == "dna"){
+                opts.colorscheme = {"scheme":"nucleotide"};
+            }
 			opts.vis = {
 				conserv: false,
 				overviewbox: false,
@@ -341,14 +432,14 @@ define([
 			//this.tree.setTree(this.data.tree);
 
 			var idMenuDivs = [];
-			this.tree.addLabels(this.alt_labels["genome_name"], "Organism Names");
-			idMenuDivs.push('<div class="wsActionTooltip" rel="' + "Organism Names" + '">' + "Organism Names" + '</div>');
-			this.tree.addLabels(this.alt_labels["patric_id"], "PATRIC ID");
-			idMenuDivs.push('<div class="wsActionTooltip" rel="' + "PATRIC ID" + '">' + "PATRIC ID" + '</div>');
+			this.tree.addLabels(this.alt_labels["genome_name"], "Genome Name");
+			idMenuDivs.push('<div class="wsActionTooltip" rel="' + "Genome Name" + '">' + "Genome Name" + '</div>');
+			this.tree.addLabels(this.alt_labels["patric_id"], "Gene ID");
+			idMenuDivs.push('<div class="wsActionTooltip" rel="' + "Gene ID" + '">' + "Gene ID" + '</div>');
 			idMenu.set("content", idMenuDivs.join(""));
 
 			this.tree.startup();
-			this.tree.selectLabels("Organism Names");
+			this.tree.selectLabels("Genome Name");
 			this.tree.update();
 
 			Object.keys(rearrangeSeqs).forEach(lang.hitch(this, function(fid){
@@ -360,6 +451,7 @@ define([
 
 			// init msa
 			var m = new msa.msa(opts);
+		 	console.log("m ", m);
 			var menuOpts = {};
 			menuOpts.el = menuDiv;
 			//var msaDiv = document.getElementById('msaDiv');
@@ -400,6 +492,159 @@ define([
 				popup.close(idMenu);
 			}));
 
+			on(filterMenu.domNode, "click", lang.hitch(this, function(evt){
+				var rel = evt.target.attributes.rel.value;
+				var sel = filterMenu.selection;
+				delete filterMenu.selection;
+				const maxLen = m.seqs.getMaxLength();
+				// console.log("maxLen=", maxLen);
+				const conserv = m.g.stats.scale(m.g.stats.conservation());
+				const end = maxLen - 1;
+
+				// console.log("msa_models=", msa_models);
+				// console.log("m=", m);
+				
+				switch(rel){
+				case "hide_col_threshold_greater":
+					var threshold = prompt("Enter threshold (in percent)", 20);
+					threshold = threshold / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						if (conserv[i] >= threshold) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+					
+				case "hide_col_threshold_less":
+					var threshold = prompt("Enter threshold (in percent)", 20);
+					threshold = threshold / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						if (conserv[i] <= threshold) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+
+				case "hide_col_threshold_between":
+					var threshold1 = prompt("Enter minimum threshold (in percent)", 20);
+					var threshold2 = prompt("Enter maximum threshold (in percent)", 80);
+					threshold1 = threshold1 / 100;
+					threshold2 = threshold2 / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						if (conserv[i] >= threshold1 && conserv[i] <= threshold2) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+
+				case "hide_col_gaps_greater":
+					var threshold = prompt("Enter threshold (in percent)", 20);
+					threshold = threshold / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						var gaps = 0;
+						var total = 0;
+						m.seqs.each((el) => {
+						  if (el.get('seq')[i] === "-") { gaps++; }
+						  return total++;
+						});
+						const gapContent = gaps / total;
+						if (gapContent >= threshold) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+
+				case "hide_col_gaps_less":
+					var threshold = prompt("Enter threshold (in percent)", 20);
+					threshold = threshold / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						var gaps = 0;
+						var total = 0;
+						m.seqs.each((el) => {
+						  if (el.get('seq')[i] === "-") { gaps++; }
+						  return total++;
+						});
+						const gapContent = gaps / total;
+						if (gapContent <= threshold) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+
+				case "hide_col_gaps_between":
+					var threshold1 = prompt("Enter minimum threshold (in percent)", 20);
+					var threshold2 = prompt("Enter maximum threshold (in percent)", 80);
+					threshold1 = threshold1 / 100;
+					threshold2 = threshold2 / 100;
+					var hidden = [];
+					for (var i = 0; i <= end; i++) {
+						var gaps = 0;
+						var total = 0;
+						m.seqs.each((el) => {
+						  if (el.get('seq')[i] === "-") { gaps++; }
+						  return total++;
+						});
+						const gapContent = gaps / total;
+						if (gapContent >= threshold1 && gapContent <= threshold2) {
+						  hidden.push(i);
+						}
+					}
+					treeDiv.setAttribute("style", "padding-top:0px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:105px;");
+					m.g.columns.set("hidden", hidden);
+					m.g.vis.set("seqlogo", false);
+					break;
+
+				case "reset":
+					m.g.columns.set("hidden", []);
+					m.seqs.each((el) => {
+						if (el.get('hidden')) {
+							return el.set('hidden', false);
+						}
+					});
+					treeDiv.setAttribute("style", "padding-top:106px; width:100%; vertical-align:top; overflow-x:visible; display:inline-block; border-right:1px solid grey;");
+					this.tree.update();
+					cell2.setAttribute("style", "padding-top:0px;");
+					m.g.vis.set("seqlogo", true);
+					break;
+
+				default:
+					break;
+				}
+				popup.close(filterMenu);
+			}));
+			
 			on(snapMenu.domNode, "click", lang.hitch(this, function(evt){
 				var rel = evt.target.attributes.rel ? evt.target.attributes.rel.value : null;
 				var sel = snapMenu.selection;
@@ -409,6 +654,9 @@ define([
 				}
 				else if(rel == "msa-txt"){
 					saveAs(new Blob([this.dataStats.clustal]), "PATRIC_msa.txt");
+				}
+				else if(rel == "msa-fasta"){
+					msa.utils.export.saveAsFile(m, "PATRIC_msa.fasta");
 				}
 				else if(rel == "tree-svg"){
 					saveAs(new Blob([query("svg")[0].outerHTML]), "PATRIC_msa_tree.svg");
@@ -470,9 +718,11 @@ define([
 			this.set('loading', true);
 			if(this.state && this.state.search){
 				var q = this.state.search + "&limit(" + this.maxSequences + ")";
-
+                if (this.state.pathname.indexOf("dna") !== -1){
+                    this.alignType = "dna";
+                }
 				console.log("RUN MSA Against: ", q)
-				return when(window.App.api.data("multipleSequenceAlignment", [q]), lang.hitch(this, function(res){
+				return when(window.App.api.data("multipleSequenceAlignment", [q, this.alignType]), lang.hitch(this, function(res){
 					console.log("MSA Results: ", res);
 					this.set('loading', false);
 					this.set('data', res);
@@ -495,10 +745,11 @@ define([
 				region: "right",
 				style: "width:300px",
 				splitter: true,
-				layoutPriority: 1
+				layoutPriority: 1,
+				containerWidget: this
 			});
 			this.addChild(this.selectionActionBar);
-			//this.addChild(this.itemDetailPanel);
+			this.addChild(this.itemDetailPanel);
 			this.itemDetailPanel.startup();
 			this.setupActions();
 		},
@@ -521,7 +772,7 @@ define([
 					if(children.some(function(child){
 							return this.itemDetailPanel && (child.id == this.itemDetailPanel.id);
 						}, this)){
-						// console.log("Remove Item Detail Panel");
+						console.log("Remove Item Detail Panel");
 						this.removeChild(this.itemDetailPanel);
 						console.log("Button Node: ", button)
 
@@ -603,6 +854,31 @@ define([
 				true
 			],
 			[
+				"FilterSelection",
+				"fa icon-filter fa-2x",
+				{
+					label: "Filter",
+					persistent: true,
+					validTypes: ["*"],
+					validContainerTypes: ["*"],
+					tooltip: "Show hide columns",
+					tooltipDialog: filterMenu,
+					ignoreDataType: true
+				},
+				function(selection){
+					// console.log("Toggle Item Detail Panel",this.itemDetailPanel.id, this.itemDetailPanel);
+
+					filterMenu.selection = selection;
+					// console.log("ViewFasta Sel: ", this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog)
+					popup.open({
+						popup: this.selectionActionBar._actions.FilterSelection.options.tooltipDialog,
+						around: this.selectionActionBar._actions.FilterSelection.button,
+						orient: ["below"]
+					});
+				},
+				true
+			],
+			[
 				"AddGroup",
 				"fa icon-object-group fa-2x",
 				{
@@ -641,7 +917,173 @@ define([
 					dlg.show();
 				},
 				false
-			], [
+			], 
+			[
+				"MultipleSeqAlignmentFeatures",
+				"fa icon-alignment fa-2x",
+				{
+					label: "MSA",
+					ignoreDataType: true,
+					min: 2,
+					multiple: true,
+					max: 200,
+					validTypes: ["*"],
+					tooltip: "Multiple Sequence Alignment",
+					validContainerTypes: ["*"]
+				},
+				function(selection){
+					// console.log("MSA Selection: ", selection);
+					var ids = selection.map(function(d){
+						return d['feature_id'];
+					});
+					// console.log("OPEN MSA VIEWER");
+					Topic.publish("/navigate", {href: "/view/MSA/?in(feature_id,(" + ids.map(encodeURIComponent).join(",") + "))", target: "blank"});
+
+				},
+				false
+			],
+			[
+				"ViewFeatureItem",
+				"MultiButton fa icon-selection-Feature fa-2x",
+				{
+					label: "FEATURE",
+					validTypes: ["*"],
+					multiple: false,
+					tooltip: "Switch to Feature View. Press and Hold for more options.",
+					validContainerTypes: ["*"],
+					pressAndHold: function(selection, button, opts, evt){
+						console.log("PressAndHold");
+						console.log("Selection: ", selection, selection[0])
+						popup.open({
+							popup: new PerspectiveToolTipDialog({
+								perspective: "Feature",
+								perspectiveUrl: "/view/Feature/" + selection[0].feature_id
+							}),
+							around: button,
+							orient: ["below"]
+						});
+					}
+				},
+				function(selection){
+					var sel = selection[0];
+					Topic.publish("/navigate", {href: "/view/Feature/" + sel.feature_id + "#view_tab=overview", target: "blank"});
+				},
+				false
+			],
+			[
+				"ViewFeatureItems",
+				"MultiButton fa icon-selection-FeatureList fa-2x",
+				{
+					label: "FEATURES",
+					validTypes: ["*"],
+					multiple: true,
+					min: 2,
+					max: 5000,
+					tooltip: "Switch to Feature List View. Press and Hold for more options.",
+					validContainerTypes: ["*"],
+					pressAndHold: function(selection, button, opts, evt){
+						console.log("PressAndHold");
+						console.log("Selection: ", selection, selection[0])
+						popup.open({
+							popup: new PerspectiveToolTipDialog({
+								perspective: "FeatureList",
+								perspectiveUrl: "/view/FeatureList/?in(feature_id,(" + selection.map(function(x){
+									return x.feature_id;
+								}).join(",") + "))"
+							}),
+							around: button,
+							orient: ["below"]
+						});
+
+					}
+				},
+				function(selection){
+					var sel = selection[0];
+					Topic.publish("/navigate", {
+						href: "/view/FeatureList/?in(feature_id,(" + selection.map(function(x){
+							return x.feature_id;
+						}).join(",") + "))",
+						target: "blank"
+					});
+				},
+				false
+			], 
+			[
+				"ViewGenomeItem",
+				"MultiButton fa icon-selection-Genome fa-2x",
+				{
+					label: "GENOME",
+					validTypes: ["*"],
+					multiple: false,
+					tooltip: "Switch to Genome View. Press and Hold for more options.",
+					ignoreDataType: true,
+					validContainerTypes: ["*"],
+					pressAndHold: function(selection, button, opts, evt){
+						console.log("PressAndHold");
+						console.log("Selection: ", selection, selection[0])
+						popup.open({
+							popup: new PerspectiveToolTipDialog({
+								perspective: "Genome",
+								perspectiveUrl: "/view/Genome/" + selection[0].genome_id
+							}),
+							around: button,
+							orient: ["below"]
+						});
+
+					}
+				},
+				function(selection){
+					var sel = selection[0];
+					// console.log("sel: ", sel)
+					// console.log("Nav to: ", "/view/Genome/" + sel.genome_id);
+					Topic.publish("/navigate", {href: "/view/Genome/" + sel.genome_id, target: "blank"});
+				},
+				false
+			],
+			[
+				"ViewGenomeItems",
+				"MultiButton fa icon-selection-GenomeList fa-2x",
+				{
+					label: "GENOMES",
+					validTypes: ["*"],
+					multiple: true,
+					min: 2,
+					max: 1000,
+					tooltip: "Switch to Genome List View. Press and Hold for more options.",
+					ignoreDataType: true,
+					validContainerTypes: ["*"],
+					pressAndHold: function(selection, button, opts, evt){
+						var map = {};
+						selection.forEach(function(sel){
+							if(!map[sel.genome_id]){
+								map[sel.genome_id] = true
+							}
+						})
+						var genome_ids = Object.keys(map);
+						popup.open({
+							popup: new PerspectiveToolTipDialog({
+								perspective: "GenomeList",
+								perspectiveUrl: "/view/GenomeList/?in(genome_id,(" + genome_ids.join(",") + "))"
+							}),
+							around: button,
+							orient: ["below"]
+						});
+
+					}
+				},
+				function(selection){
+					var map = {};
+					selection.forEach(function(sel){
+						if(!map[sel.genome_id]){
+							map[sel.genome_id] = true
+						}
+					})
+					var genome_ids = Object.keys(map);
+					Topic.publish("/navigate", {href: "/view/GenomeList/?in(genome_id,(" + genome_ids.join(",") + "))", target: "blank"});
+				},
+				false
+			],
+			[
 				"Snapshot",
 				"fa icon-download fa-2x",
 				{
@@ -657,7 +1099,8 @@ define([
 					// console.log("Toggle Item Detail Panel",this.itemDetailPanel.id, this.itemDetailPanel);
 
 					var snapMenuDivs = [];
-					snapMenuDivs.push('<div class="wsActionTooltip" rel="msa">MSA png</div>');
+					// disable downloding MSA png as the png does not give the species or tell you where in the alignment it is.
+					// snapMenuDivs.push('<div class="wsActionTooltip" rel="msa">MSA png</div>');
 					/*var encodedTree = window.btoa(unescape(encodeURIComponent(Query("svg")[0].outerHTML)));
 
 					var e = domConstruct.create("a", {
@@ -686,6 +1129,7 @@ define([
 						alt: "tree_newick.txt"
 					});*/
 					snapMenuDivs.push('<div class="wsActionTooltip" rel="msa-txt">' + "MSA txt" + '</div>');
+					snapMenuDivs.push('<div class="wsActionTooltip" rel="msa-fasta">' + "MSA fasta" + '</div>');
 					snapMenuDivs.push('<div class="wsActionTooltip" rel="tree-svg">' + "Tree svg" + '</div>');
 					snapMenuDivs.push('<div class="wsActionTooltip" rel="tree-newick">' + "Tree newick" + '</div>');
 
