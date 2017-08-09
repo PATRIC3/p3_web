@@ -1207,7 +1207,7 @@ define([
 				// console.log("oldVal: ", oldVal, "newVal: ", newVal, "state.hashParams.filter: ", this.state.hashParams.filter)
 				// console.log("setFilter Watch() callback", newVal);
 				if((oldVal != newVal) && (newVal != this.state.hashParams.filter)){
-					// console.log("Emit UpdateHash: ", newVal);
+					//console.log("Emit UpdateHash: ", newVal);
 					on.emit(this.domNode, "UpdateHash", {
 						bubbles: true,
 						cancelable: true,

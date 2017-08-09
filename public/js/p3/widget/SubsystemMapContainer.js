@@ -3,12 +3,12 @@ define([
 	"dijit/layout/BorderContainer", "dijit/layout/StackContainer", "dijit/layout/TabController", "dijit/layout/ContentPane",
 	"dijit/form/RadioButton", "dijit/form/Textarea", "dijit/form/TextBox", "dijit/form/Button", "dijit/form/Select",
 	"./ActionBar", "./ContainerActionBar",
-	"./PathwayMapKeggContainer", "./PathwayMapHeatmapContainer"
+	"./SubsystemMapHeatmapContainer"
 ], function(declare, lang, on, Topic, domConstruct,
 			BorderContainer, TabContainer, StackController, ContentPane,
 			RadioButton, TextArea, TextBox, Button, Select,
 			ActionBar, ContainerActionBar,
-			MainMapContainer, HeatmapContainer){
+			HeatmapContainer){
 
 	return declare([BorderContainer], {
 		gutters: false,
@@ -41,21 +41,14 @@ define([
 				"class": "TextTabButtons"
 			});
 
-			this.mainMapContainer = new MainMapContainer({
-				title: "KEGG Map",
-				content: "KEGG Map",
+			this.heatmapContainer = new HeatmapContainer({
+				title: "Subsystem Heatmap",
+				content: "Subsystem Heatmap", 
 				state: this.state,
 				apiServer: this.apiServer
 			});
 
-			this.heatmapContainer = new HeatmapContainer({
-				title: "Pathway Heatmap",
-				content: "Pathway Heatmap"
-			});
-
-			// this.watch("state", lang.hitch(this, "onSetState"));
-
-			this.tabContainer.addChild(this.mainMapContainer);
+			//this.tabContainer.addChild(this.mainMapContainer);
 			this.tabContainer.addChild(this.heatmapContainer);
 			this.addChild(tabController);
 			this.addChild(this.tabContainer);
