@@ -42,7 +42,7 @@ define([
 
 		constructor: function(options){
 			// console.log(options);
-			this.topicId = "SubsystemMap_" + options.id.split('_subsystems')[0];
+			this.topicId = "SubSystemMap_" + options.id.split('_subsystems')[0];
 
 			Topic.subscribe(this.topicId, lang.hitch(this, function(){
 				// console.log("ProteinFamiliesHeatmapContainer:", arguments);

@@ -439,7 +439,7 @@ define([
 						return p + "=" + url[p]
 					}).join("&");
 
-					Topic.publish("/navigate", {href: "/view/SubsystemMap/?" + params, target: "blank", genomeIds: this.state.genome_ids});
+					Topic.publish("/navigate", {href: "/view/SubSystemMap/?" + params, target: "blank", genomeIds: this.state.genome_ids});
 				},
 				false
 			]
