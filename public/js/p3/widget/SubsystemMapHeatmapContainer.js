@@ -36,7 +36,7 @@ define([
 						this.pmState.heatmapAxis = "";
 					}
 
-					Topic.publish("SubsystemMap", "refreshHeatmap");
+					Topic.publish("SubSystemMap", "refreshHeatmap");
 				},
 				true
 			]
@@ -46,7 +46,7 @@ define([
 
 			var self = this;
 			// subscribe
-			Topic.subscribe("SubsystemMap", lang.hitch(self, function(){
+			Topic.subscribe("SubSystemMap", lang.hitch(self, function(){
 				// console.log("SubsystemMapHeatmapContainer:", arguments);
 				var key = arguments[0], value = arguments[1];
 
@@ -55,7 +55,7 @@ define([
 						self.pmState = value;
 						break;
 					case "refreshHeatmap":
-						Topic.publish("SubsystemMap", "requestHeatmapData", self.pmState);
+						Topic.publish("SubSystemMap", "requestHeatmapData", self.pmState);
 						break;
 					case "updateHeatmapData":
 						self.currentData = value;
@@ -105,7 +105,7 @@ define([
 		},
 		flashReady: function(){
 			if(typeof(this.flashDom.refreshData) == "function"){
-				Topic.publish("SubsystemMap", "refreshHeatmap");
+				Topic.publish("SubSystemMap", "refreshHeatmap");
 			}
 		},
 		flashCellClicked: function(flashObjectID, colID, rowID){
@@ -119,7 +119,7 @@ define([
 			var query = "?and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
 			//var query = 'and(eq(role_id,LongChaiFattAcid),eq(genome_id,83332.12))&limit(25000,0)';
 
-			Topic.publish("SubsystemMap", "showLoadingMask");
+			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "subsystem", query), {
 				handleAs: 'json',
 				headers: {
@@ -129,7 +129,7 @@ define([
 					'Content-Type': 'application/rqlquery+x-www-form-urlencoded'
 				}
 			}).then(lang.hitch(this, function(response){
-				Topic.publish("SubsystemMap", "hideLoadingMask");
+				Topic.publish("SubSystemMap", "hideLoadingMask");
 
 				// dedupe features
 				var featureSet = {};
@@ -160,7 +160,7 @@ define([
 
 			var query = "?and(in(role_id,(" + roleIds + ")),in(genome_id,(" + genomeIds + "))&limit(25000,0)";
 
-			Topic.publish("SubsystemMap", "showLoadingMask");
+			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.post(PathJoin(window.App.dataServiceURL, "subsystem"), {
 				handleAs: 'json',
 				headers: {
@@ -171,7 +171,7 @@ define([
 				},
 				data: query
 			}).then(lang.hitch(this, function(response){
-				Topic.publish("SubsystemMap", "hideLoadingMask");
+				Topic.publish("SubSystemMap", "hideLoadingMask");
 
 				// dedupe features
 				var featureSet = {};
