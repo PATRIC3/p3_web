@@ -30,7 +30,7 @@ define([
 
 			var self = this;
 
-			Topic.subscribe("SubsystemMap", function(){
+			Topic.subscribe("SubSystemMap", function(){
 				// console.log("SubsystemMapMemStore received:", arguments);
 				var key = arguments[0], value = arguments[1];
 
@@ -38,7 +38,7 @@ define([
 					case "requestHeatmapData":
 						// console.log("requestHeatmapData with ", value.genomeIds);
 						self.currentData = self.getHeatmapData(value);
-						Topic.publish("SubsystemMap", "updateHeatmapData", self.currentData);
+						Topic.publish("SubSystemMap", "updateHeatmapData", self.currentData);
 						break;
 					default:
 						break;
@@ -143,7 +143,7 @@ define([
 				});
 				_self.pmState.genomeIds = Object.keys(_self.pmState.genomeFilterStatus);
 				// publish pmState & update filter panel
-				Topic.publish("SubsystemMap", "updatePmState", _self.pmState);
+				Topic.publish("SubSystemMap", "updatePmState", _self.pmState);
 
 				// sub query - genome distribution
 				var query = {
@@ -258,7 +258,7 @@ define([
 
 						_self.setData(data);
 						_self._loaded = true;
-						// Topic.publish("SubsystemMap", "hideLoadingMask");
+						// Topic.publish("SubSystemMap", "hideLoadingMask");
 						return true;
 					})
 				});
