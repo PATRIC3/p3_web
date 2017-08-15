@@ -58,10 +58,15 @@ define([
 				},
 				data: query
 			}), function(response){
-				//return response.response.docs;
-				return response.response.docs.map(function(d){
-					return d.genome_id;
-				});
+				var genomeIdList = [];
+				var genomeIds = response.facet_counts.facet_fields.genome_id;
+
+				for (var key in genomeIds) {
+					if (genomeIds.hasOwnProperty(key)) {
+						genomeIdList.push(key);
+					}
+				}
+				return genomeIdList;
 			});
 		},
 
