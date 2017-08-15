@@ -26,73 +26,44 @@ define([
 			});
 			state = lang.mixin(state, params);
 
-			// if(!state.taxon_id) return;
-
 			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
 			if(state.hasOwnProperty('genome_ids')){
 				state.genome_ids = state.genome_ids;
-				this.viewer.set('visible', true);
 			} else if(state.hasOwnProperty('genome_id')){
 				state.genome_ids = [state.genome_id];
-				this.viewer.set('visible', true);
 			}
-						// else if(state.hasOwnProperty('genome_ids')){
-			// 	this.viewer.set('visible', true);
-			// }
 
-			
-			// if(state.hasOwnProperty('feature_id')){
-			// 	this.viewer.set('visible', true);
-			// }
-			
 			var self = this;
-			when(this.getGenomeIdsByFeatureId(state.taxon_id), function(genomeIds){
+			when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id[0]), function(genomeIds){
 				state.genome_ids = genomeIds;
 				self.viewer.set('visible', true);
 			});
-
-
-			// update header
+				
 			this.buildHeaderContent(state.subsystem_id[0]);
 
-			// update page title
 			window.document.title = 'Subsystem Map';
 		},
 
-	// $ curl -X POST -H 'Content-Type: application/jsonrpc+json' 
-	// -d '{"id”:1,"method":"subSystem","params":[{"genomeIds":["83332.12"]},{"token":""}],
-	//"jsonrpc":"2.0"}' 'https://www.alpha.patricbrc.org/api/‘
-		getGenomeIdsByFeatureId: function(taxon_id){
+		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
-			return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
+			var query = "and(in(genome_id,(" + genome_ids.join(',') + ")),in(subsystem_id,(" + subsystem_id + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+
+			return when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+				handleAs: 'json',
 				headers: {
-					'Accept': "application/json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+					'Accept': "application/solr+json",
+					'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+					'X-Requested-With': null,
+					'Authorization': (window.App.authorizationToken || "")
 				},
-				handleAs: "json"
+				data: query
 			}), function(response){
-				return response.map(function(d){
+				//return response.response.docs;
+				return response.response.docs.map(function(d){
 					return d.genome_id;
 				});
 			});
 		},
-
-		// getGenomeIdsByTaxonId: function(taxon_id){
-
-		// 	var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
-		// 	return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
-		// 		headers: {
-		// 			'Accept': "application/json",
-		// 			'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-		// 		},
-		// 		handleAs: "json"
-		// 	}), function(response){
-		// 		return response.map(function(d){
-		// 			return d.genome_id;
-		// 		});
-		// 	});
-		// },
 
 		buildHeaderContent: function(mapId){
 			var self = this;
@@ -136,11 +107,6 @@ define([
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
-
-			// this.totalCountNode = domConstruct.create("span", {
-			// 	"class": "PerspectiveTotalCount",
-			// 	innerHTML: "( loading... )"
-			// }, headerContent);
 
 			this.addChild(this.viewerHeader);
 			this.addChild(this.viewer);

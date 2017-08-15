@@ -433,7 +433,6 @@ define([
 					// }
 
 					url['genome_ids'] = this.state.genome_ids;
-					url['feature_id'] = selection[0].feature_id;
 					url['subsystem_id'] = selection[0].subsystem_id;
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]

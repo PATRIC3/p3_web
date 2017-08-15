@@ -278,7 +278,7 @@ define([
 			// var start = window.performance.now();
 
 			// assumes axises are corrected
-			var familyOrder = pmState.clusterColumnOrder;
+			var roleOrder = pmState.clusterColumnOrder;
 			var genomeOrder = pmState.clusterRowOrder;
 
 			var createColumn = function(order, colId, label, distribution, meta){
@@ -333,27 +333,27 @@ define([
 			}
 			var data = this.query("", opts);
 
-			var familyOrderMap = {};
-			if(familyOrder !== [] && familyOrder.length > 0){
-				familyOrder.forEach(function(familyId, idx){
-					familyOrderMap[familyId] = idx;
+			var roleOrderMap = {};
+			if(roleOrder !== [] && roleOrder.length > 0){
+				roleOrder.forEach(function(roleId, idx){
+					roleOrderMap[roleId] = idx;
 				});
 			}else{
-				data.forEach(function(family, idx){
-					familyOrderMap[family.role_id] = idx;
+				data.forEach(function(role, idx){
+					roleOrderMap[role.role_id] = idx;
 				})
 			}
 
-			data.forEach(function(family){
+			data.forEach(function(role){
 				var meta = {
-					'instances': family.feature_count,
-					'members': family.genome_count
+					'instances': role.role_count,
+					'members': role.genome_count
 				};
 				if(genomeOrderChangeMap.length > 0){
-					family.genomes = distributionTransformer(family.genomes, genomeOrderChangeMap);
+					role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
 				}
-				var order = familyOrderMap[family.role_id];
-				cols[order] = createColumn(order, family.role_id, family.role_id + ' - ' + family.description, family.genomes, meta);
+				var order = roleOrderMap[role.role_id];
+				cols[order] = createColumn(order, role.role_id, role.role_id + ' - ' + role.description, role.genomes, meta);
 			});
 
 			// colorStop
@@ -410,7 +410,7 @@ define([
 				currentData = lang.mixin(currentData, {
 					'rows': newRows,
 					'columns': newColumns,
-					'rowLabel': 'Protein Families',
+					'rowLabel': 'Roles',
 					'colLabel': 'Genomes',
 					'rowTrunc': 'end',
 					'colTrunc': 'mid'
