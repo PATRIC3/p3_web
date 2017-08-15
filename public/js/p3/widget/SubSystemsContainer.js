@@ -241,6 +241,7 @@ define([
 				} else if (this.tabContainer.selectedChildWidget.type === "subsystems_heatmap") {
 					Topic.publish(this.topicId, "showMainGrid");
 				} else {
+					this.state.autoFilterMessage = "";
 					page.set('state', this.state);
 				}
 			}));
