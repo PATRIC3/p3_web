@@ -150,7 +150,7 @@ define([
 					q: "genome_id:(" + _self.pmState.genomeIds.join(' OR ') + ") AND subsystem_id:" + _self.pmState.subsystem_id,
 					rows: 0,
 					facet: true,
-					'json.facet': '{stat:{type:field,field:role_id,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
+					'json.facet': '{stat:{type:field,field:role_name,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
 				};
 
 				var q = Object.keys(query).map(function(p){
@@ -226,7 +226,7 @@ define([
 						},
 						data: {
 							q: 'subsystem_id:' + _self.pmState.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
-							fl: 'role_id,role_name',
+							fl: 'role_id,role_name,class',
 							sort: 'role_id asc',
 							rows: roleIDs.length
 						}
@@ -234,7 +234,7 @@ define([
 
 						var ecRefHash = {};
 						res.forEach(function(el){
-							ecRefHash[el['role_id']] = el['role_name'];
+							ecRefHash[el['role_name']] = el['role_name'];
 						});
 
 						var data = [];
@@ -244,7 +244,7 @@ define([
 								var roleCount = element.count;
 
 								var row = {
-									role_id: role,
+									role_name: role,
 									role_count: roleCount,
 									genome_count: roleGenomeIdSet[role].length,
 									genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
@@ -254,11 +254,9 @@ define([
 								data.push(row);
 							}
 						});
-						// console.log(data);
 
 						_self.setData(data);
 						_self._loaded = true;
-						// Topic.publish("SubSystemMap", "hideLoadingMask");
 						return true;
 					})
 				});
@@ -340,7 +338,7 @@ define([
 				});
 			}else{
 				data.forEach(function(role, idx){
-					roleOrderMap[role.role_id] = idx;
+					roleOrderMap[role.role_name] = idx;
 				})
 			}
 
@@ -352,8 +350,8 @@ define([
 				if(genomeOrderChangeMap.length > 0){
 					role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
 				}
-				var order = roleOrderMap[role.role_id];
-				cols[order] = createColumn(order, role.role_id, role.role_id + ' - ' + role.description, role.genomes, meta);
+				var order = roleOrderMap[role.role_name];
+				cols[order] = createColumn(order, role.role_name, role.role_name, role.genomes, meta);
 			});
 
 			// colorStop
