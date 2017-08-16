@@ -103,6 +103,7 @@ define([
 				content: "",
 				region: "top"
 			});
+			//subclass, class, subsystem name 
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);

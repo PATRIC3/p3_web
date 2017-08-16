@@ -150,7 +150,7 @@ define([
 					q: "genome_id:(" + _self.pmState.genomeIds.join(' OR ') + ") AND subsystem_id:" + _self.pmState.subsystem_id,
 					rows: 0,
 					facet: true,
-					'json.facet': '{stat:{type:field,field:role_name,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
+					'json.facet': '{stat:{type:field,field:role_id,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
 				};
 
 				var q = Object.keys(query).map(function(p){
