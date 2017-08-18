@@ -293,12 +293,12 @@ define([
 			this.tabContainer.addChild(this.genesGrid);
 
 			Topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
+				this.state.autoFilterMessage = "";
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
 					//do nothing
 				} else if (this.tabContainer.selectedChildWidget.type === "subsystems_heatmap") {
 					Topic.publish(this.topicId, "showMainGrid");
 				} else {
-					this.state.autoFilterMessage = "";
 					page.set('state', this.state);
 				}
 			}));
