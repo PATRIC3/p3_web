@@ -423,8 +423,15 @@ define([
 						url['taxon_id'] = this.state.taxon_id;
 					};
 
+					//used to query data
 					url['genome_ids'] = this.state.genome_ids;
 					url['subsystem_id'] = selection[0].subsystem_id;
+
+					//used to create DOM
+					url['subsystem_name'] =  selection[0].subsystem_name;
+					url['class'] =  selection[0].class;
+					url['subclass'] =  selection[0].subclass;
+
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]
 					}).join("&");

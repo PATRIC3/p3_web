@@ -18,12 +18,7 @@ define([
 				return;
 			}
 
-			var params = {};
-			var qparts = state.search.split("&");
-			qparts.forEach(function(qp){
-				var parts = qp.split("=");
-				params[parts[0]] = parts[1].split(",");
-			});
+			var params = this.getStateParams(state);
 			state = lang.mixin(state, params);
 
 			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
@@ -42,6 +37,28 @@ define([
 			this.buildHeaderContent(state.subsystem_id[0]);
 
 			window.document.title = 'Subsystem Map';
+		},
+
+		getStateParams: function(state) {
+			var params = {};
+			var qparts = state.search.split("&");
+			qparts.forEach(function(qp){
+				var parts = qp.split("=");
+				params[parts[0]] = parts[1].split(",");
+			});
+
+			return params;
+		},
+
+		getStateParamsForSubClass: function(state) {
+			var params = {};
+			var qparts = state.search.split("&");
+			qparts.forEach(function(qp){
+				var parts = qp.split("=");
+				params[parts[0]] = parts[1];
+			});
+
+			return params;
 		},
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
@@ -103,13 +120,20 @@ define([
 				content: "",
 				region: "top"
 			});
+
+			var params = this.getStateParamsForSubClass(this.state);
+			
+			var subsystemName = decodeURIComponent(params.subsystem_name);
+			var subsystemClass = decodeURIComponent(params.class);
+			var subclass = decodeURIComponent(params.subclass);
+
 			//subclass, class, subsystem name 
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				innerHTML: "Subsystem View"
+				innerHTML: "Subsystem View - " + subsystemName + " - " + subsystemClass + " - " + subclass
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
