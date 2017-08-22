@@ -18,81 +18,74 @@ define([
 				return;
 			}
 
+			var params = this.getStateParams(state);
+			state = lang.mixin(state, params);
+
+			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
+			if(state.hasOwnProperty('genome_ids')){
+				state.genome_ids = state.genome_ids;
+			} else if(state.hasOwnProperty('genome_id')){
+				state.genome_ids = [state.genome_id];
+			}
+
+			var self = this;
+			when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id[0]), function(genomeIds){
+				state.genome_ids = genomeIds;
+				self.viewer.set('visible', true);
+			});
+				
+			this.buildHeaderContent(state.subsystem_id[0]);
+
+			window.document.title = 'Subsystem Map';
+		},
+
+		getStateParams: function(state) {
 			var params = {};
 			var qparts = state.search.split("&");
 			qparts.forEach(function(qp){
 				var parts = qp.split("=");
 				params[parts[0]] = parts[1].split(",");
 			});
-			state = lang.mixin(state, params);
 
-			// if(!state.taxon_id) return;
-
-			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
-			if(state.hasOwnProperty('genome_ids')){
-				state.genome_ids = state.genome_ids;
-				this.viewer.set('visible', true);
-			} else if(state.hasOwnProperty('genome_id')){
-				state.genome_ids = [state.genome_id];
-				this.viewer.set('visible', true);
-			}
-						// else if(state.hasOwnProperty('genome_ids')){
-			// 	this.viewer.set('visible', true);
-			// }
-
-			
-			// if(state.hasOwnProperty('feature_id')){
-			// 	this.viewer.set('visible', true);
-			// }
-			
-			var self = this;
-			when(this.getGenomeIdsByFeatureId(state.taxon_id), function(genomeIds){
-				state.genome_ids = genomeIds;
-				self.viewer.set('visible', true);
-			});
-
-
-			// update header
-			this.buildHeaderContent(state.subsystem_id[0]);
-
-			// update page title
-			window.document.title = 'Subsystem Map';
+			return params;
 		},
 
-	// $ curl -X POST -H 'Content-Type: application/jsonrpc+json' 
-	// -d '{"id”:1,"method":"subSystem","params":[{"genomeIds":["83332.12"]},{"token":""}],
-	//"jsonrpc":"2.0"}' 'https://www.alpha.patricbrc.org/api/‘
-		getGenomeIdsByFeatureId: function(taxon_id){
+		getStateParamsForSubClass: function(state) {
+			var params = {};
+			var qparts = state.search.split("&");
+			qparts.forEach(function(qp){
+				var parts = qp.split("=");
+				params[parts[0]] = parts[1];
+			});
 
-			var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
-			return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
+			return params;
+		},
+
+		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
+
+			var query = "and(in(genome_id,(" + genome_ids.join(',') + ")),in(subsystem_id,(" + subsystem_id + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+
+			return when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+				handleAs: 'json',
 				headers: {
-					'Accept': "application/json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+					'Accept': "application/solr+json",
+					'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+					'X-Requested-With': null,
+					'Authorization': (window.App.authorizationToken || "")
 				},
-				handleAs: "json"
+				data: query
 			}), function(response){
-				return response.map(function(d){
-					return d.genome_id;
-				});
+				var genomeIdList = [];
+				var genomeIds = response.facet_counts.facet_fields.genome_id;
+
+				for (var key in genomeIds) {
+					if (genomeIds.hasOwnProperty(key)) {
+						genomeIdList.push(key);
+					}
+				}
+				return genomeIdList;
 			});
 		},
-
-		// getGenomeIdsByTaxonId: function(taxon_id){
-
-		// 	var query = "?eq(taxon_lineage_ids," + taxon_id + ")&select(genome_id)&limit(25000)";
-		// 	return when(request.get(PathJoin(this.apiServiceUrl, "genome", query), {
-		// 		headers: {
-		// 			'Accept': "application/json",
-		// 			'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-		// 		},
-		// 		handleAs: "json"
-		// 	}), function(response){
-		// 		return response.map(function(d){
-		// 			return d.genome_id;
-		// 		});
-		// 	});
-		// },
 
 		buildHeaderContent: function(mapId){
 			var self = this;
@@ -127,20 +120,23 @@ define([
 				content: "",
 				region: "top"
 			});
+
+			var params = this.getStateParamsForSubClass(this.state);
+			
+			var subsystemName = decodeURIComponent(params.subsystem_name);
+			var subsystemClass = decodeURIComponent(params.class);
+			var subclass = decodeURIComponent(params.subclass);
+
+			//subclass, class, subsystem name 
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				innerHTML: "Subsystem View"
+				innerHTML: "Subsystem View - " + subsystemName + " - " + subsystemClass + " - " + subclass
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
-
-			// this.totalCountNode = domConstruct.create("span", {
-			// 	"class": "PerspectiveTotalCount",
-			// 	innerHTML: "( loading... )"
-			// }, headerContent);
 
 			this.addChild(this.viewerHeader);
 			this.addChild(this.viewer);

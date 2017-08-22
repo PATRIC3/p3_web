@@ -165,67 +165,124 @@ define([
 				visible: true
 			});
 
-			this.subsystemsGrid = new SubSystemsGridContainer({
-				title: "Subsystems",
-				type: "subsystems",
-				apiServer: this.apiServer,
-				defaultFilter: this.defaultFilter,
-				store: subsystemsStore,
-				facetFields: ["class", "subclass", "active"],
-				columns: {
-					"Selection Checkboxes": selector({unhidable: true}),
-					id: 				{label: 'ID', field: 'id', hidden: true},
-					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 			{label: "Class", field: "class"},
-					subclass: 			{label: 'Subclass', field: 'subclass'},
-					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
-					genome_count: 		{label: 'Genome Count', field: 'genome_count'},
-					gene_count: 		{label: 'Gene Count', field: 'gene_count'},
-					role_count: 		{label: 'Role Count', field: 'role_count'},
-					active: 			{label: "Active", field: "active"}
-				},
-				queryOptions: {
-					sort: [{attribute: "subsystem_name"}]
-				},
-				enableFilterPanel: true,
-				visible: true
-			});
+			//taxonomy view does not have the active filter tab
+			var currentUri = this.containerNode.baseURI;
+			var isTaxonomyView = /Taxonomy/.test(currentUri);
 
-			// this.mainGridContainer = new MainGridContainer({
-			// 	title: "Subsystems Heatmap",
-			// 	topicId: this.topicId,
-			// 	content: "Heatmap",
-			// 	type: "subsystems_heatmap"
-			// });
+			//the taxonomy and gene level tabs have some differences
+			if (isTaxonomyView) {
+				this.subsystemsGrid = new SubSystemsGridContainer({
+					title: "Subsystems",
+					type: "subsystems",
+					apiServer: this.apiServer,
+					defaultFilter: this.defaultFilter,
+					store: subsystemsStore,
+					facetFields: ["class", "subclass", "active"],
+					columns: {
+						"Selection Checkboxes": selector({unhidable: true}),
+						id: 				{label: 'ID', field: 'id', hidden: true},
+						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						"class": 			{label: "Class", field: "class"},
+						subclass: 			{label: 'Subclass', field: 'subclass'},
+						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+						genome_count: 		{label: 'Genome Count', field: 'genome_count'},
+						gene_count: 		{label: 'Gene Count', field: 'gene_count'},
+						role_count: 		{label: 'Role Count', field: 'role_count'}
+					},
+					queryOptions: {
+						sort: [{attribute: "subsystem_name"}]
+					},
+					enableFilterPanel: true,
+					visible: true
+				});
 
-			this.genesGrid = new SubSystemsGridContainer({
-				title: "Genes",
-				type: "genes",
-				// state: this.state,
-				apiServer: this.apiServer,
-				// defaultFilter: this.defaultFilter,
-				store: geneSubsystemsStore,
-				facetFields: ["class", "subclass", "active", "subsystem_name"],
-				columns: {
-					"Selection Checkboxes": selector({unhidable: true}),
-					id: 				{label: 'ID', field: 'id', hidden: true},
-					subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
-					"class": 			{label: "Class", field: "class"},
-					subclass: 			{label: 'Subclass', field: 'subclass'},
-					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
-					role_id: 			{label: "Role ID", field: "role_id", hidden: true},
-					role_name: 			{label: "Role Name", field: "role_name"},
-					active: 			{label: "Active", field: "active"},
-					patric_id: 			{label: "Patric ID", field: "patric_id"},
-					gene: 				{label: "Gene", field: "gene"},
-					product: 			{label: "Product", field: "product"}
-				},
-				queryOptions: {
-					sort: [{attribute: "subsystem_name"}]
-				},
-				enableFilterPanel: true,
-				visible: true
-			});
+				this.genesGrid = new SubSystemsGridContainer({
+					title: "Genes",
+					type: "genes",
+					apiServer: this.apiServer,
+					store: geneSubsystemsStore,
+					facetFields: ["class", "subclass", "active", "subsystem_name"],
+					columns: {
+						"Selection Checkboxes": selector({unhidable: true}),
+						id: 				{label: 'ID', field: 'id', hidden: true},
+						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						"class": 			{label: "Class", field: "class"},
+						subclass: 			{label: 'Subclass', field: 'subclass'},
+						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+						role_id: 			{label: "Role ID", field: "role_id", hidden: true},
+						role_name: 			{label: "Role Name", field: "role_name"},
+						patric_id: 			{label: "Patric ID", field: "patric_id"},
+						gene: 				{label: "Gene", field: "gene"},
+						product: 			{label: "Product", field: "product"},
+						refseq_locus_tag: 	{label: 'RefSeq Locus Tag', field: 'refseq_locus_tag'},
+						alt_locus_tag: 		{label: 'Alt Locus Tag', field: 'alt_locus_tag', hidden: true},
+						product: 			{label: 'Product', field: 'product'},
+						genome_id: 			{label: "Genome ID", field: "genome_id", hidden: true},
+						genome_name: 		{label: "Genome Name", field: "genome_name"},
+						taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true},
+					},
+					queryOptions: {
+						sort: [{attribute: "subsystem_name"}]
+					},
+					enableFilterPanel: true,
+					visible: true
+				});
+			} else {
+				this.subsystemsGrid = new SubSystemsGridContainer({
+					title: "Subsystems",
+					type: "subsystems",
+					apiServer: this.apiServer,
+					defaultFilter: this.defaultFilter,
+					store: subsystemsStore,
+					facetFields: ["class", "subclass", "active"],
+					columns: {
+						"Selection Checkboxes": selector({unhidable: true}),
+						id: 				{label: 'ID', field: 'id', hidden: true},
+						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						"class": 			{label: "Class", field: "class"},
+						subclass: 			{label: 'Subclass', field: 'subclass'},
+						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+						genome_count: 		{label: 'Genome Count', field: 'genome_count'},
+						gene_count: 		{label: 'Gene Count', field: 'gene_count'},
+						role_count: 		{label: 'Role Count', field: 'role_count'},
+						active: 			{label: "Active", field: "active"}
+					},
+					queryOptions: {
+						sort: [{attribute: "subsystem_name"}]
+					},
+					enableFilterPanel: true,
+					visible: true
+				});
+
+				this.genesGrid = new SubSystemsGridContainer({
+					title: "Genes",
+					type: "genes",
+					// state: this.state,
+					apiServer: this.apiServer,
+					// defaultFilter: this.defaultFilter,
+					store: geneSubsystemsStore,
+					facetFields: ["class", "subclass", "active", "subsystem_name"],
+					columns: {
+						"Selection Checkboxes": selector({unhidable: true}),
+						id: 				{label: 'ID', field: 'id', hidden: true},
+						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						"class": 			{label: "Class", field: "class"},
+						subclass: 			{label: 'Subclass', field: 'subclass'},
+						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+						role_id: 			{label: "Role ID", field: "role_id", hidden: true},
+						role_name: 			{label: "Role Name", field: "role_name"},
+						active: 			{label: "Active", field: "active"},
+						patric_id: 			{label: "Patric ID", field: "patric_id"},
+						gene: 				{label: "Gene", field: "gene"},
+						product: 			{label: "Product", field: "product"}
+					},
+					queryOptions: {
+						sort: [{attribute: "subsystem_name"}]
+					},
+					enableFilterPanel: true,
+					visible: true
+				});
+			}
 
 			this.addChild(tabController);
 			this.addChild(this.tabContainer);
@@ -236,6 +293,7 @@ define([
 			this.tabContainer.addChild(this.genesGrid);
 
 			Topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
+				this.state.autoFilterMessage = "";
 				if (this.tabContainer.selectedChildWidget.type === "subsystems_overview") {
 					//do nothing
 				} else if (this.tabContainer.selectedChildWidget.type === "subsystems_heatmap") {

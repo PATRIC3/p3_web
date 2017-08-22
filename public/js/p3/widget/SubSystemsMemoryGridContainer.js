@@ -421,20 +421,17 @@ define([
 					var url = {};
 					if(this.state.hasOwnProperty('taxon_id')){
 						url['taxon_id'] = this.state.taxon_id;
-					}
+					};
 
-					// else if(this.state.hasOwnProperty('genome')){
-					// 	url['genome_id'] = this.state.genome.genome_id;
-					// }
-					// if(this.state.hasOwnProperty('genome_ids')){
-					// 	url['genome_ids'] = this.state.genome_ids;
-					// } else {
-					// 	url['genome_id'] = selection[0].genome_id;
-					// }
-
+					//used to query data
 					url['genome_ids'] = this.state.genome_ids;
-					url['feature_id'] = selection[0].feature_id;
 					url['subsystem_id'] = selection[0].subsystem_id;
+
+					//used to create DOM
+					url['subsystem_name'] =  selection[0].subsystem_name;
+					url['class'] =  selection[0].class;
+					url['subclass'] =  selection[0].subclass;
+
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]
 					}).join("&");

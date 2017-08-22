@@ -226,7 +226,7 @@ define([
 						},
 						data: {
 							q: 'subsystem_id:' + _self.pmState.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
-							fl: 'role_id,role_name',
+							fl: 'role_id,role_name,class',
 							sort: 'role_id asc',
 							rows: roleIDs.length
 						}
@@ -234,7 +234,7 @@ define([
 
 						var ecRefHash = {};
 						res.forEach(function(el){
-							ecRefHash[el['role_id']] = el['role_name'];
+							ecRefHash[el['role_name']] = el['role_name'];
 						});
 
 						var data = [];
@@ -244,7 +244,7 @@ define([
 								var roleCount = element.count;
 
 								var row = {
-									role_id: role,
+									role_name: role,
 									role_count: roleCount,
 									genome_count: roleGenomeIdSet[role].length,
 									genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
@@ -254,11 +254,9 @@ define([
 								data.push(row);
 							}
 						});
-						// console.log(data);
 
 						_self.setData(data);
 						_self._loaded = true;
-						// Topic.publish("SubSystemMap", "hideLoadingMask");
 						return true;
 					})
 				});
@@ -278,7 +276,7 @@ define([
 			// var start = window.performance.now();
 
 			// assumes axises are corrected
-			var familyOrder = pmState.clusterColumnOrder;
+			var roleOrder = pmState.clusterColumnOrder;
 			var genomeOrder = pmState.clusterRowOrder;
 
 			var createColumn = function(order, colId, label, distribution, meta){
@@ -333,27 +331,27 @@ define([
 			}
 			var data = this.query("", opts);
 
-			var familyOrderMap = {};
-			if(familyOrder !== [] && familyOrder.length > 0){
-				familyOrder.forEach(function(familyId, idx){
-					familyOrderMap[familyId] = idx;
+			var roleOrderMap = {};
+			if(roleOrder !== [] && roleOrder.length > 0){
+				roleOrder.forEach(function(roleId, idx){
+					roleOrderMap[roleId] = idx;
 				});
 			}else{
-				data.forEach(function(family, idx){
-					familyOrderMap[family.role_id] = idx;
+				data.forEach(function(role, idx){
+					roleOrderMap[role.role_name] = idx;
 				})
 			}
 
-			data.forEach(function(family){
+			data.forEach(function(role){
 				var meta = {
-					'instances': family.feature_count,
-					'members': family.genome_count
+					'instances': role.role_count,
+					'members': role.genome_count
 				};
 				if(genomeOrderChangeMap.length > 0){
-					family.genomes = distributionTransformer(family.genomes, genomeOrderChangeMap);
+					role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
 				}
-				var order = familyOrderMap[family.role_id];
-				cols[order] = createColumn(order, family.role_id, family.role_id + ' - ' + family.description, family.genomes, meta);
+				var order = roleOrderMap[role.role_name];
+				cols[order] = createColumn(order, role.role_name, role.role_name, role.genomes, meta);
 			});
 
 			// colorStop
@@ -410,7 +408,7 @@ define([
 				currentData = lang.mixin(currentData, {
 					'rows': newRows,
 					'columns': newColumns,
-					'rowLabel': 'Protein Families',
+					'rowLabel': 'Roles',
 					'colLabel': 'Genomes',
 					'rowTrunc': 'end',
 					'colTrunc': 'mid'

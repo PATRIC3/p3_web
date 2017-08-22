@@ -109,7 +109,6 @@ define([
 			}
 		},
 		flashCellClicked: function(flashObjectID, colID, rowID){
-			//console.log("flashCellClicked is called ", colID, rowID);
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colID, rowID);
 
@@ -117,7 +116,6 @@ define([
 			var genomeId = originalAxis.rowIds;
 
 			var query = "?and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
-			//var query = 'and(eq(role_id,LongChaiFattAcid),eq(genome_id,83332.12))&limit(25000,0)';
 
 			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "subsystem", query), {
@@ -148,9 +146,8 @@ define([
 			}));
 
 		},
-		//TODO - fix query here
+
 		flashCellsSelected: function(flashObjectID, colIDs, rowIDs){
-			//console.log("flashCellsSelected is called", colIDs, rowIDs);
 			if(rowIDs.length == 0) return;
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colIDs, rowIDs);
@@ -158,10 +155,10 @@ define([
 			var roleIds = originalAxis.columnIds;
 			var genomeIds = originalAxis.rowIds;
 
-			var query = "?and(in(role_id,(" + roleIds + ")),in(genome_id,(" + genomeIds + "))&limit(25000,0)";
+			var query = "and(in(role_id,(" + roleIds + ")),in(genome_id,(" + genomeIds + "))&limit(25000,0)";
 
 			Topic.publish("SubSystemMap", "showLoadingMask");
-			request.post(PathJoin(window.App.dataServiceURL, "subsystem"), {
+			request.get(PathJoin(window.App.dataServiceURL, "subsystem"), {
 				handleAs: 'json',
 				headers: {
 					'Accept': "application/json",
