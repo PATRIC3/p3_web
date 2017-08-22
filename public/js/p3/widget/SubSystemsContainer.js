@@ -219,7 +219,7 @@ define([
 						product: 			{label: 'Product', field: 'product'},
 						genome_id: 			{label: "Genome ID", field: "genome_id", hidden: true},
 						genome_name: 		{label: "Genome Name", field: "genome_name"},
-						taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true},
+						taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true}
 					},
 					queryOptions: {
 						sort: [{attribute: "subsystem_name"}]

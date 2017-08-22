@@ -429,7 +429,7 @@ define([
 
 					//used to create DOM
 					url['subsystem_name'] =  selection[0].subsystem_name;
-					url['class'] =  selection[0].class;
+					url['class'] =  selection[0]['class'];
 					url['subclass'] =  selection[0].subclass;
 
 					var params = Object.keys(url).map(function(p){
