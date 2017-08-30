@@ -171,6 +171,15 @@ define([
           .attr('y', legendRectSize - legendSpacing)
           .text(function(d) { return d; });
 
+      subsystemslegend.on("click", function(d) {
+        var subystemData = {};
+        subystemData.data = {};
+        var re = /.*\(/;
+        var classname = d.match(re);
+        subystemData.data.val = classname[0].slice(0, -2);
+        that.navigateToSubsystemsSubTab(subystemData);
+      })
+
       var tooltip = d3.select("body")
           .append("div")
           .style("position", "absolute")
