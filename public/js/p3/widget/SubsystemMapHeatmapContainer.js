@@ -186,7 +186,7 @@ define([
 				this.dialog.show();
 			}));
 		},
-		_buildPanelCellClicked: function(isTransposed, ecNumber, genomeId, features){
+		_buildPanelCellClicked: function(isTransposed, roleId, genomeId, features){
 
 			var gfs = this.pmState.genomeFilterStatus;
 
@@ -196,7 +196,7 @@ define([
 			if(isTransposed){
 				// rows: families, columns: genomes
 				this.currentData.rows.forEach(function(row, idx){
-					if(row.rowID === ecNumber){
+					if(row.rowID === roleId){
 						description = row.rowLabel;
 						index = idx;
 					}
@@ -209,7 +209,7 @@ define([
 			}else{
 				index = gfs[genomeId].getIndex();
 				this.currentData.columns.forEach(function(col){
-					if(col.colID === ecNumber){
+					if(col.colID === roleId){
 						description = col.colLabel;
 						memberCount = parseInt(col.distribution.substr(2 * index, 2), 16);
 					}
@@ -219,17 +219,17 @@ define([
 			var text = [];
 			text.push('<b>Genome:</b> ' + genomeName);
 			text.push('<b>Product:</b> ' + description);
-			text.push('<b>EC Number:</b> ' + ecNumber);
-			text.push('<b>Members:</b> ' + memberCount);
+			text.push('<b>Role ID:</b> ' + roleId);
+			//text.push('<b>Members:</b> ' + memberCount);
 
 			return text.join("<br>");
 		},
-		_buildPanelCellsSelected: function(isTransposed, ecNumbers, genomeIds, features){
+		_buildPanelCellsSelected: function(isTransposed, roleIds, genomeIds, features){
 
 			var text = [];
 			text.push('<b>Genomes Selected:</b> ' + genomeIds.length);
-			text.push('<b>EC Selected:</b> ' + ecNumbers.length);
-			text.push('<b>Members:</b> ' + features.length);
+			text.push('<b>Roles Selected:</b> ' + roleIds.length);
+			//text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
 		},
