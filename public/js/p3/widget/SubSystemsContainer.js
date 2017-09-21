@@ -320,6 +320,10 @@ define([
 				this.tabContainer.selectChild(this.subsystemsGrid);
 			}));
 
+			Topic.subscribe("navigateToSubsystemsSubTabFromCoverageBar", lang.hitch(this, function(){
+				this.tabContainer.selectChild(this.subsystemsGrid);
+			}));
+
 			this._firstView = true;
 		}
 	})

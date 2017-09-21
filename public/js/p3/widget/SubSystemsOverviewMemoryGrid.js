@@ -121,7 +121,7 @@ define([
         .attr("y", 50)
         .attr("text-anchor", "middle")
         .style("font-weight", "bold")
-        .style("font-size", "13px")
+        .style("font-size", "14px")
         .text("Subsystem Category Distribution - " + titleText);
 
       var arc = d3.svg.arc()
@@ -175,7 +175,7 @@ define([
         .attr('x', 0)
         .attr('y', -legendTitleOffset)
         .style("font-weight", "bold")
-        .style("font-size", "13px")
+        .style("font-size", "14px")
         .text("Subsystem Feature Counts");
 
       subsystemslegend.append('rect')
@@ -310,6 +310,8 @@ define([
 
     renderSubsystemCoverageData: function(subsystemCoverageData, width, height) {
 
+      var that = this;
+
       subsystemCoverageData.totalSubsystemsNotHypothetical = subsystemCoverageData.totalSubsystems - subsystemCoverageData.totalSubsystemsHypothetical;
       subsystemCoverageData.totalNotCovered = subsystemCoverageData.totalGenomes - subsystemCoverageData.totalSubsystems;
       subsystemCoverageData.totalNotCoveredHypothetical = subsystemCoverageData.totalGenomesHypothetical - subsystemCoverageData.totalSubsystemsHypothetical;
@@ -338,7 +340,10 @@ define([
                           .attr("width", 50)
                           .style("fill", "#399F56")
                           .attr("id", "subsystemsCovered")
-                          .attr("height", divHeightCovered);
+                          .attr("height", divHeightCovered)
+                          .on("click", function() {
+                            that.navigateToSubsystemsSubTabFromCoverageBar();
+                          });
 
       var notCoveredRect = svg.append("rect")
                             .attr("x", 120)
@@ -346,14 +351,17 @@ define([
                             .attr("width", 50)
                             .style("fill", "#3F6993")
                             .attr("id", "subsystemsNotCovered")
-                            .attr("height", divHeightNotCovered);
+                            .attr("height", divHeightNotCovered)
+                            .on("click", function() {
+                              that.navigateToSubsystemsSubTabFromCoverageBar();
+                            });
 
       svg.append("text")
         .attr("x", 150)             
         .attr("y", height / 8)
         .attr("text-anchor", "middle")
         .style("font-weight", "bold")
-        .style("font-size", "13px")
+        .style("font-size", "14px")
         .text("Subsystem Coverage");
 
       //percentages
@@ -392,14 +400,18 @@ define([
     },
 
     navigateToSubsystemsSubTab: function(d) {
-        switch (d.data.val) {
-          case "Other":
-            //do nothing
-            break;
-          default:
-            Topic.publish("navigateToSubsystemsSubTab", d.data);
-            break;
-        }
+      switch (d.data.val) {
+        case "Other":
+          //do nothing
+          break;
+        default:
+          Topic.publish("navigateToSubsystemsSubTab", d.data);
+          break;
+      }
+    },
+
+    navigateToSubsystemsSubTabFromCoverageBar: function() {
+      Topic.publish("navigateToSubsystemsSubTabFromCoverageBar");
     },
 
     setSubsystemPieGraph: function () {
