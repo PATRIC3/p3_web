@@ -169,7 +169,7 @@ define([
       });
 
       var legendCount = legendHolder.selectAll('.subsystemslegend').size();
-      var legendTitleOffset = legendCount * legendRectSize / 2 + 50;
+      var legendTitleOffset = legendCount * legendRectSize / 2 + 70;
 
       legendHolder.append('text')
         .attr('x', 0)
@@ -320,8 +320,11 @@ define([
       var proportionCovered = (subsystemCoverageData.totalSubsystems / subsystemCoverageData.totalGenomes).toFixed(2);
       var proportionNotCovered = (subsystemCoverageData.totalNotCovered / subsystemCoverageData.totalGenomes).toFixed(2);
 
-      var divHeightCovered = proportionCovered * height;
-      var divHeightNotCovered = proportionNotCovered * height;
+      var marginAdjustedTotalbarHeight = height * .9;
+      var marginTop = height - marginAdjustedTotalbarHeight;
+
+      var divHeightCovered = proportionCovered * marginAdjustedTotalbarHeight;
+      var divHeightNotCovered = proportionNotCovered * marginAdjustedTotalbarHeight;
 
       var percentCovered = proportionCovered * 100;
       var percentNotCovered = proportionNotCovered * 100;
@@ -336,7 +339,7 @@ define([
 
       var coveredRect = svg.append("rect")
                           .attr("x", 120)
-                          .attr("y", height / 7)
+                          .attr("y", marginTop)
                           .attr("width", 50)
                           .style("fill", "#399F56")
                           .attr("id", "subsystemsCovered")
@@ -347,7 +350,7 @@ define([
 
       var notCoveredRect = svg.append("rect")
                             .attr("x", 120)
-                            .attr("y", height / 7 + divHeightCovered)
+                            .attr("y", divHeightCovered + marginTop)
                             .attr("width", 50)
                             .style("fill", "#3F6993")
                             .attr("id", "subsystemsNotCovered")
@@ -358,7 +361,7 @@ define([
 
       svg.append("text")
         .attr("x", 150)             
-        .attr("y", height / 8)
+        .attr("y", 50)
         .attr("text-anchor", "middle")
         .style("font-weight", "bold")
         .style("font-size", "14px")
