@@ -117,7 +117,7 @@ define([
 					field: "superclass",
 					limit: -1,
 					facet: {
-						class: {
+						"class": {
 							type: "field",
 							field: "class",
 							limit: -1,
@@ -129,7 +129,7 @@ define([
 				}
 
 			})) + ")"
-			
+
 			// subsystems_overview: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
 			// "&json(facet," + encodeURIComponent(JSON.stringify({
 			// 	stat: {
