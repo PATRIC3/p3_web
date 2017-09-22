@@ -109,39 +109,39 @@ define([
 
 		queryTypes: {
 
-			// subsystems_overview: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
-			// "&json(facet," + encodeURIComponent(JSON.stringify({
-
-			// 	stat: {
-			// 		type: "field",
-			// 		field: "superclass",
-			// 		limit: -1,
-			// 		facet: {
-			// 			class: {
-			// 				type: "field",
-			// 				field: "class",
-			// 				limit: -1,
-			// 				facet: {
-			// 					gene_count: "unique(feature_id)"
-			// 				}
-			// 			}
-			// 		}
-			// 	}
-
-			// })) + ")"
-			
 			subsystems_overview: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
 			"&json(facet," + encodeURIComponent(JSON.stringify({
+
 				stat: {
-					field: {
-						field: "class",
-						limit: -1,
-						facet: {
-							gene_count: "unique(feature_id)"
+					type: "field",
+					field: "superclass",
+					limit: -1,
+					facet: {
+						class: {
+							type: "field",
+							field: "class",
+							limit: -1,
+							facet: {
+								gene_count: "unique(feature_id)"
+							}
 						}
-					}	
+					}
 				}
+
 			})) + ")"
+			
+			// subsystems_overview: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
+			// "&json(facet," + encodeURIComponent(JSON.stringify({
+			// 	stat: {
+			// 		field: {
+			// 			field: "class",
+			// 			limit: -1,
+			// 			facet: {
+			// 				gene_count: "unique(feature_id)"
+			// 			}
+			// 		}	
+			// 	}
+			// })) + ")"
 
 		},
 		buildQuery: function(){

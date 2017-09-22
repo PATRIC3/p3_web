@@ -74,6 +74,19 @@ define([
       }
     },
 
+    formatSubsystemData: function(subsystemData) {
+
+      //add superclass data to class data
+      var flattenedSubsystemData = [];
+      for (var i = 0; i < subsystemData.length; i++) {
+        for (var j = 0; j < subsystemData[i].class.buckets.length; j++) {
+          subsystemData[i].class.buckets[j].superclass = subsystemData[i].val;
+          flattenedSubsystemData.push(subsystemData[i].class.buckets[j]);
+        }
+      }
+      return flattenedSubsystemData;
+    },
+
     //function is coupled because color data is used across circle and tree to match
     //color data is rendered via d3 library programmatically
     drawGraphAndLegend: function(subsystemData) {
@@ -92,6 +105,27 @@ define([
       else {
         titleText = "";
       }
+
+      var superClassColorCodes = {
+        "CELLULAR PROCESSES": "#e6194b",
+        "MEMBRANE TRANSPORT": "#3cb44b",
+        "METABOLISM": "#ffe119",
+        "REGULATION AND CELL SIGNALING": "#0082c8",
+        "STRESS RESPONSE, DEFENSE, VIRULENCE": "#f58231",
+        "CELL ENVELOPE": "#911eb4",
+        "CELLULAR PROCESSES": "#46f0f0",
+        "DNA PROCESSING": "#f032e6",
+        "ENERGY": "#d2f53c",
+        "MEMBRANE TRANSPORT": "#fabebe",
+        "METABOLISM": "#008080",
+        "MISCELLANEOUS": "#e6beff",
+        "PROTEIN PROCESSING": "#aa6e28",
+        "REGULATION AND CELL SIGNALING": "#fffac8",
+        "RNA PROCESSING": "#800000",
+        "STRESS RESPONSE, DEFENSE, VIRULENCE": "#aaffc3"
+      }
+
+      var formattedSubsystemData = this.formatSubsystemData(subsystemData);
 
       var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
@@ -133,7 +167,7 @@ define([
         .sort(null);
 
       var path = svg.selectAll('path')
-        .data(pie(maxLimitedPieChartData))
+        .data(pie(formattedSubsystemData))
         .enter()
         .append('path')
         .attr('d', arc)
@@ -145,8 +179,11 @@ define([
         })
         .on("mousemove", function(){return tooltip.style("top", (event.pageY-10)+"px").style("left",(event.pageX+10)+"px");})
         .on("mouseout", function(){return tooltip.style("visibility", "hidden");})
+        .style("stroke", "#000")
+        .attr("stroke-width", "1px")
         .attr('fill', function(d) {
-          return color(d.data.val + " (" + d.data.count + ")");
+          //return color(d.data.val + " (" + d.data.count + ")");
+          return superClassColorCodes[d.data.superclass.toUpperCase()]
       });
 
       var margin = {left: 60};
@@ -156,14 +193,14 @@ define([
         .attr("id", "legendHolder");
 
       var subsystemslegend = legendHolder.selectAll('.subsystemslegend')
-        .data(color.domain())
+        .data(subsystemData)
         .enter()
         .append('g')
         .attr('class', 'subsystemslegend')
         .attr('transform', function(d, i) {
           var height = legendRectSize + legendSpacing;
-          var offset =  height * color.domain().length / 2;
-          var horz = -2 * legendRectSize;
+          var offset =  height * subsystemData.length / 2;
+          var horz = -1 * legendRectSize;
           var vert = i * height - offset;
           return 'translate(' + horz + ',' + vert + ')';
       });
@@ -176,19 +213,23 @@ define([
         .attr('y', -legendTitleOffset)
         .style("font-weight", "bold")
         .style("font-size", "14px")
-        .text("Subsystem Feature Counts");
+        .text("Subsystem Superclass Counts");
 
       subsystemslegend.append('rect')
           .attr("x", 0)
           .attr('width', legendRectSize)
           .attr('height', legendRectSize)                                   
-          .style('fill', color)
-          .style('stroke', color);
+          .style('fill', function(d) { 
+            return superClassColorCodes[d.val.toUpperCase()]
+          })
+          .style('stroke',function(d) { 
+            return superClassColorCodes[d.val.toUpperCase()]
+          });
         
       subsystemslegend.append('text')
           .attr('x', legendRectSize + legendSpacing)
           .attr('y', legendRectSize - legendSpacing)
-          .text(function(d) { return d; });
+          .text(function(d) { return d.val; });
 
       subsystemslegend.on("click", function(d) {
         var subystemData = {};
