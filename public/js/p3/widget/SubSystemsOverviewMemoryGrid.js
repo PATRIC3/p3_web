@@ -229,7 +229,7 @@ define([
       subsystemslegend.append('text')
           .attr('x', legendRectSize + legendSpacing)
           .attr('y', legendRectSize - legendSpacing)
-          .text(function(d) { return d.val; });
+          .text(function(d) { return d.val + " (" + d.count + ")"; });
 
       subsystemslegend.on("click", function(d) {
         var subystemData = {};
