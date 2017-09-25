@@ -129,20 +129,6 @@ define([
 				}
 
 			})) + ")"
-
-			// subsystems_overview: "&group((field,subsystem_id),(format,simple),(ngroups,true),(limit,1),(facet,true))" +
-			// "&json(facet," + encodeURIComponent(JSON.stringify({
-			// 	stat: {
-			// 		field: {
-			// 			field: "class",
-			// 			limit: -1,
-			// 			facet: {
-			// 				gene_count: "unique(feature_id)"
-			// 			}
-			// 		}	
-			// 	}
-			// })) + ")"
-
 		},
 		buildQuery: function(){
 			var q = [];

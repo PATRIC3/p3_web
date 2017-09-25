@@ -2,11 +2,11 @@ define([
   "dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/Deferred",
   "dojo/dom-class", "dijit/layout/ContentPane", "dojo/dom-construct", "dijit/Tooltip",
   "dojo/_base/xhr", "dojo/_base/lang", "./PageGrid", "./formatter", "../store/SubsystemsOverviewMemoryStore", "dojo/request",
-  "dojo/aspect", "./GridSelector", "dojo/when", "d3/d3", "dojo/Stateful", "dojo/topic", "../util/PathJoin", "dojo/promise/all"
+  "dojo/aspect", "./GridSelector", "dojo/when", "d3/d3", "dojo/Stateful", "dojo/topic", "../util/PathJoin", "dojo/promise/all", "./PATRICTheme",
 ], function(declare, BorderContainer, on, Deferred,
       domClass, ContentPane, domConstruct, Tooltip,
       xhr, lang, Grid, formatter, SubsystemsOverviewMemoryStore, request,
-      aspect, selector, when, d3, Stateful, Topic, PathJoin, All){
+      aspect, selector, when, d3, Stateful, Topic, PathJoin, All, Theme){
   return declare([Stateful], {
     store: null,
     subsystemSvg: null,
@@ -18,7 +18,7 @@ define([
     },
 
     // x + "Other" as aggregation of what is left over
-    subsystemMaxNumToDisplay: 19,
+    subsystemMaxNumToDisplay: 15,
 
     onSetState: function(attr, oldState, state){
 
@@ -80,8 +80,8 @@ define([
       var flattenedSubsystemData = [];
       for (var i = 0; i < subsystemData.length; i++) {
         for (var j = 0; j < subsystemData[i].class.buckets.length; j++) {
-          subsystemData[i].class.buckets[j].superclass = subsystemData[i].val;
-          flattenedSubsystemData.push(subsystemData[i].class.buckets[j]);
+          subsystemData[i]['class'].buckets[j].superclass = subsystemData[i].val;
+          flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
         }
       }
       return flattenedSubsystemData;
@@ -106,23 +106,25 @@ define([
         titleText = "";
       }
 
+      //var theme = new Theme;
+
       var superClassColorCodes = {
-        "CELLULAR PROCESSES": "#e6194b",
-        "MEMBRANE TRANSPORT": "#3cb44b",
-        "METABOLISM": "#ffe119",
-        "REGULATION AND CELL SIGNALING": "#0082c8",
-        "STRESS RESPONSE, DEFENSE, VIRULENCE": "#f58231",
-        "CELL ENVELOPE": "#911eb4",
-        "CELLULAR PROCESSES": "#46f0f0",
-        "DNA PROCESSING": "#f032e6",
-        "ENERGY": "#d2f53c",
-        "MEMBRANE TRANSPORT": "#fabebe",
-        "METABOLISM": "#008080",
-        "MISCELLANEOUS": "#e6beff",
-        "PROTEIN PROCESSING": "#aa6e28",
-        "REGULATION AND CELL SIGNALING": "#fffac8",
-        "RNA PROCESSING": "#800000",
-        "STRESS RESPONSE, DEFENSE, VIRULENCE": "#aaffc3"
+        "CELLULAR PROCESSES": Theme.colors[0],
+        "MEMBRANE TRANSPORT": Theme.colors[1],
+        "METABOLISM": Theme.colors[2],
+        "REGULATION AND CELL SIGNALING": Theme.colors[3],
+        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[4],
+        "CELL ENVELOPE": Theme.colors[5],
+        "CELLULAR PROCESSES": Theme.colors[6],
+        "DNA PROCESSING": Theme.colors[7],
+        "ENERGY": Theme.colors[8],
+        "MEMBRANE TRANSPORT": Theme.colors[9],
+        "METABOLISM": Theme.colors[10],
+        "MISCELLANEOUS": Theme.colors[11],
+        "PROTEIN PROCESSING": Theme.colors[12],
+        "REGULATION AND CELL SIGNALING": Theme.colors[13],
+        "RNA PROCESSING": Theme.colors[14],
+        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[15]
       }
 
       var formattedSubsystemData = this.formatSubsystemData(subsystemData);
@@ -232,12 +234,7 @@ define([
           .text(function(d) { return d.val + " (" + d.count + ")"; });
 
       subsystemslegend.on("click", function(d) {
-        var subystemData = {};
-        subystemData.data = {};
-        var re = /.*\(/;
-        var classname = d.match(re);
-        subystemData.data.val = classname[0].slice(0, -2);
-        that.navigateToSubsystemsSubTab(subystemData);
+        that.navigateToSubsystemsSubTabFromLegend(d.class.buckets);
       })
 
       var tooltip = d3.select("body")
@@ -451,6 +448,16 @@ define([
         default:
           Topic.publish("navigateToSubsystemsSubTab", d.data);
           break;
+      }
+    },
+
+    navigateToSubsystemsSubTabFromLegend: function(buckets) {
+      for (var i = 0; i < buckets.length; i++) {
+        // var subystemData = {};
+        // subystemData.data = {};
+        // var re = /.*\(/;
+        // var classname = d.match(re);
+        // subystemData.data.val = classname[0].slice(0, -2);
       }
     },
 
