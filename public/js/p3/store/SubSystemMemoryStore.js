@@ -207,35 +207,41 @@ define([
 					//subsystems tab
 					if ( response.grouped[props[this.type]] ){
 						var ds = response.grouped[props[this.type]].doclist.docs;
-						var buckets = response.facets.stat.buckets;
-						var map = {};
-						buckets.forEach(function(b){
-							map[b["val"]] = b;
-							delete b["val"];
-						});
-						docs = ds.map(function(doc){
-							var p = props[this.type];
-							var pv = doc[p];
-							lang.mixin(doc, map[pv] || {});
+						if (response.facets.stat && response.facets.stat.buckets) {
+							var buckets = response.facets.stat.buckets;
+							var map = {};
+							buckets.forEach(function(b){
+								map[b["val"]] = b;
+								delete b["val"];
+							});
+							docs = ds.map(function(doc){
+								var p = props[this.type];
+								var pv = doc[p];
+								lang.mixin(doc, map[pv] || {});
 
-							switch(this.type){
-								case "subsystems":
-									doc.document_type = "subsystems_subsystem";
-									break;
-								case "subsystems_overview":
-									doc.document_type = "subsystems_overview";
-									break;
-								case "roleid":
-									break;
-								case "genes":
-									doc.document_type = "subsystems_gene";
-									break;
-								default:
-									break;
-							}
+								switch(this.type){
+									case "subsystems":
+										doc.document_type = "subsystems_subsystem";
+										break;
+									case "subsystems_overview":
+										doc.document_type = "subsystems_overview";
+										break;
+									case "roleid":
+										break;
+									case "genes":
+										doc.document_type = "subsystems_gene";
+										break;
+									default:
+										break;
+								}
+							
+								return doc;
+							}, this);
+						}
+						else {
+							this.state.filter = false;
+						}
 						
-							return doc;
-						}, this);
 
 						_self.setData(docs);
 						_self._loaded = true;

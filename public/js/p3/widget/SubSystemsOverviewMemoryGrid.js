@@ -55,24 +55,25 @@ define([
       });
     },
 
-    //subsystemData is returned in descending order by count. This code depends on that. 
-    applyMaxLimitToSubsystemPieCharts: function(subsystemData) {
-      if (this.subsystemMaxNumToDisplay >= subsystemData.length) {
-        return subsystemData;
-      } else {
-        var maxLimitedPieChartData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
-        var subsystemsOtherCategory = {};
-        subsystemsOtherCategory.val = "Other";
-        subsystemsOtherCategory.count = 0;
+    // //subsystemData is returned in descending order by count. This code depends on that. 
+    // applyMaxLimitToSubsystemPieCharts: function(subsystemData) {
+    //   if (this.subsystemMaxNumToDisplay >= subsystemData.length) {
+    //     return subsystemData;
+    //   } else {
+    //     var maxLimitedPieChartData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
+    //     var subsystemsOtherCategory = {};
+    //     subsystemsOtherCategory.val = "Other";
+    //     subsystemsOtherCategory.superclass = "Other";
+    //     subsystemsOtherCategory.count = 0;
 
-        for (var i = 0; i < subsystemData.length; i++) {
-          subsystemsOtherCategory.count += subsystemData[i].count;
-        };
+    //     for (var i = 0; i < subsystemData.length; i++) {
+    //       subsystemsOtherCategory.count += subsystemData[i].count;
+    //     };
 
-        maxLimitedPieChartData.push(subsystemsOtherCategory);
-        return maxLimitedPieChartData;
-      }
-    },
+    //     maxLimitedPieChartData.push(subsystemsOtherCategory);
+    //     return maxLimitedPieChartData;
+    //   }
+    // },
 
     formatSubsystemData: function(subsystemData) {
 
@@ -84,6 +85,7 @@ define([
           flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
         }
       }
+      //flattenedSubsystemData = this.applyMaxLimitToSubsystemPieCharts(flattenedSubsystemData)
       return flattenedSubsystemData;
     },
 
@@ -106,30 +108,26 @@ define([
         titleText = "";
       }
 
-      //var theme = new Theme;
-
       var superClassColorCodes = {
-        "CELLULAR PROCESSES": Theme.colors[0],
-        "MEMBRANE TRANSPORT": Theme.colors[1],
-        "METABOLISM": Theme.colors[2],
-        "REGULATION AND CELL SIGNALING": Theme.colors[3],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[4],
-        "CELL ENVELOPE": Theme.colors[5],
-        "CELLULAR PROCESSES": Theme.colors[6],
-        "DNA PROCESSING": Theme.colors[7],
-        "ENERGY": Theme.colors[8],
-        "MEMBRANE TRANSPORT": Theme.colors[9],
-        "METABOLISM": Theme.colors[10],
-        "MISCELLANEOUS": Theme.colors[11],
-        "PROTEIN PROCESSING": Theme.colors[12],
-        "REGULATION AND CELL SIGNALING": Theme.colors[13],
-        "RNA PROCESSING": Theme.colors[14],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[0]
+        "CELLULAR PROCESSES":                   Theme.colors[0],
+        "MEMBRANE TRANSPORT":                   Theme.colors[1],
+        "METABOLISM":                           Theme.colors[2],
+        "REGULATION AND CELL SIGNALING":        Theme.colors[3],
+        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[4],
+        "CELL ENVELOPE":                        Theme.colors[5],
+        "CELLULAR PROCESSES":                   Theme.colors[6],
+        "DNA PROCESSING":                       Theme.colors[7],
+        "ENERGY":                               Theme.colors[8],
+        "MEMBRANE TRANSPORT":                   Theme.colors[9],
+        "METABOLISM":                           Theme.colors[10],
+        "MISCELLANEOUS":                        Theme.colors[11],
+        "PROTEIN PROCESSING":                   Theme.colors[12],
+        "REGULATION AND CELL SIGNALING":        Theme.colors[13],
+        "RNA PROCESSING":                       Theme.colors[14],
+        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[0]
       }
 
       var formattedSubsystemData = this.formatSubsystemData(subsystemData);
-
-      var maxLimitedPieChartData = this.applyMaxLimitToSubsystemPieCharts(subsystemData);
 
       var width = $( window ).width() * .85;
       var height = $( window ).height() * .6;
