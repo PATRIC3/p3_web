@@ -124,7 +124,7 @@ define([
         "PROTEIN PROCESSING": Theme.colors[12],
         "REGULATION AND CELL SIGNALING": Theme.colors[13],
         "RNA PROCESSING": Theme.colors[14],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[15]
+        "STRESS RESPONSE, DEFENSE, VIRULENCE": Theme.colors[0]
       }
 
       var formattedSubsystemData = this.formatSubsystemData(subsystemData);

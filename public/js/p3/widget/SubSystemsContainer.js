@@ -177,11 +177,10 @@ define([
 					apiServer: this.apiServer,
 					defaultFilter: this.defaultFilter,
 					store: subsystemsStore,
-					facetFields: ["class", "subclass", "active"],
+					facetFields: ["superclass", "class", "subclass", "active"],
 					columns: {
 						"Selection Checkboxes": selector({unhidable: true}),
-						id: 				{label: 'ID', field: 'id', hidden: true},
-						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						superclass: 		{label: "Superclass", field: "superclass"},
 						"class": 			{label: "Class", field: "class"},
 						subclass: 			{label: 'Subclass', field: 'subclass'},
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
@@ -204,8 +203,7 @@ define([
 					facetFields: ["class", "subclass", "active", "subsystem_name"],
 					columns: {
 						"Selection Checkboxes": selector({unhidable: true}),
-						id: 				{label: 'ID', field: 'id', hidden: true},
-						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						superclass: 		{label: "Superclass", field: "superclass"},
 						"class": 			{label: "Class", field: "class"},
 						subclass: 			{label: 'Subclass', field: 'subclass'},
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
@@ -237,8 +235,7 @@ define([
 					facetFields: ["class", "subclass", "active"],
 					columns: {
 						"Selection Checkboxes": selector({unhidable: true}),
-						id: 				{label: 'ID', field: 'id', hidden: true},
-						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						superclass: 		{label: "Superclass", field: "superclass"},
 						"class": 			{label: "Class", field: "class"},
 						subclass: 			{label: 'Subclass', field: 'subclass'},
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
@@ -264,8 +261,7 @@ define([
 					facetFields: ["class", "subclass", "active", "subsystem_name"],
 					columns: {
 						"Selection Checkboxes": selector({unhidable: true}),
-						id: 				{label: 'ID', field: 'id', hidden: true},
-						subsystem_id: 		{label: 'Subsystem ID', field: 'subsystem_id', hidden: true},
+						superclass: 		{label: "Superclass", field: "superclass"},
 						"class": 			{label: "Class", field: "class"},
 						subclass: 			{label: 'Subclass', field: 'subclass'},
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},

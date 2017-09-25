@@ -168,9 +168,9 @@ define([
 
 						case "subsystems":
 							headers = [
+									"Superclass",
 									"Class",
 									"Subclass",
-									"Subsystem Id",
 									"Subsystem Name",
 									"Genome Count",
 									"Gene Count",
@@ -185,19 +185,19 @@ define([
 
 							data.forEach(function(row){
 								content.push([
-									row['class'],
+									JSON.stringify(row.superclass),
+									JSON.stringify(row['class']),
 									JSON.stringify(row.subclass),
-									row.subsystem_id,
 									JSON.stringify(row.subsystem_name),
-									row.genome_count,
-									row.gene_count,
-									row.role_count,
-									row.role_id,
-									row.role_name,
-									row.active,
-									row.patric_id,
-									row.gene,
-									row.product
+									JSON.stringify(row.genome_count),
+									JSON.stringify(row.gene_count),
+									JSON.stringify(row.role_count),
+									JSON.stringify(row.role_id),
+									JSON.stringify(row.role_name),
+									JSON.stringify(row.active),
+									JSON.stringify(row.patric_id),
+									JSON.stringify(row.gene),
+									JSON.stringify(row.product)
 								]);
 							});
 							filename = "PATRIC_subsystems";
@@ -205,9 +205,9 @@ define([
 
 						case "genes":
 							headers = [
+									"Superclass",
 									"Class",
 									"Subclass",
-									"Subsystem Id",
 									"Subsystem Name",
 									"Role ID",
 									"Role Name",
@@ -219,16 +219,16 @@ define([
 
 							data.forEach(function(row){
 								content.push([
-									row['class'],
+									JSON.stringify(row.superclass),
+									JSON.stringify(row['class']),
 									JSON.stringify(row.subclass),
-									row.subsystem_id,
 									JSON.stringify(row.subsystem_name),
-									row.role_id,
-									row.role_name,
-									row.active,
-									row.patric_id,
-									row.gene,
-									row.product
+									JSON.stringify(row.role_id),
+									JSON.stringify(row.role_name),
+									JSON.stringify(row.active),
+									JSON.stringify(row.patric_id),
+									JSON.stringify(row.gene),
+									JSON.stringify(row.product)
 								]);
 							});
 							filename = "PATRIC_subsystems";
