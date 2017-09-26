@@ -101,51 +101,6 @@ define([
 			this._set('store', store);
 		},
 
-		createFilterPanel: function(){
-			var _self = this;
-			this.containerActionBar = this.filterPanel = new ContainerActionBar({
-				region: "top",
-				layoutPriority: 7,
-				splitter: true,
-				"className": "BrowserHeader",
-				dataModel: this.dataModel,
-				facetFields: this.facetFields,
-				currentContainerWidget: this,
-				_setQueryAttr: function(query){
-					var p = _self.typeMap[_self.type];
-					query = query + "&limit(25000)&group((field," + p + "),(format,simple),(ngroups,true),(limit,1),(facet,true))";
-					this._set("query", query);
-					this.getFacets(query).then(lang.hitch(this, function(facets){
-						if(!facets){
-							return;
-						}
-
-						Object.keys(facets).forEach(function(cat){
-							if(this._ffWidgets[cat]){
-								var selected = this.state.selected;
-								this._ffWidgets[cat].set('data', facets[cat], selected);
-							}else{
-							}
-						}, this);
-
-					}));
-
-				}
-			});
-
-			this.filterPanel.watch("filter", lang.hitch(this, function(attr, oldVal, newVal){
-
-				if((oldVal != newVal) && (this.state && this.state.hashParams && (newVal != this.state.hashParams.filter))){
-					on.emit(this.domNode, "UpdateHash", {
-						bubbles: true,
-						cancelable: true,
-						hashProperty: "filter",
-						value: newVal,
-						oldValue: oldVal
-					})
-				}
-			}));
-		},
 		containerActions: GridContainer.prototype.containerActions.concat([
 			[
 				"DownloadTable",
@@ -445,7 +400,7 @@ define([
 		_setStateAttr: function(state){
 			this._set("state", state);
 			// console.log("from _setState", state)
-			this.filterPanel.set("state", lang.mixin({}, state));
+			// this.filterPanel.set("state", lang.mixin({}, state));
 			if(this.grid){
 				this.grid.set("state", lang.mixin({}, state, {hashParams: lang.mixin({}, state.hashParams)}));
 			}
