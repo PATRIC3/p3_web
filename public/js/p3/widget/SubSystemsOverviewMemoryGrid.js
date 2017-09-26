@@ -2,7 +2,7 @@ define([
   "dojo/_base/declare", "dijit/layout/BorderContainer", "dojo/on", "dojo/_base/Deferred",
   "dojo/dom-class", "dijit/layout/ContentPane", "dojo/dom-construct", "dijit/Tooltip",
   "dojo/_base/xhr", "dojo/_base/lang", "./PageGrid", "./formatter", "../store/SubsystemsOverviewMemoryStore", "dojo/request",
-  "dojo/aspect", "./GridSelector", "dojo/when", "d3/d3", "dojo/Stateful", "dojo/topic", "../util/PathJoin", "dojo/promise/all", "./PATRICTheme",
+  "dojo/aspect", "./GridSelector", "dojo/when", "d3/d3", "dojo/Stateful", "dojo/topic", "../util/PathJoin", "dojo/promise/all", "./DataVisualizationTheme",
 ], function(declare, BorderContainer, on, Deferred,
       domClass, ContentPane, domConstruct, Tooltip,
       xhr, lang, Grid, formatter, SubsystemsOverviewMemoryStore, request,
@@ -18,7 +18,7 @@ define([
     },
 
     // x + "Other" as aggregation of what is left over
-    subsystemMaxNumToDisplay: 15,
+    subsystemMaxNumToDisplay: 16,
 
     onSetState: function(attr, oldState, state){
 
@@ -124,7 +124,7 @@ define([
         "PROTEIN PROCESSING":                   Theme.colors[12],
         "REGULATION AND CELL SIGNALING":        Theme.colors[13],
         "RNA PROCESSING":                       Theme.colors[14],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[0]
+        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[15]
       }
 
       var formattedSubsystemData = this.formatSubsystemData(subsystemData);
