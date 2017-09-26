@@ -239,6 +239,7 @@ define([
           .append("div")
           .style("position", "absolute")
           .style("z-index", "10")
+          .style("background-color", "white")
           .style("visibility", "hidden")
 
       if (this.genomeView) {
