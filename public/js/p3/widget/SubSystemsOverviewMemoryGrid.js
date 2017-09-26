@@ -80,7 +80,7 @@ define([
       //add superclass data to class data
       var flattenedSubsystemData = [];
       for (var i = 0; i < subsystemData.length; i++) {
-        for (var j = 0; j < subsystemData[i].class.buckets.length; j++) {
+        for (var j = 0; j < subsystemData[i]['class'].buckets.length; j++) {
           subsystemData[i]['class'].buckets[j].superclass = subsystemData[i].val;
           flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
         }
@@ -232,7 +232,7 @@ define([
           .text(function(d) { return d.val + " (" + d.count + ")"; });
 
       subsystemslegend.on("click", function(d) {
-        that.navigateToSubsystemsSubTabFromLegend(d.class.buckets);
+        that.navigateToSubsystemsSubTabFromLegend(d['class'].buckets);
       })
 
       var tooltip = d3.select("body")
