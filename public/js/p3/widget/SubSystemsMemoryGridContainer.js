@@ -108,9 +108,6 @@ define([
 			if(this.type === 'genes'){
 				this.inherited(arguments)
 			} else {
-				console.log("createFilterPanel is called")
-				debugger;
-
 				var _self = this;
 				this.containerActionBar = this.filterPanel = new ContainerActionBar({
 					region: "top",
@@ -121,7 +118,6 @@ define([
 					facetFields: this.facetFields,
 					currentContainerWidget: this,
 					_setQueryAttr: function(query){
-						console.warn("queryattr is set", query)
 						var p = _self.typeMap[_self.type];
 						query = query + "&limit(25000)&group((field," + p + "),(format,simple),(ngroups,true),(limit,1),(facet,true))";
 						this._set("query", query);
@@ -136,13 +132,11 @@ define([
 									var selected = this.state.selected;
 									this._ffWidgets[cat].set('data', facets[cat], selected);
 								}else{
+									
 								}
 								}, this);
 							}
-							
-
 						}));
-
 					}
 				});
 

@@ -315,10 +315,10 @@ define([
 				console.log(page);
 			}));
 
-			Topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(data){
+			Topic.subscribe("navigateToSubsystemsSubTab", lang.hitch(this, function(val){
 
-				var encodedClassKeyword = encodeURIComponent('"' + data.val + '"');
-				var searchHashParam = "eq(class," + encodedClassKeyword + ")"
+				var encodedClassKeyword = encodeURIComponent('"' + val + '"');
+				var searchHashParam = "eq(superclass," + encodedClassKeyword + ")"
 
 				var newState = lang.mixin({}, this.state, {hashParams:
 					lang.mixin({}, {filter: searchHashParam})

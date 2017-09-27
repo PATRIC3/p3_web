@@ -75,19 +75,19 @@ define([
     //   }
     // },
 
-    formatSubsystemData: function(subsystemData) {
+    // formatSubsystemData: function(subsystemData) {
 
-      //add superclass data to class data
-      var flattenedSubsystemData = [];
-      for (var i = 0; i < subsystemData.length; i++) {
-        for (var j = 0; j < subsystemData[i]['class'].buckets.length; j++) {
-          subsystemData[i]['class'].buckets[j].superclass = subsystemData[i].val;
-          flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
-        }
-      }
-      //flattenedSubsystemData = this.applyMaxLimitToSubsystemPieCharts(flattenedSubsystemData)
-      return flattenedSubsystemData;
-    },
+    //   //add superclass data to class data
+    //   var flattenedSubsystemData = [];
+    //   for (var i = 0; i < subsystemData.length; i++) {
+    //     for (var j = 0; j < subsystemData[i]['class'].buckets.length; j++) {
+    //       subsystemData[i]['class'].buckets[j].superclass = subsystemData[i].val;
+    //       flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
+    //     }
+    //   }
+    //   //flattenedSubsystemData = this.applyMaxLimitToSubsystemPieCharts(flattenedSubsystemData)
+    //   return flattenedSubsystemData;
+    // },
 
     //function is coupled because color data is used across circle and tree to match
     //color data is rendered via d3 library programmatically
@@ -127,7 +127,7 @@ define([
         "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[15]
       }
 
-      var formattedSubsystemData = this.formatSubsystemData(subsystemData);
+      //var formattedSubsystemData = this.formatSubsystemData(subsystemData);
 
       var width = $( window ).width() * .85;
       var height = $( window ).height() * .6;
@@ -167,7 +167,7 @@ define([
         .sort(null);
 
       var path = svg.selectAll('path')
-        .data(pie(formattedSubsystemData))
+        .data(pie(subsystemData))
         .enter()
         .append('path')
         .attr('d', arc)
@@ -183,7 +183,7 @@ define([
         .attr("stroke-width", "1px")
         .attr('fill', function(d) {
           //return color(d.data.val + " (" + d.data.count + ")");
-          return superClassColorCodes[d.data.superclass.toUpperCase()]
+          return superClassColorCodes[d.data.val.toUpperCase()]
       });
 
       var margin = {left: 60};
@@ -232,7 +232,7 @@ define([
           .text(function(d) { return d.val + " (" + d.count + ")"; });
 
       subsystemslegend.on("click", function(d) {
-        that.navigateToSubsystemsSubTabFromLegend(d['class'].buckets);
+        that.navigateToSubsystemsSubTabFromLegend(d);
       })
 
       var tooltip = d3.select("body")
@@ -445,18 +445,19 @@ define([
           //do nothing
           break;
         default:
-          Topic.publish("navigateToSubsystemsSubTab", d.data);
+          Topic.publish("navigateToSubsystemsSubTab", d.data.val);
           break;
       }
     },
 
-    navigateToSubsystemsSubTabFromLegend: function(buckets) {
-      for (var i = 0; i < buckets.length; i++) {
-        // var subystemData = {};
-        // subystemData.data = {};
-        // var re = /.*\(/;
-        // var classname = d.match(re);
-        // subystemData.data.val = classname[0].slice(0, -2);
+    navigateToSubsystemsSubTabFromLegend: function(d) {
+      switch (d.val) {
+        case "Other":
+          //do nothing
+          break;
+        default:
+          Topic.publish("navigateToSubsystemsSubTab", d.val);
+          break;
       }
     },
 
