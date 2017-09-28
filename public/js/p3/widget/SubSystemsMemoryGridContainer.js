@@ -132,7 +132,7 @@ define([
 									var selected = this.state.selected;
 									this._ffWidgets[cat].set('data', facets[cat], selected);
 								}else{
-									
+
 								}
 								}, this);
 							}
@@ -153,7 +153,6 @@ define([
 				}));
 			}
 		},
-
 
 		containerActions: GridContainer.prototype.containerActions.concat([
 			[
@@ -260,6 +259,7 @@ define([
 				true
 			]
 		]),
+		
 		selectionActions: GridContainer.prototype.selectionActions.concat([
 
 			[
@@ -437,9 +437,9 @@ define([
 					url['subsystem_id'] = selection[0].subsystem_id;
 
 					//used to create DOM
-					url['subsystem_name'] =  selection[0].subsystem_name;
-					url['class'] =  selection[0]['class'];
-					url['subclass'] =  selection[0].subclass;
+					// url['subsystem_name'] =  selection[0].subsystem_name;
+					// url['class'] =  selection[0]['class'];
+					// url['subclass'] =  selection[0].subclass;
 
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]

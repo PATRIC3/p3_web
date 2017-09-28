@@ -11,43 +11,70 @@ define([
 		containerType: "transcriptomics_experiment",
 		apiServiceUrl: window.App.dataAPI,
 
+		subsystemName: "",
+		subsystemClass: "",
+		subclass: "",
+		
+		genomeIds: "",
+		subsystemId: "",
+		taxonId: "",
+
 		onSetState: function(attr, oldVal, state){
-			// console.log("subsystemMap onSetState", state);
 
 			if(!state){
 				return;
 			}
 
-			var params = this.getStateParams(state);
-			state = lang.mixin(state, params);
+			var subsystemData = this.getStateParams(state);
 
-			// taxon_id -> state.genome_ids or genome_id ->state.genome_ids
-			if(state.hasOwnProperty('genome_ids')){
-				state.genome_ids = state.genome_ids;
-			} else if(state.hasOwnProperty('genome_id')){
-				state.genome_ids = [state.genome_id];
-			}
+			state.genome_ids = subsystemData.genome_ids;
+			state.subsystem_id = subsystemData.subsystem_id
 
 			var self = this;
-			when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id[0]), function(genomeIds){
+			when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id), function(genomeIds){
 				state.genome_ids = genomeIds;
 				self.viewer.set('visible', true);
 			});
 				
-			this.buildHeaderContent(state.subsystem_id[0]);
+			this.buildHeaderContent(state.subsystem_id);
 
 			window.document.title = 'Subsystem Map';
 		},
 
 		getStateParams: function(state) {
-			var params = {};
-			var qparts = state.search.split("&");
-			qparts.forEach(function(qp){
-				var parts = qp.split("=");
-				params[parts[0]] = parts[1].split(",");
-			});
 
-			return params;
+			var search = state.search;
+
+			var everythingAfterParam = /subsystem_id=(.*)/;
+			var subsystem_id = everythingAfterParam.exec(search)[1];
+
+			var everythingUpToParam = /^(.*?)&subsystem_id=/;
+			var genomeIdsParam = everythingUpToParam.exec(search);
+			var genome_ids = genomeIdsParam[1].replace("genome_ids=", "");
+
+			//for taxon level
+			if (genome_ids.indexOf('&') > -1)
+			{
+				var everythingAfterTaxonId = /taxon_id=(.*)/;
+				var taxonString = genomeIdsParam[0];
+				var taxonId = everythingAfterTaxonId.exec(taxonString);
+
+				var everythingUpToTaxonid = /^(.*?)&/;
+				this.taxonId = everythingUpToTaxonid.exec(taxonId[1])[1];
+
+			  	var everythingUpAmpersand = /&(.*)/;
+				var genome_ids_cleaned = everythingUpAmpersand.exec(genome_ids);
+				genome_ids = genome_ids_cleaned[1];
+			}
+
+			this.genomeIds = genome_ids;
+			this.subsystem_id = subsystem_id;
+
+			var subsystemData = {};
+			subsystemData.genome_ids = genome_ids;
+			subsystemData.subsystem_id = subsystem_id;
+
+			return subsystemData;
 		},
 
 		getStateParamsForSubClass: function(state) {
@@ -63,7 +90,7 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var query = "and(in(genome_id,(" + genome_ids.join(',') + ")),in(subsystem_id,(" + subsystem_id + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+			var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + subsystem_id + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
 
 			return when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 				handleAs: 'json',
@@ -75,6 +102,11 @@ define([
 				},
 				data: query
 			}), function(response){
+
+				this.subsystemName = response.response.docs[0].subsystem_name;
+				this.subsystemClass = response.response.docs[0].class;
+				this.subclass = response.response.docs[0].superclass;
+
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
 
@@ -83,6 +115,7 @@ define([
 						genomeIdList.push(key);
 					}
 				}
+
 				return genomeIdList;
 			});
 		},
@@ -123,17 +156,13 @@ define([
 
 			var params = this.getStateParamsForSubClass(this.state);
 			
-			var subsystemName = decodeURIComponent(params.subsystem_name);
-			var subsystemClass = decodeURIComponent(params.class);
-			var subclass = decodeURIComponent(params.subclass);
-
 			//subclass, class, subsystem name 
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				innerHTML: "Subsystem View - " + subsystemName + " - " + subsystemClass + " - " + subclass
+				innerHTML: "Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
