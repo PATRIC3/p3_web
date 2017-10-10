@@ -147,7 +147,7 @@ define([
 
 				// sub query - genome distribution
 				var query = {
-					q: "genome_id:(" + _self.pmState.genomeIds.join(' OR ') + ") AND subsystem_id:" + _self.pmState.subsystem_id,
+					q: "genome_id:(" + _self.state.genome_ids.join(' OR ') + ") AND subsystem_id:" + _self.state.subsystem_id,
 					rows: 0,
 					facet: true,
 					'json.facet': '{stat:{type:field,field:role_id,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
@@ -225,7 +225,7 @@ define([
 							'Authorization': _self.token ? _self.token : (window.App.authorizationToken || "")
 						},
 						data: {
-							q: 'subsystem_id:' + _self.pmState.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
+							q: 'subsystem_id:' + _self.state.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
 							fl: 'role_id,role_name,class',
 							sort: 'role_id asc',
 							rows: roleIDs.length
