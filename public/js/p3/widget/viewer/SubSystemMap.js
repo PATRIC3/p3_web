@@ -1,10 +1,10 @@
 define([
 	"dojo/_base/declare", "dojo/_base/lang", "dojo/when", "dojo/request", "dojo/dom-construct",
 	"dijit/layout/ContentPane",
-	"./Base", "../../util/PathJoin", "../SubsystemMapContainer"
+	"./Base", "../../util/PathJoin", "../SubsystemMapContainer", "../../util/EncodeURIComponentExpanded"
 ], function(declare, lang, when, request, domConstruct,
 			ContentPane,
-			ViewerBase, PathJoin, SubsystemMapContainer){
+			ViewerBase, PathJoin, SubsystemMapContainer, EncodeURIComponentExpanded){
 	return declare([ViewerBase], {
 		"disabled": false,
 		"query": null,
@@ -90,7 +90,13 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + subsystem_id + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+			var subsystem_id_quotes = "\"" + subsystem_id + "\""
+
+			var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id_quotes)
+
+			var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + encodedSubsystemId + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+
+			// var sanitizedQuery = escape(query);
 
 			return when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 				handleAs: 'json',
