@@ -225,7 +225,7 @@ define([
 							'Authorization': _self.token ? _self.token : (window.App.authorizationToken || "")
 						},
 						data: {
-							q: 'subsystem_id:' + _self.state.subsystem_id + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
+							q: 'subsystem_id:' + encodeURIComponent(_self.state.subsystem_id) + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
 							fl: 'role_id,role_name,class',
 							sort: 'role_id asc',
 							rows: roleIDs.length

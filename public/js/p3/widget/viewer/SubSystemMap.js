@@ -28,10 +28,11 @@ define([
 			var subsystemData = this.getStateParams(state);
 
 			state.genome_ids = subsystemData.genome_ids;
+			state.genome_ids_arr = subsystemData.genome_ids.split(',');
 			state.subsystem_id = subsystemData.subsystem_id
 
 			var self = this;
-			when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id), function(genomeIds){
+			when(this.getGenomeIdsBySubsystemId(state.genome_ids_arr, state.subsystem_id), function(genomeIds){
 				state.genome_ids = genomeIds;
 				self.viewer.set('visible', true);
 			});
@@ -90,23 +91,24 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var subsystem_id_quotes = "\"" + subsystem_id + "\""
+			var encodedSubsystemId = "\"" + EncodeURIComponentExpanded(subsystem_id) + "\"";
 
-			var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id_quotes)
-
-			var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + encodedSubsystemId + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
-
-			// var sanitizedQuery = escape(query);
-
-			return when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
 				headers: {
-					'Accept': "application/solr+json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+					'Accept': "application/json",
+					'Content-Type': "application/solrquery+x-www-form-urlencoded",
 					'X-Requested-With': null,
-					'Authorization': (window.App.authorizationToken || "")
+					'Authorization': window.App.authorizationToken
 				},
-				data: query
+				data: {
+					q: "genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:" + encodedSubsystemId,
+					rows: 0,
+					facet: true,
+					"facet.field": "genome_id",
+					"facet.mincount": 1,
+					"json.nl": "map"
+				}
 			}), function(response){
 
 				this.subsystemName = response.response.docs[0].subsystem_name;
@@ -124,6 +126,37 @@ define([
 
 				return genomeIdList;
 			});
+
+			// var subsystem_id_quotes = "\"" + subsystem_id + "\"";
+			// var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id_quotes);
+			// var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + encodedSubsystemId + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+
+			// return when(request.post(PathJoin(window.App.dataAPI, 'subsystem/'), {
+			// 	handleAs: 'json',
+			// 	headers: {
+			// 		'Accept': "application/solr+json",
+			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+			// 		'X-Requested-With': null,
+			// 		'Authorization': (window.App.authorizationToken || "")
+			// 	},
+			// 	data: query
+			// }), function(response){
+
+			// 	this.subsystemName = response.response.docs[0].subsystem_name;
+			// 	this.subsystemClass = response.response.docs[0].class;
+			// 	this.subclass = response.response.docs[0].superclass;
+
+			// 	var genomeIdList = [];
+			// 	var genomeIds = response.facet_counts.facet_fields.genome_id;
+
+			// 	for (var key in genomeIds) {
+			// 		if (genomeIds.hasOwnProperty(key)) {
+			// 			genomeIdList.push(key);
+			// 		}
+			// 	}
+
+			// 	return genomeIdList;
+			// });
 		},
 
 		buildHeaderContent: function(mapId){
