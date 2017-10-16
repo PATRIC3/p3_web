@@ -91,23 +91,24 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var encodedSubsystemId = "\"" + EncodeURIComponentExpanded(subsystem_id) + "\"";
+			var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id);
+
+			//"genome_id:83332.12 AND subsystem_id:"Cob%28I%29alamin%5Fadenosyltransferase"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map"
+
+			//"genome_id:(83332.12) AND subsystem_id:"Cob%28I%29alamin%5Fadenosyltransferase"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map"
+			
+			var query = "genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodedSubsystemId + "\"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
 
 			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
 				headers: {
 					'Accept': "application/json",
-					'Content-Type': "application/solrquery+x-www-form-urlencoded",
+					'Content-Type': "application/solrquery",
 					'X-Requested-With': null,
 					'Authorization': window.App.authorizationToken
 				},
 				data: {
-					q: "genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:" + encodedSubsystemId,
-					rows: 0,
-					facet: true,
-					"facet.field": "genome_id",
-					"facet.mincount": 1,
-					"json.nl": "map"
+					q: query
 				}
 			}), function(response){
 
@@ -127,15 +128,14 @@ define([
 				return genomeIdList;
 			});
 
-			// var subsystem_id_quotes = "\"" + subsystem_id + "\"";
-			// var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id_quotes);
-			// var query = "and(in(genome_id,(" + genome_ids + ")),in(subsystem_id,(" + encodedSubsystemId + ")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
+			// var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id);
+			// var query = "and(in(genome_id,(" + genome_ids.join(" OR ") + ")),in(subsystem_id,(\"" + encodedSubsystemId + "\")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
 
 			// return when(request.post(PathJoin(window.App.dataAPI, 'subsystem/'), {
 			// 	handleAs: 'json',
 			// 	headers: {
-			// 		'Accept': "application/solr+json",
-			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+			// 		'Accept': "application/rql+json",
+			// 		'Content-Type': "application/rqlquery",
 			// 		'X-Requested-With': null,
 			// 		'Authorization': (window.App.authorizationToken || "")
 			// 	},
