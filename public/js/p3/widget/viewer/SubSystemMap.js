@@ -101,9 +101,7 @@ define([
 					'X-Requested-With': null,
 					'Authorization': window.App.authorizationToken
 				},
-				data: {
-					q: query
-				}
+				data: query
 			}), function(response){
 
 				this.subsystemName = response.response.docs[0].subsystem_name;
