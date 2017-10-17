@@ -91,7 +91,7 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + subsystem_id + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
+			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
 			
 			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
@@ -119,36 +119,6 @@ define([
 
 				return genomeIdList;
 			});
-
-			// var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id);
-			// var query = "and(in(genome_id,(" + genome_ids.join(" OR ") + ")),in(subsystem_id,(\"" + encodedSubsystemId + "\")))&limit(1)&facet((field,genome_id),(mincount,1))&json(nl,map)";
-
-			// return when(request.post(PathJoin(window.App.dataAPI, 'subsystem/'), {
-			// 	handleAs: 'json',
-			// 	headers: {
-			// 		'Accept': "application/rql+json",
-			// 		'Content-Type': "application/rqlquery",
-			// 		'X-Requested-With': null,
-			// 		'Authorization': (window.App.authorizationToken || "")
-			// 	},
-			// 	data: query
-			// }), function(response){
-
-			// 	this.subsystemName = response.response.docs[0].subsystem_name;
-			// 	this.subsystemClass = response.response.docs[0].class;
-			// 	this.subclass = response.response.docs[0].superclass;
-
-			// 	var genomeIdList = [];
-			// 	var genomeIds = response.facet_counts.facet_fields.genome_id;
-
-			// 	for (var key in genomeIds) {
-			// 		if (genomeIds.hasOwnProperty(key)) {
-			// 			genomeIdList.push(key);
-			// 		}
-			// 	}
-
-			// 	return genomeIdList;
-			// });
 		},
 
 		buildHeaderContent: function(mapId){
