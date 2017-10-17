@@ -91,19 +91,13 @@ define([
 
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
-			var encodedSubsystemId = EncodeURIComponentExpanded(subsystem_id);
-
-			//"genome_id:83332.12 AND subsystem_id:"Cob%28I%29alamin%5Fadenosyltransferase"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map"
-
-			//"genome_id:(83332.12) AND subsystem_id:"Cob%28I%29alamin%5Fadenosyltransferase"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map"
+			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + subsystem_id + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
 			
-			var query = "genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodedSubsystemId + "\"&rows=0&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
-
 			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
 				headers: {
-					'Accept': "application/json",
-					'Content-Type': "application/solrquery",
+					'Accept': "application/solr+json",
+					'Content-Type': "application/solrquery+x-www-form-urlencoded",
 					'X-Requested-With': null,
 					'Authorization': window.App.authorizationToken
 				},

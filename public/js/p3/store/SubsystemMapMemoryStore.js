@@ -147,7 +147,7 @@ define([
 
 				// sub query - genome distribution
 				var query = {
-					q: "genome_id:(" + _self.state.genome_ids.join(' OR ') + ") AND subsystem_id:" + _self.state.subsystem_id,
+					q: "genome_id:(" + _self.state.genome_ids.join(' OR ') + ") AND subsystem_id:\"" + _self.state.subsystem_id + "\"",
 					rows: 0,
 					facet: true,
 					'json.facet': '{stat:{type:field,field:role_id,limit:-1,sort:{index:asc},facet:{families:{type:field,field:genome_id,limit:-1}}}}'
@@ -216,6 +216,12 @@ define([
 						});
 					});
 
+					var roleIDsInQuote = roleIDs.map(function(idstr){
+						return '"' + idstr + '"'
+					}).join(' OR ');
+
+					var ref_query = 'q=subsystem_id:"' +  _self.state.subsystem_id + '" AND role_id:(' + roleIDsInQuote + ')&fl=role_id,role_name,class&sort=role_id asc&rows=' + roleIDs.length
+
 					return when(request.post(_self.apiServer + 'subsystem_ref/', {
 						handleAs: 'json',
 						headers: {
@@ -224,12 +230,7 @@ define([
 							'X-Requested-With': null,
 							'Authorization': _self.token ? _self.token : (window.App.authorizationToken || "")
 						},
-						data: {
-							q: 'subsystem_id:' + encodeURIComponent(_self.state.subsystem_id) + ' AND role_id:(' + roleIDs.join(' OR ') + ')',
-							fl: 'role_id,role_name,class',
-							sort: 'role_id asc',
-							rows: roleIDs.length
-						}
+						data: ref_query
 					}), function(res){
 
 						var ecRefHash = {};
