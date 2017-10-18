@@ -112,10 +112,10 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colID, rowID);
 
-			var roleId = originalAxis.columnIds;
-			var genomeId = originalAxis.rowIds;
+			var roleId = encodeURIComponent(originalAxis.columnIds);
+			var genomeId = encodeURIComponent(originalAxis.rowIds);
 
-			var query = "?and(eq(role_id," + roleId + "),eq(genome_id," + genomeId + "))&limit(25000,0)";
+			var query = "?and(eq(role_id,\"" + roleId + "\"),eq(genome_id,\"" + genomeId + "\"))&limit(25000,0)";
 
 			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "subsystem", query), {
@@ -124,7 +124,7 @@ define([
 					'Accept': "application/json",
 					'X-Requested-With': null,
 					'Authorization': (window.App.authorizationToken || ""),
-					'Content-Type': 'application/rqlquery+x-www-form-urlencoded'
+					'Content-Type': 'application/solrquery+x-www-form-urlencoded'
 				}
 			}).then(lang.hitch(this, function(response){
 				Topic.publish("SubSystemMap", "hideLoadingMask");
@@ -152,10 +152,10 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colIDs, rowIDs);
 
-			var roleIds = originalAxis.columnIds;
-			var genomeIds = originalAxis.rowIds;
+			var roleIds = encodeURIComponent(originalAxis.columnIds);
+			var genomeIds = encodeURIComponent(originalAxis.rowIds);
 
-			var query = "and(in(role_id,(" + roleIds + ")),in(genome_id,(" + genomeIds + "))&limit(25000,0)";
+			var query = "and(in(role_id,(\"" + roleIds + "\")),in(genome_id,(\"" + genomeIds + "\"))&limit(25000,0)";
 
 			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "subsystem"), {
