@@ -52,10 +52,18 @@ define([
 				return sel[pkField]
 			});
 
+
+
 			console.log("DOWNLOAD TYPE: ", type)
 			if(conf.generateDownloadFromStore && this.grid && this.grid.store && type && this["_to" + type]){
 				var query = "in(" + pkField + ",(" + sel.join(",") + "))&sort(+" + pkField + ")&limit(2500000)"
+				var that = this;
 				when(this.grid.store.query({}), lang.hitch(this, function(results){
+					if (that.pkField === "subsystem_id") {
+						for(var i = 0; i < results.length; i++) {
+							results[i]["subsystem_id"] = encodeURIComponent(results[i]["subsystem_id"]);
+						}
+					}
 					results = rql.query(query, {}, results);
 					var data = this["_to" + type.toLowerCase()](results);
 					saveAs(new Blob([data]), "PATRIC_" + this.containerType + "." + type);
