@@ -1,6 +1,7 @@
 var register = function(){
   console.log('show me a registration form here!');
   nevermind('LoginForm');
+  nevermind('RegistrationForm');
   var regform = document.createElement('div');
   regform.className = 'RegistrationForm';
   regform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PATRIC User Registration</h2><form method="post" data-dojo-type="dijit/form/Form">'+
@@ -33,6 +34,7 @@ var nevermind = function(className){
 
 var loginUser = function(){
   console.log('show me a login form here!');
+  nevermind('LoginForm');
   nevermind('RegistrationForm');
   var loginform = document.createElement('div');
   loginform.className = 'LoginForm';
