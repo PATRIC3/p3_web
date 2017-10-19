@@ -12,7 +12,7 @@ var session = require("express-session-unsigned");
 var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
 var package = require("./package.json");
-
+//var backendUrl = 'http://localhost:7000'; //replace this with a variable used on prod server
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var reportProblem = require('./routes/reportProblem');
@@ -34,7 +34,7 @@ var apiProxy = httpProxy.createProxyServer();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.set('query parser', 'extended');
-
+//app.locals.backendUrl='http://localhost:7000';
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 //app.use(bodyParser.json());
@@ -163,6 +163,7 @@ app.use("/patric/images", express.static(path.join(__dirname, "public/patric/ima
 }));
 app.use("/patric/", express.static(path.join(__dirname, 'public/patric/')));
 app.use("/public/", express.static(path.join(__dirname, 'public/')));
+app.use("/user/", express.static(path.join(__dirname, 'public/user/')));
 app.use('/', routes);
 app.post("/reportProblem", reportProblem);
 app.use("/workspace", workspace);

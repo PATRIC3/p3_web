@@ -1,6 +1,13 @@
 
 const fs = require('fs');
 var nconf = require('nconf');
+//const dotenv = require('dotenv');
+//const fs = require('fs');
+// ignoring this for testing because it is only used for development purposes
+/* istanbul ignore next */
+// if (fs.existsSync('./.env')) {
+//   dotenv.config();
+// }
 
 var defaults = {
 	"http_port": 3000,
@@ -21,8 +28,8 @@ var defaults = {
 	"cookieDomain": ".patric.local",
 	"newsFeedRSS": "http://enews.patricbrc.org/feed",
 	"sessionTTL": 2628000000,
-
 	workspaceServiceURL: "",
+	backendUrl: "",
 	appServiceURL: "",
 	dataURL: "",
 	accountURL: "http://user.patric.local:3002/",
@@ -46,7 +53,7 @@ var defaults = {
 		"brcdownloads": "http://brcdownloads.patricbrc.org"
 	}
 };
-	
+
 var config_filename = "p3-web.conf";
 var config_file = __dirname + "/" + config_filename;
 if (!fs.statSync(config_file))
@@ -55,5 +62,3 @@ if (!fs.statSync(config_file))
 }
 
 module.exports = nconf.argv().env().file(config_file).defaults(defaults);
-
-
