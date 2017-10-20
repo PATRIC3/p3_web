@@ -43,14 +43,14 @@ var createUser = function(){
   .catch((error) => {
     console.log(error);
   });
-let firstname = document.getElementsByClassName('firstname')[0].value;
-let lastname = document.getElementsByClassName('lastname')[0].value;
-let orgString = '';
-orgString += document.getElementsByClassName('organization')[0].value;
-let organismString = '';
-organismString += document.getElementsByClassName('organisms')[0].value;
-let userdetString = '';
-userdetString += document.getElementsByClassName('interests')[0].value;
+  let firstname = document.getElementsByClassName('firstname')[0].value;
+  let lastname = document.getElementsByClassName('lastname')[0].value;
+  let orgString = '';
+  orgString += document.getElementsByClassName('organization')[0].value;
+  let organismString = '';
+  organismString += document.getElementsByClassName('organisms')[0].value;
+  let userdetString = '';
+  userdetString += document.getElementsByClassName('interests')[0].value;
   //let comments = document.getElementsByClassName('obscom');
   let bodyData = {'name': firstname + ' ' + lastname, 'email': document.getElementsByClassName('email')[0].value,
   'password': document.getElementsByClassName('password')[0].value,
@@ -59,13 +59,13 @@ userdetString += document.getElementsByClassName('interests')[0].value;
   'organisms': organismString,
   'userDetails': userdetString
 };
-  console.log(bodyData);
-  let fetchData = {
-    method: 'POST',
-    //credentials: 'same-origin',
-    body: JSON.stringify(bodyData),
-    headers: {
-      //'X-CSRFTOKEN': cookieToken,
+console.log(bodyData);
+let fetchData = {
+  method: 'POST',
+  //credentials: 'same-origin',
+  body: JSON.stringify(bodyData),
+  headers: {
+    //'X-CSRFTOKEN': cookieToken,
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   }
@@ -97,24 +97,20 @@ var loginUser = function(){
   var loginform = document.createElement('div');
   loginform.className = 'LoginForm';
   loginform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PATRIC Login</h2>'+
-  '<form><div style="padding:2px; margin:10px;"><table><tbody><tr><th style="border:none">EMAIL</th></tr><tr><td>' +
-  '<input type="text" name="username"/ data-dojo-type="dijit/form/ValidationTextBox" style="width:300px;"></td></tr>'+
-  '<tr><th style="border:none">PASSWORD</th></tr><tr><td>' +
-  // '<input type="text" name="first_name"/ data-dojo-type="dijit/form/ValidationTextBox" style="width:300px;">'+
-  '<input type="password" name="password"/ data-dojo-type="dijit/form/ValidationTextBox" style="width:300px;"></td></tr>'+
-  // 	'</td></tr><tr><th colspan="1">EMAIL ADDRESS</th></tr><tr><td colspan="1"><input type="text" name="email"/ data-dojo-type="dijit/form/ValidationTextBox" style="width:100%;">'+
-  // 	'</td></tr><tr><th colspan="2">ORGANIZATION</th></tr><tr><td colspan="2"><div style="width:100%"><input type="text" name="affiliation"></div></td></tr>'+
-  // '<tr><th colspan="2">ORGANISMS</th></tr><tr><td colspan="2"><div><input type="text" name="organisms"></div></td></tr>'+
-  // '<tr><th colspan="2">INTERESTS</th></tr><tr><td colspan="2"><div><textarea rows="5" cols="50" name="interests" style="height:75px;"></textarea></div></td></tr>'+
+  '<form><div style="padding:2px; margin:10px;"><table><tbody><tr><th style="border:none">Email</th></tr><tr><td>' +
+  '<input class="loginemail" type="email" name="email" style="width:300px;" value=""></td></tr>'+
+  '<tr><th style="border:none">Password</th></tr><tr><td>' +
+  '<input class="loginpass" type="password" name="password" style="width:300px;" value=""></td></tr>'+
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
-  '<div><button type="button" class="regbutton" onclick="logMeIn()">Login</button><button style="margin-left:20px" type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>';
+  '<div><button type="button" class="regbutton" onclick="logMeIn()">Login</button><button style="margin-left:20px" type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
+  '<div class="loginerror" style="color:red"></div>';
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(loginform, home[0].childNodes[0]);
   console.log(home[0].firstChild);
 }
 
 var logMeIn = function(){
-  let bodyData = {'name': 'tester3', 'email': 'tester3@test.com', 'password': 'password' };
+  let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': document.getElementsByClassName('loginpass')[0].value };
   //var cookieToken = getCookieToken();
   let fetchData = {
     method: 'POST',
@@ -122,22 +118,38 @@ var logMeIn = function(){
     body: JSON.stringify(bodyData),
     headers: {
       //'X-CSRFTOKEN': cookieToken,
-    'Accept': 'application/json',
-    'Content-Type': 'application/json'
-  }
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
   };
+
+  function handleErrors(response) {
+    if (!response.ok) {
+      throw Error(response.statusText);
+    }
+    return response;
+  }
   fetch(backendUrl + '/auth/login', fetchData)
+  //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
-  //console.log(data.json());
-  //console.log(data.token);
-  //const token = data.json();
-  console.log(data);
-  localStorage.setItem('token', data.token);
-  nevermind('LoginForm');
-  //loginUser();
+    //console.log(data.json());
+    //console.log(data.token);
+    //const token = data.json();
+    console.log(data);
+    if(data.token !== undefined){
+      localStorage.setItem('token', data.token);
+      nevermind('LoginForm');
+    }
+    if(data.message){
+      console.log(data.message);
+      let messagediv = document.getElementsByClassName('loginerror')[0];
+      messagediv.innerHTML = '<p style="text-align:center">' + data.message + '</p>';
+    }
+    //loginUser();
   })
   .catch((error) => {
-  console.log(error);
+    console.log(error);
+    console.log
   });
 }
