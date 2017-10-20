@@ -1,3 +1,13 @@
+
+button {
+  cursor: hand;
+  cursor: pointer;
+}
+
+th {
+  padding-bottom: 0;
+}
+
 .regbutton:hover {
   background-color: #87b934;
 }
@@ -26,7 +36,8 @@
   margin-bottom: 10px;
 }
 
-button {
-  cursor: hand;
-  cursor: pointer;
+.RegistrationForm th {
+  padding-bottom: 0;
+  padding-top: 6px;
+  font-weight: bold;
 }
