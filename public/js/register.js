@@ -113,9 +113,13 @@ var logMeIn = function(){
   }
   };
   fetch(backendUrl + '/auth/login', fetchData)
+  .then((response) => response.json())
   .then((data) => {
+  //console.log(data.json());
+  //console.log(data.token);
+  //const token = data.json();
   console.log(data);
-  console.log(data.token);
+  localStorage.setItem('token', data.token);
   nevermind('LoginForm');
   //loginUser();
   })
