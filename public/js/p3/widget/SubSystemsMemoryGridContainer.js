@@ -353,107 +353,108 @@ define([
 
 				},
 				false
-			], [
-				"PathwaySummary",
-				"fa icon-git-pull-request fa-2x",
-				{
-					label: "PTHWY",
-					ignoreDataType: true,
-					multiple: true,
-					max: 5000,
-					validTypes: ["subsystems_gene"],
-					tooltip: "Pathway Summary",
-					validContainerTypes: ["subsystem_data"]
-				},
-				function(selection, containerWidget){
-					var ids = [];
-					var queryContext = containerWidget.grid.store.state.search;
-					if(containerWidget.grid.store.state.hashParams.filter != "false" && containerWidget.grid.store.state.hashParams.filter != undefined){
-						queryContext += "&" + containerWidget.grid.store.state.hashParams.filter;
-					}
-
-					var subsystem_ids = selection.map(function(d){
-						return d['subsystem_id']
-					});
-
-					when(request.post(this.apiServer + '/subsystem/', {
-						handleAs: 'json',
-						headers: {
-							'Accept': "application/json",
-							'Content-Type': "application/rqlquery+x-www-form-urlencoded",
-							'X-Requested-With': null,
-							'Authorization': (window.App.authorizationToken || "")
-						},
-						data: "and(in(subsystem_id,(" + subsystem_ids.join(",") + "))," + queryContext + ")&select(feature_id)&limit(25000)"
-					}), function(response){
-						ids = response.map(function(d){
-							return d['feature_id']
-						});
-						Topic.publish("/navigate", {
-							href: "/view/PathwaySummary/?features=" + ids.join(','),
-							target: "blank"
-						});
-					});
-				},
-				false
-			], [
-				"ViewGenomeItem",
-				"MultiButton fa icon-selection-Genome fa-2x",
-				{
-					label: "GENOME",
-					validTypes: ["subsystems_gene"],
-					multiple: false,
-					tooltip: "Switch to Genome View. Press and Hold for more options.",
-					ignoreDataType: true,
-					validContainerTypes: ["subsystem_data"],
-					pressAndHold: function(selection, button, opts, evt){
-						console.log("PressAndHold");
-						console.log("Selection: ", selection, selection[0])
-						popup.open({
-							popup: new PerspectiveToolTipDialog({perspectiveUrl: "/view/Genome/" + selection[0].genome_id}),
-							around: button,
-							orient: ["below"]
-						});
-
-					}
-				},
-				function(selection, container){
-
-					if(container.type !== "genes"){
-						return;
-					}
-					var sel = selection[0];
-					Topic.publish("/navigate", {
-						href: "/view/Genome/" + sel.genome_id,
-						target: "blank"
-					});
-				},
-				false
-			], [
-				"ViewFASTA",
-				"fa icon-fasta fa-2x",
-				{
-					label: "FASTA",
-					ignoreDataType: true,
-					multiple: true,
-					validTypes: ["subsystems_gene"],
-					max: 5000,
-					tooltip: "View FASTA Data",
-					tooltipDialog: viewFASTATT,
-					validContainerTypes: ["subsystem_data"]
-				},
-				function(selection){
-					// console.log("view FASTA")
-					viewFASTATT.selection = selection;
-					// console.log("ViewFasta Sel: ", this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog)
-					popup.open({
-						popup: this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
-						around: this.selectionActionBar._actions.ViewFASTA.button,
-						orient: ["below"]
-					});
-				},
-				false
 			],
+			// , [
+			// 	"PathwaySummary",
+			// 	"fa icon-git-pull-request fa-2x",
+			// 	{
+			// 		label: "PTHWY",
+			// 		ignoreDataType: true,
+			// 		multiple: true,
+			// 		max: 5000,
+			// 		validTypes: ["subsystems_gene"],
+			// 		tooltip: "Pathway Summary",
+			// 		validContainerTypes: ["subsystem_data"]
+			// 	},
+			// 	function(selection, containerWidget){
+			// 		var ids = [];
+			// 		var queryContext = containerWidget.grid.store.state.search;
+			// 		if(containerWidget.grid.store.state.hashParams.filter != "false" && containerWidget.grid.store.state.hashParams.filter != undefined){
+			// 			queryContext += "&" + containerWidget.grid.store.state.hashParams.filter;
+			// 		}
+
+			// 		var subsystem_ids = selection.map(function(d){
+			// 			return d['subsystem_id']
+			// 		});
+
+			// 		when(request.post(this.apiServer + '/subsystem/', {
+			// 			handleAs: 'json',
+			// 			headers: {
+			// 				'Accept': "application/json",
+			// 				'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+			// 				'X-Requested-With': null,
+			// 				'Authorization': (window.App.authorizationToken || "")
+			// 			},
+			// 			data: "and(in(subsystem_id,(" + subsystem_ids.join(",") + "))," + queryContext + ")&select(feature_id)&limit(25000)"
+			// 		}), function(response){
+			// 			ids = response.map(function(d){
+			// 				return d['feature_id']
+			// 			});
+			// 			Topic.publish("/navigate", {
+			// 				href: "/view/PathwaySummary/?features=" + ids.join(','),
+			// 				target: "blank"
+			// 			});
+			// 		});
+			// 	},
+			// 	false
+			// ], [
+			// 	"ViewGenomeItem",
+			// 	"MultiButton fa icon-selection-Genome fa-2x",
+			// 	{
+			// 		label: "GENOME",
+			// 		validTypes: ["subsystems_gene"],
+			// 		multiple: false,
+			// 		tooltip: "Switch to Genome View. Press and Hold for more options.",
+			// 		ignoreDataType: true,
+			// 		validContainerTypes: ["subsystem_data"],
+			// 		pressAndHold: function(selection, button, opts, evt){
+			// 			console.log("PressAndHold");
+			// 			console.log("Selection: ", selection, selection[0])
+			// 			popup.open({
+			// 				popup: new PerspectiveToolTipDialog({perspectiveUrl: "/view/Genome/" + selection[0].genome_id}),
+			// 				around: button,
+			// 				orient: ["below"]
+			// 			});
+
+			// 		}
+			// 	},
+			// 	function(selection, container){
+
+			// 		if(container.type !== "genes"){
+			// 			return;
+			// 		}
+			// 		var sel = selection[0];
+			// 		Topic.publish("/navigate", {
+			// 			href: "/view/Genome/" + sel.genome_id,
+			// 			target: "blank"
+			// 		});
+			// 	},
+			// 	false
+			// ], [
+			// 	"ViewFASTA",
+			// 	"fa icon-fasta fa-2x",
+			// 	{
+			// 		label: "FASTA",
+			// 		ignoreDataType: true,
+			// 		multiple: true,
+			// 		validTypes: ["subsystems_gene"],
+			// 		max: 5000,
+			// 		tooltip: "View FASTA Data",
+			// 		tooltipDialog: viewFASTATT,
+			// 		validContainerTypes: ["subsystem_data"]
+			// 	},
+			// 	function(selection){
+			// 		// console.log("view FASTA")
+			// 		viewFASTATT.selection = selection;
+			// 		// console.log("ViewFasta Sel: ", this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog)
+			// 		popup.open({
+			// 			popup: this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
+			// 			around: this.selectionActionBar._actions.ViewFASTA.button,
+			// 			orient: ["below"]
+			// 		});
+			// 	},
+			// 	false
+			// ],
 			[
 				"ViewSubsystemMap",
 				"fa icon-map-o fa-2x",
