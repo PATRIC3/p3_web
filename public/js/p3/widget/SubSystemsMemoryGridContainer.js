@@ -2,12 +2,12 @@ define([
 	"dojo/_base/declare", "./GridContainer", "dojo/on",
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
 	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
-	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip"
+	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip", "./CopyTooltipDialog"
 
 ], function(declare, GridContainer, on,
 			SubSystemsGrid, popup, Topic, request, when,
 			TooltipDialog, ContainerActionBar, saveAs, PathJoin,
-			lang, domConstruct, PerspectiveToolTipDialog){
+			lang, domConstruct, PerspectiveToolTipDialog, CopyTooltipDialog){
 
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
@@ -45,6 +45,9 @@ define([
 			popup.close(downloadTT);
 		}
 	});
+
+	var copySelectionTT = new CopyTooltipDialog({});
+	copySelectionTT.startup();
 
 	on(downloadTT.domNode, "div:click", lang.hitch(function(evt){
 		var rel = evt.target.attributes.rel.value;
@@ -263,6 +266,38 @@ define([
 		selectionActions: GridContainer.prototype.selectionActions.concat([
 
 			[
+				"CopySelection",
+				"fa icon-clipboard2 fa-2x",
+				{
+					label: "COPY",
+					multiple: true,
+					validTypes: ["*"],
+					ignoreDataType: true,
+					tooltip: "Copy Selection to Clipboard.",
+					tooltipDialog: copySelectionTT,
+					max: 5000,
+					validContainerTypes: ["genome_data", "sequence_data", "feature_data", "spgene_data", "spgene_ref_data", "transcriptomics_experiment_data", "transcriptomics_sample_data", "pathway_data", "transcriptomics_gene_data", "gene_expression_data", "interaction_data", "genome_amr_data", "subsystem_data"]
+				},
+				function(selection, container){
+					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("selection", selection);
+					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("containerType", this.containerType);
+					if(container && container.grid){
+						this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("grid", container.grid);
+					}
+
+					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.timeout(3500);
+
+					setTimeout(lang.hitch(this, function(){
+						popup.open({
+							popup: this.selectionActionBar._actions.CopySelection.options.tooltipDialog,
+							around: this.selectionActionBar._actions.CopySelection.button,
+							orient: ["below"]
+						});
+					}), 10);
+
+				},
+				false
+			], [
 				"ViewFeatureItems",
 				"MultiButton fa icon-selection-FeatureList fa-2x",
 				{
@@ -288,12 +323,6 @@ define([
 				function(selection, container){
 					//subsystem tab
 					if (selection[0].document_type === "subsystems_subsystem") {
-
-						// var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
-
-						// var query = "and(in(genome_id,(" + container.state.genome_ids.join(',') + ")),in(subsystem_id,(" + selection.map(function(s){
-						// 	return encodeURIComponent(s.subsystem_id);
-						// }).join(',') + ")))&select(feature_id)&limit(25000)";
 						
 						var subsystem_ids = selection.map(function(s){
 							return encodeURIComponent(s.subsystem_id)
