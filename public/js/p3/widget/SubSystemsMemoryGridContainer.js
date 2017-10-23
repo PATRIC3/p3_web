@@ -288,21 +288,31 @@ define([
 				function(selection, container){
 					//subsystem tab
 					if (selection[0].document_type === "subsystems_subsystem") {
-						var query = "and(in(genome_id,(" + container.state.genome_ids.join(',') + ")),in(subsystem_id,(" + selection.map(function(s){
-							return s.subsystem_id;
-						}).join(',') + ")))&select(feature_id)&limit(25000)";
+
+						// var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
+
+						// var query = "and(in(genome_id,(" + container.state.genome_ids.join(',') + ")),in(subsystem_id,(" + selection.map(function(s){
+						// 	return encodeURIComponent(s.subsystem_id);
+						// }).join(',') + ")))&select(feature_id)&limit(25000)";
+						
+						var subsystem_ids = selection.map(function(s){
+							return encodeURIComponent(s.subsystem_id)
+						});
+
+						var query = "q=genome_id:(" + container.state.genome_ids.join(" OR ") + ") AND subsystem_id:\"" + subsystem_ids.join(',') + "\"&select(feature_id)&limit(25000)";
+
 
 						when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 							handleAs: 'json',
 							headers: {
-								'Accept': "application/json",
-								'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+								'Accept': "application/solr+json",
+								'Content-Type': "application/solrquery+x-www-form-urlencoded",
 								'X-Requested-With': null,
 								'Authorization': (window.App.authorizationToken || "")
 							},
 							data: query
-						}), function(featureIds){
-							Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + featureIds.map(function(x){
+						}), function(response){
+							Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + response.response.docs.map(function(x){
 								return x.feature_id;
 							}).join(",") + "))#view_tab=features", target: "blank"});
 						});

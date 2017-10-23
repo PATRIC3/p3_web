@@ -338,7 +338,8 @@ define([
 				});
 
 				this.state = newState;
-				this.tabContainer.selectChild(this.genesGrid);
+				//this.tabContainer.selectChild(this.genesGrid);
+				this.tabContainer.selectChild(this.subsystemsGrid);
 			}));
 
 			Topic.subscribe("navigateToSubsystemsSubTabFromCoverageBar", lang.hitch(this, function(){
