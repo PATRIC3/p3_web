@@ -456,7 +456,7 @@ define([
           //do nothing
           break;
         default:
-          Topic.publish("navigateToSubsystemsSubTab", d.val);
+          Topic.publish("navigateToSubsystemsGenesSubTab", d.val);
           break;
       }
     },
