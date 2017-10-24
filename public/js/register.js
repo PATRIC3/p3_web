@@ -157,3 +157,12 @@ var logMeIn = function(){
     //console.log
   });
 }
+
+var logout = function(){
+  localStorage.removeItem('token');
+  let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+  hideWithAuth.style.display='block';
+  let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+  showWithAuth.style.display='none';
+  window.location.href = '/';
+}
