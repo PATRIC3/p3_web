@@ -5,7 +5,7 @@
 // if (fs.existsSync('../../../.env')) {
 //   dotenv.config({path: '../../../.env'});
 // }
-var backendUrl = 'http://localhost:7000'; //replace with a global variable that gets inserted during the build process somehow
+var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable that gets inserted during the build process somehow
 var register = function(){
   //formtype = 'register';
   //window.location.href = '/user?formtype=register';
@@ -29,7 +29,8 @@ var register = function(){
   '<tr><th colspan="2">Interests</th></tr><tr><td colspan="2"><div><textarea class="interests" rows="5" cols="50" name="interests" style="height:75px;" value=""></textarea></div></td></tr>'+
   '</tbody></table><p><span style="color:red">*</span> <i>Indicates required field</i></p></div><div style="text-align:center;padding:2px;margin:10px;">'+
   '<div><button type="button" class="registerbutton" onclick="createUser()" style="display:none; margin-bottom:-22px">Register New User</button>' +
-  '<button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>';
+  '<button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
+  '<div class="registererror" style="color:red"></div>';;
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(regform, home[0].childNodes[0]);
   //console.log(home[0].firstChild);
@@ -85,7 +86,7 @@ var createUser = function(){
   'organisms': organismString,
   'userDetails': userdetString
 };
-console.log(bodyData);
+//console.log(bodyData);
 let fetchData = {
   method: 'POST',
   //credentials: 'same-origin',
@@ -97,15 +98,29 @@ let fetchData = {
   }
 };
 fetch(backendUrl + '/auth/signup', fetchData)
+.then((response) => response.json())
 .then((data) => {
   console.log(data);
-  nevermind('RegistrationForm');
-  loginUser();
+  if(data.message){
+    console.log(data.message);
+    let messagediv = document.getElementsByClassName('registererror')[0];
+    messagediv.innerHTML = '<p style="text-align:left;padding-left:12px">' + data.message + '</p>';
+  } else{
+    nevermind('RegistrationForm');
+    //loginUser();
+    if(data.email){
+      verifyEmail(data.email);
+    }
+  }
 })
 .catch((error) => {
   console.log(error);
 });
+}
 
+var verifyEmail = function(email){
+  console.log('going to verify the email now');
+  window.location.href = '/user/?email=' + email;
 }
 
 var nevermind = function(className){
@@ -197,7 +212,7 @@ var logMeIn = function(){
     if(data.message){
       console.log(data.message);
       let messagediv = document.getElementsByClassName('loginerror')[0];
-      messagediv.innerHTML = '<p style="text-align:center">' + data.message + '</p>';
+      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     }
     //loginUser();
   })
