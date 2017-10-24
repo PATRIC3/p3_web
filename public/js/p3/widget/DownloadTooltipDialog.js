@@ -61,7 +61,8 @@ define([
 				when(this.grid.store.query({}), lang.hitch(this, function(results){
 					if (field === "subsystem_id") {
 						for(var i = 0; i < results.length; i++) {
-							results[i]["subsystem_id"] = encodeURIComponent(results[i]["subsystem_id"]);
+							results[i]["subsystem_name"] = encodeURIComponent(results[i]["subsystem_name"]);
+							results[i]["subclass"] = encodeURIComponent(results[i]["subclass"]);
 						}
 					}
 					results = rql.query(query, {}, results);
@@ -114,6 +115,12 @@ define([
 
 		_tocsv: function(selection){
 			var out = [];
+			if (selection[0].hasOwnProperty("subsystem_name")) {
+				for (var i = 0; i < selection.length; i++) {
+					selection[i]["subsystem_name"] = decodeURIComponent(selection[i]["subsystem_name"]);
+					selection[i]["subclass"] = decodeURIComponent(selection[i]["subclass"]);
+				}
+			}
 			var keys = Object.keys(selection[0]);
 
 			var header = []
@@ -128,7 +135,14 @@ define([
 					if (obj[key] instanceof Array){
 						io.push(obj[key].join(";"));
 					}else{
-						io.push(obj[key]);
+						//replace commas because they are used to delineate new columns
+						var cleanedKey;
+						if (typeof obj[key] === 'string') {
+							cleanedKey = obj[key].replace(/,/g, ';')
+						} else {
+							cleanedKey = obj[key]
+						}
+						io.push(cleanedKey);
 					}
 				})
 
@@ -141,6 +155,12 @@ define([
 
 		_totsv: function(selection){
 			var out = [];
+			if (selection[0].hasOwnProperty("subsystem_name")) {
+				for (var i = 0; i < selection.length; i++) {
+					selection[i]["subsystem_name"] = decodeURIComponent(selection[i]["subsystem_name"]);
+					selection[i]["subclass"] = decodeURIComponent(selection[i]["subclass"]);
+				}
+			}
 			var keys = Object.keys(selection[0]);
 
 			var header = []
@@ -155,7 +175,14 @@ define([
 					if (obj[key] instanceof Array){
 						io.push(obj[key].join(";"));
 					}else{
-						io.push(obj[key]);
+						//replace commas because they are used to delineate new columns
+						var cleanedKey;
+						if (typeof obj[key] === 'string') {
+							cleanedKey = obj[key].replace(/,/g, ';')
+						} else {
+							cleanedKey = obj[key]
+						}
+						io.push(cleanedKey);
 					}
 				})
 
