@@ -37,8 +37,6 @@ define([
 				self.viewer.set('visible', true);
 			});
 				
-			this.buildHeaderContent(state.subsystem_id);
-
 			window.document.title = 'Subsystem Map';
 		},
 
@@ -123,22 +121,6 @@ define([
 			});
 		},
 
-		buildHeaderContent: function(mapId){
-			var self = this;
-			var query = "?eq(Subsystem_id," + mapId + ")&limit(1)";
-			// return when(request.get(PathJoin(this.apiServiceUrl, "Subsystem_ref", query), {
-			// 	headers: {
-			// 		'Accept': "application/json",
-			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-			// 	},
-			// 	handleAs: "json"
-			// }), function(response){
-			// 	var p = response[0];
-
-			// 	self.queryNode.innerHTML = "<b>" + p.Subsystem_id + " | " + p.Subsystem_name + "</b>";
-			// });
-		},
-
 		postCreate: function(){
 			if(!this.state){
 				this.state = {};
@@ -156,24 +138,19 @@ define([
 				content: "",
 				region: "top"
 			});
-
-			var params = this.getStateParamsForSubClass(this.state);
 			
-			//subclass, class, subsystem name 
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
 				"id": "subSystemHeatmap"
-				// ,
-				// innerHTML: "Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass
+				
 			}, headerContent);
 
-			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
-
 			this.addChild(this.viewerHeader);
-			this.addChild(this.viewer);
+			setTimeout(this.addChild(this.viewer), 3000);
+			
 		}
 	});
 });
