@@ -55,40 +55,6 @@ define([
       });
     },
 
-    // //subsystemData is returned in descending order by count. This code depends on that. 
-    // applyMaxLimitToSubsystemPieCharts: function(subsystemData) {
-    //   if (this.subsystemMaxNumToDisplay >= subsystemData.length) {
-    //     return subsystemData;
-    //   } else {
-    //     var maxLimitedPieChartData = subsystemData.splice(0, this.subsystemMaxNumToDisplay);
-    //     var subsystemsOtherCategory = {};
-    //     subsystemsOtherCategory.val = "Other";
-    //     subsystemsOtherCategory.superclass = "Other";
-    //     subsystemsOtherCategory.count = 0;
-
-    //     for (var i = 0; i < subsystemData.length; i++) {
-    //       subsystemsOtherCategory.count += subsystemData[i].count;
-    //     };
-
-    //     maxLimitedPieChartData.push(subsystemsOtherCategory);
-    //     return maxLimitedPieChartData;
-    //   }
-    // },
-
-    // formatSubsystemData: function(subsystemData) {
-
-    //   //add superclass data to class data
-    //   var flattenedSubsystemData = [];
-    //   for (var i = 0; i < subsystemData.length; i++) {
-    //     for (var j = 0; j < subsystemData[i]['class'].buckets.length; j++) {
-    //       subsystemData[i]['class'].buckets[j].superclass = subsystemData[i].val;
-    //       flattenedSubsystemData.push(subsystemData[i]['class'].buckets[j]);
-    //     }
-    //   }
-    //   //flattenedSubsystemData = this.applyMaxLimitToSubsystemPieCharts(flattenedSubsystemData)
-    //   return flattenedSubsystemData;
-    // },
-
     //function is coupled because color data is used across circle and tree to match
     //color data is rendered via d3 library programmatically
     drawGraphAndLegend: function(subsystemData) {
@@ -357,7 +323,7 @@ define([
       var proportionCovered = (subsystemCoverageData.totalSubsystems / subsystemCoverageData.totalGenomes).toFixed(2);
       var proportionNotCovered = (subsystemCoverageData.totalNotCovered / subsystemCoverageData.totalGenomes).toFixed(2);
 
-      var marginAdjustedTotalbarHeight = height * .9;
+      var marginAdjustedTotalbarHeight = height * .7;
       var marginTop = height - marginAdjustedTotalbarHeight;
 
       var divHeightCovered = proportionCovered * marginAdjustedTotalbarHeight;
@@ -398,7 +364,7 @@ define([
 
       svg.append("text")
         .attr("x", 150)             
-        .attr("y", 50)
+        .attr("y", 100)
         .attr("text-anchor", "middle")
         .style("font-weight", "bold")
         .style("font-size", "14px")
@@ -407,14 +373,14 @@ define([
       //percentages
       svg.append("text")
         .attr("x", 145)             
-        .attr("y", divHeightCovered / 2 + height / 7)
+        .attr("y", divHeightCovered / 2 + height / 3)
         .attr("text-anchor", "middle")
         .style("fill", "#ffffff")
         .text(percentCovered + "%");
 
       svg.append("text")
         .attr("x", 145)             
-        .attr("y", divHeightNotCovered / 2 + divHeightCovered + height / 14)
+        .attr("y", divHeightNotCovered / 2 + divHeightCovered + height / 3)
         .attr("text-anchor", "middle")
         .style("fill", "#ffffff")
         .text(percentNotCovered + "%");
