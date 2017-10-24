@@ -12,7 +12,12 @@ th {
   background-color: #87b934;
 }
 
-.regbutton {
+.registerbutton:hover {
+  background-color: #87b934;
+}
+
+.regbutton,
+.registerbutton {
   background-color: rgb(247, 255, 186);
   padding: 4px;
   padding-top: 2px;

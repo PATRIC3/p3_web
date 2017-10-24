@@ -18,18 +18,44 @@ var register = function(){
   '<form class=""><div style="padding:2px; margin:10px;"><table><tbody>'+
   //'<tr><th>USERNAME</th></tr><tr><td><input type="text" name="username" style="width:150px;"></td></tr>' +
   '<tr><th>First Name <span style="color:red">*</span></th><th>Last Name <span style="color:red">*</span></th></tr><tr><td>' +
-  '<input class="firstname" type="text" name="first_name" style="width:300px;">'+
-  '</td><td><input class="lastname" type="text" name="last_name" style="width:300px;">'+
-  '</td></tr><tr><th colspan="1">Email Address <span style="color:red">*</span></th></tr><tr><td colspan="1"><input class="email" type="email" name="email" style="width:100%;">'+
-  '</td></tr><tr><th colspan="1">Password <span style="color:red">*</span></th></tr><tr><td colspan="1"><input class="password" type="password" name="password" style="width:100%;">'+
+  '<input class="firstname" type="text" name="first_name" style="width:300px;" onchange="validateReg()">'+
+  '</td><td><input class="lastname" type="text" name="last_name" style="width:300px;" onchange="validateReg()">'+
+  '</td></tr><tr><th colspan="1">Email Address <span style="color:red">*</span></th></tr><tr><td colspan="1">' +
+  '<input class="email" type="email" name="email" style="width:100%;" onchange="validateReg()" required>'+
+  '</td></tr><tr><th colspan="1">Password <span style="color:red">*</span></th></tr><tr><td colspan="1">' +
+  '<input class="password" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:100%;" onchange="validateReg()" onfocus="validateReg()" onkeydown="validateReg()" onkeyup="validateReg()"required>'+
   '</td></tr><tr><th colspan="2">Organization</th></tr><tr><td colspan="2"><div style="width:100%"><input class="organization" type="text" name="affiliation" value=""></div></td></tr>'+
   '<tr><th colspan="2">Organisms</th></tr><tr><td colspan="2"><div><input class="organisms" type="text" name="organisms" value=""></div></td></tr>'+
   '<tr><th colspan="2">Interests</th></tr><tr><td colspan="2"><div><textarea class="interests" rows="5" cols="50" name="interests" style="height:75px;" value=""></textarea></div></td></tr>'+
   '</tbody></table><p><span style="color:red">*</span> <i>Indicates required field</i></p></div><div style="text-align:center;padding:2px;margin:10px;">'+
-  '<div><button type="button" class="regbutton" onclick="createUser()">Register New User</button><button style="margin-left:20px" type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>';
+  '<div><button type="button" class="registerbutton" onclick="createUser()" style="display:none; margin-bottom:-22px">Register New User</button>' +
+  '<button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>';
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(regform, home[0].childNodes[0]);
   //console.log(home[0].firstChild);
+}
+
+var validateReg = function(){
+  console.log('validating reg');
+  let fname = document.getElementsByClassName('firstname')[0].value;
+  let lname = document.getElementsByClassName('lastname')[0].value;
+  let email = document.getElementsByClassName('email')[0].value;
+  let validemail = document.getElementsByClassName('email')[0];
+  let password = document.getElementsByClassName('password')[0].value;
+  let validpass = document.getElementsByClassName('password')[0];
+  let registbutton = document.getElementsByClassName('registerbutton')[0];
+  if(fname !== '' && lname !== '' && email !=='' && password !== ''){
+    //console.log('valid');
+    //console.log(registbutton);
+    console.log(validemail.checkValidity());
+    if(validemail.checkValidity() && validpass.checkValidity()){
+      registbutton.style.display = 'block';
+    } else {
+      registbutton.style.display = 'none';
+    }
+  } else{
+    registbutton.style.display = 'none';
+  }
 }
 
 var createUser = function(){
