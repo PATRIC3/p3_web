@@ -108,6 +108,8 @@ define([
 				this.subsystemClass = response.response.docs[0].class;
 				this.subclass = response.response.docs[0].superclass;
 
+				$('#subSystemHeatmap').html("Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass);
+
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
 
@@ -163,7 +165,9 @@ define([
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				innerHTML: "Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass
+				"id": "subSystemHeatmap"
+				// ,
+				// innerHTML: "Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass
 			}, headerContent);
 
 			this.queryNode = domConstruct.create("span", {"class": "PerspectiveQuery"}, headerContent);
