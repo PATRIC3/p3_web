@@ -123,12 +123,12 @@ var logMeIn = function(){
     }
   };
 
-  function handleErrors(response) {
-    if (!response.ok) {
-      throw Error(response.statusText);
-    }
-    return response;
-  }
+  // function handleErrors(response) {
+  //   if (!response.ok) {
+  //     throw Error(response.statusText);
+  //   }
+  //   return response;
+  // }
   fetch(backendUrl + '/auth/login', fetchData)
   //.then(handleErrors)
   .then((response) => response.json())
@@ -140,6 +140,10 @@ var logMeIn = function(){
     if(data.token !== undefined){
       localStorage.setItem('token', data.token);
       nevermind('LoginForm');
+      let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+      hideWithAuth.style.display='none';
+      let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+      showWithAuth.style.display='block';
     }
     if(data.message){
       console.log(data.message);
@@ -150,6 +154,6 @@ var logMeIn = function(){
   })
   .catch((error) => {
     console.log(error);
-    console.log
+    //console.log
   });
 }
