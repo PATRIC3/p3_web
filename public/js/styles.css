@@ -8,6 +8,10 @@ th {
   padding-bottom: 0;
 }
 
+.loginbutton:hover {
+  background-color: #87b934;
+}
+
 .regbutton:hover {
   background-color: #87b934;
 }
@@ -17,7 +21,8 @@ th {
 }
 
 .regbutton,
-.registerbutton {
+.registerbutton,
+.loginbutton {
   background-color: rgb(247, 255, 186);
   padding: 4px;
   padding-top: 2px;

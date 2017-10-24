@@ -124,15 +124,38 @@ var loginUser = function(){
   loginform.className = 'LoginForm';
   loginform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PATRIC Login</h2>'+
   '<form><div style="padding:2px; margin:10px;"><table><tbody><tr><th style="border:none">Email</th></tr><tr><td>' +
-  '<input class="loginemail" type="email" name="email" style="width:300px;" value=""></td></tr>'+
+  '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required onchange="validateLogin()" onfocus="validateLogin()" onkeydown="validateLogin()" onkeyup="validateLogin()"></td></tr>'+
   '<tr><th style="border:none">Password</th></tr><tr><td>' +
-  '<input class="loginpass" type="password" name="password" style="width:300px;" value=""></td></tr>'+
+  '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="validateLogin()" onfocus="validateLogin()" onkeydown="validateLogin()" onkeyup="validateLogin()"></td></tr>'+
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
-  '<div><button type="button" class="regbutton" onclick="logMeIn()">Login</button><button style="margin-left:20px" type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
+  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="logMeIn()">Login</button><button type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(loginform, home[0].childNodes[0]);
   console.log(home[0].firstChild);
+}
+
+var validateLogin = function(){
+  console.log('validating login');
+  //let fname = document.getElementsByClassName('firstname')[0].value;
+  //let lname = document.getElementsByClassName('lastname')[0].value;
+  let email = document.getElementsByClassName('loginemail')[0].value;
+  let validemail = document.getElementsByClassName('loginemail')[0];
+  let password = document.getElementsByClassName('loginpass')[0].value;
+  let validpass = document.getElementsByClassName('loginpass')[0];
+  let logbutton = document.getElementsByClassName('loginbutton')[0];
+  if(email !=='' && password !== ''){
+    //console.log('valid');
+    //console.log(registbutton);
+    console.log(validemail.checkValidity());
+    if(validemail.checkValidity() && validpass.checkValidity()){
+      logbutton.style.display = 'block';
+    } else {
+      logbutton.style.display = 'none';
+    }
+  } else{
+    logbutton.style.display = 'none';
+  }
 }
 
 var logMeIn = function(){
