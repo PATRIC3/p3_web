@@ -328,7 +328,7 @@ define([
 							return encodeURIComponent(s.subsystem_id)
 						});
 
-						var query = "q=genome_id:(" + container.state.genome_ids.join(" OR ") + ") AND subsystem_id:\"" + subsystem_ids.join(',') + "\"&select(feature_id)&limit(25000)";
+						var query = "q=genome_id:(" + container.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&select(feature_id)&limit(25000)";
 
 
 						when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
