@@ -264,40 +264,7 @@ define([
 		]),
 		
 		selectionActions: GridContainer.prototype.selectionActions.concat([
-
 			[
-				"CopySelection",
-				"fa icon-clipboard2 fa-2x",
-				{
-					label: "COPY",
-					multiple: true,
-					validTypes: ["*"],
-					ignoreDataType: true,
-					tooltip: "Copy Selection to Clipboard.",
-					tooltipDialog: copySelectionTT,
-					max: 5000,
-					validContainerTypes: ["genome_data", "sequence_data", "feature_data", "spgene_data", "spgene_ref_data", "transcriptomics_experiment_data", "transcriptomics_sample_data", "pathway_data", "transcriptomics_gene_data", "gene_expression_data", "interaction_data", "genome_amr_data", "subsystem_data"]
-				},
-				function(selection, container){
-					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("selection", selection);
-					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("containerType", this.containerType);
-					if(container && container.grid){
-						this.selectionActionBar._actions.CopySelection.options.tooltipDialog.set("grid", container.grid);
-					}
-
-					this.selectionActionBar._actions.CopySelection.options.tooltipDialog.timeout(3500);
-
-					setTimeout(lang.hitch(this, function(){
-						popup.open({
-							popup: this.selectionActionBar._actions.CopySelection.options.tooltipDialog,
-							around: this.selectionActionBar._actions.CopySelection.button,
-							orient: ["below"]
-						});
-					}), 10);
-
-				},
-				false
-			], [
 				"ViewFeatureItems",
 				"MultiButton fa icon-selection-FeatureList fa-2x",
 				{
