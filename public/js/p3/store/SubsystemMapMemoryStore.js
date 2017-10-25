@@ -18,7 +18,7 @@ define([
 	return declare([Memory, Stateful], {
 		baseQuery: {},
 		apiServer: window.App.dataServiceURL,
-		idProperty: "ec_number",
+		idProperty: "subsystem_id",
 		state: null,
 		pmState: pmState,
 
