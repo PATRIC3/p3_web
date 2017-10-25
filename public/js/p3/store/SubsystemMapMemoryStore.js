@@ -36,9 +36,10 @@ define([
 
 				switch(key){
 					case "requestHeatmapData":
-						// console.log("requestHeatmapData with ", value.genomeIds);
-						self.currentData = self.getHeatmapData(value);
-						Topic.publish("SubSystemMap", "updateHeatmapData", self.currentData);
+						self.getHeatmapData(value).then(function(response) {
+							Topic.publish("SubSystemMap", "updateHeatmapData", response);
+						});
+						
 						break;
 					default:
 						break;
@@ -267,6 +268,8 @@ define([
 
 		getHeatmapData: function(pmState){
 
+			var def = new Deferred();
+
 			var rows = [];
 			var cols = [];
 			var maxIntensity = 0; // global and will be modified inside createColumn function
@@ -419,7 +422,8 @@ define([
 			// var end = window.performance.now();
 			// console.log('getHeatmapData() took: ', (end - start), "ms");
 
-			return currentData;
+			def.resolve(currentData);
+			return def.promise;
 		}
 	});
 });
