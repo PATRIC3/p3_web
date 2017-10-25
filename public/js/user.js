@@ -54,7 +54,7 @@ var validateForm = function(){
 
 var updateUser = function(){
   console.log('going to update user');
-  //post to backend /auth/validemail
+  //put to backend /auth/validemail
   let bodyData = {'email': document.getElementsByClassName('email')[0].value, 'resetCode': document.getElementsByClassName('code')[0].value };
   let fetchData = {
     method: 'PUT',

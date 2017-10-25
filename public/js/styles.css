@@ -20,6 +20,11 @@ th {
   background-color: #87b934;
 }
 
+.resetpass:hover {
+  background-color: white;
+}
+
+.resetpass,
 .regbutton,
 .registerbutton,
 .loginbutton {
@@ -32,6 +37,10 @@ th {
   border-width: 1px;
   border-style: solid;
   border-color: rgb(117, 157, 192);
+}
+
+.resetpass {
+  background-color: orange;
 }
 
 .RegistrationForm,

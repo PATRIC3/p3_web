@@ -143,11 +143,45 @@ var loginUser = function(){
   '<tr><th style="border:none">Password</th></tr><tr><td>' +
   '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="validateLogin()" onfocus="validateLogin()" onkeydown="validateLogin()" onkeyup="validateLogin()"></td></tr>'+
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
-  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="logMeIn()">Login</button><button type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
+  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="logMeIn()">Login</button>' +
+  '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="resetpass()">Reset Password</button></div></div></form>' +
+  '<button style="margin-left:14px;" type="button" onclick="nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(loginform, home[0].childNodes[0]);
   console.log(home[0].firstChild);
+}
+
+var resetpass = function(){
+  console.log('going to reset your password');
+  let loginEmail = document.getElementsByClassName('loginemail')[0].value;
+  //put to backend /auth/resetpass
+  let bodyData = {'email': loginEmail };
+  let fetchData = {
+    method: 'PUT',
+    body: JSON.stringify(bodyData),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  };
+  fetch(backendUrl + '/auth/resetpass', fetchData)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    if(data.message){
+      console.log(data.message);
+      let messagediv = document.getElementsByClassName('loginerror')[0];
+      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+    } else {
+      nevermind('LoginForm');
+      window.location.href = '/user/?email=' + loginEmail + '&form=reset';
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
+  });
 }
 
 var validateLogin = function(){
@@ -159,6 +193,7 @@ var validateLogin = function(){
   let password = document.getElementsByClassName('loginpass')[0].value;
   let validpass = document.getElementsByClassName('loginpass')[0];
   let logbutton = document.getElementsByClassName('loginbutton')[0];
+  let resetpass = document.getElementsByClassName('resetpass')[0];
   if(email !=='' && password !== ''){
     //console.log('valid');
     //console.log(registbutton);
@@ -170,6 +205,11 @@ var validateLogin = function(){
     }
   } else{
     logbutton.style.display = 'none';
+  }
+  if(validemail.checkValidity()){
+    resetpass.style.display = 'block';
+  } else{
+    resetpass.style.display = 'none';
   }
 }
 
