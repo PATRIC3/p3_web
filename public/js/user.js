@@ -11,21 +11,22 @@ var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable 
 
 var verifyEmail = function(){
   console.log('going to verify this address: ' + userEmail);
-    var emailVarifyForm = document.createElement('div');
-    emailVarifyForm.className = 'RegistrationForm';
-    emailVarifyForm.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Verify Your Email Address</h2><form>'+
-    '<div style="padding:2px; margin:10px;"><table><tbody><tr><th style="text-align:left">Email</th></tr><tr><td>' +
-    '<input class="email" type="email" name="email" style="width:250px;" required value="" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()">'+
-    '</td></tr><tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
-    '<input type="text" pattern=".{5,}" title="5 digit code" name="code" class="code" style="width:150px;" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()"></td></tr>' +
-    '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
-    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="updateUser()">Submit</button><button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>';
-    var home = document.getElementsByClassName('home');
-    home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
-    if(userEmail !=='' && userEmail !== null && userEmail !== undefined){
-      document.getElementsByClassName('email')[0].value = userEmail;
-    }
-    //console.log(home[0].firstChild);
+  var emailVarifyForm = document.createElement('div');
+  emailVarifyForm.className = 'RegistrationForm';
+  emailVarifyForm.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Verify Your Email Address</h2><form>'+
+  '<div style="padding:2px; margin:10px;"><table><tbody><tr><th style="text-align:left">Email</th></tr><tr><td>' +
+  '<input class="email" type="email" name="email" style="width:250px;" required value="" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()" onpaste="validateForm()">'+
+  '</td></tr><tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
+  '<input type="text" pattern=".{5,}" title="5 digit code" name="code" class="code" style="width:150px;" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()" onpaste="validateForm()"></td></tr>' +
+  '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
+  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="updateUser()">Submit</button><button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
+  '<div class="loginerror" style="color:red"></div>';
+  var home = document.getElementsByClassName('home');
+  home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
+  if(userEmail !=='' && userEmail !== null && userEmail !== undefined){
+    document.getElementsByClassName('email')[0].value = userEmail;
+  }
+  //console.log(home[0].firstChild);
 }
 
 var validateForm = function(){
@@ -53,7 +54,52 @@ var validateForm = function(){
 
 var updateUser = function(){
   console.log('going to update user');
-  nevermind('RegistrationForm');
+  //post to backend /auth/validemail
+  let bodyData = {'email': document.getElementsByClassName('email')[0].value, 'resetCode': document.getElementsByClassName('code')[0].value };
+  let fetchData = {
+    method: 'PUT',
+    body: JSON.stringify(bodyData),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  };
+
+  // function handleErrors(response) {
+  //   if (!response.ok) {
+  //     throw Error(response.statusText);
+  //   }
+  //   return response;
+  // }
+  fetch(backendUrl + '/auth/validemail', fetchData)
+  //.then(handleErrors)
+  .then((response) => response.json())
+  .then((data) => {
+    //console.log(data.json());
+    //console.log(data.token);
+    //const token = data.json();
+    console.log(data);
+    // if(data.token !== undefined){
+    //   localStorage.setItem('token', data.token);
+    //   nevermind('LoginForm');
+    //   let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+    //   hideWithAuth.style.display='none';
+    //   let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+    //   showWithAuth.style.display='block';
+    // }
+    if(data.message){
+      console.log(data.message);
+      let messagediv = document.getElementsByClassName('loginerror')[0];
+      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+    } else {
+      nevermind('RegistrationForm');
+      window.location.href = '/';
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
+  });
 }
 
 // var register = function(){
@@ -130,9 +176,9 @@ var nevermind = function(className){
 
 verifyEmail();
 // var displayform = function(){
-  // if(formtype === 'register'){
-  //   register();
-  // }else {
-  //   loginUser();
-  // }
+// if(formtype === 'register'){
+//   register();
+// }else {
+//   loginUser();
+// }
 // }
