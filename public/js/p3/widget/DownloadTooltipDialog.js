@@ -37,6 +37,7 @@ define([
 			popup.close(this);
 		},
 
+
 		downloadSelection: function(type, selection){
 
 			var conf = this.downloadableConfig[this.containerType];
@@ -52,24 +53,22 @@ define([
 				return sel[pkField]
 			});
 
-
-
 			console.log("DOWNLOAD TYPE: ", type)
 			if(conf.generateDownloadFromStore && this.grid && this.grid.store && type && this["_to" + type]){
 				var query = "in(" + pkField + ",(" + sel.join(",") + "))&sort(+" + pkField + ")&limit(2500000)"
 				var field = pkField;
+				var selectedSubsystems = selection;
 				when(this.grid.store.query({}), lang.hitch(this, function(results){
-					if (field === "subsystem_id") {
-						results = rql.query(query, {}, results);
-
-
-						var data = this["_to" + type.toLowerCase()](results);
+					
+					if (field === "subsystem_id") {	
+						var data = this["_to" + type.toLowerCase()](selectedSubsystems);
 						saveAs(new Blob([data]), "PATRIC_" + this.containerType + "." + type);
 					} else {
 						results = rql.query(query, {}, results);
 						var data = this["_to" + type.toLowerCase()](results);
 						saveAs(new Blob([data]), "PATRIC_" + this.containerType + "." + type);
 					}
+
 				}));
 			}else{
 
@@ -117,12 +116,6 @@ define([
 
 		_tocsv: function(selection){
 			var out = [];
-			//if (selection[0].hasOwnProperty("subsystem_name")) {
-				// for (var i = 0; i < selection.length; i++) {
-				// 	selection[i]["subsystem_name"] = decodeURIComponent(selection[i]["subsystem_name"]);
-				// 	selection[i]["subclass"] = decodeURIComponent(selection[i]["subclass"]);
-				// }
-			//}
 			var keys = Object.keys(selection[0]);
 
 			var header = []
@@ -137,7 +130,7 @@ define([
 					if (obj[key] instanceof Array){
 						io.push(obj[key].join(";"));
 					}else{
-						//replace commas because they are used to delineate new columns
+						//wrap commas because they are used to delineate new columns
 						var cleanedKey;
 						if (typeof obj[key] === 'string') {
 							cleanedKey = "\"" + obj[key] + "\""
@@ -157,12 +150,6 @@ define([
 
 		_totsv: function(selection){
 			var out = [];
-			// if (selection[0].hasOwnProperty("subsystem_name")) {
-			// 	for (var i = 0; i < selection.length; i++) {
-			// 		selection[i]["subsystem_name"] = decodeURIComponent(selection[i]["subsystem_name"]);
-			// 		selection[i]["subclass"] = decodeURIComponent(selection[i]["subclass"]);
-			// 	}
-			// }
 			var keys = Object.keys(selection[0]);
 
 			var header = []
