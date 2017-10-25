@@ -2,6 +2,8 @@
 var searchParams = new URLSearchParams(window.location.search); //?anything=123
 console.log(searchParams.get('email'));
 var userEmail = searchParams.get('email');
+var formType = '';
+formType += searchParams.get('form');
 var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable that gets inserted during the build process somehow
 // var para = document.getElementsByClassName('test');
 // //console.log(para);
@@ -10,16 +12,27 @@ var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable 
 // }
 
 var verifyEmail = function(){
+  let formTitle = '';
+  let passInput = '';
+  let formButton = '';
   console.log('going to verify this address: ' + userEmail);
   var emailVarifyForm = document.createElement('div');
+  if (formType === 'reset'){
+    formTitle = 'Reset Your Password';
+    passInput = '<tr><th style="border:none; text-align:left">Password</th></tr><tr><td><input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()"></td></tr>';
+    formButton = 'resetPasswd()';
+  } else {
+    formTitle = 'Verify Your Email Address';
+    formButton = 'updateUser()';
+  }
   emailVarifyForm.className = 'RegistrationForm';
-  emailVarifyForm.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Verify Your Email Address</h2><form>'+
+  emailVarifyForm.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">'+ formTitle + '</h2><form>' +
   '<div style="padding:2px; margin:10px;"><table><tbody><tr><th style="text-align:left">Email</th></tr><tr><td>' +
   '<input class="email" type="email" name="email" style="width:250px;" required value="" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()" onpaste="validateForm()">'+
-  '</td></tr><tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
+  '</td></tr><tr><td> </td></tr>' + passInput + '<tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
   '<input type="text" pattern=".{5,}" title="5 digit code" name="code" class="code" style="width:150px;" required onchange="validateForm()" onfocus="validateForm()" onkeydown="validateForm()" onkeyup="validateForm()" onpaste="validateForm()"></td></tr>' +
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">'+
-  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="updateUser()">Submit</button><button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
+  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="'+ formButton + '">Submit</button><button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
   var home = document.getElementsByClassName('home');
   home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
@@ -31,6 +44,10 @@ var verifyEmail = function(){
 
 var validateForm = function(){
   console.log('validating form');
+  let newpasswd = '';
+  if(formType === 'reset'){
+    newpasswd = document.getElementsByClassName('loginpass')[0];
+  }
   //let fname = document.getElementsByClassName('firstname')[0].value;
   //let lname = document.getElementsByClassName('lastname')[0].value;
   let email = document.getElementsByClassName('email')[0].value;
@@ -50,6 +67,48 @@ var validateForm = function(){
   } else{
     submitbutton.style.display = 'none';
   }
+  if(formType === 'reset'){
+    if(newpasswd.checkValidity() && validemail.checkValidity() && validcode.checkValidity()){
+      submitbutton.style.display = 'block';
+    } else {
+      submitbutton.style.display = 'none';
+    }
+  }
+}
+
+var resetPasswd = function(){
+  console.log('going to update your password');
+  //put to backend /auth/passwdreset
+  let bodyData = {'email': document.getElementsByClassName('email')[0].value,
+  'resetCode': document.getElementsByClassName('code')[0].value,
+  'password': document.getElementsByClassName('loginpass')[0].value
+};
+  let fetchData = {
+    method: 'PUT',
+    body: JSON.stringify(bodyData),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  };
+  fetch(backendUrl + '/auth/passwdreset', fetchData)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    if(data.message){
+      console.log(data.message);
+      let messagediv = document.getElementsByClassName('loginerror')[0];
+      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+    } else {
+      nevermind('RegistrationForm');
+      window.location.href = '/';
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
+  });
+
 }
 
 var updateUser = function(){
