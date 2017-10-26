@@ -146,7 +146,7 @@ define([
 					if(that.targetType.get("value") == "existing"){
 						def = WorkspaceManager.addToGroup(that.value, that.idType, response.response.docs);
 					}else{
-						def = WorkspaceManager.createGroup(that.value, that.type, that.path, that.idType, tresponse.response.docs);
+						def = WorkspaceManager.createGroup(that.value, that.type, that.path, that.idType, response.response.docs);
 					}
 					def.then(lang.hitch(that, function(){
 						on.emit(that.domNode, "dialogAction", {action: "close", bubbles: true});
