@@ -271,7 +271,6 @@ define([
 					label: "FEATURES",
 					validTypes: ["*"],
 					multiple: true,
-					max: 10,
 					tooltip: "Switch to Feature List View. Press and Hold for more options.",
 					validContainerTypes: ["subsystem_data"],
 					pressAndHold: function(selection, button, opts, evt){
@@ -315,7 +314,10 @@ define([
 					}
 					//gene tab - selection has id already
 					else if (selection[0].document_type === "subsystems_gene") {
-						Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + selection[0].feature_id + "))#view_tab=features", target: "blank"});
+						var feature_ids = selection.map(function(s){
+							return s.feature_id
+						});
+						Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + feature_ids.join(",") + "))#view_tab=features", target: "blank"});
 					}
 
 				},
