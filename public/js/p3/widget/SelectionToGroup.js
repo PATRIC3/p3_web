@@ -3,10 +3,11 @@ define([
 	"dojo/dom-class", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
 	"dojo/text!./templates/SelectionToGroup.html", "dojo/_base/lang",
 	"../WorkspaceManager", "dojo/dom-style", "dojo/parser", "dijit/form/Select", "./WorkspaceFilenameValidationTextBox",
-	"./WorkspaceObjectSelector"
+	"./WorkspaceObjectSelector", "dojo/when", "dojo/request", "../util/PathJoin"
 ], function(declare, WidgetBase, on,
 			domClass, Templated, WidgetsInTemplate,
-			Template, lang, WorkspaceManager, domStyle, Parser, Select, WorkspaceFilenameValidationTextBox, WorkspaceObjectSelector){
+			Template, lang, WorkspaceManager, domStyle, Parser, Select, WorkspaceFilenameValidationTextBox, 
+			WorkspaceObjectSelector, when, request, PathJoin){
 	return declare([WidgetBase, Templated, WidgetsInTemplate], {
 		"baseClass": "Panel",
 		"disabled": false,
@@ -46,7 +47,7 @@ define([
 			}
 			else if(this.type == "feature_group"){
 				this.idType = "feature_id";
-			}
+			} 
 		},
 
 		onChangeTarget: function(target){
@@ -108,36 +109,82 @@ define([
 		onCopy: function(evt){
 			// console.log("Copy Selection: ", this.selection, " to ", this.value);
 			//var idType = (this.type == "genome_group") ? "genome_id" : "feature_id"
-			if(!this.idType){
-				this.idType = "genome_id";
-				if(this.type == "genome_group"){
-					this.idType = "genome_id";
-				}
-				else if(this.type == "feature_group"){
-					this.idType = "feature_id";
-				}
-				else if(this.type == "experiment_group"){
-					this.idType = "eid";
-				}
-			}
-			var def;
-			if(this.targetType.get("value") == "existing"){
-				def = WorkspaceManager.addToGroup(this.value, this.idType, this.selection.filter(lang.hitch(this, function(d){
-					return this.idType in d
-				})).map(lang.hitch(this, function(o){
-					return o[this.idType];
-				})));
-			}else{
-				def = WorkspaceManager.createGroup(this.value, this.type, this.path, this.idType, this.selection.filter(lang.hitch(this, function(d){
-					return this.idType in d
-				})).map(lang.hitch(this, function(o){
-					return o[this.idType];
-				})));
-			}
-			def.then(lang.hitch(this, function(){
-				on.emit(this.domNode, "dialogAction", {action: "close", bubbles: true});
-			}));
-		}
 
+			// for subsystems grab all associated features in async call
+			if (this.selection[0] && this.selection[0].hasOwnProperty("subsystem_id")) {
+				var genome_ids = this.selection.map(lang.hitch(this, function(g) {
+					return g.genome_id
+				}))
+
+				//filter out non-unique genome_ids
+				var unique_genome_ids = [];
+			    for(var i = 0; i < genome_ids.length; i++) {
+			        if(unique_genome_ids.indexOf(genome_ids[i]) === -1) {
+			            unique_genome_ids.push(genome_ids[i]);
+			        }
+			    }
+			   
+				var subsystem_ids = this.selection.map(lang.hitch(this, function(s) {
+					return s.subsystem_id
+				}))
+
+				var query = "q=genome_id:(" + unique_genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&select(feature_id)&limit(25000)";
+				var that = this;
+				when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+					handleAs: 'json',
+					headers: {
+						'Accept': "application/solr+json",
+						'Content-Type': "application/solrquery+x-www-form-urlencoded",
+						'X-Requested-With': null,
+						'Authorization': (window.App.authorizationToken || "")
+					},
+					data: query
+				}), function(response){
+					
+					that.idType = "feature_id";
+					var def;
+					if(that.targetType.get("value") == "existing"){
+						def = WorkspaceManager.addToGroup(that.value, that.idType, response.response.docs);
+					}else{
+						def = WorkspaceManager.createGroup(that.value, that.type, that.path, that.idType, tresponse.response.docs);
+					}
+					def.then(lang.hitch(that, function(){
+						on.emit(that.domNode, "dialogAction", {action: "close", bubbles: true});
+					}));
+					
+				});
+			} else {
+				if(!this.idType){
+					this.idType = "genome_id";
+					if(this.type == "genome_group"){
+						this.idType = "genome_id";
+					}
+					else if(this.type == "feature_group"){
+						this.idType = "feature_id";
+					}
+					else if(this.type == "experiment_group"){
+						this.idType = "eid";
+					}
+				}
+
+				var def;
+				if(this.targetType.get("value") == "existing"){
+					def = WorkspaceManager.addToGroup(this.value, this.idType, this.selection.filter(lang.hitch(this, function(d){
+						return this.idType in d
+					})).map(lang.hitch(this, function(o){
+						return o[this.idType];
+					})));
+				}else{
+					def = WorkspaceManager.createGroup(this.value, this.type, this.path, this.idType, this.selection.filter(lang.hitch(this, function(d){
+						return this.idType in d
+					})).map(lang.hitch(this, function(o){
+						return o[this.idType];
+					})));
+				}
+				def.then(lang.hitch(this, function(){
+					on.emit(this.domNode, "dialogAction", {action: "close", bubbles: true});
+				}));
+			}
+		}
 	});
 });
