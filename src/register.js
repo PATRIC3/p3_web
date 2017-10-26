@@ -5,7 +5,7 @@
 // if (fs.existsSync('../../../.env')) {
 //   dotenv.config({path: '../../../.env'});
 // }
-var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable that gets inserted during the build process somehow
+var backendUrl = '{$BackEndUrl}'; //TODO replace with a global variable that gets inserted during the build process somehow
 var register = function(){
   //formtype = 'register';
   //window.location.href = '/user?formtype=register';
