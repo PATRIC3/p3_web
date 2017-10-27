@@ -160,36 +160,38 @@ define([
 			var encodedRoleIds = encodeURIComponent(originalAxis.columnIds);
 			var encodedGenomeIds = encodeURIComponent(originalAxis.rowIds);
 
-			var query = "and(in(role_id,(\"" + encodedRoleIds + "\")),in(genome_id,(\"" + encodedGenomeIds + "\"))&limit(25000,0)";
+			var roleIdsQuotes = roleIds.map(function(role) {
+				return "\"" + role + "\""
+			});
 
-			Topic.publish("SubSystemMap", "showLoadingMask");
-			request.get(PathJoin(window.App.dataServiceURL, "subsystem"), {
+			var query = "q=role_id:(" + roleIdsQuotes.join(" OR ") + ") AND genome_id:(" + genomeIds.join(" OR ") + ")&rows=25000";
+			
+			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
 				headers: {
-					'Accept': "application/json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+					'Accept': "application/solr+json",
+					'Content-Type': "application/solrquery+x-www-form-urlencoded",
 					'X-Requested-With': null,
-					'Authorization': (window.App.authorizationToken || '')
+					'Authorization': window.App.authorizationToken
 				},
 				data: query
-			}).then(lang.hitch(this, function(response){
+			}), function(response){
 				Topic.publish("SubSystemMap", "hideLoadingMask");
 
-				// dedupe features
 				var featureSet = {};
-				response.forEach(function(d){
+				response.response.docs.forEach(function(d){
 					if(!featureSet.hasOwnProperty(d.feature_id)){
 						featureSet[d.feature_id] = true;
 					}
 				});
 				var features = Object.keys(featureSet);
 
-				this.dialog.set('content', this._buildPanelCellsSelected(isTransposed, roleIds, genomeIds, features));
-				var actionBar = this._buildPanelButtons(colIDs, rowIDs, roleIds, genomeIds, features);
-				domConstruct.place(actionBar, this.dialog.containerNode, "last");
+				that.dialog.set('content', that._buildPanelCellsSelected(isTransposed, roleIds, genomeIds, features));
+				var actionBar = that._buildPanelButtons(colIDs, rowIDs, roleIds, genomeIds, features);
+				domConstruct.place(actionBar, that.dialog.containerNode, "last");
 
-				this.dialog.show();
-			}));
+				that.dialog.show();
+			});
 		},
 		_buildPanelCellClicked: function(isTransposed, roleId, genomeId, features){
 
