@@ -3,9 +3,13 @@
   "version": "3.4.12",
   "private": true,
   "scripts": {
-    "dev": "gulp backend && gulp startredis && npm start",
+    "dev": "gulp backend && gulp startredis && npm run moveuser && npm run startback && npm start",
     "start": "node ./bin/p3-web",
-    "installglobals": "npm install -g npm@latest && npm install -g yarn@latest && npm install -g gulp@latest"
+    "startback": "gnome-terminal -e 'node ./backend/index.js'",
+    "installglobals": "npm install -g npm@latest && npm install -g yarn@latest && npm install -g gulp@latest",
+    "buildClient": "./buildClient.sh",
+    "buildBack": "./buildBack.sh && cp .env backend/ && cp src/index.html backend/frontend/dist/",
+    "moveuser": "cp src/styles.css public/js/ && cp src/user/index.html public/user/"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
@@ -44,6 +48,7 @@
     "passport-oauth2": "^1.1.2",
     "promised-io": "^0.3.5",
     "pug": "^2.0.0-rc.3",
+    "redis-server": "^1.1.0",
     "request": "^2.83.0",
     "rql": "^0.3.3",
     "serve-favicon": "~2.1.3",
