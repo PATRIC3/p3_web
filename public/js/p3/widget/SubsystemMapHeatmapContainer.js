@@ -152,10 +152,15 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colIDs, rowIDs);
 
-			var roleIds = encodeURIComponent(originalAxis.columnIds);
-			var genomeIds = encodeURIComponent(originalAxis.rowIds);
+			var that = this;
 
-			var query = "and(in(role_id,(\"" + roleIds + "\")),in(genome_id,(\"" + genomeIds + "\"))&limit(25000,0)";
+			var roleIds = originalAxis.columnIds;
+			var genomeIds = originalAxis.rowIds;
+
+			var encodedRoleIds = encodeURIComponent(originalAxis.columnIds);
+			var encodedGenomeIds = encodeURIComponent(originalAxis.rowIds);
+
+			var query = "and(in(role_id,(\"" + encodedRoleIds + "\")),in(genome_id,(\"" + encodedGenomeIds + "\"))&limit(25000,0)";
 
 			Topic.publish("SubSystemMap", "showLoadingMask");
 			request.get(PathJoin(window.App.dataServiceURL, "subsystem"), {

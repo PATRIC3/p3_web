@@ -658,7 +658,7 @@ define([
 					max: 5000,
 					tooltip: "View FASTA Data",
 					tooltipDialog: viewFASTATT,
-					validContainerTypes: ["feature_data", "spgene_data", "transcriptomics_gene_data"]
+					validContainerTypes: ["feature_data", "spgene_data", "transcriptomics_gene_data", "subsystem_data", "pathway_data"]
 				},
 				function(selection){
 					// console.log("view FASTA")
