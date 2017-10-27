@@ -6,10 +6,10 @@ const server = new RedisServer(6379);
 
 gulp.task('backend', function(){
   gulp.src(['./src/register.js'])
-  .pipe(replace('{$BackEndUrl}', config.get('backendUrl')))
+  .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   .pipe(gulp.dest('./public/js/'));
   gulp.src(['./src/user.js'])
-  .pipe(replace('{$BackEndUrl}', config.get('backendUrl')))
+  .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   .pipe(gulp.dest('./public/js/'));
 });
 

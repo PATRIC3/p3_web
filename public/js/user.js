@@ -1,10 +1,10 @@
 
 var searchParams = new URLSearchParams(window.location.search); //?anything=123
-console.log(searchParams.get('email'));
+//console.log(searchParams.get('email'));
 var userEmail = searchParams.get('email');
 var formType = '';
 formType += searchParams.get('form');
-var backendUrl = 'http://localhost:7000'; //TODO replace with a global variable that gets inserted during the build process somehow
+var backendUrl = 'http://localhost:7000';
 // var para = document.getElementsByClassName('test');
 // //console.log(para);
 // if(para[0] !== undefined){

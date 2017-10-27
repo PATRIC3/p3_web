@@ -1,0 +1,7 @@
+{
+  "verbose": true,
+  "testPathIgnorePatterns": ["/node_modules/", "backend", "public"],
+  "coverageDirectory": "coverage",
+   "collectCoverageFrom" : ["src/*.{js,jsx}", "!**/node_modules/**", "!**/public/**", "!**/backend/**"],
+   "collectCoverage": true
+}
