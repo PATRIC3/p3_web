@@ -125,10 +125,10 @@ define([
 			    }
 			   
 				var subsystem_ids = this.selection.map(lang.hitch(this, function(s) {
-					return s.subsystem_id
+					return encodeURIComponent(s.subsystem_id)
 				}))
 
-				var query = "q=genome_id:(" + unique_genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&select(feature_id)&limit(25000)";
+				var query = "q=genome_id:(" + unique_genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
 				var that = this;
 				when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 					handleAs: 'json',
@@ -140,13 +140,17 @@ define([
 					},
 					data: query
 				}), function(response){
+
+					var feature_ids = response.response.docs.map(lang.hitch(this, function(val) {
+						return val.feature_id;
+					}))
 					
 					that.idType = "feature_id";
 					var def;
 					if(that.targetType.get("value") == "existing"){
-						def = WorkspaceManager.addToGroup(that.value, that.idType, response.response.docs);
+						def = WorkspaceManager.addToGroup(that.value, that.idType, feature_ids);
 					}else{
-						def = WorkspaceManager.createGroup(that.value, that.type, that.path, that.idType, response.response.docs);
+						def = WorkspaceManager.createGroup(that.value, that.type, that.path, that.idType, feature_ids);
 					}
 					def.then(lang.hitch(that, function(){
 						on.emit(that.domNode, "dialogAction", {action: "close", bubbles: true});
