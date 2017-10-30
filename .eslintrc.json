@@ -1,5 +1,5 @@
 {
-  "extends": "airbnb",
+"extends": "./node_modules/aurelia-tools/.eslintrc.json",
   "rules": {
     "no-multi-spaces": 0,
     "no-underscore-dangle": [0],
@@ -26,6 +26,7 @@
     "no-undef": 0,
     "prefer-template": 0,
     "indent": 0,
-    "no-trailing-spaces": [ 1, {"skipBlankLines" : true}]
+    "no-trailing-spaces": [ 1, {"skipBlankLines" : true}],
+    "no-unused-vars": 0
   }
 }

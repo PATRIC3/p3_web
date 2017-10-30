@@ -1,8 +1,8 @@
-const Fetch = require('isomorphic-fetch');
+
 class Register {
   constructor() {
     this.backendUrl = 'http://localhost:7000';
-    this.fetch = Fetch;
+    
     this.frontendUrl = 'http://localhost:3000';
     //this.errorMessage = '';
   }
@@ -85,7 +85,7 @@ class Register {
       'Content-Type': 'application/json'
     }
   };
-  this.fetch(this.backendUrl + '/auth/signup', fetchData)
+  fetch(this.backendUrl + '/auth/signup', fetchData)
   .then((response) => response.json())
   .then((data) => {
     //console.log(data);
@@ -154,7 +154,7 @@ resetpass() {
       'Content-Type': 'application/json'
     }
   };
-  this.fetch(this.backendUrl + '/auth/resetpass', fetchData)
+  fetch(this.backendUrl + '/auth/resetpass', fetchData)
   .then((response) => response.json())
   .then((data) => {
     //console.log(data);
@@ -222,7 +222,7 @@ logMeIn() {
   //   }
   //   return response;
   // }
-  this.fetch(this.backendUrl + '/auth/login', fetchData)
+  fetch(this.backendUrl + '/auth/login', fetchData)
   //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
@@ -261,4 +261,4 @@ logout() {
 }
 }
 
-module.exports = Register;
+
