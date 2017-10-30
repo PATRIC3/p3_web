@@ -333,97 +333,100 @@ define([
 			if(this.sort && this.sort.length > 0){
 				opts.sort = this.sort;
 			}
-			var data = this.query("", opts);
-
+			
 			var roleOrderMap = {};
-			if(roleOrder !== [] && roleOrder.length > 0){
-				roleOrder.forEach(function(roleId, idx){
-					roleOrderMap[roleId] = idx;
-				});
-			}else{
-				data.forEach(function(role, idx){
-					roleOrderMap[role.role_name] = idx;
-				})
-			}
-
-			data.forEach(function(role){
-				var meta = {
-					'instances': role.role_count,
-					'members': role.genome_count
-				};
-				if(genomeOrderChangeMap.length > 0){
-					role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
-				}
-				var order = roleOrderMap[role.role_name];
-				cols[order] = createColumn(order, role.role_name, role.role_name, role.genomes, meta);
-			});
-
-			// colorStop
-			if(maxIntensity == 1){
-				colorStop = [new ColorStop(1, 0xfadb4e)];
-			}else if(maxIntensity == 2){
-				colorStop = [new ColorStop(0.5, 0xfadb4e), new ColorStop(1, 0xf6b437)];
-			}else if(maxIntensity >= 3){
-				colorStop = [new ColorStop(1 / maxIntensity, 0xfadb4e), new ColorStop(2 / maxIntensity, 0xf6b437), new ColorStop(3 / maxIntensity, 0xff6633), new ColorStop(maxIntensity / maxIntensity, 0xff6633)];
-			}
-
-			//console.log(rows, cols, colorStop);
-
-			var currentData = {
-				'rows': rows,
-				'columns': cols,
-				'colorStops': colorStop,
-				'rowLabel': 'Genomes',
-				'colLabel': 'Roles	',
-				'rowTrunc': 'mid',
-				'colTrunc': 'end',
-				'offset': 1,
-				'digits': 2,
-				'countLabel': 'Members',
-				'negativeBit': false,
-				'cellLabelField': '',
-				'cellLabelsOverrideCount': false,
-				'beforeCellLabel': '',
-				'afterCellLabel': ''
-			};
-
-			if(isTransposed){
-
-				var flippedDistribution = []; // new Array(currentData.rows.length);
-				currentData.rows.forEach(function(row, rowIdx){
-					var distribution = [];
-					currentData.columns.forEach(function(col){
-						distribution.push(col.distribution.substr(rowIdx * 2, 2));
+			
+			this.query("", opts).then(function(data) {
+				
+				if(roleOrder !== [] && roleOrder.length > 0){
+					roleOrder.forEach(function(roleId, idx){
+						roleOrderMap[roleId] = idx;
 					});
-					flippedDistribution[rowIdx] = distribution.join("");
+				}else{
+					data.forEach(function(role, idx){
+						roleOrderMap[role.role_name] = idx;
+					})
+				}
+
+				data.forEach(function(role){
+					var meta = {
+						'instances': role.role_count,
+						'members': role.genome_count
+					};
+					if(genomeOrderChangeMap.length > 0){
+						role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
+					}
+					var order = roleOrderMap[role.role_name];
+					cols[order] = createColumn(order, role.role_name, role.role_name, role.genomes, meta);
 				});
 
-				// create new rows
-				var newRows = [];
-				currentData.columns.forEach(function(col, colID){
-					newRows.push(new Row(colID, col.colID, col.colLabel, col.labelColor, col.bgColor, col.meta));
-				});
-				// create new columns
-				var newColumns = [];
-				currentData.rows.forEach(function(row, rowID){
-					newColumns.push(new Column(rowID, row.rowID, row.rowLabel, flippedDistribution[rowID], row.labelColor, row.bgColor, row.meta))
-				});
+				// colorStop
+				if(maxIntensity == 1){
+					colorStop = [new ColorStop(1, 0xfadb4e)];
+				}else if(maxIntensity == 2){
+					colorStop = [new ColorStop(0.5, 0xfadb4e), new ColorStop(1, 0xf6b437)];
+				}else if(maxIntensity >= 3){
+					colorStop = [new ColorStop(1 / maxIntensity, 0xfadb4e), new ColorStop(2 / maxIntensity, 0xf6b437), new ColorStop(3 / maxIntensity, 0xff6633), new ColorStop(maxIntensity / maxIntensity, 0xff6633)];
+				}
 
-				currentData = lang.mixin(currentData, {
-					'rows': newRows,
-					'columns': newColumns,
-					'rowLabel': 'Roles',
-					'colLabel': 'Genomes',
-					'rowTrunc': 'end',
-					'colTrunc': 'mid'
-				});
-			}
+				//console.log(rows, cols, colorStop);
+				var currentData = {
+					'rows': rows,
+					'columns': cols,
+					'colorStops': colorStop,
+					'rowLabel': 'Genomes',
+					'colLabel': 'Roles	',
+					'rowTrunc': 'mid',
+					'colTrunc': 'end',
+					'offset': 1,
+					'digits': 2,
+					'countLabel': 'Members',
+					'negativeBit': false,
+					'cellLabelField': '',
+					'cellLabelsOverrideCount': false,
+					'beforeCellLabel': '',
+					'afterCellLabel': ''
+				};
 
-			// var end = window.performance.now();
-			// console.log('getHeatmapData() took: ', (end - start), "ms");
+				if(isTransposed){
 
-			def.resolve(currentData);
+					var flippedDistribution = []; // new Array(currentData.rows.length);
+					currentData.rows.forEach(function(row, rowIdx){
+						var distribution = [];
+						currentData.columns.forEach(function(col){
+							distribution.push(col.distribution.substr(rowIdx * 2, 2));
+						});
+						flippedDistribution[rowIdx] = distribution.join("");
+					});
+
+					// create new rows
+					var newRows = [];
+					currentData.columns.forEach(function(col, colID){
+						newRows.push(new Row(colID, col.colID, col.colLabel, col.labelColor, col.bgColor, col.meta));
+					});
+					// create new columns
+					var newColumns = [];
+					currentData.rows.forEach(function(row, rowID){
+						newColumns.push(new Column(rowID, row.rowID, row.rowLabel, flippedDistribution[rowID], row.labelColor, row.bgColor, row.meta))
+					});
+
+					currentData = lang.mixin(currentData, {
+						'rows': newRows,
+						'columns': newColumns,
+						'rowLabel': 'Roles',
+						'colLabel': 'Genomes',
+						'rowTrunc': 'end',
+						'colTrunc': 'mid'
+					});
+				}
+
+				// var end = window.performance.now();
+				// console.log('getHeatmapData() took: ', (end - start), "ms");
+
+				def.resolve(currentData);
+			});
 			return def.promise;
+
 		}
 	});
 });
