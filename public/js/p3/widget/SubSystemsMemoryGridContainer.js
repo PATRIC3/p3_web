@@ -2,12 +2,14 @@ define([
 	"dojo/_base/declare", "./GridContainer", "dojo/on",
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
 	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
-	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip"
+	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip",
+	"./SelectionToGroup", "dijit/Dialog"
 
 ], function(declare, GridContainer, on,
 			SubSystemsGrid, popup, Topic, request, when,
 			TooltipDialog, ContainerActionBar, saveAs, PathJoin,
-			lang, domConstruct, PerspectiveToolTipDialog){
+			lang, domConstruct, PerspectiveToolTipDialog,
+			SelectionToGroup, Dialog){
 
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
@@ -317,6 +319,75 @@ define([
 						Topic.publish("/navigate", {href: "/view/FeatureList/?in(feature_id,(" + feature_ids.join(",") + "))#view_tab=features", target: "blank"});
 					}
 
+				},
+				false
+			],
+			[
+				"AddGroup",
+				"fa icon-object-group fa-2x",
+				{
+					label: "GROUP",
+					ignoreDataType: true,
+					multiple: true,
+					validTypes: ["*"],
+					requireAuth: true,
+					tooltip: "Add selection to a new or existing group",
+					validContainerTypes: ["subsystem_data"]
+				},
+				function(selection){
+
+					// for subsystems grab all associated features in async call
+					var genome_ids = selection.map(lang.hitch(this, function(g) {
+						return g.genome_id
+					}));
+
+					//filter out non-unique genome_ids
+					var unique_genome_ids = [];
+				    for(var i = 0; i < genome_ids.length; i++) {
+				        if(unique_genome_ids.indexOf(genome_ids[i]) === -1) {
+				            unique_genome_ids.push(genome_ids[i]);
+				        }
+				    };
+				   
+					var subsystem_ids = selection.map(lang.hitch(this, function(s) {
+						return encodeURIComponent(s.subsystem_id)
+					}));
+
+					var query = "q=genome_id:(" + unique_genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+					var that = this;
+					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+						handleAs: 'json',
+						headers: {
+							'Accept': "application/solr+json",
+							'Content-Type': "application/solrquery+x-www-form-urlencoded",
+							'X-Requested-With': null,
+							'Authorization': (window.App.authorizationToken || "")
+						},
+						data: query
+					}), function(response){
+
+						var feature_ids = response.response.docs.map(lang.hitch(this, function(val) {
+							return val.feature_id;
+						}))
+
+						var dlg = new Dialog({title: "Add selected items to group"});
+						var stg = new SelectionToGroup({
+							selection: feature_ids,
+							type: "feature_group",
+							inputType: "feature_data",
+							path: ""
+						});
+						on(dlg.domNode, "dialogAction", function(){
+							dlg.hide();
+							setTimeout(function(){
+								dlg.destroy();
+							}, 2000);
+						});
+						domConstruct.place(stg.domNode, dlg.containerNode, "first");
+						stg.startup();
+						dlg.startup();
+						dlg.show();
+					});
 				},
 				false
 			],
