@@ -2,7 +2,7 @@
   "verbose": true,
   "testPathIgnorePatterns": ["/node_modules/", "backend", "public"],
   "coverageDirectory": "coverage",
-  "collectCoverageFrom" : ["src/*.{js,jsx}", "!**/node_modules/**", "!**/public/**", "!**/backend/**"],
+  "collectCoverageFrom" : ["src/*.{js,jsx}", "!**/node_modules/**", "!**/public/**", "!**/backend/**", "gulpfile.js"],
   "collectCoverage": true,
   "testEnvironment": "jest-environment-jsdom-11.0.0"
 }
