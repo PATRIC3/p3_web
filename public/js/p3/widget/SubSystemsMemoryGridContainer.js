@@ -367,7 +367,7 @@ define([
 					}), function(response){
 
 						var feature_ids = response.response.docs.map(lang.hitch(this, function(val) {
-							return val.feature_id;
+							return {"feature_id": val.feature_id};
 						}))
 
 						var dlg = new Dialog({title: "Add selected items to group"});

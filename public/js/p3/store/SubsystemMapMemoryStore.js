@@ -346,11 +346,9 @@ define([
 				})
 			}
 
-			if (!this.data || this.data.length < 1) {
-				alert("UPDATE")
-				setTimeout(this.ge)
-				return;
-			}
+			// if (!this.data || this.data.length < 1) {
+			
+			// }
 
 			this.data.forEach(function(role){
 				var meta = {
