@@ -183,7 +183,7 @@ test('generates a login form', () => {
   reg.loginUser();
   let regform = document.getElementsByClassName('LoginForm');
   expect(regform[0]).toBeDefined();
-  document.body.innerHTML = '';
+  //document.body.innerHTML = '';
   //expect(sum(1, 2)).toBe(3);
 });
 
@@ -202,7 +202,7 @@ test('initiates a reset password request', () => {
   };
   reg.fetch = mockfetch;
   reg.resetpass();
-  document.body.innerHTML = '';
+  //document.body.innerHTML = '';
   //expect(sum(1, 2)).toBe(3);
 });
 
@@ -237,7 +237,7 @@ test('validates a login form', () => {
   reg.validateLogin();
   expect(logbutton.style.display).toBe('block');
   expect(resetpassButton.style.display).toBe('block');
-  document.body.innerHTML = '';
+  //document.body.innerHTML = '';
   //expect(sum(1, 2)).toBe(3);
 });
 
@@ -253,7 +253,7 @@ test('login and reset buttons do not display when form is not valid', () => {
   reg.validateLogin();
   expect(logbutton.style.display).toBe('none');
   expect(resetpassButton.style.display).toBe('none');
-  document.body.innerHTML = '';
+  //document.body.innerHTML = '';
   //expect(sum(1, 2)).toBe(3);
 });
 
@@ -361,4 +361,5 @@ test('logs out the user', () => {
   window.localStorage = mockStorage;
   document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
   reg.logout();
+  document.body.innerHTML = '';
 });

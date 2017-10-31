@@ -1,17 +1,16 @@
+
 class User {
   constructor() {
     this.backendUrl = 'http://localhost:7000';
-
-    this.searchParams = new URLSearchParams(window.location.search); // ?anything=123
+    this.frontendUrl = 'http://localhost:3000';
+    
+    this.searchParams = new URLSearchParams(window.location.search);
     //console.log(searchParams.get('email'));
     this.userEmail = this.searchParams.get('email');
     this.formType = '';
     this.formType += this.searchParams.get('form');
     this.backendUrl = 'http://localhost:7000';
-    // var para = document.getElementsByClassName('test');
-    // //console.log(para);
-    // if(para[0] !== undefined){
-    //   para[0].innerHTML += formtype;
+
     this.verifyEmail();
   }
 
@@ -47,7 +46,7 @@ class User {
   }
 
   validateForm() {
-    console.log('validating form');
+    //console.log('validating form');
     let newpasswd = '';
     if (this.formType === 'reset') {
       newpasswd = document.getElementsByClassName('loginpass')[0];
@@ -103,10 +102,11 @@ class User {
       console.log(data.message);
       let messagediv = document.getElementsByClassName('loginerror')[0];
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
-    } else {
-      this.nevermind('RegistrationForm');
-      window.location.href = '/';
+      return data.message;
     }
+      this.nevermind('RegistrationForm');
+      window.location.href = this.frontendUrl + '/';
+
   })
   .catch((error) => {
     console.log(error);
@@ -149,7 +149,7 @@ updateUser() {
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
       this.nevermind('RegistrationForm');
-      window.location.href = '/';
+      window.location.href = this.frontendUrl + '/';
     }
   })
   .catch((error) => {
@@ -159,11 +159,10 @@ updateUser() {
 }
 
 nevermind(className) {
-  let regform1 = document.getElementsByClassName(className);
-  if (regform1[0] !== undefined) {
+  let regform1 = [];
+  regform1 = document.getElementsByClassName(className);
+  if (regform1.length > 0) {
     regform1[0].style.display = 'none';
-    window.location.href = '/';
-
   }
 }
 

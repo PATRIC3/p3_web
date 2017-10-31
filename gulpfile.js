@@ -4,7 +4,7 @@ const config = require('./config.js');
 //const RedisServer = require('redis-server');
 //const server = new RedisServer(6379);
 
-gulp.task('backend', function() {
+gulp.task('srcfiles', function() {
   gulp.src(['./src/register_.js'])
   .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   .pipe(replace('http://localhost:3000', config.get('frontendUrl')))
@@ -15,6 +15,10 @@ gulp.task('backend', function() {
   .pipe(gulp.dest('./public/js/'));
   gulp.src(['./src/user_.js'])
   .pipe(replace('http://localhost:7000', config.get('backendUrl')))
+  .pipe(replace('http://localhost:3000', config.get('frontendUrl')))
+  .pipe(replace('const Fetch = require(\'isomorphic-fetch\');', ''))
+  .pipe(replace('this.fetch = Fetch;', ''))
+  .pipe(replace('this.fetch', 'fetch'))
   .pipe(replace('module.exports = User;', ''))
   .pipe(gulp.dest('./public/js/'));
 });
