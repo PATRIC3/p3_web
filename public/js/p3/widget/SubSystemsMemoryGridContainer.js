@@ -3,13 +3,13 @@ define([
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
 	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
 	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip",
-	"./SelectionToGroup", "dijit/Dialog"
+	"./SelectionToGroup", "dijit/Dialog", "./DownloadTooltipDialog"
 
 ], function(declare, GridContainer, on,
 			SubSystemsGrid, popup, Topic, request, when,
 			TooltipDialog, ContainerActionBar, saveAs, PathJoin,
 			lang, domConstruct, PerspectiveToolTipDialog,
-			SelectionToGroup, Dialog){
+			SelectionToGroup, Dialog, DownloadTooltipDialog){
 
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
@@ -40,6 +40,9 @@ define([
 
 		Topic.publish("/navigate", {href: "/view/FASTA/" + rel + "/?in(" + idType + ",(" + ids.map(encodeURIComponent).join(",") + "))", target: "blank"});
 	});
+
+	var downloadSelectionTT = new DownloadTooltipDialog({});
+	downloadSelectionTT.startup();
 
 	var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div>';
 	var downloadTT = new TooltipDialog({
@@ -182,15 +185,11 @@ define([
 									"Class",
 									"Subclass",
 									"Subsystem Name",
-									"Genome Count",
+									//"Genome Count",
 									"Gene Count",
 									"Role Count",
-									"Role ID",
-									"Role Name",
-									"Active",
-									"Patric ID",
-									"Gene",
-									"Product"
+									"Active"
+
 								]
 
 							data.forEach(function(row){
@@ -199,15 +198,11 @@ define([
 									JSON.stringify(row['class']),
 									JSON.stringify(row.subclass),
 									JSON.stringify(row.subsystem_name),
-									JSON.stringify(row.genome_count),
+									//JSON.stringify(row.genome_count),
 									JSON.stringify(row.gene_count),
 									JSON.stringify(row.role_count),
-									JSON.stringify(row.role_id),
-									JSON.stringify(row.role_name),
-									JSON.stringify(row.active),
-									JSON.stringify(row.patric_id),
-									JSON.stringify(row.gene),
-									JSON.stringify(row.product)
+									JSON.stringify(row.active)
+									
 								]);
 							});
 							filename = "PATRIC_subsystems";
@@ -263,6 +258,89 @@ define([
 		]),
 		
 		selectionActions: GridContainer.prototype.selectionActions.concat([
+
+			[
+				"DownloadSelection",
+				"fa icon-download fa-2x",
+				{
+					label: "DWNLD",
+					multiple: true,
+					validTypes: ["*"],
+					ignoreDataType: true,
+					tooltip: "Download Selection",
+					max: 10000,
+					tooltipDialog: downloadSelectionTT,
+					validContainerTypes: ["subsystem_data"]
+				},
+				function(selection, container){
+
+
+					var selectedRows = [];
+
+					switch(this.type){
+
+						case "subsystems":
+
+							selection.forEach(function(row) {
+								var selectedRow = {};
+
+								selectedRow["Superclass"] = row["superclass"];
+								selectedRow["Class"] = row["class"];
+								selectedRow["Subclass"] = row["subclass"];
+								selectedRow["Subsystem Name"] = row["subsystem_name"];
+								selectedRow["Gene Count"] = row["gene_count"];
+								selectedRow["Role Count"] = row["role_count"];
+								selectedRow["Active"] = row["active"];
+
+								selectedRows.push(selectedRow)
+							})
+
+							break;
+
+						case "genes":
+
+
+							selection.forEach(function(row) {
+								var selectedRow = {};
+
+								selectedRow["Superclass"] = row["superclass"];
+								selectedRow["Class"] = row["class"];
+								selectedRow["Subclass"] = row["subclass"];
+								selectedRow["Subsystem Name"] = row["subsystem_name"];
+								selectedRow["Role ID"] = row["role_id"];
+								selectedRow["Role Name"] = row["role_name"];
+								selectedRow["Active"] = row["active"];
+								selectedRow["Patric Id"] = row["patric_id"];
+								selectedRow["Gene"] = row["gene"];
+								selectedRow["Product"] = row["product"];
+
+								selectedRows.push(selectedRow)
+							})
+							break;
+
+						default:
+							break;
+					}
+
+					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("selection", selectedRows);
+					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("containerType", this.containerType);
+					if(container && container.grid){
+						this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("grid", container.grid);
+					}
+
+					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.timeout(3500);
+
+					setTimeout(lang.hitch(this, function(){
+						popup.open({
+							popup: this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog,
+							around: this.selectionActionBar._actions.DownloadSelection.button,
+							orient: ["below"]
+						});
+					}), 10);
+
+				},
+				false
+			],
 
 			[
 				"ViewFeatureItems",
