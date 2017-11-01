@@ -1,4 +1,10 @@
 const User = require('../src/user_.js');
+let mockfetch;
+function testAsync(runAsync) {
+  return (done) => {
+    runAsync().then(done, (e) => { fail(e); done(); });
+  };
+}
 
 document.body.innerHTML = '<div><div class="home"></div></div>';
 let user = new User();
@@ -65,7 +71,7 @@ test('it hides submit button if the reset password form is invalid', () => {
 });
 
 test('it resets the password', () => {
-  const mockfetch = function(url, data) {
+  mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;
@@ -85,8 +91,14 @@ test('it resets the password', () => {
   expect(messagediv.innerHTML).toBe('');
 });
 
-test('it displays the error message from reset password PUT', () => {
-  const mockfetch = function(url, data) {
+test('it displays the error message from reset password PUT', done => {
+  debugger;
+  document.body.innerHTML = '<div><div class="home"></div></div>';
+  let user = new User();
+  user.formType = 'reset';
+  user.userEmail = 'joe@smith.com';
+  user.verifyEmail();
+  let mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;
@@ -96,16 +108,20 @@ test('it displays the error message from reset password PUT', () => {
     });
   };
   user.fetch = mockfetch;
-  //document.body.innerHTML = '<div class="loginerror"></div>';
-  //expect.assertions(1);
-   user.resetPasswd();
-    ///let messagediv = document.getElementsByClassName('loginerror')[0];
-    //console.log(messagediv1.innerHTML);
-    //expect(user.resetPasswd()).toEqual('incorrect email');
+  document.getElementsByClassName('loginpass')[0].value = 'password1';
+  document.getElementsByClassName('code')[0].value = '12345';
+  //document.getElementsByClassName('email')[0].value = 'joe@smith.com';
+  user.resetPasswd().then(() => {
+  const messagediv = document.getElementsByClassName('loginerror')[0];
+  console.log(messagediv.innerHTML);
+  console.log(document.body.innerHTML);
+  expect(messagediv.innerHTML).toMatch(/incorrect email/);
+  done();
+});
 });
 
 test('it catches the error from reset password PUT', () => {
-  const mockfetch = function(url, data) {
+  mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;
@@ -115,12 +131,12 @@ test('it catches the error from reset password PUT', () => {
     });
   };
   user.fetch = mockfetch;
-  //document.body.innerHTML += '<div class="loginerror"></div>';
-  user.resetPasswd();
+  return user.resetPasswd()
+     .catch(e => expect(e).toBeTruthy());
 });
 
 test('it updates the user', () => {
-  const mockfetch = function(url, data) {
+  mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;
@@ -135,7 +151,7 @@ test('it updates the user', () => {
 });
 
 test('it displays error message on updates the user PUT', () => {
-  const mockfetch = function(url, data) {
+  mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;
@@ -152,7 +168,7 @@ test('it displays error message on updates the user PUT', () => {
 });
 
 test('it catches errors on update the user PUT', () => {
-  const mockfetch = function(url, data) {
+  mockfetch = function(url, data) {
     this.headers = {};
     this.headers.url = url;
     this.headers.method = data.method;

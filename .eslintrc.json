@@ -27,6 +27,7 @@
     "prefer-template": 0,
     "indent": 0,
     "no-trailing-spaces": [ 1, {"skipBlankLines" : true}],
-    "no-unused-vars": 0
+    "no-unused-vars": 0,
+    "no-debugger": 0
   }
 }

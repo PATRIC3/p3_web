@@ -119,7 +119,7 @@ nevermind(className) {
   }
 }
 
-loginUser() {
+loginUser(authtype) {
   //console.log('show me a login form here!');
   //window.location.href = '/user';
   this.nevermind('LoginForm');
@@ -132,7 +132,7 @@ loginUser() {
   '<tr><th style="border:none">Password</th></tr><tr><td>' +
   '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>' +
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
-  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="registerClass.logMeIn()">Login</button>' +
+  '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="registerClass.logMeIn(&apos;' + authtype + '&apos;)">Login</button>' +
   '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="registerClass.resetpass()">Reset Password</button></div></div></form>' +
   '<button style="margin-left:14px;" type="button" onclick="registerClass.nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
@@ -202,7 +202,7 @@ validateLogin() {
   }
 }
 
-logMeIn() {
+logMeIn(authtype) {
   let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': document.getElementsByClassName('loginpass')[0].value };
   //var cookieToken = getCookieToken();
   let fetchData = {
@@ -237,6 +237,9 @@ logMeIn() {
       hideWithAuth.style.display = 'none';
       let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
       showWithAuth.style.display = 'block';
+      if (authtype === 'session') {
+        this.generateSession(bodyData.email);
+      }
     }
     if (data.message) {
       //console.log(data.message);
@@ -259,6 +262,31 @@ logout() {
   showWithAuth.style.display = 'none';
   window.location.href = this.frontendUrl + '/';
 }
+
+
+generateSession(useremail) {
+  //fetch the user with the auth header
+  console.log('put some cool code here for session and cookie and storage or something for this user: ' + useremail);
+  let bodyData = {'email': useremail };
+  //var cookieToken = getCookieToken();
+  let fetchData = {
+    method: 'POST',
+    //credentials: 'same-origin',
+    body: JSON.stringify(bodyData),
+    headers: {
+      //'X-CSRFTOKEN': cookieToken,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  };
+  fetch(this.backendUrl + '/user/', fetchData)
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+  });
+}
+
 }
 
 

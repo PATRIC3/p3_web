@@ -94,7 +94,7 @@ class User {
       'Content-Type': 'application/json'
     }
   };
-  this.fetch(this.backendUrl + '/auth/passwdreset', fetchData)
+  return this.fetch(this.backendUrl + '/auth/passwdreset', fetchData)
   .then((response) => response.json())
   .then((data) => {
     console.log(data);
@@ -102,7 +102,7 @@ class User {
       console.log(data.message);
       let messagediv = document.getElementsByClassName('loginerror')[0];
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
-      return data.message;
+      // return data.message;
     }
       this.nevermind('RegistrationForm');
       window.location.href = this.frontendUrl + '/';
