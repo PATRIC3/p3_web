@@ -1,4 +1,5 @@
 var config = require("./config");
+//const request = require('request');
 if(config.get("newrelic_license_key")){
 	require('newrelic');
 }
@@ -47,7 +48,7 @@ app.use(session({
 	store: sessionStore,
 	key: config.get("cookieKey"),
 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-//    secret: config.get('cookieSecret'),
+	//    secret: config.get('cookieSecret'),
 	resave: false,
 	saveUninitialized: true
 }));
@@ -177,13 +178,13 @@ app.use("/help", help);
 app.use("/uploads", uploads);
 app.use('/users', users);
 app.get("/login",
-	function(req, res, next){
-		if(!req.isAuthenticated || !req.isAuthenticated()){
-			res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
-		}else{
-			res.render('authcb', {title: 'User Service', request: req});
-		}
+function(req, res, next){
+	if(!req.isAuthenticated || !req.isAuthenticated()){
+		res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
+	}else{
+		res.render('authcb', {title: 'User Service', request: req});
 	}
+}
 );
 
 app.get("/logout", [
@@ -197,13 +198,19 @@ app.get("/logout", [
 ]);
 
 app.get("/auth/callback",
-	function(req, res, next){
-		console.log("Authorization Callback");
-		console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
-		res.render('authcb', {title: 'User Service', request: req});
-//		res.redirect("/");
-	}
+function(req, res, next){
+	console.log("Authorization Callback");
+	console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
+	res.render('authcb', {title: 'User Service', request: req});
+	//		res.redirect("/");
+}
 );
+
+// app.post('/auth/login', (req, res) => {
+// 	request('http://localhost:7000/auth/login', (error, body) => {
+// 		return body;
+// 	});
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next){

@@ -75,17 +75,10 @@ test('it does not create a new user when there is an response error message from
     });
   };
   reg.fetch = mockfetch;
-  // const mockvalidity = function() {
-  //   return false;
-  // };
-  // document.getElementsByClassName('password')[0].checkValidity = function() {return true;};
-  // document.getElementsByClassName('email')[0].checkValidity = function() {return true;};
-  // reg.validateReg();
-  // let registbutton = document.getElementsByClassName('registerbutton')[0];
-  // expect(registbutton.style.display).toBe('none');
-  reg.createUser();
-  //let messagediv1 = document.getElementsByClassName('registererror')[0];
-  //expect(reg.errorMessage).toBe('error');
+  reg.createUser().then(() => {
+    let messagediv1 = document.getElementsByClassName('registererror')[0];
+    expect(messagediv1.innerHTML).toMatch(/error/);
+  });
 });
 
 test('it catches error on create a new user', () => {
@@ -105,17 +98,8 @@ test('it catches error on create a new user', () => {
     });
   };
   reg.fetch = mockfetch;
-  // const mockvalidity = function() {
-  //   return false;
-  // };
-  // document.getElementsByClassName('password')[0].checkValidity = function() {return true;};
-  // document.getElementsByClassName('email')[0].checkValidity = function() {return true;};
-  // reg.validateReg();
-  // let registbutton = document.getElementsByClassName('registerbutton')[0];
-  // expect(registbutton.style.display).toBe('none');
-  reg.createUser();
-  //let messagediv1 = document.getElementsByClassName('registererror')[0];
-  //expect(reg.errorMessage).toBe('error');
+  return reg.createUser()
+  .catch(e => expect(e).toBeTruthy());
 });
 
 test('it initiates an email varification', () => {
@@ -135,17 +119,9 @@ test('it initiates an email varification', () => {
     });
   };
   reg.fetch = mockfetch;
-  // const mockvalidity = function() {
-  //   return false;
-  // };
-  // document.getElementsByClassName('password')[0].checkValidity = function() {return true;};
-  // document.getElementsByClassName('email')[0].checkValidity = function() {return true;};
-  // reg.validateReg();
-  // let registbutton = document.getElementsByClassName('registerbutton')[0];
-  // expect(registbutton.style.display).toBe('none');
-  reg.createUser();
-  //let messagediv1 = document.getElementsByClassName('registererror')[0];
-  //expect(reg.errorMessage).toBe('error');
+  reg.createUser().then((data) => {
+    expect(data.email).toBe('joe@smith.com');
+  });
 });
 
 test('it does not initiates an email varification', () => {
@@ -165,17 +141,9 @@ test('it does not initiates an email varification', () => {
     });
   };
   reg.fetch = mockfetch;
-  // const mockvalidity = function() {
-  //   return false;
-  // };
-  // document.getElementsByClassName('password')[0].checkValidity = function() {return true;};
-  // document.getElementsByClassName('email')[0].checkValidity = function() {return true;};
-  // reg.validateReg();
-  // let registbutton = document.getElementsByClassName('registerbutton')[0];
-  // expect(registbutton.style.display).toBe('none');
-  reg.createUser();
-  //let messagediv1 = document.getElementsByClassName('registererror')[0];
-  //expect(reg.errorMessage).toBe('error');
+  reg.createUser().then((data) => {
+    expect(data.email).toBe(null);
+  });
 });
 
 test('generates a login form', () => {
@@ -201,9 +169,9 @@ test('initiates a reset password request', () => {
     });
   };
   reg.fetch = mockfetch;
-  reg.resetpass();
-  //document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
+  reg.resetpass().then((data) => {
+    expect(data.message).toBe(null);
+  });
 });
 
 test('Does not initiates a reset password request with invalid email', () => {
@@ -220,9 +188,30 @@ test('Does not initiates a reset password request with invalid email', () => {
     });
   };
   reg.fetch = mockfetch;
-  reg.resetpass();
-  document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
+  reg.resetpass().then((data) =>{
+    expect(data.message).toBe('incorrect email address');
+  });
+});
+
+test('it catches error on reset password', () => {
+  document.body.innerHTML = '<div class="home"></div>';
+  reg.loginUser();
+  //document.getElementsByClassName('firstname')[0].value = 'Joe';
+  //document.getElementsByClassName('lastname')[0].value = 'Smith';
+  document.getElementsByClassName('loginemail')[0].value = 'joe@smith.com';
+  //document.getElementsByClassName('password')[0].value = '123456789';
+  const mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.reject({error: 'rejected' })
+    });
+  };
+  reg.fetch = mockfetch;
+  return reg.resetpass()
+  .catch(e => expect(e).toBeTruthy());
 });
 
 test('validates a login form', () => {
@@ -237,8 +226,6 @@ test('validates a login form', () => {
   reg.validateLogin();
   expect(logbutton.style.display).toBe('block');
   expect(resetpassButton.style.display).toBe('block');
-  //document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
 });
 
 test('login and reset buttons do not display when form is not valid', () => {
@@ -294,9 +281,12 @@ test('login the user', () => {
   }};
   window.localStorage = mockStorage;
   document.body.innerHTML += '<div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
-  reg.logMeIn();
-  //document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
+  reg.logMeIn().then((data) => {
+    expect(data.token).toBe('lsdfldjflsdjlfdjfsjdlf');
+    let showA = document.getElementsByClassName('ShowWithAuth')[0];
+    expect(showA.style.display).toBe('block');
+  });
+
 });
 
 test('displays error message if login fails', () => {
@@ -319,10 +309,10 @@ test('displays error message if login fails', () => {
     //do nothing
   }};
   window.localStorage = mockStorage;
-  document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
-  reg.logMeIn();
-  //document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
+  reg.logMeIn().then((data) => {
+    expect(data.message).toBe('incorrect email or password');
+  });
+
 });
 
 
@@ -346,10 +336,9 @@ test('catches any login errors', () => {
     //do nothing
   }};
   window.localStorage = mockStorage;
-  document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
-  reg.logMeIn();
-  //document.body.innerHTML = '';
-  //expect(sum(1, 2)).toBe(3);
+
+  return reg.logMeIn()
+  .catch(e => expect(e).toBeTruthy());
 });
 
 test('logs out the user', () => {
@@ -361,5 +350,6 @@ test('logs out the user', () => {
   window.localStorage = mockStorage;
   document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
   reg.logout();
-  document.body.innerHTML = '';
+  let showA = document.getElementsByClassName('ShowWithAuth')[0];
+  expect(showA.style.display).toBe('none');
 });

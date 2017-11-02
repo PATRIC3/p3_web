@@ -1,10 +1,11 @@
 const User = require('../src/user_.js');
 let mockfetch;
-function testAsync(runAsync) {
-  return (done) => {
-    runAsync().then(done, (e) => { fail(e); done(); });
-  };
-}
+
+// function testAsync(runAsync) {
+//   return (done) => {
+//     runAsync().then(done, (e) => { fail(e); done(); });
+//   };
+// }
 
 document.body.innerHTML = '<div><div class="home"></div></div>';
 let user = new User();
@@ -86,13 +87,14 @@ test('it resets the password', () => {
   document.getElementsByClassName('loginpass')[0].value = 'password1';
   document.getElementsByClassName('code')[0].value = '12345';
   document.getElementsByClassName('email')[0].value = 'joe@smith.com';
-  user.resetPasswd();
-  let messagediv = document.getElementsByClassName('loginerror')[0];
-  expect(messagediv.innerHTML).toBe('');
+  user.resetPasswd().then(() => {
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toBe('');
+  });
 });
 
-test('it displays the error message from reset password PUT', done => {
-  debugger;
+test('it displays the error message from reset password PUT', () => {
+  // debugger;
   document.body.innerHTML = '<div><div class="home"></div></div>';
   let user = new User();
   user.formType = 'reset';
@@ -112,12 +114,10 @@ test('it displays the error message from reset password PUT', done => {
   document.getElementsByClassName('code')[0].value = '12345';
   //document.getElementsByClassName('email')[0].value = 'joe@smith.com';
   user.resetPasswd().then(() => {
-  const messagediv = document.getElementsByClassName('loginerror')[0];
-  console.log(messagediv.innerHTML);
-  console.log(document.body.innerHTML);
-  expect(messagediv.innerHTML).toMatch(/incorrect email/);
-  done();
-});
+    const messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toMatch(/incorrect email/);
+    messagediv.innerHTML = '';
+  });
 });
 
 test('it catches the error from reset password PUT', () => {
@@ -132,7 +132,7 @@ test('it catches the error from reset password PUT', () => {
   };
   user.fetch = mockfetch;
   return user.resetPasswd()
-     .catch(e => expect(e).toBeTruthy());
+  .catch(e => expect(e).toBeTruthy());
 });
 
 test('it updates the user', () => {
@@ -146,8 +146,10 @@ test('it updates the user', () => {
     });
   };
   user.fetch = mockfetch;
-  //document.body.innerHTML += '<div class="loginerror"></div>';
-  user.updateUser();
+  user.updateUser().then(() => {
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toBe('');
+  });
 });
 
 test('it displays error message on updates the user PUT', () => {
@@ -161,10 +163,11 @@ test('it displays error message on updates the user PUT', () => {
     });
   };
   user.fetch = mockfetch;
-  ///document.body.innerHTML += '<div class="loginerror"></div>';
-  user.updateUser();
-  let messagediv = document.getElementsByClassName('loginerror')[0];
-  //expect(messagediv.innerHTML).toBe('wrong email');
+  user.updateUser().then(() => {
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toMatch(/wrong email/);
+    messagediv.innerHTML = '';
+  });
 });
 
 test('it catches errors on update the user PUT', () => {
@@ -178,8 +181,8 @@ test('it catches errors on update the user PUT', () => {
     });
   };
   user.fetch = mockfetch;
-  document.body.innerHTML += '<div class="loginerror"></div>';
-  user.updateUser();
+  return user.updateUser()
+  .catch(e => expect(e).toBeTruthy());
 });
 
 test('if the element does not exist, it does not try to hide it', () => {

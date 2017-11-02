@@ -61,7 +61,7 @@ class User {
     if (email !== '' && codenumber !== '') {
       //console.log('valid');
       //console.log(registbutton);
-      console.log(validemail.checkValidity());
+      //console.log(validemail.checkValidity());
       if (validemail.checkValidity() && validcode.checkValidity()) {
         submitbutton.style.display = 'block';
       } else {
@@ -80,7 +80,7 @@ class User {
   }
 
   resetPasswd() {
-    console.log('going to update your password');
+    //console.log('going to update your password');
     //put to backend /auth/passwdreset
     let bodyData = {'email': document.getElementsByClassName('email')[0].value,
     'resetCode': document.getElementsByClassName('code')[0].value,
@@ -94,18 +94,18 @@ class User {
       'Content-Type': 'application/json'
     }
   };
-  fetch(this.backendUrl + '/auth/passwdreset', fetchData)
+  return fetch(this.backendUrl + '/auth/passwdreset', fetchData)
   .then((response) => response.json())
   .then((data) => {
-    console.log(data);
+    //console.log(data);
     if (data.message) {
-      console.log(data.message);
+      //console.log(data.message);
       let messagediv = document.getElementsByClassName('loginerror')[0];
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
-      return data.message;
+      // return data.message;
     }
-      this.nevermind('RegistrationForm');
-      window.location.href = this.frontendUrl + '/';
+    this.nevermind('RegistrationForm');
+    window.location.href = this.frontendUrl + '/';
 
   })
   .catch((error) => {
@@ -116,7 +116,7 @@ class User {
 }
 
 updateUser() {
-  console.log('going to update user');
+  //console.log('going to update user');
   //put to backend /auth/validemail
   let bodyData = {'email': document.getElementsByClassName('email')[0].value, 'resetCode': document.getElementsByClassName('code')[0].value };
   let fetchData = {
@@ -128,23 +128,15 @@ updateUser() {
     }
   };
 
-  // function handleErrors(response) {
-  //   if (!response.ok) {
-  //     throw Error(response.statusText);
-  //   }
-  //   return response;
-  // }
-  fetch(this.backendUrl + '/auth/validemail', fetchData)
+  return fetch(this.backendUrl + '/auth/validemail', fetchData)
   //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
-    //console.log(data.json());
-    //console.log(data.token);
-    //const token = data.json();
-    console.log(data);
+
+    //console.log(data);
 
     if (data.message) {
-      console.log(data.message);
+      //console.log(data.message);
       let messagediv = document.getElementsByClassName('loginerror')[0];
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
