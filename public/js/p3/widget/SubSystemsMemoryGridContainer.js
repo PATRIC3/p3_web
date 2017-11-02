@@ -3,13 +3,13 @@ define([
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
 	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
 	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip",
-	"./SelectionToGroup", "dijit/Dialog", "./DownloadTooltipDialog"
+	"./SelectionToGroup", "dijit/Dialog", "./DownloadTooltipDialog", "dojo/_base/Deferred"
 
 ], function(declare, GridContainer, on,
 			SubSystemsGrid, popup, Topic, request, when,
 			TooltipDialog, ContainerActionBar, saveAs, PathJoin,
 			lang, domConstruct, PerspectiveToolTipDialog,
-			SelectionToGroup, Dialog, DownloadTooltipDialog){
+			SelectionToGroup, Dialog, DownloadTooltipDialog, Deferred){
 
 	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
 	var viewFASTATT = new TooltipDialog({
@@ -107,6 +107,41 @@ define([
 			}
 			this._set('store', store);
 		},
+
+		// not needed unless future requirements change
+		// getGenomeIds: function(data){
+
+		// 	var def = new Deferred();
+		// 	if(data.hasOwnProperty('taxon_id')){
+
+		// 		var taxon_ids = data.selection.map(function(row) {
+		// 			return row.taxon_id;
+		// 		})
+
+		// 		var query = "?eq(taxon_lineage_ids," + taxon_ids.join(" OR ") + ")&select(genome_id)&limit(25000)";
+		// 		return when(request.get(PathJoin(this.apiServer, "genome", query), {
+		// 			headers: {
+		// 				'Accept': "application/json",
+		// 				'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+		// 			},
+		// 			handleAs: "json"
+		// 		}), function(response){
+
+		// 			var genome_ids = response.map(function(d){
+		// 				return d.genome_id;
+		// 			});
+					
+		// 			def.resolve(genome_ids);
+		// 			return def.promise;
+		// 		});
+		// 	} else {
+		// 		var genome_ids = data.selection.map(function(s){
+		// 			return s.genome_id
+		// 		});
+		// 		def.resolve(genome_ids);
+		// 		return def.promise;
+		// 	}
+		// },
 
 		createFilterPanel: function(){
 			
@@ -260,6 +295,52 @@ define([
 		selectionActions: GridContainer.prototype.selectionActions.concat([
 
 			[
+				"ViewFASTA",
+				"fa icon-fasta fa-2x",
+				{
+					label: "FASTA",
+					ignoreDataType: true,
+					multiple: true,
+					validTypes: ["*"],
+					max: 5000,
+					tooltip: "View FASTA Data",
+					tooltipDialog: viewFASTATT,
+					validContainerTypes: ["subsystem_data"]
+				},
+				function(selection){
+
+					var subsystem_ids = selection.map(function(s){
+						return s.subsystem_id
+					});
+
+					var query = "q=genome_id:(" + this.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+					var that = this;
+					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+						handleAs: 'json',
+						headers: {
+							'Accept': "application/solr+json",
+							'Content-Type': "application/solrquery+x-www-form-urlencoded",
+							'X-Requested-With': null,
+							'Authorization': (window.App.authorizationToken || "")
+						},
+						data: query
+					}), function(response){
+
+						var feature_ids = response.response.docs.map(function(feature) {
+							return {"feature_id": feature.feature_id}
+						})
+						viewFASTATT.selection = feature_ids;
+						popup.open({
+							popup: that.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
+							around: that.selectionActionBar._actions.ViewFASTA.button,
+							orient: ["below"]
+						});
+					});
+				},
+				false
+			],
+
+			[
 				"DownloadSelection",
 				"fa icon-download fa-2x",
 				{
@@ -365,14 +446,13 @@ define([
 					}
 				},
 				function(selection, container){
-					//subsystem tab
 					if (selection[0].document_type === "subsystems_subsystem") {
-						
+
 						var subsystem_ids = selection.map(function(s){
 							return encodeURIComponent(s.subsystem_id)
 						});
 
-						var query = "q=genome_id:(" + container.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+						var query = "q=genome_id:(" + this.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
 
 						when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 							handleAs: 'json',
