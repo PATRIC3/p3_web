@@ -106,7 +106,7 @@ define([
 				this.subsystemClass = response.response.docs[0].class;
 				this.subclass = response.response.docs[0].superclass;
 
-				$('#subSystemHeatmap').html("Subsystem View - " + this.subsystemName + " - " + this.subsystemClass + " - " + this.subclass);
+				$('#subSystemHeatmap').html("Subsystem View » " + this.subclass + " » " + this.subsystemClass + " » " + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + "</span>");
 
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
