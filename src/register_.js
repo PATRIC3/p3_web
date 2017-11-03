@@ -158,11 +158,11 @@ loginUser(appName) {
 }
 
 validateLogin() {
-  let useridInput = null;
+  //let useridInput = null;
   let useridValue = '';
-  useridInput = document.getElementsByClassName('userid');
-  if (useridInput) {
-    useridValue = useridInput[0].value;
+//console.log(document.getElementsByClassName('userid')[0]);
+  if (document.getElementsByClassName('userid')[0] !== undefined) {
+    useridValue = document.getElementsByClassName('userid')[0];
   }
   let email = document.getElementsByClassName('loginemail')[0].value;
   let validemail = document.getElementsByClassName('loginemail')[0];
@@ -219,13 +219,13 @@ resetpass() {
 }
 
 logMeIn(appName) {
-  let useridInput = null;
+  //let useridInput = null;
   let useridValue = '';
   const passwordValue = document.getElementsByClassName('loginpass')[0].value;
-  console.log('this is the password given ' + passwordValue);
-  useridInput = document.getElementsByClassName('userid');
-  if (useridInput) {
-    useridValue = useridInput[0].value;
+  //console.log('this is the password given ' + passwordValue);
+  //useridInput = document.getElementsByClassName('userid');
+  if (document.getElementsByClassName('userid')[0] !== undefined) {
+    useridValue = document.getElementsByClassName('userid')[0];
   }
   let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': passwordValue, 'id': useridValue };
   //var cookieToken = getCookieToken();
