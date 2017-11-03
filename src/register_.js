@@ -225,7 +225,8 @@ logMeIn(appName) {
   //console.log('this is the password given ' + passwordValue);
   //useridInput = document.getElementsByClassName('userid');
   if (document.getElementsByClassName('userid')[0] !== undefined) {
-    useridValue = document.getElementsByClassName('userid')[0];
+    useridValue = document.getElementsByClassName('userid')[0].value;
+    console.log(useridValue);
   }
   let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': passwordValue, 'id': useridValue };
   //var cookieToken = getCookieToken();
@@ -262,7 +263,7 @@ logMeIn(appName) {
       let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
       showWithAuth.style.display = 'block';
       if (appName === 'PATRIC') {
-        this.generateSession(bodyData.email);
+        this.generateSession(data.email);
       }
     }
     if (data.message) {
