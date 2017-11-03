@@ -1,4 +1,5 @@
 var config = require("./config");
+//const request = require('request');
 if(config.get("newrelic_license_key")){
 	require('newrelic');
 }
@@ -12,7 +13,7 @@ var session = require("express-session-unsigned");
 var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
 var package = require("./package.json");
-
+//var backendUrl = 'http://localhost:7000'; //replace this with a variable used on prod server
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var reportProblem = require('./routes/reportProblem');
@@ -34,7 +35,7 @@ var apiProxy = httpProxy.createProxyServer();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.set('query parser', 'extended');
-
+//app.locals.backendUrl='http://localhost:7000';
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 //app.use(bodyParser.json());
@@ -47,7 +48,7 @@ app.use(session({
 	store: sessionStore,
 	key: config.get("cookieKey"),
 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-//    secret: config.get('cookieSecret'),
+	//    secret: config.get('cookieSecret'),
 	resave: false,
 	saveUninitialized: true
 }));
@@ -163,6 +164,7 @@ app.use("/patric/images", express.static(path.join(__dirname, "public/patric/ima
 }));
 app.use("/patric/", express.static(path.join(__dirname, 'public/patric/')));
 app.use("/public/", express.static(path.join(__dirname, 'public/')));
+app.use("/user/", express.static(path.join(__dirname, 'public/user/')));
 app.use('/', routes);
 app.post("/reportProblem", reportProblem);
 app.use("/workspace", workspace);
@@ -176,13 +178,13 @@ app.use("/help", help);
 app.use("/uploads", uploads);
 app.use('/users', users);
 app.get("/login",
-	function(req, res, next){
-		if(!req.isAuthenticated || !req.isAuthenticated()){
-			res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
-		}else{
-			res.render('authcb', {title: 'User Service', request: req});
-		}
+function(req, res, next){
+	if(!req.isAuthenticated || !req.isAuthenticated()){
+		res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
+	}else{
+		res.render('authcb', {title: 'User Service', request: req});
 	}
+}
 );
 
 app.get("/logout", [
@@ -196,13 +198,19 @@ app.get("/logout", [
 ]);
 
 app.get("/auth/callback",
-	function(req, res, next){
-		console.log("Authorization Callback");
-		console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
-		res.render('authcb', {title: 'User Service', request: req});
-//		res.redirect("/");
-	}
+function(req, res, next){
+	console.log("Authorization Callback");
+	console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
+	res.render('authcb', {title: 'User Service', request: req});
+	//		res.redirect("/");
+}
 );
+
+// app.post('/auth/login', (req, res) => {
+// 	request('http://localhost:7000/auth/login', (error, body) => {
+// 		return body;
+// 	});
+// });
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next){

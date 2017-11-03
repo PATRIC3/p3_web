@@ -1,3 +1,6 @@
+coverage
+backend
+.env
 p3-web.conf
 node_modules/
 *.swp
@@ -9,3 +12,4 @@ public/js/release/build-report.txt
 .idea/
 .vscode/
 public/video/
+yarn-error.log
