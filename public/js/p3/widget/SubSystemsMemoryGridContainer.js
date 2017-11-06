@@ -11,7 +11,7 @@ define([
 			lang, domConstruct, PerspectiveToolTipDialog,
 			SelectionToGroup, Dialog, DownloadTooltipDialog, Deferred){
 
-	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div><hr><div class="wsActionTooltip" rel="dna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloaddna">Download FASTA DNA</div><div class="wsActionTooltip" rel="downloadprotein"> ';
+	var vfc = '<div class="wsActionTooltip" rel="dna">View FASTA DNA</div><div class="wsActionTooltip" rel="protein">View FASTA Proteins</div>';
 	var viewFASTATT = new TooltipDialog({
 		content: vfc, onMouseLeave: function(){
 			popup.close(viewFASTATT);

@@ -296,7 +296,8 @@ define([
 				dataType: "subsystem",
 				"label": "Subsystem",
 				"generateDownloadFromStore": true,
-				tableData: true
+				tableData: true,
+				otherData: ["dna+fasta", "protein+fasta"]
 			},
 			"gene_expression_data": {
 				dataType: "transcriptomics_gene",
