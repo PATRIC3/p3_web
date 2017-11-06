@@ -494,25 +494,12 @@ define([
 				},
 				function(selection){
 
-					// for subsystems grab all associated features in async call
-					var genome_ids = selection.map(lang.hitch(this, function(g) {
-						return g.genome_id
-					}));
-
-					//filter out non-unique genome_ids
-					var unique_genome_ids = [];
-				    for(var i = 0; i < genome_ids.length; i++) {
-				        if(unique_genome_ids.indexOf(genome_ids[i]) === -1) {
-				            unique_genome_ids.push(genome_ids[i]);
-				        }
-				    };
-				   
-					var subsystem_ids = selection.map(lang.hitch(this, function(s) {
+					var subsystem_ids = selection.map(function(s){
 						return encodeURIComponent(s.subsystem_id)
-					}));
+					});
 
-					var query = "q=genome_id:(" + unique_genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
-					var that = this;
+					var query = "q=genome_id:(" + this.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+
 					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 						handleAs: 'json',
 						headers: {
