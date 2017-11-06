@@ -309,43 +309,64 @@ define([
 				},
 				function(selection){
 
-					var genome_ids = [];
+					switch(this.type){
+						
+						case "subsystems":
+							var genome_ids = [];
 
-					if (selection[0].document_type === "subsystems_gene") {
-						genome_ids = selection.map(function(s){
-							return s.genome_id;
-						})
-					} else {
-						genome_ids = this.state.genome_ids;
-					}
+							if (selection[0].document_type === "subsystems_gene") {
+								genome_ids = selection.map(function(s){
+									return s.genome_id;
+								})
+							} else {
+								genome_ids = this.state.genome_ids;
+							}
 
-					var subsystem_ids = selection.map(function(s){
-						return s.subsystem_id
-					});
+							var subsystem_ids = selection.map(function(s){
+								return s.subsystem_id
+							});
 
-					var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
-					var that = this;
-					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
-						handleAs: 'json',
-						headers: {
-							'Accept': "application/solr+json",
-							'Content-Type': "application/solrquery+x-www-form-urlencoded",
-							'X-Requested-With': null,
-							'Authorization': (window.App.authorizationToken || "")
-						},
-						data: query
-					}), function(response){
+							var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+							var that = this;
+							when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+								handleAs: 'json',
+								headers: {
+									'Accept': "application/solr+json",
+									'Content-Type': "application/solrquery+x-www-form-urlencoded",
+									'X-Requested-With': null,
+									'Authorization': (window.App.authorizationToken || "")
+								},
+								data: query
+							}), function(response){
 
-						var feature_ids = response.response.docs.map(function(feature) {
-							return {"feature_id": feature.feature_id}
-						})
-						viewFASTATT.selection = feature_ids;
-						popup.open({
-							popup: that.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
-							around: that.selectionActionBar._actions.ViewFASTA.button,
-							orient: ["below"]
-						});
-					});
+								var feature_ids = response.response.docs.map(function(feature) {
+									return {"feature_id": feature.feature_id}
+								})
+								viewFASTATT.selection = feature_ids;
+								popup.open({
+									popup: that.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
+									around: that.selectionActionBar._actions.ViewFASTA.button,
+									orient: ["below"]
+								});
+							});
+							break;
+						
+						case "genes": 
+							
+							var feature_ids = selection.map(function(feature) {
+								return {"feature_id": feature.feature_id}
+							})
+							viewFASTATT.selection = feature_ids;
+							popup.open({
+								popup: this.selectionActionBar._actions.ViewFASTA.options.tooltipDialog,
+								around: this.selectionActionBar._actions.ViewFASTA.button,
+								orient: ["below"]
+							});
+							break;
+						
+						default:
+							break;
+					}	
 				},
 				false
 			],
