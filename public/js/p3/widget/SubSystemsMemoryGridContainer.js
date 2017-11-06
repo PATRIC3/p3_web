@@ -108,41 +108,6 @@ define([
 			this._set('store', store);
 		},
 
-		// not needed unless future requirements change
-		// getGenomeIds: function(data){
-
-		// 	var def = new Deferred();
-		// 	if(data.hasOwnProperty('taxon_id')){
-
-		// 		var taxon_ids = data.selection.map(function(row) {
-		// 			return row.taxon_id;
-		// 		})
-
-		// 		var query = "?eq(taxon_lineage_ids," + taxon_ids.join(" OR ") + ")&select(genome_id)&limit(25000)";
-		// 		return when(request.get(PathJoin(this.apiServer, "genome", query), {
-		// 			headers: {
-		// 				'Accept': "application/json",
-		// 				'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-		// 			},
-		// 			handleAs: "json"
-		// 		}), function(response){
-
-		// 			var genome_ids = response.map(function(d){
-		// 				return d.genome_id;
-		// 			});
-					
-		// 			def.resolve(genome_ids);
-		// 			return def.promise;
-		// 		});
-		// 	} else {
-		// 		var genome_ids = data.selection.map(function(s){
-		// 			return s.genome_id
-		// 		});
-		// 		def.resolve(genome_ids);
-		// 		return def.promise;
-		// 	}
-		// },
-
 		createFilterPanel: function(){
 			
 			if(this.type === 'genes'){
@@ -212,10 +177,43 @@ define([
 					var data = this.grid.store.query("", {});
 					var headers, content = [], filename;
 
+					var isTaxonView = false;
+					if (this.state.hasOwnProperty("taxon_id")) {
+						isTaxonView = true;
+					}
+
 					switch(this.type){
 
 						case "subsystems":
-							headers = [
+
+							if (isTaxonView) {
+								headers = [
+									"Superclass",
+									"Class",
+									"Subclass",
+									"Subsystem Name",
+									"Genome Count",
+									"Gene Count",
+									"Role Count",
+									"Active"
+
+								]
+
+								data.forEach(function(row){
+									content.push([
+										JSON.stringify(row.superclass),
+										JSON.stringify(row['class']),
+										JSON.stringify(row.subclass),
+										JSON.stringify(row.subsystem_name),
+										JSON.stringify(row.genome_count),
+										JSON.stringify(row.gene_count),
+										JSON.stringify(row.role_count),
+										JSON.stringify(row.active)
+										
+									]);
+								});
+							} else {
+								headers = [
 									"Superclass",
 									"Class",
 									"Subclass",
@@ -227,19 +225,21 @@ define([
 
 								]
 
-							data.forEach(function(row){
-								content.push([
-									JSON.stringify(row.superclass),
-									JSON.stringify(row['class']),
-									JSON.stringify(row.subclass),
-									JSON.stringify(row.subsystem_name),
-									//JSON.stringify(row.genome_count),
-									JSON.stringify(row.gene_count),
-									JSON.stringify(row.role_count),
-									JSON.stringify(row.active)
-									
-								]);
-							});
+								data.forEach(function(row){
+									content.push([
+										JSON.stringify(row.superclass),
+										JSON.stringify(row['class']),
+										JSON.stringify(row.subclass),
+										JSON.stringify(row.subsystem_name),
+										//JSON.stringify(row.genome_count),
+										JSON.stringify(row.gene_count),
+										JSON.stringify(row.role_count),
+										JSON.stringify(row.active)
+										
+									]);
+								});
+							}
+						
 							filename = "PATRIC_subsystems";
 							break;
 
@@ -309,11 +309,21 @@ define([
 				},
 				function(selection){
 
+					var genome_ids = [];
+
+					if (selection[0].document_type === "subsystems_gene") {
+						genome_ids = selection.map(function(s){
+							return s.genome_id;
+						})
+					} else {
+						genome_ids = this.state.genome_ids;
+					}
+
 					var subsystem_ids = selection.map(function(s){
 						return s.subsystem_id
 					});
 
-					var query = "q=genome_id:(" + this.state.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+					var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
 					var that = this;
 					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
 						handleAs: 'json',
@@ -355,8 +365,12 @@ define([
 				},
 				function(selection, container){
 
-
 					var selectedRows = [];
+
+					var isTaxonView = false;
+					if (this.state.hasOwnProperty("taxon_id")) {
+						isTaxonView = true;
+					}
 
 					switch(this.type){
 
@@ -369,6 +383,9 @@ define([
 								selectedRow["Class"] = row["class"];
 								selectedRow["Subclass"] = row["subclass"];
 								selectedRow["Subsystem Name"] = row["subsystem_name"];
+								if (isTaxonView) {
+									selectedRow["Genome Count"] = row["genome_count"];
+								}
 								selectedRow["Gene Count"] = row["gene_count"];
 								selectedRow["Role Count"] = row["role_count"];
 								selectedRow["Active"] = row["active"];
