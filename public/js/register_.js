@@ -1,8 +1,7 @@
 
 class Register {
   constructor() {
-    this.backendUrl = 'http://localhost:7000';
-    
+    this.backendUrl = '';
     this.frontendUrl = 'http://localhost:3000';
     //this.errorMessage = '';
   }
@@ -118,7 +117,7 @@ class Register {
 
 verifyEmail(email) {
   //console.log('going to verify the email now');
-  window.location.href = this.frontendUrl + '/user/?email=' + email;
+  window.location.href = this.frontendUrl + '/userutil/?email=' + email;
 }
 
 nevermind(className) {
@@ -135,21 +134,23 @@ loginUser(appName) {
   this.nevermind('LoginForm');
   this.nevermind('RegistrationForm');
   let useridrow = '';
+  let useremailinput = '<tr><th style="border:none">Email</th></tr><tr><td>' +
+  '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>';
   if (appName === 'PATRIC') {
-    useridrow = '<tr><th style="border:none">Userid</th></tr><tr><td>' +
+    useridrow = '<tr><th style="border:none">Email or Userid</th></tr><tr><td>' +
     '<input class="userid" name="userid" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()">';
+    useremailinput = '';
   }
   let loginform = document.createElement('div');
   loginform.className = 'LoginForm';
   loginform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PATRIC Login</h2>' +
   '<form><div style="padding:2px; margin:10px;"><table><tbody>' + useridrow +
-  '<tr><td>&nbsp;</td></tr><tr><th style="border:none">Email</th></tr><tr><td>' +
-  '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>' +
+  '<tr><td>&nbsp;</td></tr>' + useremailinput +
   '<tr><td>&nbsp;</td></tr><tr><th style="border:none">Password</th></tr><tr><td>' +
   '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>' +
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
   '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="registerClass.logMeIn(&apos;' + appName + '&apos;)">Login</button>' +
-  '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="registerClass.resetpass()">Reset Password</button></div></div></form>' +
+  '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="registerClass.resetpass(&apos;' + appName + '&apos;)">Reset Password</button></div></div></form>' +
   '<button style="margin-left:12px;margin-top:20px" type="button" onclick="registerClass.nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
   let home = document.getElementsByClassName('home');
@@ -160,35 +161,48 @@ loginUser(appName) {
 validateLogin() {
   //let useridInput = null;
   let useridValue = '';
-//console.log(document.getElementsByClassName('userid')[0]);
+  //console.log(document.getElementsByClassName('userid')[0]);
   if (document.getElementsByClassName('userid')[0] !== undefined) {
     useridValue = document.getElementsByClassName('userid')[0];
   }
-  let email = document.getElementsByClassName('loginemail')[0].value;
-  let validemail = document.getElementsByClassName('loginemail')[0];
+  let email = '';
+  let validemail = '';
+  if (document.getElementsByClassName('loginemail').length > 0) {
+    email = document.getElementsByClassName('loginemail')[0].value;
+    validemail = document.getElementsByClassName('loginemail')[0];
+  }
   let password = document.getElementsByClassName('loginpass')[0].value;
   let validpass = document.getElementsByClassName('loginpass')[0];
   let logbutton = document.getElementsByClassName('loginbutton')[0];
   let resetpassButton = document.getElementsByClassName('resetpass')[0];
-
+  if (validemail !== '') {
     if (validemail.checkValidity() && validpass.checkValidity()) {
       logbutton.style.display = 'block';
-    } else if (useridValue !== '' && validpass.checkValidity()) {
-        logbutton.style.display = 'block';
-    } else {
-      logbutton.style.display = 'none';
     }
-
-  if (validemail.checkValidity()) {
-    resetpassButton.style.display = 'block';
+  } else if (useridValue !== '' && validpass.checkValidity()) {
+    logbutton.style.display = 'block';
   } else {
+    logbutton.style.display = 'none';
+  }
+  if (validemail !== '') {
+    if (validemail.checkValidity()) {
+      resetpassButton.style.display = 'block';
+    } else {
+      resetpassButton.style.display = 'none';
+    }
+  } else if (useridValue !== '') {
     resetpassButton.style.display = 'none';
   }
 }
 
-resetpass() {
+resetpass(appName) {
+  let loginEmail = '';
   //console.log('going to reset your password');
-  let loginEmail = document.getElementsByClassName('loginemail')[0].value;
+  if (appName !== 'PATRIC') {
+    loginEmail = document.getElementsByClassName('loginemail')[0].value;
+  } else {
+    loginEmail = document.getElementsByClassName('userid')[0].value;
+  }
   //put to backend /auth/resetpass
   let bodyData = {'email': loginEmail };
   let fetchData = {
@@ -209,7 +223,7 @@ resetpass() {
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
       this.nevermind('LoginForm');
-      window.location.href = this.frontendUrl + '/user/?email=' + loginEmail + '&form=reset';
+      window.location.href = this.frontendUrl + '/userutil/?email=' + loginEmail + '&form=reset';
     }
   })
   .catch((error) => {
@@ -221,6 +235,7 @@ resetpass() {
 logMeIn(appName) {
   //let useridInput = null;
   let useridValue = '';
+  let emailValue = '';
   const passwordValue = document.getElementsByClassName('loginpass')[0].value;
   //console.log('this is the password given ' + passwordValue);
   //useridInput = document.getElementsByClassName('userid');
@@ -228,7 +243,10 @@ logMeIn(appName) {
     useridValue = document.getElementsByClassName('userid')[0].value;
     console.log(useridValue);
   }
-  let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': passwordValue, 'id': useridValue };
+  if (appName !== 'PATRIC') {
+    emailValue = document.getElementsByClassName('loginemail')[0].value;
+  }
+  let bodyData = {'email': emailValue, 'password': passwordValue, 'id': useridValue };
   //var cookieToken = getCookieToken();
   let fetchData = {
     method: 'POST',
@@ -313,5 +331,3 @@ generateSession(useremail) {
 }
 
 }
-
-

@@ -1,14 +1,41 @@
 var config = require("./config");
+const dotenv = require('dotenv');
+//const fs = require('fs');
+// ignoring this for testing because it is only used for development purposes
+/* istanbul ignore next */
+// if (fs.existsSync('./.env')) {
+//   dotenv.config();
+// }
 //const request = require('request');
 if(config.get("newrelic_license_key")){
 	require('newrelic');
 }
-var express = require('express');
-var path = require('path');
+const cors = require('cors');
+const express = require('express');
+const path = require('path');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+const bodyParser = require('body-parser');
+const bluebird = require('bluebird');
+const user  = require('./backend/model/user/user-router');
+const auth = require('./backend/auth');
+const hello = require('./backend/hello/index');
+//const hello = require('./backend/hello/index');
+const authUtils = require('./backend/auth/authUtils');
+//const config2 = require('./backend/config.js');
+//const routes2 = require('./backend/routes.js');
+const app = express();
+// const enforce = require('express-sslify');
+// const cors = require('cors');
+// const corsOptions =
+// { origin: JSON.parse(process.env.AllowUrl).urls,
+//   credentials: true,
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+//const morgan = require('morgan');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
 var session = require("express-session-unsigned");
 var RedisStore = require('connect-redis')(session);
 var passport = require('passport');
@@ -26,8 +53,6 @@ var apps = require('./routes/apps');
 var uploads = require('./routes/uploads');
 var jobs = require('./routes/jobs');
 var help = require('./routes/help');
-var app = express();
-
 var httpProxy = require('http-proxy');
 var apiProxy = httpProxy.createProxyServer();
 
@@ -41,20 +66,41 @@ app.use(logger('dev'));
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: false}));
 
+// Handle rejected promises globally
+app.use((req, res, next) => {
+  process.on('unhandledRejection', (reason, promise) => {
+    /* istanbul ignore next */
+    next(new Error(reason));
+  });
+  next();
+});
+
+mongoose.Promise = bluebird;
+console.log(process.env.MONGO_DB_URI);
+mongoose.connect(process.env.MONGO_DB_URI, {
+  useMongoClient: true
+});
+
+app.use(helmet());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+//app.use(morgan('tiny'));
+//routes2(app);
+
 app.use(cookieParser(config.get('cookieSecret')));
 
-var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
-app.use(session({
-	store: sessionStore,
-	key: config.get("cookieKey"),
-	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-	//    secret: config.get('cookieSecret'),
-	resave: false,
-	saveUninitialized: true
-}));
+// var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
+// app.use(session({
+// 	store: sessionStore,
+// 	key: config.get("cookieKey"),
+// 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
+// 	//    secret: config.get('cookieSecret'),
+// 	resave: false,
+// 	saveUninitialized: true
+// }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 if(config.get("enableDevAuth")){
 	app.use(function(req, res, next){
@@ -113,24 +159,24 @@ app.use(function(req, res, next){
 // deserializing at the moment to avoid forcing p3-web to depend on the p3-user
 // database directly.  However, req.session.user is populated by p3-user
 // to contain the users' profile, so this isnt' so necessary
+//
+// passport.serializeUser(function(user, done){
+// 	done(null, user.id);
+// });
+//
+// passport.deserializeUser(function(id, done){
+// 	done(null, {id: id});
+// });
 
-passport.serializeUser(function(user, done){
-	done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done){
-	done(null, {id: id});
-});
-
-var proxies = config.get("proxy");
-
-app.use("/p/:proxy/", function(req, res, next){
-	if(proxies[req.params.proxy]){
-		apiProxy.web(req, res, {target: proxies[req.params.proxy]});
-	}else{
-		next();
-	}
-})
+// var proxies = config.get("proxy");
+//
+// app.use("/p/:proxy/", function(req, res, next){
+// 	if(proxies[req.params.proxy]){
+// 		apiProxy.web(req, res, {target: proxies[req.params.proxy]});
+// 	}else{
+// 		next();
+// 	}
+// })
 
 app.use("/portal/portal/patric/Home", [
 	function(req, res, next){
@@ -162,9 +208,18 @@ app.use("/patric/images", express.static(path.join(__dirname, "public/patric/ima
 		res.setHeader("Expires", d.toGMTString());
 	}
 }));
+// const corsOptions =
+// { origin: JSON.parse(process.env.AllowUrl).urls,
+//   credentials: true,
+//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+// };
+// app.use(cors(corsOptions));
+app.use('/auth', auth);
+app.use('/hello', hello);
+app.use('/user', authUtils.ensureAuthenticated, user);
 app.use("/patric/", express.static(path.join(__dirname, 'public/patric/')));
 app.use("/public/", express.static(path.join(__dirname, 'public/')));
-app.use("/user/", express.static(path.join(__dirname, 'public/user/')));
+app.use("/userutil/", express.static(path.join(__dirname, 'public/userutil/')));
 app.use('/', routes);
 app.post("/reportProblem", reportProblem);
 app.use("/workspace", workspace);
@@ -197,14 +252,14 @@ app.get("/logout", [
 	}
 ]);
 
-app.get("/auth/callback",
-function(req, res, next){
-	console.log("Authorization Callback");
-	console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
-	res.render('authcb', {title: 'User Service', request: req});
-	//		res.redirect("/");
-}
-);
+// app.get("/auth/callback",
+// function(req, res, next){
+// 	console.log("Authorization Callback");
+// 	console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
+// 	res.render('authcb', {title: 'User Service', request: req});
+// 	//		res.redirect("/");
+// }
+// );
 
 // app.post('/auth/login', (req, res) => {
 // 	request('http://localhost:7000/auth/login', (error, body) => {
