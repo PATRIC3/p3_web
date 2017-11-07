@@ -1,5 +1,14 @@
 const User = require('../src/user_.js');
 let mockfetch;
+const mockStorage = {setItem: function(item, value) {
+  //do nothing
+}, getItem: function(item) {
+  //do nothing
+}, removeItem: function(item) {
+  //do nothing
+}
+};
+window.localStorage = mockStorage;
 
 // function testAsync(runAsync) {
 //   return (done) => {
@@ -194,4 +203,54 @@ test('it displays the user profile', () => {
   document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:none"></div>';
   user.verifyEmail();
   expect(document.getElementsByClassName('UserProfileForm')[0].style.display).toBe('block');
+});
+
+test('it does not display the user profile form if the user has not logged in', () => {
+  user.formType = 'prefs';
+  user.userToken = null;
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:none"></div>';
+  user.verifyEmail();
+  expect(document.getElementsByClassName('UserProfileForm')[0].style.display).toBe('none');
+});
+
+test('it populates the user pref form with the current user attributes', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.resolve([{'_id': '12345', 'first_name': 'bob', 'last_name': 'jones', 'affiliation': 'self', 'organisms': 'fish', 'interests': 'fishing', 'email': 'bob@smith.com'}])
+    });
+  };
+  user.fetch = mockfetch;
+  //user.userToken = null;
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:block">' +
+  '<input class="uprofFirstName"><input class="uprofLastName"><input class="uprofAff"><input class="uprofOrganisms">' +
+  '<input class="uprofInterests"><input class="uprofEmail"></div>';
+  user.populateForm().then((data) => {
+    expect(document.getElementsByClassName('uprofEmail')[0].value).toBe('bob@smith.com');
+    expect(user.uid).toBe('12345');
+  });
+});
+
+test('it updates user with the user prefs form', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.resolve({message: 'success'})
+    });
+  };
+  user.fetch = mockfetch;
+  //user.userToken = null;
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:block">' +
+  '<input class="uprofFirstName" value="Bob"><input class="uprofLastName" value="Smith"><input class="uprofAff" value="self"><input class="uprofOrganisms" value="dog">' +
+  '<input class="uprofInterests" value="walking"><input class="uprofEmail" value="bob@smith.com"></div>';
+  user.updateUserPrefs().then((data) => {
+    //expect(document.getElementsByClassName('uprofEmail')[0].value).toBe('bob@smith.com');
+    expect(data.message).toBe('success');
+  });
 });

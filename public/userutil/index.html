@@ -25,10 +25,10 @@
           <tr><th colspan="2">ORGANISMS</th></tr>
           <tr><td colspan="2"><input class="uprofOrganisms" name="organisms" style="width:100%"></td></tr>
           <tr><th colspan="2">INTERESTS</th></tr>
-          <tr><td colspan="2"><textarea rows="10" name="interests" style="height:85px;width:100%" value=""></textarea></td></tr>
+          <tr><td colspan="2"><textarea class="uprofInterests" rows="10" name="interests" style="height:85px;width:100%" value=""></textarea></td></tr>
         </tbody>
       </table>
-      <button style="margin-left:200px" onclick="userClass.updateUserPrefs()">Update Profile</button>
+      <button type="button" style="margin-left:200px" onclick="userClass.updateUserPrefs()">Update Profile</button>
     </form>
   </div>
   <p>&nbsp;</p>
@@ -37,7 +37,7 @@
       <label style="display:block"><strong>Email Address</strong></label>
       <input class="uprofEmail" type="email" name="email" required="true" value="" >
       <div style="margin-top:10px; text-align:left">
-      <button style="margin-left:90px" onclick="userClass.updateUserEmail()">Update Email</button>
+      <button type="button" style="margin-left:90px" onclick="userClass.updateUserEmail()">Update Email</button>
     </div>
     </form>
   </div>

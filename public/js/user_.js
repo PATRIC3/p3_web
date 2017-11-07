@@ -3,12 +3,13 @@ class User {
   constructor() {
     this.backendUrl = '';
     this.frontendUrl = 'http://localhost:3000';
-
+    
     this.searchParams = new URLSearchParams(window.location.search);
-    //console.log(searchParams.get('email'));
+    this.uid = '';
     this.userEmail = this.searchParams.get('email');
     this.formType = '';
     this.formType += this.searchParams.get('form');
+    this.userToken = localStorage.getItem('token');
     this.verifyEmail();
   }
 
@@ -44,7 +45,77 @@ class User {
     if (this.formType === 'prefs') {
       document.getElementsByClassName('RegistrationForm')[0].style.display = 'none';
       document.getElementsByClassName('UserProfileForm')[0].style.display = 'block';
+      console.log('this is the user token: ' + this.userToken);
+      if (this.userToken === null) {
+        this.nevermind('UserProfileForm');
+      } else {
+            this.populateForm();
+      }
     }
+  }
+
+  // async populateForm() {
+  //   const currentuser = await this.getuser();
+  //   console.log('this is the current user: ' + currentuser);
+  // }
+
+  populateForm() {
+    let bodyData = {'email': localStorage.getItem('useremail') };
+    //var cookieToken = getCookieToken();
+    let fetchData = {
+      method: 'POST',
+      //credentials: 'same-origin',
+      body: JSON.stringify(bodyData),
+      headers: {
+        //'X-CSRFTOKEN': cookieToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    return fetch(this.backendUrl + '/user/', fetchData)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      document.getElementsByClassName('uprofFirstName')[0].value = data[0].first_name;
+      document.getElementsByClassName('uprofLastName')[0].value = data[0].last_name;
+      document.getElementsByClassName('uprofAff')[0].value = data[0].affiliation;
+      document.getElementsByClassName('uprofOrganisms')[0].value = data[0].organisms;
+      document.getElementsByClassName('uprofInterests')[0].value = data[0].interests;
+      document.getElementsByClassName('uprofEmail')[0].value = data[0].email;
+      this.uid = data[0]._id;
+      //console.log(data);
+    });
+  }
+
+  updateUserPrefs() {
+    //document.getElementsByClassName('uprofEmail')[0].value = data[0].email;
+    //this.uid = data[0]._id;
+    let bodyData = {'first_name': document.getElementsByClassName('uprofFirstName')[0].value,
+    'last_name': document.getElementsByClassName('uprofLastName')[0].value,
+    'affiliation': document.getElementsByClassName('uprofAff')[0].value,
+    'organisms': document.getElementsByClassName('uprofOrganisms')[0].value,
+    'interests': document.getElementsByClassName('uprofInterests')[0].value};
+
+    //email': localStorage.getItem('useremail') };
+    //var cookieToken = getCookieToken();
+    let fetchData = {
+      method: 'PUT',
+      //credentials: 'same-origin',
+      body: JSON.stringify(bodyData),
+      headers: {
+        //'X-CSRFTOKEN': cookieToken,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    return fetch(this.backendUrl + '/user/' + this.uid, fetchData)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      this.nevermind('UserProfileForm');
+    });
   }
 
   validateForm() {
@@ -107,7 +178,7 @@ class User {
       // return data.message;
     }
     this.nevermind('RegistrationForm');
-    window.location.href = this.frontendUrl + '/';
+    //window.location.href = this.frontendUrl + '/';
 
   })
   .catch((error) => {
@@ -143,7 +214,7 @@ updateUser() {
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
       this.nevermind('RegistrationForm');
-      window.location.href = this.frontendUrl + '/';
+      //window.location.href = this.frontendUrl + '/';
     }
   })
   .catch((error) => {
@@ -158,7 +229,9 @@ nevermind(className) {
   if (regform1.length > 0) {
     regform1[0].style.display = 'none';
   }
-    window.location.href = this.frontendUrl + '/';
+  window.location.href = this.frontendUrl + '/';
 }
 
 }
+
+

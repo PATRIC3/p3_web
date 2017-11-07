@@ -287,6 +287,7 @@ logMeIn(appName) {
     //console.log(data);
     if (data.token !== undefined) {
       localStorage.setItem('token', data.token);
+      localStorage.setItem('useremail', data.email);
       this.nevermind('LoginForm');
       let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
       hideWithAuth.style.display = 'none';
