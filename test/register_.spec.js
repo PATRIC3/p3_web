@@ -346,12 +346,14 @@ test('login the PATRIC user', () => {
   reg.fetch = mockfetch;
   const mockStorage = {setItem: function(item, value) {
     //do nothing
+  }, getItem: function(item, value) {
+    //do nothing
   }};
   window.localStorage = mockStorage;
-  document.body.innerHTML += '<div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
+  document.body.innerHTML += '<div class="ShowWAuth"></div><div class="HideWAuth"></div>';
   reg.logMeIn('PATRIC').then((data) => {
     expect(data.token).toBe('lsdfldjflsdjlfdjfsjdlf');
-    let showA = document.getElementsByClassName('ShowWithAuth')[0];
+    let showA = document.getElementsByClassName('ShowWAuth')[0];
     expect(showA.style.display).toBe('block');
   });
 });
@@ -374,12 +376,14 @@ test('login the other app user', () => {
   reg.fetch = mockfetch;
   const mockStorage = {setItem: function(item, value) {
     //do nothing
+  }, getItem: function(item, value) {
+    //do nothing
   }};
   window.localStorage = mockStorage;
-  document.body.innerHTML += '<div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
+  document.body.innerHTML += '<div class="ShowWAuth"></div><div class="HideWAuth"></div>';
   reg.logMeIn('OtherApp').then((data) => {
     expect(data.token).toBe('lsdfldjflsdjlfdjfsjdlf');
-    let showA = document.getElementsByClassName('ShowWithAuth')[0];
+    let showA = document.getElementsByClassName('ShowWAuth')[0];
     expect(showA.style.display).toBe('block');
   });
 });
@@ -442,9 +446,9 @@ test('logs out the user', () => {
     //do nothing
   }};
   window.localStorage = mockStorage;
-  document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWithAuth"></div><div class="HideWithAuth"></div>';
+  document.body.innerHTML += '<div class="loginerror"></div><div class="ShowWAuth"></div><div class="HideWAuth"></div>';
   reg.logout();
-  let showA = document.getElementsByClassName('ShowWithAuth')[0];
+  let showA = document.getElementsByClassName('ShowWAuth')[0];
   expect(showA.style.display).toBe('none');
 });
 
@@ -466,4 +470,34 @@ test('Generates a session for PATRIC', () => {
   reg.generateSession('joe@smith.com').then((data) => {
     expect(data.message).toBe('success');
   });
+});
+
+test('it displays account and logout buttons when the user is logged in', () => {
+  const mockStorage = {getItem: function(item, value) {
+    return '12345';
+  }, removeItem: function(item) {
+    //do nothing
+  }};
+  window.localStorage = mockStorage;
+  document.body.innerHTML = '<div class="HideWAuth"></div><div class="ShowWAuth"></div>';
+  reg.checkIfLoggedIn();
+  expect(document.getElementsByClassName('ShowWAuth')[0].style.display).toBe('block');
+  expect(document.getElementsByClassName('HideWAuth')[0].style.display).toBe('none');
+});
+
+test('it does not displays account and logout buttons when the user is not logged in', () => {
+  const mockStorage = {getItem: function(item, value) {
+    return null;
+  }, removeItem: function(item) {
+    //do nothing
+  }};
+  window.localStorage = mockStorage;
+  document.body.innerHTML = '<div class="HideWAuth" style="display:block"></div><div class="ShowWAuth" style="display:none"></div>';
+  reg.checkIfLoggedIn();
+  expect(document.getElementsByClassName('ShowWAuth')[0].style.display).toBe('none');
+  expect(document.getElementsByClassName('HideWAuth')[0].style.display).toBe('block');
+});
+
+test('it navigates to the user preferences page', () => {
+  reg.userAccount();
 });

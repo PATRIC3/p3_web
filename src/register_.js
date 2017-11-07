@@ -4,7 +4,19 @@ class Register {
     this.backendUrl = 'http://localhost:7000';
     this.fetch = Fetch;
     this.frontendUrl = 'http://localhost:3000';
-    //this.errorMessage = '';
+    //window.onload(this.checkIfLoggedIn());
+  }
+  checkIfLoggedIn() {
+    console.log('checking if I am already logged in');
+    if (localStorage.getItem('token') !== null) {
+      let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
+      console.log('this is local storage :' + localStorage.getItem('token'));
+      hideWithAuth.style.display = 'none';
+      console.log('this is the hide with auth element' + hideWithAuth);
+      let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
+      showWithAuth.style.display = 'block';
+
+    }
   }
   register(appName) {
     //console.log('show me a registration form here!');
@@ -270,29 +282,14 @@ logMeIn(appName) {
       'Content-Type': 'application/json'
     }
   };
-
-  // function handleErrors(response) {
-  //   if (!response.ok) {
-  //     throw Error(response.statusText);
-  //   }
-  //   return response;
-  // }
   return this.fetch(this.backendUrl + '/auth/login', fetchData)
-  //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
-    //console.log(data.json());
-    //console.log(data.token);
-    //const token = data.json();
-    //console.log(data);
     if (data.token !== undefined) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('useremail', data.email);
+      this.checkIfLoggedIn();
       this.nevermind('LoginForm');
-      let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
-      hideWithAuth.style.display = 'none';
-      let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
-      showWithAuth.style.display = 'block';
       if (appName === 'PATRIC') {
         this.generateSession(data.email);
       }
@@ -312,9 +309,10 @@ logMeIn(appName) {
 
 logout() {
   localStorage.removeItem('token');
-  let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+  localStorage.removeItem('useremail');
+  let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
   hideWithAuth.style.display = 'block';
-  let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+  let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
   showWithAuth.style.display = 'none';
   window.location.href = this.frontendUrl + '/';
 }
@@ -341,6 +339,10 @@ generateSession(useremail) {
   .then((data) => {
     console.log(data);
   });
+}
+
+userAccount() {
+  window.location.href = this.frontendUrl + '/userutil/?form=prefs';
 }
 
 }

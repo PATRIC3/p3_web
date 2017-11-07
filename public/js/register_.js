@@ -4,7 +4,19 @@ class Register {
     this.backendUrl = '';
     
     this.frontendUrl = 'http://localhost:3000';
-    //this.errorMessage = '';
+    //window.onload(this.checkIfLoggedIn());
+  }
+  checkIfLoggedIn() {
+    console.log('checking if I am already logged in');
+    if (localStorage.getItem('token') !== null) {
+      let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
+      console.log('this is local storage :' + localStorage.getItem('token'));
+      hideWithAuth.style.display = 'none';
+      console.log('this is the hide with auth element' + hideWithAuth);
+      let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
+      showWithAuth.style.display = 'block';
+
+    }
   }
   register(appName) {
     //console.log('show me a registration form here!');
@@ -288,6 +300,7 @@ logMeIn(appName) {
     if (data.token !== undefined) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('useremail', data.email);
+      this.checkIfLoggedIn();
       this.nevermind('LoginForm');
       let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
       hideWithAuth.style.display = 'none';
@@ -312,6 +325,7 @@ logMeIn(appName) {
 
 logout() {
   localStorage.removeItem('token');
+  localStorage.removeItem('useremail');
   let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
   hideWithAuth.style.display = 'block';
   let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
@@ -341,6 +355,10 @@ generateSession(useremail) {
   .then((data) => {
     console.log(data);
   });
+}
+
+userAccount() {
+  window.location.href = this.frontendUrl + '/userutil/?form=prefs';
 }
 
 }
