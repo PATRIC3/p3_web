@@ -1,4 +1,4 @@
-var config = require("./config");
+let config = require('./config');
 const dotenv = require('dotenv');
 //const fs = require('fs');
 // ignoring this for testing because it is only used for development purposes
@@ -7,13 +7,13 @@ const dotenv = require('dotenv');
 //   dotenv.config();
 // }
 //const request = require('request');
-if(config.get("newrelic_license_key")){
+if (config.get('newrelic_license_key')) {
 	require('newrelic');
 }
 const cors = require('cors');
 const express = require('express');
 const path = require('path');
-const mongoose = require('mongoose');
+const mongoose = require('./backend/node_modules/mongoose');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
 const bluebird = require('bluebird');
@@ -33,28 +33,28 @@ const app = express();
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // };
 //const morgan = require('morgan');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var session = require("express-session-unsigned");
-var RedisStore = require('connect-redis')(session);
-var passport = require('passport');
-var package = require("./package.json");
+let favicon = require('serve-favicon');
+let logger = require('morgan');
+let cookieParser = require('cookie-parser');
+let session = require('express-session-unsigned');
+let RedisStore = require('connect-redis')(session);
+let passport = require('passport');
+const packagejson = require('./package.json');
 //var backendUrl = 'http://localhost:7000'; //replace this with a variable used on prod server
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var reportProblem = require('./routes/reportProblem');
-var workspace = require('./routes/workspace');
-var viewers = require('./routes/viewers');
-var remotePage = require('./routes/remotePage');
-var search = require('./routes/search');
-var contentViewer = require("./routes/content");
-var apps = require('./routes/apps');
-var uploads = require('./routes/uploads');
-var jobs = require('./routes/jobs');
-var help = require('./routes/help');
-var httpProxy = require('http-proxy');
-var apiProxy = httpProxy.createProxyServer();
+let routes = require('./routes/index');
+let users = require('./routes/users');
+let reportProblem = require('./routes/reportProblem');
+let workspace = require('./routes/workspace');
+let viewers = require('./routes/viewers');
+let remotePage = require('./routes/remotePage');
+let search = require('./routes/search');
+let contentViewer = require('./routes/content');
+let apps = require('./routes/apps');
+let uploads = require('./routes/uploads');
+let jobs = require('./routes/jobs');
+let help = require('./routes/help');
+let httpProxy = require('http-proxy');
+let apiProxy = httpProxy.createProxyServer();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -102,53 +102,53 @@ app.use(cookieParser(config.get('cookieSecret')));
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-if(config.get("enableDevAuth")){
-	app.use(function(req, res, next){
-		var user = config.get("devUser");
+if (config.get('enableDevAuth')) {
+	app.use(function(req, res, next) {
+		let user = config.get('devUser');
 		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
-		if(user && (!req.isAuthenticated || !req.isAuthenticated() )){
+		if (user && (!req.isAuthenticated || !req.isAuthenticated() )) {
 			// console.log("Auto Login Dev User");
-			req.login(user, function(err){
+			req.login(user, function(err) {
 				// console.log("login user: ", user);
-				if(err){
+				if (err) {
 					return next(err);
 				}
 				// console.log("Dev User logged in.  Setup Session");
-				if(user && req.session){
+				if (user && req.session) {
 					delete user.password;
 					req.session.userProfile = user;
-					req.session.authorizationToken = config.get("devAuthorizationToken");
-				}else{
-					console.log("NO Session");
+					req.session.authorizationToken = config.get('devAuthorizationToken');
+				} else {
+					console.log('NO Session');
 				}
 				next();
 			});
-		}else{
+		} else {
 			next();
 		}
 	});
 }
 
-app.use(function(req, res, next){
+app.use(function(req, res, next) {
 	// console.log("Config.production: ", config.production);
 	// console.log("Session Data: ", req.session);
 	req.config = config;
-	req.production = config.get("production") || false;
-	req.productionLayers = ["p3/layer/core"];
-	req.package = package;
+	req.production = config.get('production') || false;
+	req.productionLayers = ['p3/layer/core'];
+	req.package = packagejson;
 	req.applicationOptions = {
-		version: "3.0",
-		gaID: config.get("gaID") || false,
-		workspaceServiceURL: config.get("workspaceServiceURL"),
-		appServiceURL: config.get("appServiceURL"),
-		dataServiceURL: config.get("dataServiceURL"),
-		homologyServiceURL: config.get("homologyServiceURL"),
-		genomedistanceServiceURL: config.get("genomedistanceServiceURL"),
-		compareregionServiceURL: config.get("compareregionServiceURL"),
-		enableDevTools: config.get("enableDevTools"),
-		accountURL: config.get("accountURL"),
-		appLabel: config.get("appLabel"),
-		appVersion: package.version
+		version: '3.0',
+		gaID: config.get('gaID') || false,
+		workspaceServiceURL: config.get('workspaceServiceURL'),
+		appServiceURL: config.get('appServiceURL'),
+		dataServiceURL: config.get('dataServiceURL'),
+		homologyServiceURL: config.get('homologyServiceURL'),
+		genomedistanceServiceURL: config.get('genomedistanceServiceURL'),
+		compareregionServiceURL: config.get('compareregionServiceURL'),
+		enableDevTools: config.get('enableDevTools'),
+		accountURL: config.get('accountURL'),
+		appLabel: config.get('appLabel'),
+		appVersion: packagejson.version
 	};
 	// console.log("Application Options: ", req.applicationOptions);
 	next();
@@ -178,34 +178,34 @@ app.use(function(req, res, next){
 // 	}
 // })
 
-app.use("/portal/portal/patric/Home", [
-	function(req, res, next){
-		console.log("Got Portal Request");
+app.use('/portal/portal/patric/Home', [
+	function(req, res, next) {
+		console.log('Got Portal Request');
 		next();
 	},
-	express.static(path.join(__dirname, "public/cached.html"))
+	express.static(path.join(__dirname, 'public/cached.html'))
 ]);
 
-app.use("*jbrowse.conf", express.static(path.join(__dirname, "public/js/jbrowse.conf")));
-app.use("/js/" + package.version + "/", [
+app.use('*jbrowse.conf', express.static(path.join(__dirname, 'public/js/jbrowse.conf')));
+app.use('/js/' + packagejson.version + '/', [
 	express.static(path.join(__dirname, 'public/js/release/'), {
-		maxage: "356d",
+		maxage: '356d',
 		/*etag:false,*/
-		setHeaders: function(res, path){
-			var d = new Date();
+		setHeaders: function(res, path) {
+			let d = new Date();
 			d.setYear(d.getFullYear() + 1);
-			res.setHeader("Expires", d.toGMTString());
+			res.setHeader('Expires', d.toGMTString());
 		}
-	}),
+	})
 ]);
-app.use("/js/swfobject/", express.static(path.join(__dirname, 'node_modules/swfobject-amd/')));
-app.use("/js/", express.static(path.join(__dirname, 'public/js/')));
-app.use("/patric/images", express.static(path.join(__dirname, "public/patric/images/"), {
-	maxage: "365d",
-	setHeaders: function(res, path){
-		var d = new Date();
+app.use('/js/swfobject/', express.static(path.join(__dirname, 'node_modules/swfobject-amd/')));
+app.use('/js/', express.static(path.join(__dirname, 'public/js/')));
+app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/images/'), {
+	maxage: '365d',
+	setHeaders: function(res, path) {
+		let d = new Date();
 		d.setYear(d.getFullYear() + 1);
-		res.setHeader("Expires", d.toGMTString());
+		res.setHeader('Expires', d.toGMTString());
 	}
 }));
 // const corsOptions =
@@ -217,35 +217,35 @@ app.use("/patric/images", express.static(path.join(__dirname, "public/patric/ima
 app.use('/auth', auth);
 app.use('/hello', hello);
 app.use('/user', authUtils.ensureAuthenticated, user);
-app.use("/patric/", express.static(path.join(__dirname, 'public/patric/')));
-app.use("/public/", express.static(path.join(__dirname, 'public/')));
-app.use("/userutil/", express.static(path.join(__dirname, 'public/userutil/')));
+app.use('/patric/', express.static(path.join(__dirname, 'public/patric/')));
+app.use('/public/', express.static(path.join(__dirname, 'public/')));
+app.use('/userutil/', express.static(path.join(__dirname, 'public/userutil/')));
 app.use('/', routes);
-app.post("/reportProblem", reportProblem);
-app.use("/workspace", workspace);
-app.use("/content", contentViewer);
-app.use("/remote", remotePage);
-app.use("/view", viewers);
-app.use("/search", search);
-app.use("/app", apps);
-app.use("/job", jobs);
-app.use("/help", help);
-app.use("/uploads", uploads);
+app.post('/reportProblem', reportProblem);
+app.use('/workspace', workspace);
+app.use('/content', contentViewer);
+app.use('/remote', remotePage);
+app.use('/view', viewers);
+app.use('/search', search);
+app.use('/app', apps);
+app.use('/job', jobs);
+app.use('/help', help);
+app.use('/uploads', uploads);
 app.use('/users', users);
-app.get("/login",
-function(req, res, next){
-	if(!req.isAuthenticated || !req.isAuthenticated()){
-		res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
-	}else{
+app.get('/login',
+function(req, res, next) {
+	if (!req.isAuthenticated || !req.isAuthenticated()) {
+		res.redirect(302, config.get('authorizationURL') + '?application_id=' + config.get('application_id'));
+	} else {
 		res.render('authcb', {title: 'User Service', request: req});
 	}
 }
 );
 
-app.get("/logout", [
-	function(req, res, next){
-		console.log("req.params.location: ", req.param('location'));
-		var redir = req.param('location');
+app.get('/logout', [
+	function(req, res, next) {
+		console.log('req.params.location: ', req.param('location'));
+		let redir = req.param('location');
 		req.session.destroy();
 		req.logout();
 		res.redirect(redir || '/');
@@ -268,8 +268,8 @@ app.get("/logout", [
 // });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next){
-	var err = new Error('Not Found');
+app.use(function(req, res, next) {
+	let err = new Error('Not Found');
 	err.status = 404;
 	next(err);
 });
@@ -278,8 +278,8 @@ app.use(function(req, res, next){
 
 // development error handler
 // will print stacktrace
-if(app.get('env') === 'development'){
-	app.use(function(err, req, res, next){
+if (app.get('env') === 'development') {
+	app.use(function(err, req, res, next) {
 		res.status(err.status || 500);
 		res.render('error', {
 			message: err.message,
@@ -290,7 +290,7 @@ if(app.get('env') === 'development'){
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res, next){
+app.use(function(err, req, res, next) {
 	res.status(err.status || 500);
 	res.render('error', {
 		message: err.message,

@@ -1,12 +1,12 @@
 #!/usr/bin/env node
-var debug = require('debug')('p3-web');
-var app = require('../app');
-var conf = require('../config');
-const mongoose = require('mongoose');
-debug("Launching p3-www...");
+let debug = require('debug')('p3-web');
+let app = require('../app');
+let conf = require('../config');
+const mongoose = require('../backend/node_modules/mongoose');
+debug('Launching p3-www...');
 
 app.set('port', conf.get('http_port') || 3000);
 console.log(mongoose.connection.readyState);
-var server = app.listen(app.get('port'), function(){
+const server = app.listen(app.get('port'), function() {
 	debug('Express server listening on port ' + server.address().port);
 });

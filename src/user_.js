@@ -1,7 +1,7 @@
 const Fetch = require('isomorphic-fetch');
 class User {
   constructor() {
-    this.backendUrl = 'http://localhost:7000';
+    this.backendUrl = '';
     this.frontendUrl = 'http://localhost:3000';
     this.fetch = Fetch;
     this.searchParams = new URLSearchParams(window.location.search);

@@ -3,9 +3,8 @@
   "version": "3.4.13",
   "private": true,
   "scripts": {
-    "dev": "gulp srcfiles && gulp startredis && npm run moveuser && npm run startback && npm start",
+    "dev": "gulp srcfiles && gulp startredis && npm run moveuser && npm start",
     "start": "node ./bin/p3-web",
-    "startback": "gnome-terminal -e 'node ./backend/index.js'",
     "installglobals": "npm install -g yarn@latest && npm install -g gulp@latest && npm install",
     "buildClient": "./buildClient.sh",
     "buildBack": "./buildBack.sh && cp .env backend/ && cp src/index.html backend/frontend/dist/",
@@ -54,7 +53,6 @@
     "jscs": "^3.0.7",
     "jwt-simple": "^0.5.0",
     "moment": "^2.15.2",
-    "mongoose": "^4.10.0",
     "morgan": "^1.9.0",
     "nconf": "^0.7.1",
     "newrelic": "^2.2.2",
