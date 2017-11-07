@@ -103,7 +103,7 @@ define([
 			}), function(response){
 
 				this.superclass = response.response.docs[0].superclass;
-				this.class = response.response.docs[0].class;
+				this.subsystemClass = response.response.docs[0].class;
 				this.subclass = response.response.docs[0].subclass;
 				this.subsystemName = response.response.docs[0].subsystem_name;
 
@@ -113,8 +113,8 @@ define([
 					headerString += this.superclass + " » ";
 				}
 
-				if (this.class !== "") {
-					headerString += this.class + " » ";
+				if (this.subsystemClass !== "") {
+					headerString += this.subsystemClass + " » ";
 				}
 
 				if (this.subclass !== "") {
