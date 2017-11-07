@@ -2,7 +2,7 @@
 class Register {
   constructor() {
     this.backendUrl = '';
-
+    
     this.frontendUrl = 'http://localhost:3000';
     //this.errorMessage = '';
   }
@@ -343,3 +343,5 @@ generateSession(useremail) {
 }
 
 }
+
+

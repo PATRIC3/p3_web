@@ -188,3 +188,10 @@ test('it catches errors on update the user PUT', () => {
 test('if the element does not exist, it does not try to hide it', () => {
   user.nevermind('yoyo');
 });
+
+test('it displays the user profile', () => {
+  user.formType = 'prefs';
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:none"></div>';
+  user.verifyEmail();
+  expect(document.getElementsByClassName('UserProfileForm')[0].style.display).toBe('block');
+});

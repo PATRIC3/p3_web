@@ -26,6 +26,7 @@ class User {
       formTitle = 'Verify Your Email Address';
       formButton = 'userClass.updateUser()';
     }
+
     emailVarifyForm.className = 'RegistrationForm';
     emailVarifyForm.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">' + formTitle + '</h2><form>' +
     '<div style="padding:2px; margin:10px;"><table><tbody><tr><th style="text-align:left">Email</th></tr><tr><td>' +
@@ -33,14 +34,17 @@ class User {
     '</td></tr><tr><td> </td></tr>' + passInput + '<tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
     '<input type="text" pattern=".{5,}" title="5 digit code" name="code" class="code" style="width:150px;" required onchange="userClass.validateForm()" onfocus="userClass.validateForm()" onkeydown="userClass.validateForm()" onkeyup="userClass.validateForm()" onpaste="userClass.validateForm()"></td></tr>' +
     '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
-    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="' + formButton + '">Submit</button><button type="button" onclick="nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
+    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton" onclick="' + formButton + '">Submit</button><button type="button" onclick="userClass.nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
     '<div class="loginerror" style="color:red"></div>';
     let home = document.getElementsByClassName('home');
     home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
     if (this.userEmail !== '' && this.userEmail !== null && this.userEmail !== undefined) {
       document.getElementsByClassName('email')[0].value = this.userEmail;
     }
-    //console.log(home[0].firstChild);
+    if (this.formType === 'prefs') {
+      document.getElementsByClassName('RegistrationForm')[0].style.display = 'none';
+      document.getElementsByClassName('UserProfileForm')[0].style.display = 'block';
+    }
   }
 
   validateForm() {
@@ -103,7 +107,7 @@ class User {
       // return data.message;
     }
     this.nevermind('RegistrationForm');
-    window.location.href = this.frontendUrl + '/';
+    //window.location.href = this.frontendUrl + '/';
 
   })
   .catch((error) => {
@@ -139,7 +143,7 @@ updateUser() {
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
       this.nevermind('RegistrationForm');
-      window.location.href = this.frontendUrl + '/';
+      //window.location.href = this.frontendUrl + '/';
     }
   })
   .catch((error) => {
@@ -154,6 +158,7 @@ nevermind(className) {
   if (regform1.length > 0) {
     regform1[0].style.display = 'none';
   }
+  window.location.href = this.frontendUrl + '/';
 }
 
 }
