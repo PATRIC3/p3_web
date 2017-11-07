@@ -102,11 +102,26 @@ define([
 				data: query
 			}), function(response){
 
+				this.superclass = response.response.docs[0].superclass;
+				this.class = response.response.docs[0].class;
+				this.subclass = response.response.docs[0].subclass;
 				this.subsystemName = response.response.docs[0].subsystem_name;
-				this.subsystemClass = response.response.docs[0].class;
-				this.subclass = response.response.docs[0].superclass;
 
-				$('#subSystemHeatmap').html("Subsystem View » " + this.subclass + " » " + this.subsystemClass + " » " + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + "</span>");
+				var headerString = "Subsystem View » ";
+
+				if (this.superclass !== "") {
+					headerString += this.superclass + " » ";
+				}
+
+				if (this.class !== "") {
+					headerString += this.class + " » ";
+				}
+
+				if (this.subclass !== "") {
+					headerString += this.subclass + " » ";
+				}
+				
+				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + "</span>");
 
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
