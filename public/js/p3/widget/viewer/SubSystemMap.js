@@ -107,7 +107,7 @@ define([
 				this.subclass = response.response.docs[0].subclass;
 				this.subsystemName = response.response.docs[0].subsystem_name;
 
-				var headerString = "Subsystem View » ";
+				var headerString = "Subsystem View <br>";
 
 				if (this.superclass !== "") {
 					headerString += this.superclass + " » ";
