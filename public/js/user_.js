@@ -3,12 +3,12 @@ class User {
   constructor() {
     this.backendUrl = '';
     this.frontendUrl = 'http://localhost:3000';
+    
     this.searchParams = new URLSearchParams(window.location.search);
     //console.log(searchParams.get('email'));
     this.userEmail = this.searchParams.get('email');
     this.formType = '';
     this.formType += this.searchParams.get('form');
-
     this.verifyEmail();
   }
 
@@ -157,3 +157,5 @@ nevermind(className) {
 }
 
 }
+
+

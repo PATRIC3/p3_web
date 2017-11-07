@@ -2,6 +2,7 @@
 class Register {
   constructor() {
     this.backendUrl = '';
+
     this.frontendUrl = 'http://localhost:3000';
     //this.errorMessage = '';
   }
@@ -178,20 +179,31 @@ validateLogin() {
   if (validemail !== '') {
     if (validemail.checkValidity() && validpass.checkValidity()) {
       logbutton.style.display = 'block';
+    } else {
+      logbutton.style.display = 'none';
     }
-  } else if (useridValue !== '' && validpass.checkValidity()) {
-    logbutton.style.display = 'block';
-  } else {
-    logbutton.style.display = 'none';
   }
+  if (useridValue !== '') {
+    if (validpass.checkValidity()) {
+      logbutton.style.display = 'block';
+    } else {
+      logbutton.style.display = 'none';
+    }
+  }
+  // } && validpass.checkValidity()) {
+  //   logbutton.style.display = 'block';
+  // } else {
+  //   logbutton.style.display = 'none';
+  // }
   if (validemail !== '') {
     if (validemail.checkValidity()) {
       resetpassButton.style.display = 'block';
     } else {
       resetpassButton.style.display = 'none';
     }
-  } else if (useridValue !== '') {
-    resetpassButton.style.display = 'none';
+  }
+  if (useridValue !== '') {
+    resetpassButton.style.display = 'block';
   }
 }
 

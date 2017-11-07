@@ -1,7 +1,7 @@
 const Fetch = require('isomorphic-fetch');
 class Register {
   constructor() {
-    this.backendUrl = '';
+    this.backendUrl = 'http://localhost:7000';
     this.fetch = Fetch;
     this.frontendUrl = 'http://localhost:3000';
     //this.errorMessage = '';

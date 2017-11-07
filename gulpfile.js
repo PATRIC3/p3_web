@@ -1,12 +1,13 @@
 const gulp = require('gulp');
 const replace = require('gulp-replace');
 const config = require('./config.js');
+console.log(config.get('backendUrl'));
 //const RedisServer = require('redis-server');
 //const server = new RedisServer(6379);
 
 gulp.task('srcfiles', function() {
   gulp.src(['./src/register_.js'])
-  .pipe(replace('this.backendUrl = \'\';', 'this.backendUrl =' + config.get('backendUrl')))
+  .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   .pipe(replace('http://localhost:3000', config.get('frontendUrl')))
   .pipe(replace('module.exports = Register;', ''))
   .pipe(replace('const Fetch = require(\'isomorphic-fetch\');', ''))
@@ -14,7 +15,7 @@ gulp.task('srcfiles', function() {
   .pipe(replace('this.fetch', 'fetch'))
   .pipe(gulp.dest('./public/js/'));
   gulp.src(['./src/user_.js'])
-  .pipe(replace('this.backendUrl = \'\';', 'this.backendUrl =' + config.get('backendUrl')))
+  .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   .pipe(replace('http://localhost:3000', config.get('frontendUrl')))
   .pipe(replace('const Fetch = require(\'isomorphic-fetch\');', ''))
   .pipe(replace('this.fetch = Fetch;', ''))
