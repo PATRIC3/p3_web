@@ -282,30 +282,14 @@ logMeIn(appName) {
       'Content-Type': 'application/json'
     }
   };
-
-  // function handleErrors(response) {
-  //   if (!response.ok) {
-  //     throw Error(response.statusText);
-  //   }
-  //   return response;
-  // }
   return fetch(this.backendUrl + '/auth/login', fetchData)
-  //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
-    //console.log(data.json());
-    //console.log(data.token);
-    //const token = data.json();
-    //console.log(data);
     if (data.token !== undefined) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('useremail', data.email);
       this.checkIfLoggedIn();
       this.nevermind('LoginForm');
-      let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
-      hideWithAuth.style.display = 'none';
-      let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
-      showWithAuth.style.display = 'block';
       if (appName === 'PATRIC') {
         this.generateSession(data.email);
       }
@@ -326,9 +310,9 @@ logMeIn(appName) {
 logout() {
   localStorage.removeItem('token');
   localStorage.removeItem('useremail');
-  let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+  let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
   hideWithAuth.style.display = 'block';
-  let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+  let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
   showWithAuth.style.display = 'none';
   window.location.href = this.frontendUrl + '/';
 }

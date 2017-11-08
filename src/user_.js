@@ -49,15 +49,10 @@ class User {
       if (this.userToken === null) {
         this.nevermind('UserProfileForm');
       } else {
-            this.populateForm();
+        this.populateForm();
       }
     }
   }
-
-  // async populateForm() {
-  //   const currentuser = await this.getuser();
-  //   console.log('this is the current user: ' + currentuser);
-  // }
 
   populateForm() {
     let bodyData = {'email': localStorage.getItem('useremail') };
@@ -86,6 +81,32 @@ class User {
       this.uid = data[0]._id;
       //console.log(data);
     });
+  }
+
+  validateUserPrefs() {
+    console.log('going to validate firstname, lastname, and email');
+    let profBut = document.getElementsByClassName('updateprofbutton')[0];
+    let emBut = document.getElementsByClassName('updateemailbutton')[0];
+    let fname = document.getElementsByClassName('uprofFirstName')[0].value;
+    let fspace = fname.split(' ');
+    console.log(fspace.length);
+    let lname = document.getElementsByClassName('uprofLastName')[0].value;
+    let lspace = lname.split(' ');
+    let isemailvalid = document.getElementsByClassName('uprofEmail')[0].checkValidity();
+    let emValue = document.getElementsByClassName('uprofEmail')[0].value;
+    let edot = emValue.split('.');
+    console.log(isemailvalid);
+    //let emvalue = document.getElementsByClassName('uprofLastName')[0]
+    if (fname !== '' && lname !== '' && fspace.length === 1 && lspace.length === 1) {
+      profBut.style.display = 'block';
+    } else {
+      profBut.style.display = 'none';
+    }
+    if (isemailvalid && edot.length === 2) {
+      emBut.style.display = 'block';
+    } else {
+      emBut.style.display = 'none';
+    }
   }
 
   updateUserPrefs() {

@@ -15,22 +15,8 @@ th {
   /*max-width: 2in;*/
 }
 
-.loginbutton:hover {
-  background-color: #87b934;
-}
-
-.regbutton:hover {
-  background-color: #87b934;
-}
-
-.registerbutton:hover {
-  background-color: #87b934;
-}
-
-.resetpass:hover {
-  background-color: white;
-}
-
+.updateemailbutton,
+.updateprofbutton,
 .resetpass,
 .regbutton,
 .registerbutton,
@@ -69,4 +55,28 @@ th {
   padding-bottom: 0;
   padding-top: 6px;
   font-weight: bold;
+}
+
+.updateemailbutton:hover, {
+  background-color: #87b934;
+}
+
+.updateprofbutton:hover, {
+  background-color: #87b934;
+}
+
+.loginbutton:hover, {
+  background-color: #87b934;
+}
+
+.regbutton:hover {
+  background-color: #87b934;
+}
+
+.registerbutton:hover {
+  background-color: #87b934;
+}
+
+.resetpass:hover {
+  background-color: white;
 }

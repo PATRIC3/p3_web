@@ -254,3 +254,27 @@ test('it updates user with the user prefs form', () => {
     expect(data.message).toBe('success');
   });
 });
+
+test('it validates the user prefs form', () => {
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:block">' +
+  '<input class="uprofFirstName" value="Bob"><input class="uprofLastName" value="Smith"><input class="uprofAff" value="self"><input class="uprofOrganisms" value="dog">' +
+  '<input class="uprofInterests" value="walking"><button class="updateprofbutton"><input class="uprofEmail" value="bob@smith.com"><button class="updateemailbutton"></div>';
+  document.getElementsByClassName('uprofEmail')[0].checkValidity = function() {return true;};
+  user.validateUserPrefs();
+  let emailbutton = document.getElementsByClassName('updateemailbutton')[0];
+  let userprofbutton = document.getElementsByClassName('updateprofbutton')[0];
+  expect(emailbutton.style.display).toBe('block');
+  expect(userprofbutton.style.display).toBe('block');
+});
+
+test('it validates the user prefs form and email when fields are invalid', () => {
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:block">' +
+  '<input class="uprofFirstName" value="Bob b"><input class="uprofLastName" value="Smith"><input class="uprofAff" value="self"><input class="uprofOrganisms" value="dog">' +
+  '<input class="uprofInterests" value="walking"><button class="updateprofbutton"><input class="uprofEmail" value="bob@smith.com"><button class="updateemailbutton"></div>';
+  document.getElementsByClassName('uprofEmail')[0].checkValidity = function() {return false;};
+  user.validateUserPrefs();
+  let emailbutton = document.getElementsByClassName('updateemailbutton')[0];
+  let userprofbutton = document.getElementsByClassName('updateprofbutton')[0];
+  expect(emailbutton.style.display).toBe('none');
+  expect(userprofbutton.style.display).toBe('none');
+});
