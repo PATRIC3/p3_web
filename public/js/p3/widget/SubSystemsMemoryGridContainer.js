@@ -628,6 +628,7 @@ define([
 					//used to query data
 					url['genome_ids'] = this.state.genome_ids;
 					url['subsystem_id'] = selection[0].subsystem_id;
+					url['subsystemselectionuniqueidentifier'] = JSON.stringify(selection);
 
 					//used to create DOM
 					// url['subsystem_name'] =  selection[0].subsystem_name;

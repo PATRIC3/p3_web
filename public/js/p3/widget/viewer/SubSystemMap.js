@@ -29,7 +29,8 @@ define([
 
 			state.genome_ids = subsystemData.genome_ids;
 			state.genome_ids_arr = subsystemData.genome_ids.split(',');
-			state.subsystem_id = subsystemData.subsystem_id
+			state.subsystem_id = subsystemData.subsystem_id;
+			state.selectionData = subsystemData.selectionData;
 
 			var self = this;
 			when(this.getGenomeIdsBySubsystemId(state.genome_ids_arr, state.subsystem_id), function(genomeIds){
@@ -40,9 +41,23 @@ define([
 			window.document.title = 'Subsystem Map';
 		},
 
+		truncateBefore: function (str, pattern) {
+		  return str.slice(str.indexOf(pattern) + pattern.length);
+		},
+
+		truncateAfter: function (str, pattern) {
+		  return str.slice(0, str.indexOf(pattern));
+		},
+
 		getStateParams: function(state) {
 
-			var search = state.search;
+			var str = state.search;
+			var pattern = "&subsystemselectionuniqueidentifier=";
+
+			var search = this.truncateAfter(str, pattern);
+			var selectionData = this.truncateBefore(str, pattern);
+			var decodedSelectionData = decodeURIComponent(selectionData)
+			var parsedSelectionData = JSON.parse(decodedSelectionData);
 
 			var everythingAfterParam = /subsystem_id=(.*)/;
 			var subsystem_id = everythingAfterParam.exec(search)[1];
@@ -72,6 +87,7 @@ define([
 			var subsystemData = {};
 			subsystemData.genome_ids = genome_ids;
 			subsystemData.subsystem_id = subsystem_id;
+			subsystemData.selectionData = parsedSelectionData;
 
 			return subsystemData;
 		},
@@ -90,7 +106,8 @@ define([
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
 			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
-			
+			var that = this;
+
 			return when(request.post(window.App.dataAPI + 'subsystem/', {
 				handleAs: 'json',
 				headers: {
@@ -101,6 +118,8 @@ define([
 				},
 				data: query
 			}), function(response){
+
+				var selectionData = that.state.selectionData[0];
 
 				this.superclass = response.response.docs[0].superclass;
 				this.subsystemClass = response.response.docs[0].class;
@@ -120,8 +139,20 @@ define([
 				if (this.subclass !== "") {
 					headerString += this.subclass + " » ";
 				}
+
+				var geneInfo = " (";
+
+				if (selectionData.genome_count > 1) {
+					geneInfo += selectionData.genome_count + " genomes, ";
+				}
+
+				if (selectionData.hasOwnProperty("role_count")) {
+					geneInfo += selectionData.gene_count + " genes, " + selectionData.role_count + " roles)";
+				} else {
+					geneInfo += selectionData.genome_name + ")";
+				}
 				
-				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + "</span>");
+				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
 
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
