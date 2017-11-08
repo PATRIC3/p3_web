@@ -110,10 +110,11 @@ class User {
   }
 
   updateUserPrefs() {
+    let fname = document.getElementsByClassName('uprofFirstName')[0].value;
+    let lname = document.getElementsByClassName('uprofLastName')[0].value;
     //document.getElementsByClassName('uprofEmail')[0].value = data[0].email;
     //this.uid = data[0]._id;
-    let bodyData = {'first_name': document.getElementsByClassName('uprofFirstName')[0].value,
-    'last_name': document.getElementsByClassName('uprofLastName')[0].value,
+    let bodyData = {'first_name': fname, 'last_name': lname, 'name': fname + ' ' + lname,
     'affiliation': document.getElementsByClassName('uprofAff')[0].value,
     'organisms': document.getElementsByClassName('uprofOrganisms')[0].value,
     'interests': document.getElementsByClassName('uprofInterests')[0].value};
