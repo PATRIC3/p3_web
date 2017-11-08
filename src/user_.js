@@ -7,6 +7,7 @@ class User {
     this.searchParams = new URLSearchParams(window.location.search);
     this.uid = '';
     this.userEmail = this.searchParams.get('email');
+    this.changeEmail = this.searchParams.get('changeemail');
     this.formType = '';
     this.formType += this.searchParams.get('form');
     this.userToken = localStorage.getItem('token');
@@ -26,6 +27,9 @@ class User {
     } else {
       formTitle = 'Verify Your Email Address';
       formButton = 'userClass.updateUser()';
+      if (this.changeEmail !== '' && this.changeEmail !== null && this.changeEmail !== undefined) {
+        formButton = 'userClass.verifyChangeEmail()';
+      }
     }
 
     emailVarifyForm.className = 'RegistrationForm';
@@ -41,6 +45,8 @@ class User {
     home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
     if (this.userEmail !== '' && this.userEmail !== null && this.userEmail !== undefined) {
       document.getElementsByClassName('email')[0].value = this.userEmail;
+    } else if (this.changeEmail !== '' && this.changeEmail !== null && this.changeEmail !== undefined) {
+      document.getElementsByClassName('email')[0].value = this.changeEmail;
     }
     if (this.formType === 'prefs') {
       document.getElementsByClassName('RegistrationForm')[0].style.display = 'none';
@@ -102,7 +108,7 @@ class User {
     } else {
       profBut.style.display = 'none';
     }
-    if (isemailvalid && edot.length === 2) {
+    if (isemailvalid && edot.length > 1) {
       emBut.style.display = 'block';
     } else {
       emBut.style.display = 'none';
@@ -118,9 +124,6 @@ class User {
     'affiliation': document.getElementsByClassName('uprofAff')[0].value,
     'organisms': document.getElementsByClassName('uprofOrganisms')[0].value,
     'interests': document.getElementsByClassName('uprofInterests')[0].value};
-
-    //email': localStorage.getItem('useremail') };
-    //var cookieToken = getCookieToken();
     let fetchData = {
       method: 'PUT',
       //credentials: 'same-origin',
@@ -148,25 +151,28 @@ class User {
     }
     //let fname = document.getElementsByClassName('firstname')[0].value;
     //let lname = document.getElementsByClassName('lastname')[0].value;
-    let email = document.getElementsByClassName('email')[0].value;
-    let validemail = document.getElementsByClassName('email')[0];
-    let codenumber = document.getElementsByClassName('code')[0].value;
-    let validcode = document.getElementsByClassName('code')[0];
+    let isemailvalid = document.getElementsByClassName('email')[0].checkValidity();
+    let emValue = document.getElementsByClassName('email')[0].value;
+    let edot = emValue.split('.');
+    //let email = document.getElementsByClassName('email')[0].value;
+    //let validemail = document.getElementsByClassName('email')[0];
+    //let codenumber = document.getElementsByClassName('code')[0].value;
+    let isvalidcode = document.getElementsByClassName('code')[0].checkValidity();
     let submitbutton = document.getElementsByClassName('regbutton')[0];
-    if (email !== '' && codenumber !== '') {
-      //console.log('valid');
-      //console.log(registbutton);
-      //console.log(validemail.checkValidity());
-      if (validemail.checkValidity() && validcode.checkValidity()) {
+    //if (email !== '' && codenumber !== '') {
+      console.log(isemailvalid);
+      console.log(isvalidcode);
+      console.log(edot.length);
+      if (isemailvalid && isvalidcode && edot.length > 1) {
         submitbutton.style.display = 'block';
       } else {
         submitbutton.style.display = 'none';
       }
-    } else {
-      submitbutton.style.display = 'none';
-    }
+    // } else {
+    //   submitbutton.style.display = 'none';
+    // }
     if (this.formType === 'reset') {
-      if (newpasswd.checkValidity() && validemail.checkValidity() && validcode.checkValidity()) {
+      if (newpasswd.checkValidity() && isemailvalid && edot.length > 1 && isvalidcode) {
         submitbutton.style.display = 'block';
       } else {
         submitbutton.style.display = 'none';
@@ -252,6 +258,73 @@ nevermind(className) {
     regform1[0].style.display = 'none';
   }
   window.location.href = this.frontendUrl + '/';
+}
+
+changeUserEmail() {
+  let bodyData = {'changeemail': document.getElementsByClassName('uprofEmail')[0].value, 'email': localStorage.getItem('useremail') };
+  let fetchData = {
+    method: 'PUT',
+    body: JSON.stringify(bodyData),
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    }
+  };
+
+  return this.fetch(this.backendUrl + '/auth/validemail', fetchData)
+  //.then(handleErrors)
+  .then((response) => response.json())
+  .then((data) => {
+
+    //console.log(data);
+
+    if (data.message) {
+      //console.log(data.message);
+      let messagediv = document.getElementsByClassName('loginerror')[0];
+      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+    } else {
+  window.location.href = this.frontendUrl + '/userutil/?changeemail=' + document.getElementsByClassName('uprofEmail')[0].value;
+    }
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
+  });
+}
+
+verifyChangeEmail() {
+  console.log('using your pin to validate your new email address now ...');
+  let bodyData = {'changeemail': document.getElementsByClassName('email')[0].value, 'resetCode': document.getElementsByClassName('code')[0].value,
+'email': localStorage.getItem('useremail') };
+    let fetchData = {
+      method: 'PUT',
+      body: JSON.stringify(bodyData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    };
+
+    return this.fetch('http://localhost:7000' + '/auth/updateemail', fetchData)
+    //.then(handleErrors)
+    .then((response) => response.json())
+    .then((data) => {
+
+      //console.log(data);
+
+      if (data.message) {
+        //console.log(data.message);
+        let messagediv = document.getElementsByClassName('loginerror')[0];
+        messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+      } else {
+        this.nevermind('RegistrationForm');
+        //window.location.href = this.frontendUrl + '/';
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+      //console.log
+    });
 }
 
 }

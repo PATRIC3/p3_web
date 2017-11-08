@@ -37,7 +37,7 @@
           </table>
           <div>
             <span style="color:red; font-style: italic; text-align:left; margin-left:-120px">* Indicates a required field</span>
-              <button class="updateprofbutton" onmouseover="this.bgColor='#87b934'" onmouseout="this.bgColor='rgb(247, 255, 186)'" type="button" style="margin-left:240px" onclick="userClass.updateUserPrefs()">Update Profile</button>
+            <button class="updateprofbutton" onmouseover="this.bgColor='#87b934'" onmouseout="this.bgColor='rgb(247, 255, 186)'" type="button" style="margin-left:240px" onclick="userClass.updateUserPrefs()">Update Profile</button>
           </div>
         </form>
       </div>
@@ -47,7 +47,7 @@
           <label style="display:block"><strong>Email Address <span style="color:red">*</span></strong></label>
           <input class="uprofEmail" type="email" name="email" value="" required onchange="userClass.validateUserPrefs()" onfocus="userClass.validateUserPrefs()" onkeydown="userClass.validateUserPrefs()" onkeyup="userClass.validateUserPrefs()">
           <div style="margin-top:10px; text-align:left">
-            <button class="updateemailbutton" type="button" style="margin-left:90px" onclick="userClass.updateUserEmail()">Update Email</button>
+            <button class="updateemailbutton" type="button" style="margin-left:90px" onclick="userClass.changeUserEmail()">Update Email</button>
           </div>
         </form>
       </div>
