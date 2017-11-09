@@ -4,7 +4,19 @@ class Register {
     this.backendUrl = 'http://localhost:7000';
     this.fetch = Fetch;
     this.frontendUrl = 'http://localhost:3000';
-    //this.errorMessage = '';
+    //window.onload(this.checkIfLoggedIn());
+  }
+  checkIfLoggedIn() {
+    console.log('checking if I am already logged in');
+    if (localStorage.getItem('token') !== null) {
+      let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
+      console.log('this is local storage :' + localStorage.getItem('token'));
+      hideWithAuth.style.display = 'none';
+      console.log('this is the hide with auth element' + hideWithAuth);
+      let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
+      showWithAuth.style.display = 'block';
+
+    }
   }
   register(appName) {
     //console.log('show me a registration form here!');
@@ -118,7 +130,7 @@ class Register {
 
 verifyEmail(email) {
   //console.log('going to verify the email now');
-  window.location.href = this.frontendUrl + '/user/?email=' + email;
+  window.location.href = this.frontendUrl + '/userutil/?email=' + email;
 }
 
 nevermind(className) {
@@ -135,21 +147,23 @@ loginUser(appName) {
   this.nevermind('LoginForm');
   this.nevermind('RegistrationForm');
   let useridrow = '';
+  let useremailinput = '<tr><th style="border:none">Email</th></tr><tr><td>' +
+  '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>';
   if (appName === 'PATRIC') {
-    useridrow = '<tr><th style="border:none">Userid</th></tr><tr><td>' +
+    useridrow = '<tr><th style="border:none">Email or Userid</th></tr><tr><td>' +
     '<input class="userid" name="userid" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()">';
+    useremailinput = '';
   }
   let loginform = document.createElement('div');
   loginform.className = 'LoginForm';
   loginform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PATRIC Login</h2>' +
   '<form><div style="padding:2px; margin:10px;"><table><tbody>' + useridrow +
-  '<tr><td>&nbsp;</td></tr><tr><th style="border:none">Email</th></tr><tr><td>' +
-  '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>' +
+  '<tr><td>&nbsp;</td></tr>' + useremailinput +
   '<tr><td>&nbsp;</td></tr><tr><th style="border:none">Password</th></tr><tr><td>' +
   '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required onchange="registerClass.validateLogin()" onfocus="registerClass.validateLogin()" onkeydown="registerClass.validateLogin()" onkeyup="registerClass.validateLogin()"></td></tr>' +
   '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
   '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton" onclick="registerClass.logMeIn(&apos;' + appName + '&apos;)">Login</button>' +
-  '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="registerClass.resetpass()">Reset Password</button></div></div></form>' +
+  '<button style="display:none;margin-top:34px" class="resetpass" type="button" onclick="registerClass.resetpass(&apos;' + appName + '&apos;)">Reset Password</button></div></div></form>' +
   '<button style="margin-left:12px;margin-top:20px" type="button" onclick="registerClass.nevermind(&apos;LoginForm&apos;)">Cancel</button></div></div></form>' +
   '<div class="loginerror" style="color:red"></div>';
   let home = document.getElementsByClassName('home');
@@ -160,35 +174,59 @@ loginUser(appName) {
 validateLogin() {
   //let useridInput = null;
   let useridValue = '';
-//console.log(document.getElementsByClassName('userid')[0]);
+  //console.log(document.getElementsByClassName('userid')[0]);
   if (document.getElementsByClassName('userid')[0] !== undefined) {
     useridValue = document.getElementsByClassName('userid')[0];
   }
-  let email = document.getElementsByClassName('loginemail')[0].value;
-  let validemail = document.getElementsByClassName('loginemail')[0];
+  let email = '';
+  let validemail = '';
+  if (document.getElementsByClassName('loginemail').length > 0) {
+    email = document.getElementsByClassName('loginemail')[0].value;
+    validemail = document.getElementsByClassName('loginemail')[0];
+  }
   let password = document.getElementsByClassName('loginpass')[0].value;
   let validpass = document.getElementsByClassName('loginpass')[0];
   let logbutton = document.getElementsByClassName('loginbutton')[0];
   let resetpassButton = document.getElementsByClassName('resetpass')[0];
-
+  if (validemail !== '') {
     if (validemail.checkValidity() && validpass.checkValidity()) {
       logbutton.style.display = 'block';
-    } else if (useridValue !== '' && validpass.checkValidity()) {
-        logbutton.style.display = 'block';
     } else {
       logbutton.style.display = 'none';
     }
-
-  if (validemail.checkValidity()) {
+  }
+  if (useridValue !== '') {
+    if (validpass.checkValidity()) {
+      logbutton.style.display = 'block';
+    } else {
+      logbutton.style.display = 'none';
+    }
+  }
+  // } && validpass.checkValidity()) {
+  //   logbutton.style.display = 'block';
+  // } else {
+  //   logbutton.style.display = 'none';
+  // }
+  if (validemail !== '') {
+    if (validemail.checkValidity()) {
+      resetpassButton.style.display = 'block';
+    } else {
+      resetpassButton.style.display = 'none';
+    }
+  }
+  if (useridValue !== '') {
     resetpassButton.style.display = 'block';
-  } else {
-    resetpassButton.style.display = 'none';
   }
 }
 
-resetpass() {
+resetpass(appName) {
+  let loginEmail = '';
   //console.log('going to reset your password');
-  let loginEmail = document.getElementsByClassName('loginemail')[0].value;
+  if (appName !== 'PATRIC') {
+    loginEmail = document.getElementsByClassName('loginemail')[0].value;
+  } else {
+    loginEmail = document.getElementsByClassName('userid')[0].value;
+  }
   //put to backend /auth/resetpass
   let bodyData = {'email': loginEmail };
   let fetchData = {
@@ -209,7 +247,7 @@ resetpass() {
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
       this.nevermind('LoginForm');
-      window.location.href = this.frontendUrl + '/user/?email=' + loginEmail + '&form=reset';
+      window.location.href = this.frontendUrl + '/userutil/?email=' + loginEmail + '&form=reset';
     }
   })
   .catch((error) => {
@@ -221,13 +259,18 @@ resetpass() {
 logMeIn(appName) {
   //let useridInput = null;
   let useridValue = '';
+  let emailValue = '';
   const passwordValue = document.getElementsByClassName('loginpass')[0].value;
   //console.log('this is the password given ' + passwordValue);
   //useridInput = document.getElementsByClassName('userid');
   if (document.getElementsByClassName('userid')[0] !== undefined) {
-    useridValue = document.getElementsByClassName('userid')[0];
+    useridValue = document.getElementsByClassName('userid')[0].value;
+    console.log(useridValue);
   }
-  let bodyData = {'email': document.getElementsByClassName('loginemail')[0].value, 'password': passwordValue, 'id': useridValue };
+  if (appName !== 'PATRIC') {
+    emailValue = document.getElementsByClassName('loginemail')[0].value;
+  }
+  let bodyData = {'email': emailValue, 'password': passwordValue, 'id': useridValue };
   //var cookieToken = getCookieToken();
   let fetchData = {
     method: 'POST',
@@ -239,30 +282,16 @@ logMeIn(appName) {
       'Content-Type': 'application/json'
     }
   };
-
-  // function handleErrors(response) {
-  //   if (!response.ok) {
-  //     throw Error(response.statusText);
-  //   }
-  //   return response;
-  // }
   return this.fetch(this.backendUrl + '/auth/login', fetchData)
-  //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
-    //console.log(data.json());
-    //console.log(data.token);
-    //const token = data.json();
-    //console.log(data);
     if (data.token !== undefined) {
       localStorage.setItem('token', data.token);
+      localStorage.setItem('useremail', data.email);
+      this.checkIfLoggedIn();
       this.nevermind('LoginForm');
-      let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
-      hideWithAuth.style.display = 'none';
-      let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
-      showWithAuth.style.display = 'block';
       if (appName === 'PATRIC') {
-        this.generateSession(bodyData.email);
+        this.generateSession(data.email);
       }
     }
     if (data.message) {
@@ -280,9 +309,10 @@ logMeIn(appName) {
 
 logout() {
   localStorage.removeItem('token');
-  let hideWithAuth = document.getElementsByClassName('HideWithAuth')[0];
+  localStorage.removeItem('useremail');
+  let hideWithAuth = document.getElementsByClassName('HideWAuth')[0];
   hideWithAuth.style.display = 'block';
-  let showWithAuth = document.getElementsByClassName('ShowWithAuth')[0];
+  let showWithAuth = document.getElementsByClassName('ShowWAuth')[0];
   showWithAuth.style.display = 'none';
   window.location.href = this.frontendUrl + '/';
 }
@@ -309,6 +339,10 @@ generateSession(useremail) {
   .then((data) => {
     console.log(data);
   });
+}
+
+userAccount() {
+  window.location.href = this.frontendUrl + '/userutil/?form=prefs';
 }
 
 }

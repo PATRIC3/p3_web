@@ -8,22 +8,15 @@ th {
   padding-bottom: 0;
 }
 
-.loginbutton:hover {
-  background-color: #87b934;
+.elevation3 {
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  margin: auto;
+  /*max-width: 2in;*/
 }
 
-.regbutton:hover {
-  background-color: #87b934;
-}
-
-.registerbutton:hover {
-  background-color: #87b934;
-}
-
-.resetpass:hover {
-  background-color: white;
-}
-
+.updateemailbutton,
+.updateprofbutton,
 .resetpass,
 .regbutton,
 .registerbutton,
@@ -43,6 +36,7 @@ th {
   background-color: orange;
 }
 
+.UserProfileForm,
 .RegistrationForm,
 .LoginForm {
   width: 640px;
@@ -55,8 +49,34 @@ th {
   margin-bottom: 10px;
 }
 
+.LoginForm th,
+.UserProfileForm th,
 .RegistrationForm th {
   padding-bottom: 0;
   padding-top: 6px;
   font-weight: bold;
+}
+
+.updateemailbutton:hover, {
+  background-color: #87b934;
+}
+
+.updateprofbutton:hover, {
+  background-color: #87b934;
+}
+
+.loginbutton:hover, {
+  background-color: #87b934;
+}
+
+.regbutton:hover {
+  background-color: #87b934;
+}
+
+.registerbutton:hover {
+  background-color: #87b934;
+}
+
+.resetpass:hover {
+  background-color: white;
 }

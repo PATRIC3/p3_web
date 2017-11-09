@@ -5,7 +5,6 @@ bower_components
 montage_ui
 public
 backend
-app.js
 config.js
 routes
 user.js

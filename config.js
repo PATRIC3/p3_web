@@ -1,13 +1,6 @@
 
 const fs = require('fs');
 let nconf = require('nconf');
-//const dotenv = require('dotenv');
-//const fs = require('fs');
-// ignoring this for testing because it is only used for development purposes
-/* istanbul ignore next */
-// if (fs.existsSync('./.env')) {
-//   dotenv.config();
-// }
 
 let defaults = {
 	'http_port': 3000,
@@ -31,8 +24,8 @@ let defaults = {
 	appServiceURL: '',
 	dataURL: '',
 	accountURL: 'http://user.patric.local:3002/',
-	backendUrl: 'http://localhost:7000',
-	frontendUrl: 'http://localhost:3000',
+	backendUrl: '',
+	frontendUrl: '',
 	enableDevAuth: false,
 	devAuthorizationToken: '',
 	devUser: false,

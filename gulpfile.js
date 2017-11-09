@@ -1,6 +1,7 @@
 const gulp = require('gulp');
 const replace = require('gulp-replace');
 const config = require('./config.js');
+console.log(config.get('backendUrl'));
 //const RedisServer = require('redis-server');
 //const server = new RedisServer(6379);
 
