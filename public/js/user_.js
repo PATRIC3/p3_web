@@ -3,7 +3,7 @@ class User {
   constructor() {
     this.backendUrl = '';
     this.frontendUrl = 'http://localhost:3000';
-
+    
     this.searchParams = new URLSearchParams(window.location.search);
     this.uid = '';
     this.userEmail = this.searchParams.get('email');
@@ -217,8 +217,6 @@ class User {
 }
 
 updateUser() {
-  //console.log('going to update user');
-  //put to backend /auth/validemail
   let bodyData = {'email': document.getElementsByClassName('email')[0].value, 'resetCode': document.getElementsByClassName('code')[0].value };
   let fetchData = {
     method: 'PUT',
@@ -271,7 +269,7 @@ changeUserEmail() {
     }
   };
 
-  return fetch(this.backendUrl + '/auth/validemail', fetchData)
+  return fetch(this.backendUrl + '/auth/changeemail', fetchData)
   //.then(handleErrors)
   .then((response) => response.json())
   .then((data) => {
@@ -305,7 +303,7 @@ verifyChangeEmail() {
       }
     };
 
-    return fetch('http://localhost:7000' + '/auth/updateemail', fetchData)
+    return fetch(this.backendUrl + '/auth/updateemail', fetchData)
     //.then(handleErrors)
     .then((response) => response.json())
     .then((data) => {
@@ -317,6 +315,7 @@ verifyChangeEmail() {
         let messagediv = document.getElementsByClassName('loginerror')[0];
         messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
       } else {
+        localStorage.setItem('useremail', document.getElementsByClassName('email')[0].value);
         this.nevermind('RegistrationForm');
         //window.location.href = this.frontendUrl + '/';
       }
@@ -328,3 +327,5 @@ verifyChangeEmail() {
 }
 
 }
+
+

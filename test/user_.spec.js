@@ -278,3 +278,129 @@ test('it validates the user prefs form and email when fields are invalid', () =>
   expect(emailbutton.style.display).toBe('none');
   expect(userprofbutton.style.display).toBe('none');
 });
+
+test('it displays a email varification form for a change email request', () => {
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm"></div>';
+  //document.getElementsByClassName('email')[0].value = '';
+  user.userEmail = '';
+  user.changeEmail = 'bob@smith.com';
+  //document.getElementsByClassName('uprofEmail')[0].checkValidity = function() {return false;};
+  //user.validateUserPrefs();
+  //let emailbutton = document.getElementsByClassName('updateemailbutton')[0];
+  //let userprofbutton = document.getElementsByClassName('updateprofbutton')[0];
+  user.verifyEmail();
+  //expect(emailbutton.style.display).toBe('none');
+  expect(document.getElementsByClassName('email')[0].value).toBe('bob@smith.com');
+});
+test('it sends PUT request to change user email', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.resolve({success: true})
+    });
+  };
+  user.fetch = mockfetch;
+  document.body.innerHTML = '<input class="uprofEmail" value="new@email.com"><div class="loginerror"></div>';
+  //document.getElementsByClassName('uprofEmail')[0].value = 'new@email.com';
+
+  return user.changeUserEmail().then(() => {
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toBe('');
+    messagediv.innerHTML = '';
+  });
+});
+test('it sends PUT request to change user email and displays error message', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.resolve({message: 'email is incorrect'})
+    });
+  };
+  user.fetch = mockfetch;
+  document.body.innerHTML = '<input class="uprofEmail" value="new@email.com"><div class="loginerror"></div>';
+  //document.getElementsByClassName('uprofEmail')[0].value = 'new@email.com';
+
+  return user.changeUserEmail().then(() => {
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    expect(messagediv.innerHTML).toBe('<p style="text-align:left; padding-left:12px">email is incorrect</p>');
+    messagediv.innerHTML = '';
+  });
+});
+test('it sends PUT request to change user email and catches error', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.reject({error: 'big problem'})
+    });
+  };
+  user.fetch = mockfetch;
+  //document.body.innerHTML = '<input class="uprofEmail" value="new@email.com"><div class="loginerror"></div>';
+  //document.getElementsByClassName('uprofEmail')[0].value = 'new@email.com';
+
+  //return user.changeUserEmail().then(() => {
+    return user.changeUserEmail()
+    .catch(e => expect(e).toBeTruthy());
+  });
+  test('it sends PUT request to varify the changed email with pin', () => {
+    mockfetch = function(url, data) {
+      this.headers = {};
+      this.headers.url = url;
+      this.headers.method = data.method;
+      return Promise.resolve({
+        Headers: this.headers,
+        json: () => Promise.resolve({success: true})
+      });
+    };
+    user.fetch = mockfetch;
+    document.body.innerHTML = '<input class="email" value="new@email.com">' +
+    '<input class="code" value="12345"><div class="loginerror"></div>';
+    //document.getElementsByClassName('uprofEmail')[0].value = 'new@email.com';
+
+    //return user.changeUserEmail().then(() => {
+      return user.verifyChangeEmail().then(() => {
+        expect(document.getElementsByClassName('loginerror')[0].innerHTML).toBe('');
+      });
+    });
+    test('it sends PUT request to varify the changed email with pin and displays error message', () => {
+      mockfetch = function(url, data) {
+        this.headers = {};
+        this.headers.url = url;
+        this.headers.method = data.method;
+        return Promise.resolve({
+          Headers: this.headers,
+          json: () => Promise.resolve({message: 'incorrect pin'})
+        });
+      };
+      user.fetch = mockfetch;
+      document.body.innerHTML = '<input class="email" value="new@email.com">' +
+      '<input class="code" value="12345"><div class="loginerror"></div>';
+      //document.getElementsByClassName('uprofEmail')[0].value = 'new@email.com';
+
+      //return user.changeUserEmail().then(() => {
+        return user.verifyChangeEmail().then(() => {
+          expect(document.getElementsByClassName('loginerror')[0].innerHTML).toBe('<p style="text-align:left; padding-left:12px">incorrect pin</p>');
+        });
+      });
+      test('it sends PUT request to varify the changed email with pin and catches error', () => {
+        mockfetch = function(url, data) {
+          this.headers = {};
+          this.headers.url = url;
+          this.headers.method = data.method;
+          return Promise.resolve({
+            Headers: this.headers,
+            json: () => Promise.reject({error: 'big problem'})
+          });
+        };
+        user.fetch = mockfetch;
+          return user.verifyChangeEmail()
+          .catch(e => expect(e).toBeTruthy());
+        });
