@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"><title>PATRIC</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link href="/js/styles.css" rel="stylesheet">
+  <style>
+  .updateemailbutton:hover, {
+    background-color: #87b934;
+  }
+
+  .updateprofbutton:hover, {
+    background-color: #87b934;
+  }
+  </style>
+</head>
+<body>
+  <div>
+    <div class="home"></div>
+  </div>
+  <div class="UserProfileForm" style="display:none; text-align:center; max-width:4in;">
+    <h1>Your User Profile</h1>
+    <div class="elevation3" style="width:90%; margin-bottom:0">
+      <form>
+        <table>
+          <tbody>
+            <tr><th>First Name <span style="color:red">*</span></th><th>Last Name <span style="color:red">*</span></th></tr>
+            <tr><td><input class="uprofFirstName" style="width:100%" name="first_name" value="" required onchange="userClass.validateUserPrefs()" onfocus="userClass.validateUserPrefs()" onkeydown="userClass.validateUserPrefs()" onkeyup="userClass.validateUserPrefs()"></td>
+              <td><input class="uprofLastName" style="width:100%" name="last_name" value="" required onchange="userClass.validateUserPrefs()" onfocus="userClass.validateUserPrefs()" onkeydown="userClass.validateUserPrefs()" onkeyup="userClass.validateUserPrefs()"></td></tr>
+              <tr><th colspan="2">Organization</th></tr>
+              <tr><td colspan="2"><input class="uprofAff" style="width:100%" name="affiliation" value=""></td></tr>
+              <tr><th colspan="2">Organisms</th></tr>
+              <tr><td colspan="2"><input class="uprofOrganisms" name="organisms" style="width:100%"></td></tr>
+              <tr><th colspan="2">Interests</th></tr>
+              <tr><td colspan="2"><textarea class="uprofInterests" rows="10" name="interests" style="height:85px;width:100%" value=""></textarea></td></tr>
+            </tbody>
+          </table>
+          <div>
+            <span style="color:red; font-style: italic; text-align:left; margin-left:-120px">* Indicates a required field</span>
+            <button class="updateprofbutton" onmouseover="this.bgColor='#87b934'" onmouseout="this.bgColor='rgb(247, 255, 186)'" type="button" style="margin-left:240px" onclick="userClass.updateUserPrefs()">Update Profile</button>
+          </div>
+        </form>
+      </div>
+      <p>&nbsp;</p>
+      <div class="elevation3" style="width:90%; margin-top:-10px">
+        <form>
+          <label style="display:block"><strong>Email Address <span style="color:red">*</span></strong></label>
+          <input class="uprofEmail" type="email" name="email" value="" required onchange="userClass.validateUserPrefs()" onfocus="userClass.validateUserPrefs()" onkeydown="userClass.validateUserPrefs()" onkeyup="userClass.validateUserPrefs()">
+          <div style="margin-top:10px; text-align:left">
+            <button class="updateemailbutton" type="button" style="margin-left:90px" onclick="userClass.changeUserEmail()">Update Email</button>
+          </div>
+        </form>
+      </div>
+      <p>&nbsp;</p>
+      <button style="margin-left:-180px; margin-top:-40px" onclick="userClass.nevermind('UserProfileForm')">Return to Homepage</button>
+    </div>
+  </body>
+  <script src="/js/user_.js"></script>
+  <script>const userClass = new User();</script>
+  </html>

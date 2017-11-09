@@ -1,0 +1,82 @@
+
+button {
+  cursor: hand;
+  cursor: pointer;
+}
+
+th {
+  padding-bottom: 0;
+}
+
+.elevation3 {
+  box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.14), 0 1px 18px 0 rgba(0, 0, 0, 0.12), 0 3px 5px -1px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+  margin: auto;
+  /*max-width: 2in;*/
+}
+
+.updateemailbutton,
+.updateprofbutton,
+.resetpass,
+.regbutton,
+.registerbutton,
+.loginbutton {
+  background-color: rgb(247, 255, 186);
+  padding: 4px;
+  padding-top: 2px;
+  color: rgb(0, 0, 0);
+  box-shadow: rgba(0, 0, 0, 0.15) 0 1px 1px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(117, 157, 192);
+}
+
+.resetpass {
+  background-color: orange;
+}
+
+.UserProfileForm,
+.RegistrationForm,
+.LoginForm {
+  width: 640px;
+  font-size: 1.1em;
+  margin: auto;
+  padding: 10px;
+  border: 2px solid #ababab;
+  border-radius: 4px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.LoginForm th,
+.UserProfileForm th,
+.RegistrationForm th {
+  padding-bottom: 0;
+  padding-top: 6px;
+  font-weight: bold;
+}
+
+.updateemailbutton:hover, {
+  background-color: #87b934;
+}
+
+.updateprofbutton:hover, {
+  background-color: #87b934;
+}
+
+.loginbutton:hover, {
+  background-color: #87b934;
+}
+
+.regbutton:hover {
+  background-color: #87b934;
+}
+
+.registerbutton:hover {
+  background-color: #87b934;
+}
+
+.resetpass:hover {
+  background-color: white;
+}

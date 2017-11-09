@@ -1,22 +1,22 @@
-var request = require('request');
-var FeedParser = require('feedparser');
-var conf = require("./config");
-var Query = require("rql/js-array").query;
+let request = require('request');
+let FeedParser = require('feedparser');
+let conf = require('./config');
+let Query = require('rql/js-array').query;
 
-var News = []
+let News = [];
 
 
 function GetNews() {
-	console.log("Refreshing News from RSS Feed");
-	var news = [];
-	var req = request(conf.get("newsFeedRSS"));
+	console.log('Refreshing News from RSS Feed');
+	let news = [];
+	let req = request(conf.get('newsFeedRSS'));
 	feedparser = new FeedParser([]);
 
-	req.on('error', function (error) {
+	req.on('error', function(error) {
 	  // handle any request errors
 	});
-	req.on('response', function (res) {
-		var stream = this;
+	req.on('response', function(res) {
+		let stream = this;
 
 		if (res.statusCode != 200) return this.emit('error', new Error('Bad status code'));
   		stream.pipe(feedparser);
@@ -29,26 +29,26 @@ function GetNews() {
 
 	feedparser.on('readable', function() {
 		// This is where the action is!
-		var stream = this
-			, meta = this.meta // **NOTE** the "meta" is always available in the context of the feedparser instance
-			, item;
+		let stream = this,
+			 meta = this.meta, // **NOTE** the "meta" is always available in the context of the feedparser instance
+			 item;
 
 		while (item = stream.read()) {
 			news.push(item);
 		}
 	});
 
-	News=news;
+	News = news;
 }
 
 GetNews();
 
-setInterval(function(){
+setInterval(function() {
 	GetNews();
-},60 * 1000 *60);
+}, 60 * 1000 * 60);
 
-module.exports = function(query){
-	console.log("query: ", query);
-	return Query(query,{},News);
-}
+module.exports = function(query) {
+	console.log('query: ', query);
+	return Query(query, {}, News);
+};
 
