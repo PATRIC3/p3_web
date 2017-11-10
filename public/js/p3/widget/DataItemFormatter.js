@@ -1,11 +1,11 @@
 define([
 	"dojo/_base/lang", "dojo/date/locale", "dojo/dom-construct", "dojo/dom-class",
 	"dijit/form/Button", "../JobManager", "dijit/TitlePane", "./formatter", "dojo/on",
-	"dojo/query", "dojo/NodeList-traverse"
+	"dojo/query", "../util/PathJoin", "dojo/request", "dojo/when", "dojo/NodeList-traverse"
 ], function(
 	lang, locale, domConstruct, domClass,
 	Button, JobManager, TitlePane, formatter, on,
-	query){
+	query, PathJoin, request, when){
 
 	var formatters = {
 		"default": function(item, options){
@@ -611,18 +611,18 @@ define([
 						name: 'Subsystem Name',
 						text: 'subsystem_name'
 					}, {
-						name: 'Role Name',
-						text: 'role_name'
-					}, {
 						name: 'Active',
 						text: 'active'
+					}, {
+						name: 'Role Names',
+						text: 'role_name'
 					}
 				]
 			}
 
 			var div = domConstruct.create("div");
 			displayHeader(div, item.subsystem_name, "fa icon-git-pull-request fa-2x", "/view/Subsystems/" + item.subsystem_id, options);
-			displayDetail(item, columns, div, options);
+			displayDetailSubsystems(item, columns, div, options);
 
 			return div;
 		},
@@ -1630,6 +1630,90 @@ define([
 			if(row){
 				domConstruct.place(row, tbody);
 			}
+		})
+	}
+
+	function displayDetailSubsystems(item, columns, parent, options){
+		var table = domConstruct.create("table", {}, parent);
+		var tbody = domConstruct.create("tbody", {}, table);
+
+		columns.forEach(function(column){
+
+			if (column.text === "role_name") {
+
+				// if (item.genome_count > 1) {
+				// 	var query = "?eq(taxon_lineage_ids," + item.taxon_id + ")&select(genome_id)&limit(25000)";
+				// 	return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
+				// 		headers: {
+				// 			'Accept': "application/json",
+				// 			'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+				// 		},
+				// 		handleAs: "json"
+				// 	}), function(response){
+
+				// 		var genome_ids = response.map(function(d){
+				// 			return d.genome_id;
+				// 		});
+						
+				// 		var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + item.subsystem_id + "\")&facet=true&facet.field=role_name&facet.mincount=1&facet.limit-1&rows=25000";
+				// 		when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+				// 			handleAs: 'json',
+				// 			headers: {
+				// 				'Accept': "application/solr+json",
+				// 				'Content-Type': "application/solrquery+x-www-form-urlencoded",
+				// 				'X-Requested-With': null,
+				// 				'Authorization': (window.App.authorizationToken || "")
+				// 			},
+				// 			data: query
+				// 		}), function(response){
+							
+				// 			var role_names = response.response.docs.map(function(s){
+				// 				return s.role_name
+				// 			});
+							
+				// 			var role_list = role_names.join(", ");
+				// 			item.role_name = role_list;
+							
+				// 			var row = renderProperty(column, item, options);
+				// 			if(row){
+				// 				domConstruct.place(row, tbody);
+				// 			}
+				// 		});
+				// 	});
+				// } else {
+					var query = "q=genome_id:(" + item.genome_id + ") AND subsystem_id:(\"" + item.subsystem_id + "\")&facet=true&facet.field=role_name&facet.mincount=1&facet.limit-1&rows=25000";
+
+					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+						handleAs: 'json',
+						headers: {
+							'Accept': "application/solr+json",
+							'Content-Type': "application/solrquery+x-www-form-urlencoded",
+							'X-Requested-With': null,
+							'Authorization': (window.App.authorizationToken || "")
+						},
+						data: query
+					}), function(response){
+						
+						var role_names = response.response.docs.map(function(s){
+							return s.role_name
+						});
+						
+						var role_list = role_names.join(", ");
+						item.role_name = role_list;
+						
+						var row = renderProperty(column, item, options);
+						if(row){
+							domConstruct.place(row, tbody);
+						}
+					});
+				// }
+			} else {
+				var row = renderProperty(column, item, options);
+				if(row){
+					domConstruct.place(row, tbody);
+				}
+			}
+			
 		})
 	}
 
