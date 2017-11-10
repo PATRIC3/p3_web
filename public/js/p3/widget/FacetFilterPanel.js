@@ -2,11 +2,11 @@ define([
 	"dojo/_base/declare", "dojo/on", "dojo/_base/Deferred",
 	"dojo/dom-class", "dojo/dom-construct", "dijit/_WidgetBase",
 	"dojo/request", "dojo/_base/lang", "dojo/dom-attr", "dojo/query",
-	"dojo/dom-geometry", "dojo/dom-style", "./FacetFilter", "../util/PathJoin"
+	"dojo/dom-geometry", "dojo/dom-style", "./FacetFilter", "../util/PathJoin", "dojox/widget/Standby"
 ], function(declare, on, Deferred,
 			domClass, domConstruct, WidgetBase,
 			xhr, lang, domAttr, Query,
-			domGeometry, domStyle, FacetFilter, PathJoin){
+			domGeometry, domStyle, FacetFilter, PathJoin, Standby){
 
 	function parseFacetCounts(facets){
 		var out = {};
@@ -43,11 +43,21 @@ define([
 			var url = PathJoin(this.apiServer, this.dataModel, query + "&limit(1)" + f);
 			console.log("URL", url);
 
+			this.loadingMask = new Standby({
+				target: this.id,
+				image: "/public/js/p3/resources/images/spin.svg",
+				color: "#efefef"
+			});
+			//this.addChild(this.loadingMask);
+			this.loadingMask.startup();
+			this.loadingMask.show();
+
 			return xhr.get(url, {
 				handleAs: "json",
 				"headers": {accept: "application/solr+json"}
 			}).then(function(response){
-				return parseFacetCounts(response.facet_counts.facet_fields)
+				this.loadingMask.hide();
+				return parseFacetCounts(response.facet_counts.facet_fields);
 			})
 		},
 
