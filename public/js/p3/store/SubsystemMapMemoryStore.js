@@ -114,7 +114,7 @@ define([
 				return def.promise;
 			}
 
-			(this.state.subsystem_id) ? _self.pmState.subsystem_id = this.state.subsystem_id[0] : {};
+			(this.state.subsystem_id) ? _self.pmState.subsystem_id = this.state.subsystem_id : {};
 			(this.state.genome_ids) ? _self.pmState.genome_ids = this.state.genome_ids : {};
 			//(this.state.genome_id) ? _self.pmState.genome_id = this.state.genome_id : {};
 			//(this.state.feature_id) ? _self.pmState.feature_id = this.state.feature_id : {};

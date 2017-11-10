@@ -567,8 +567,7 @@ define([
 					{
 						name: 'Superclass',
 						text: 'superclass'
-					},
-					{
+					}, {
 						name: 'Class',
 						text: 'class'
 					}, {
@@ -583,8 +582,7 @@ define([
 					}, {
 						name: 'Active',
 						text: 'active'
-					}
-					, {
+					}, {
 						name: 'Patric ID',
 						text: 'patric_id'
 					}, {
@@ -600,8 +598,7 @@ define([
 					{
 						name: 'Superclass',
 						text: 'superclass'
-					},
-					{
+					}, {
 						name: 'Class',
 						text: 'class'
 					}, {
