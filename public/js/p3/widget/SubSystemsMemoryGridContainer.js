@@ -628,12 +628,25 @@ define([
 					//used to query data
 					url['genome_ids'] = this.state.genome_ids;
 					url['subsystem_id'] = selection[0].subsystem_id;
-					url['subsystemselectionuniqueidentifier'] = JSON.stringify(selection);
 
-					//used to create DOM
-					// url['subsystem_name'] =  selection[0].subsystem_name;
-					// url['class'] =  selection[0]['class'];
-					// url['subclass'] =  selection[0].subclass;
+					var mapSelection = {};
+					if (selection[0].genome_count) {
+						mapSelection.genome_count = selection[0].genome_count;
+					}
+					if (selection[0].role_count) {
+						mapSelection.role_count = selection[0].role_count;
+					}
+					if (selection[0].gene_count) {
+						mapSelection.gene_count = selection[0].gene_count;
+					}
+					if (selection[0].genome_name) {
+						mapSelection.genome_name = selection[0].genome_name;
+					}
+
+					var mapData = [];
+					mapData.push(mapSelection)
+
+					url['subsystemselectionuniqueidentifier'] = JSON.stringify(mapData);
 
 					var params = Object.keys(url).map(function(p){
 						return p + "=" + url[p]
