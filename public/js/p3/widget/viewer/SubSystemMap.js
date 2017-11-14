@@ -139,19 +139,24 @@ define([
 				if (this.subclass !== "") {
 					headerString += this.subclass + " » ";
 				}
-
-				var geneInfo = " (";
-
-				if (selectionData.genome_count > 1) {
-					geneInfo += selectionData.genome_count + " genomes, ";
-				}
-
-				if (selectionData.hasOwnProperty("role_count")) {
-					geneInfo += selectionData.gene_count + " genes, " + selectionData.role_count + " roles)";
-				} else {
-					geneInfo += selectionData.genome_name + ")";
-				}
 				
+				var geneInfo = "";
+
+				if ( selectionData.genome_count > 1 && selectionData.hasOwnProperty("role_count") ) {
+					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.genome_count + " genomes, " + selectionData.gene_count + " genes)";
+				} 
+				else if ( selectionData.genome_count > 1 && !selectionData.hasOwnProperty("role_count") ) {
+					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.gene_count + " genes)";
+				}
+				else if (selectionData.hasOwnProperty("role_count")) {
+					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.gene_count + " genes)";
+				} 
+				else {
+					geneInfo += " (" + selectionData.genome_name + ")";
+				}
+
+
+
 				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
 
 				var genomeIdList = [];
