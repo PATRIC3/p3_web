@@ -20,7 +20,7 @@ const bluebird = require('bluebird');
 const user  = require('./backend/model/user/user-router');
 const auth = require('./backend/auth');
 const hello = require('./backend/hello/index');
-//const hello = require('./backend/hello/index');
+const site = require('./site');
 const authUtils = require('./backend/auth/authUtils');
 //const config2 = require('./backend/config.js');
 //const routes2 = require('./backend/routes.js');
@@ -61,7 +61,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.set('query parser', 'extended');
 //app.locals.backendUrl='http://localhost:7000';
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: false}));
@@ -87,20 +87,19 @@ app.use(bodyParser.json());
 //app.use(morgan('tiny'));
 //routes2(app);
 
-app.use(cookieParser(config.get('cookieSecret')));
+//app.use(cookieParser(config.get('cookieSecret')));
+app.use(cookieParser());
 
-// var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
-// app.use(session({
-// 	store: sessionStore,
-// 	key: config.get("cookieKey"),
-// 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-// 	//    secret: config.get('cookieSecret'),
-// 	resave: false,
-// 	saveUninitialized: true
-// }));
-
-// app.use(passport.initialize());
-// app.use(passport.session());
+let sessionStore = app.sessionStore = new RedisStore(config.get('redis'));
+app.use(session({
+    store: sessionStore,
+    key: config.get('cookieKey'),
+    cookie: { domain: config.get('cookieDomain'),  maxAge: 2628000000 },
+    resave:false,
+    saveUninitialized:true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 if (config.get('enableDevAuth')) {
 	app.use(function(req, res, next) {
@@ -214,6 +213,7 @@ app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/ima
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // };
 // app.use(cors(corsOptions));
+app.post('/gensession', site.login);
 app.use('/auth', auth);
 app.use('/hello', hello);
 app.use('/user', authUtils.ensureAuthenticated, user);

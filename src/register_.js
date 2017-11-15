@@ -291,7 +291,7 @@ logMeIn(appName) {
       this.checkIfLoggedIn();
       this.nevermind('LoginForm');
       if (appName === 'PATRIC') {
-        this.generateSession(data.email);
+        this.getUser(data.email);
       }
     }
     if (data.message) {
@@ -318,7 +318,7 @@ logout() {
 }
 
 
-generateSession(useremail) {
+getUser(useremail) {
   //fetch the user with the auth header
   console.log('put some cool code here for session and cookie and storage or something for this user: ' + useremail);
   let bodyData = {'email': useremail };
@@ -337,7 +337,34 @@ generateSession(useremail) {
   return this.fetch(this.backendUrl + '/user/', fetchData)
   .then((response) => response.json())
   .then((data) => {
+    this.generateSession(data);
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
+  });
+}
+
+generateSession(user) {
+  let fetchData = {
+    method: 'POST',
+    //credentials: 'same-origin',
+    body: JSON.stringify(user),
+    headers: {
+      //'X-CSRFTOKEN': cookieToken,
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + localStorage.getItem('token')
+    }
+  };
+  return this.fetch(this.frontendUrl + '/gensession/', fetchData)
+  .then((response) => response.json())
+  .then((data) => {
     console.log(data);
+  })
+  .catch((error) => {
+    console.log(error);
+    //console.log
   });
 }
 
