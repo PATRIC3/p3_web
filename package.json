@@ -7,7 +7,7 @@
     "start": "node ./bin/p3-web",
     "start:redis": "redis-server",
     "stop:redis": "/etc/init.d/redis-server stop",
-    "installglobals": "npm install -g yarn@latest && npm install -g gulp@latest && npm install",
+    "installglobals": "npm install -g yarn@latest && npm install -g gulp@latest",
     "buildClient": "./buildClient.sh",
     "buildBack": "./buildBack.sh && cp .env backend/ && cp src/index.html backend/frontend/dist/",
     "moveuser": "cp src/styles.css public/js/ && cp src/userutil/index.html public/userutil/",

@@ -55,6 +55,21 @@ let jobs = require('./routes/jobs');
 let help = require('./routes/help');
 let httpProxy = require('http-proxy');
 let apiProxy = httpProxy.createProxyServer();
+let fs = require('fs-extra');
+
+if (config.get('signing_PEM')) {
+        let f = config.get('signing_PEM');
+        if (f.charAt(0) !== '/') {
+                f = __dirname + '/' + f;
+        }
+        try {
+                console.log('Filename: ', f);
+                SigningPEM =   fs.readFileSync(f);
+              if (SigningPEM) { console.log('Got PEM File'); }
+        } catch (err) {
+                console.log('Could not find PEM File: ', f, err);
+        }
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

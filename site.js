@@ -20,8 +20,12 @@ let bcrypt = require('bcrypt');
 // 	}
 // ];
 
-function generateBearerToken(user, req) {
-  let name = user.username || user.id;
+function generateBearerToken(req) {
+  //let name = user.username || user.id;
+  //console.log('this is the user: ' + JSON.stringify(req));
+  //console.log('this is the name: ' + user.name);
+  let name = req.body.name;
+  console.log('trying to set the userid: ' + name);
   let tokenid = uuid.v4().toString();
   let exp = new Date(); exp.setFullYear(exp.getFullYear() + 1);
   let expiration = Math.floor(exp.valueOf() / 1000);
@@ -32,9 +36,14 @@ function generateBearerToken(user, req) {
     'token_type=' + 'Bearer', 'realm=' + realm
   ];
   payload.push('SigningSubject=' + config.get('signingSubjectURL'));
+  //let key = req.headers.authorization;
+  //key = key.replace('Bearer ', '');
+  //console.log(key);
   let key = SigningPEM.toString('ascii');
+
   let sign = crypto.createSign('RSA-SHA1');
   sign.update(payload.join('|'));
+  //let signature = sign.sign(key);
   let signature = sign.sign(key, 'hex');
   let token = payload.join('|') + '|sig=' + signature;
   console.log('New Bearer Token: ', token);
@@ -58,35 +67,36 @@ exports.login = [
     //   }
       // req.logIn(user, function(err) {
       //   if (err) { return next(err); }
-        console.log('req.logIn user: ', user, 'Session: ', req.session);
+        //console.log('req.logIn user: ', user, 'Session: ', req.session);
         if (user && req.session) {
           delete user.password;
           delete user.resetCode;
-          console.log('I am trying to generate a token for: ' + user);
-          req.session.authorizationToken = generateBearerToken(user, req);
+          //console.log('I am trying to generate a token for: ' + JSON.stringify(user));
+          console.log('is this the userid: ' + JSON.stringify(user.id));
+          req.session.authorizationToken = generateBearerToken(req);
           user.id = user.id + '@patricbrc.org';
           req.session.userProfile = user;
         } else {
           console.log('NO Session');
         }
-        if (req.headers && req.headers['x-requested-with'] && (req.headers['x-requested-with'] === 'XMLHttpRequest')) {
+        // if (req.headers && req.headers['x-requested-with'] && (req.headers['x-requested-with'] === 'XMLHttpRequest')) {
           req.session.save( function() {
             console.log('Session Saved: ', req.session);
             res.status(204);
             res.end();
           });
           return;
-        }
-        if (req.query.application_id) {
-          if (req.query.application_id === 'patric3') {
-            res.write("<html><body><script>window.location='" + config.get('patric3_webapp_callbackURL') + "';</script></body></html>");
-            res.end();
-            return;
-            //						return res.redirect(302, config.get("patric3_webapp_callbackURL"));
-          }
-        }
+        // }
+        // if (req.query.application_id) {
+        //   if (req.query.application_id === 'patric3') {
+        //     res.write("<html><body><script>window.location='" + config.get('patric3_webapp_callbackURL') + "';</script></body></html>");
+        //     res.end();
+        //     return;
+        //     //						return res.redirect(302, config.get("patric3_webapp_callbackURL"));
+        //   }
+        // }
         //return res.redirect(302,'/'); // + user.username);
-        return res.redirect(302, config.get('changepw_redirect'));
+        //return res.redirect(302, config.get('changepw_redirect'));
         //next();
       // });
 
