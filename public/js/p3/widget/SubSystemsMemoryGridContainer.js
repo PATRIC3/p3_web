@@ -159,6 +159,24 @@ define([
 			}
 		},
 
+		openDownloadSelection: function(selectedRows, container) {
+			this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("selection", selectedRows);
+			this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("containerType", this.containerType);
+			if(container && container.grid){
+				this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("grid", container.grid);
+			}
+
+			this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.timeout(3500);
+
+			setTimeout(lang.hitch(this, function(){
+				popup.open({
+					popup: this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog,
+					around: this.selectionActionBar._actions.DownloadSelection.button,
+					orient: ["below"]
+				});
+			}), 10);
+		},
+
 		containerActions: GridContainer.prototype.containerActions.concat([
 			[
 				"DownloadTable",
@@ -312,15 +330,7 @@ define([
 					switch(this.type){
 						
 						case "subsystems":
-							var genome_ids = [];
-
-							if (selection[0].document_type === "subsystems_gene") {
-								genome_ids = selection.map(function(s){
-									return s.genome_id;
-								})
-							} else {
-								genome_ids = this.state.genome_ids;
-							}
+							var genome_ids = this.state.genome_ids;
 
 							var subsystem_ids = selection.map(function(s){
 								return s.subsystem_id
@@ -393,31 +403,56 @@ define([
 						isTaxonView = true;
 					}
 
+					var genome_ids = this.state.genome_ids;
+
 					switch(this.type){
 
 						case "subsystems":
 
-							selection.forEach(function(row) {
-								var selectedRow = {};
+							var subsystem_ids = selection.map(function(s){
+								return s.subsystem_id
+							});
 
-								selectedRow["Superclass"] = row["superclass"];
-								selectedRow["Class"] = row["class"];
-								selectedRow["Subclass"] = row["subclass"];
-								selectedRow["Subsystem Name"] = row["subsystem_name"];
-								if (isTaxonView) {
-									selectedRow["Genome Count"] = row["genome_count"];
-								}
-								selectedRow["Gene Count"] = row["gene_count"];
-								selectedRow["Role Count"] = row["role_count"];
-								selectedRow["Active"] = row["active"];
+							var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + subsystem_ids.join("\" OR \"") + "\")&fl=feature_id&rows=25000";
+							var that = this;
+							when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+								handleAs: 'json',
+								headers: {
+									'Accept': "application/solr+json",
+									'Content-Type': "application/solrquery+x-www-form-urlencoded",
+									'X-Requested-With': null,
+									'Authorization': (window.App.authorizationToken || "")
+								},
+								data: query
+							}), function(response){
 
-								selectedRows.push(selectedRow)
+								var feature_ids = response.response.docs.map(function(feature) {
+									return feature.feature_id
+								})
+
+								selection.forEach(function(row) {
+									var selectedRow = {};
+
+									selectedRow["Superclass"] = row["superclass"];
+									selectedRow["Class"] = row["class"];
+									selectedRow["Subclass"] = row["subclass"];
+									selectedRow["Subsystem Name"] = row["subsystem_name"];
+									if (isTaxonView) {
+										selectedRow["Genome Count"] = row["genome_count"];
+									}
+									selectedRow["Gene Count"] = row["gene_count"];
+									selectedRow["Role Count"] = row["role_count"];
+									selectedRow["Active"] = row["active"];
+									selectedRow["subsystem_id"] = row["subsystem_id"];
+									selectedRow["feature_id"] = feature_ids;
+
+									selectedRows.push(selectedRow)
+								})
+
+								that.openDownloadSelection(selectedRows, container);
 							})
-
 							break;
-
 						case "genes":
-
 
 							selection.forEach(function(row) {
 								var selectedRow = {};
@@ -432,31 +467,18 @@ define([
 								selectedRow["Patric Id"] = row["patric_id"];
 								selectedRow["Gene"] = row["gene"];
 								selectedRow["Product"] = row["product"];
+								selectedRow["subsystem_id"] = row["subsystem_id"];
+								selectedRow["feature_id"] = row["feature_id"];
 
 								selectedRows.push(selectedRow)
 							})
+
+							this.openDownloadSelection(selectedRows, container);
 							break;
 
 						default:
 							break;
 					}
-
-					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("selection", selectedRows);
-					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("containerType", this.containerType);
-					if(container && container.grid){
-						this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.set("grid", container.grid);
-					}
-
-					this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog.timeout(3500);
-
-					setTimeout(lang.hitch(this, function(){
-						popup.open({
-							popup: this.selectionActionBar._actions.DownloadSelection.options.tooltipDialog,
-							around: this.selectionActionBar._actions.DownloadSelection.button,
-							orient: ["below"]
-						});
-					}), 10);
-
 				},
 				false
 			],

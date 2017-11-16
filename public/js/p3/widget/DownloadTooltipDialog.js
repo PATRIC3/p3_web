@@ -49,10 +49,22 @@ define([
 				dataType = conf.dataType;
 				pkField = conf.pk;
 			}
-			var sel = selection.map(function(sel){
-				return sel[pkField]
-			});
 
+			var sel;
+
+			//subsystem - take only first item
+			if (selection["Superclass"] && selection["Subclass"]) {
+				sel = selection.map(function(sel){
+					return sel[pkField]
+				});
+
+				sel = sel[0]
+			} else {
+				sel = selection.map(function(sel){
+					return sel[pkField]
+				});
+			}
+			
 			console.log("DOWNLOAD TYPE: ", type)
 			if(conf.generateDownloadFromStore && this.grid && this.grid.store && type && this["_to" + type]){
 				var query = "in(" + pkField + ",(" + sel.join(",") + "))&sort(+" + pkField + ")&limit(2500000)"
@@ -292,7 +304,7 @@ define([
 				tableData: true
 			},
 			"subsystem_data": {
-				pk: "subsystem_id",
+				pk: "feature_id",
 				dataType: "subsystem",
 				"label": "Subsystem",
 				"generateDownloadFromStore": true,

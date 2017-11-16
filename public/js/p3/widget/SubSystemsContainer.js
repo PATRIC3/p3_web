@@ -189,7 +189,8 @@ define([
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 						genome_count: 		{label: 'Genome Count', field: 'genome_count'},
 						gene_count: 		{label: 'Gene Count', field: 'gene_count'},
-						role_count: 		{label: 'Role Count', field: 'role_count'}
+						role_count: 		{label: 'Role Count', field: 'role_count'},
+						subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
 					},
 					queryOptions: {
 						sort: [{attribute: "subsystem_name"}]
@@ -223,7 +224,8 @@ define([
 						product: 			{label: 'Product', field: 'product'},
 						genome_id: 			{label: "Genome ID", field: "genome_id", hidden: true},
 						genome_name: 		{label: "Genome Name", field: "genome_name"},
-						taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true}
+						taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true},
+						subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
 					},
 					queryOptions: {
 						sort: [{attribute: "subsystem_name"}]
@@ -250,7 +252,8 @@ define([
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 						gene_count: 		{label: 'Gene Count', field: 'gene_count'},
 						role_count: 		{label: 'Role Count', field: 'role_count'},
-						active: 			{label: "Active", field: "active"}
+						active: 			{label: "Active", field: "active"},
+						subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
 					},
 					queryOptions: {
 						sort: [{attribute: "subsystem_name"}]
@@ -281,7 +284,8 @@ define([
 						active: 			{label: "Active", field: "active"},
 						patric_id: 			{label: "Patric ID", field: "patric_id"},
 						gene: 				{label: "Gene", field: "gene"},
-						product: 			{label: "Product", field: "product"}
+						product: 			{label: "Product", field: "product"},
+						subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
 					},
 					queryOptions: {
 						sort: [{attribute: "subsystem_name"}]

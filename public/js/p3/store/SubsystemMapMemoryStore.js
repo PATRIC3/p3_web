@@ -220,46 +220,27 @@ define([
 						return '"' + idstr + '"'
 					}).join(' OR ');
 
-					var ref_query = "q=subsystem_id:\"" +  _self.state.subsystem_id + "\" AND role_id:(" + roleIDsInQuote + ")&fl=role_id,role_name,class&sort=role_id asc&rows=" + roleIDs.length;
+					var data = [];
+					roleGenomeDist.forEach(function(element){
+						var role = element.val;
+						if(role != ""){
+							var roleCount = element.count;
 
-					return when(request.post(_self.apiServer + 'subsystem_ref/', {
-						handleAs: 'json',
-						headers: {
-							'Accept': "application/json",
-							'Content-Type': "application/solrquery+x-www-form-urlencoded",
-							'X-Requested-With': null,
-							'Authorization': _self.token ? _self.token : (window.App.authorizationToken || "")
-						},
-						data: ref_query
-					}), function(res){
+							var row = {
+								role_name: role,
+								role_count: roleCount,
+								genome_count: roleGenomeIdSet[role].length,
+								genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
+								description: role.replace('_', ' '),
+								genomes: roleGenomeIdCountMap[role].join("")
+							};
+							data.push(row);
+						}
+					});
 
-						var ecRefHash = {};
-						res.forEach(function(el){
-							ecRefHash[el['role_name']] = el['role_name'];
-						});
-
-						var data = [];
-						roleGenomeDist.forEach(function(element){
-							var role = element.val;
-							if(role != ""){
-								var roleCount = element.count;
-
-								var row = {
-									role_name: role,
-									role_count: roleCount,
-									genome_count: roleGenomeIdSet[role].length,
-									genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
-									description: ecRefHash[role],
-									genomes: roleGenomeIdCountMap[role].join("")
-								};
-								data.push(row);
-							}
-						});
-
-						_self.setData(data);
-						_self._loaded = true;
-						return true;
-					})
+					_self.setData(data);
+					_self._loaded = true;
+					return true;
 				});
 			});
 			return this._loadingDeferred;
