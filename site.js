@@ -20,11 +20,11 @@ let bcrypt = require('bcrypt');
 // 	}
 // ];
 
-function generateBearerToken(req) {
+function generateBearerToken(user) {
   //let name = user.username || user.id;
   //console.log('this is the user: ' + JSON.stringify(req));
   //console.log('this is the name: ' + user.name);
-  let name = req.body.name;
+  let name = user.id;
   console.log('trying to set the userid: ' + name);
   let tokenid = uuid.v4().toString();
   let exp = new Date(); exp.setFullYear(exp.getFullYear() + 1);
@@ -53,7 +53,9 @@ function generateBearerToken(req) {
 exports.login = [
   bodyParser.urlencoded({extended:true}),
   function(req, res, next) {
-    let user = req.body;
+    let user = req.body[0];
+    //console.log(user[0]);
+    //user = user[0];
     // passport.authenticate('local', function(err, user, info) {
     //   console.log('local auth: ', user, info, req.query);
     //   if (err) { return next(err); }
@@ -72,20 +74,20 @@ exports.login = [
           delete user.password;
           delete user.resetCode;
           //console.log('I am trying to generate a token for: ' + JSON.stringify(user));
-          console.log('is this the userid: ' + JSON.stringify(user.id));
-          req.session.authorizationToken = generateBearerToken(req);
+          //console.log('is this the userid: ' + JSON.stringify(user.id));
+          req.session.authorizationToken = generateBearerToken(user);
           user.id = user.id + '@patricbrc.org';
           req.session.userProfile = user;
         } else {
           console.log('NO Session');
         }
         // if (req.headers && req.headers['x-requested-with'] && (req.headers['x-requested-with'] === 'XMLHttpRequest')) {
-          req.session.save( function() {
-            console.log('Session Saved: ', req.session);
+          // req.session.save( function() {
+            console.log(req.session);
             res.status(204);
             res.end();
-          });
-          return;
+          // });
+          // return;
         // }
         // if (req.query.application_id) {
         //   if (req.query.application_id === 'patric3') {
