@@ -38,7 +38,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let session = require('express-session-unsigned');
 let RedisStore = require('connect-redis')(session);
-let passport = require('passport');
+//let passport = require('passport');
 const packagejson = require('./package.json');
 //var backendUrl = 'http://localhost:7000'; //replace this with a variable used on prod server
 let routes = require('./routes/index');
@@ -113,14 +113,14 @@ app.use(session({
     resave:false,
     saveUninitialized:true
 }));
-app.use(passport.initialize());
-app.use(passport.session());
-
+//app.use(passport.initialize());
+//app.use(passport.session());
+app.use(function(req, res, next) { console.log('Session: ', req.session); next(); });
 if (config.get('enableDevAuth')) {
 	app.use(function(req, res, next) {
 		let user = config.get('devUser');
-		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
-		if (user && (!req.isAuthenticated || !req.isAuthenticated() )) {
+		console.log('Dev User: ', user, req.isAuthenticated);
+		if (user && (!req.isAuthenticated)) {
 			// console.log("Auto Login Dev User");
 			req.login(user, function(err) {
 				// console.log("login user: ", user);
