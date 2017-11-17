@@ -24,11 +24,11 @@ gulp.task('srcfiles', function() {
   .pipe(gulp.dest('./public/js/'));
 });
 
-gulp.task('startredis', function() {
-  // server.open((err) => {
-  //   if (err === null) {
-  //     // You may now connect a client to the Redis
-  //     // server bound to `server.port` (e.g. 6379).
-  //   }
-  // });
-});
+// gulp.task('startredis', function() {
+//   // server.open((err) => {
+//   //   if (err === null) {
+//   //     // You may now connect a client to the Redis
+//   //     // server bound to `server.port` (e.g. 6379).
+//   //   }
+//   // });
+// });

@@ -13,3 +13,8 @@ public/js/release/build-report.txt
 .vscode/
 public/video/
 yarn-error.log
+private.pem
+public.pem
+server.crt
+server.csr
+server.key

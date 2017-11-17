@@ -1,5 +1,5 @@
 let config = require('./config');
-const dotenv = require('dotenv');
+//const dotenv = require('dotenv');
 //const fs = require('fs');
 // ignoring this for testing because it is only used for development purposes
 /* istanbul ignore next */
@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 if (config.get('newrelic_license_key')) {
 	require('newrelic');
 }
-const cors = require('cors');
+//const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const mongoose = require('./backend/node_modules/mongoose');
@@ -19,8 +19,9 @@ const bodyParser = require('body-parser');
 const bluebird = require('bluebird');
 const user  = require('./backend/model/user/user-router');
 const auth = require('./backend/auth');
+const rql = require('./rql.js');
 const hello = require('./backend/hello/index');
-//const hello = require('./backend/hello/index');
+const site = require('./site');
 const authUtils = require('./backend/auth/authUtils');
 //const config2 = require('./backend/config.js');
 //const routes2 = require('./backend/routes.js');
@@ -28,7 +29,6 @@ const app = express();
 // const enforce = require('express-sslify');
 // const cors = require('cors');
 // const corsOptions =
-// { origin: JSON.parse(process.env.AllowUrl).urls,
 //   credentials: true,
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // };
@@ -38,7 +38,7 @@ let logger = require('morgan');
 let cookieParser = require('cookie-parser');
 let session = require('express-session-unsigned');
 let RedisStore = require('connect-redis')(session);
-let passport = require('passport');
+//let passport = require('passport');
 const packagejson = require('./package.json');
 //var backendUrl = 'http://localhost:7000'; //replace this with a variable used on prod server
 let routes = require('./routes/index');
@@ -53,15 +53,30 @@ let apps = require('./routes/apps');
 let uploads = require('./routes/uploads');
 let jobs = require('./routes/jobs');
 let help = require('./routes/help');
-let httpProxy = require('http-proxy');
-let apiProxy = httpProxy.createProxyServer();
+//let httpProxy = require('http-proxy');
+//let apiProxy = httpProxy.createProxyServer();
+let fs = require('fs-extra');
+
+if (config.get('signing_PEM')) {
+        let f = config.get('signing_PEM');
+        if (f.charAt(0) !== '/') {
+                f = __dirname + '/' + f;
+        }
+        try {
+                console.log('Filename: ', f);
+                SigningPEM =   fs.readFileSync(f);
+              if (SigningPEM) { console.log('Got PEM File'); }
+        } catch (err) {
+                console.log('Could not find PEM File: ', f, err);
+        }
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 //app.set('query parser', 'extended');
 //app.locals.backendUrl='http://localhost:7000';
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(logger('dev'));
 //app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: false}));
@@ -76,8 +91,7 @@ app.use((req, res, next) => {
 });
 
 mongoose.Promise = bluebird;
-console.log(process.env.MONGO_DB_URI);
-mongoose.connect(process.env.MONGO_DB_URI, {
+mongoose.connect(config.get('MONGO_DB_URI'), {
   useMongoClient: true
 });
 
@@ -87,47 +101,47 @@ app.use(bodyParser.json());
 //app.use(morgan('tiny'));
 //routes2(app);
 
-app.use(cookieParser(config.get('cookieSecret')));
+//app.use(cookieParser(config.get('cookieSecret')));
+app.use(cookieParser());
 
-// var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
-// app.use(session({
-// 	store: sessionStore,
-// 	key: config.get("cookieKey"),
-// 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-// 	//    secret: config.get('cookieSecret'),
-// 	resave: false,
-// 	saveUninitialized: true
-// }));
+let sessionStore = app.sessionStore = new RedisStore(config.get('redis'));
+app.use(session({
+    store: sessionStore,
+    key: config.get('cookieKey'),
+    cookie: { domain: config.get('cookieDomain'),  maxAge: 2628000000 },
+    resave:false,
+    saveUninitialized:true
+}));
+//app.use(passport.initialize());
+//app.use(passport.session());
+app.use(function(req, res, next) { console.log('Session: ', req.session); next(); });
 
-// app.use(passport.initialize());
-// app.use(passport.session());
-
-if (config.get('enableDevAuth')) {
-	app.use(function(req, res, next) {
-		let user = config.get('devUser');
-		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
-		if (user && (!req.isAuthenticated || !req.isAuthenticated() )) {
-			// console.log("Auto Login Dev User");
-			req.login(user, function(err) {
-				// console.log("login user: ", user);
-				if (err) {
-					return next(err);
-				}
-				// console.log("Dev User logged in.  Setup Session");
-				if (user && req.session) {
-					delete user.password;
-					req.session.userProfile = user;
-					req.session.authorizationToken = config.get('devAuthorizationToken');
-				} else {
-					console.log('NO Session');
-				}
-				next();
-			});
-		} else {
-			next();
-		}
-	});
-}
+// if (config.get('enableDevAuth')) {
+// 	app.use(function(req, res, next) {
+// 		let user = config.get('devUser');
+// 		console.log('Dev User: ', user, req.isAuthenticated);
+// 		if (user && (!req.isAuthenticated)) {
+// 			// console.log("Auto Login Dev User");
+// 			req.login(user, function(err) {
+// 				// console.log("login user: ", user);
+// 				if (err) {
+// 					return next(err);
+// 				}
+// 				// console.log("Dev User logged in.  Setup Session");
+// 				if (user && req.session) {
+// 					delete user.password;
+// 					req.session.userProfile = user;
+// 					req.session.authorizationToken = config.get('devAuthorizationToken');
+// 				} else {
+// 					console.log('NO Session');
+// 				}
+// 				next();
+// 			});
+// 		} else {
+// 			next();
+// 		}
+// 	});
+// }
 
 app.use(function(req, res, next) {
 	// console.log("Config.production: ", config.production);
@@ -208,14 +222,11 @@ app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/ima
 		res.setHeader('Expires', d.toGMTString());
 	}
 }));
-// const corsOptions =
-// { origin: JSON.parse(process.env.AllowUrl).urls,
-//   credentials: true,
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-// app.use(cors(corsOptions));
+
+app.post('/gensession', site.login);
 app.use('/auth', auth);
 app.use('/hello', hello);
+app.get('/rql', rql.findUserRql);
 app.use('/user', authUtils.ensureAuthenticated, user);
 app.use('/patric/', express.static(path.join(__dirname, 'public/patric/')));
 app.use('/public/', express.static(path.join(__dirname, 'public/')));
