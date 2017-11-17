@@ -17,12 +17,19 @@ let q = new Rql(queryString).toMongo();
 //console.log(JSON.stringify(q));
 console.log('this is the req query converted to mongodb');
 console.log(q);
-// User.find({id: 'JVS'}, (err, users) => {
-//   console.log(users);
-// });
+let limit = null;
+if (q[1].limit !== undefined) {
+  limit = q[1].limit;
+  console.log(limit);
+}
+let select = null;
+if (q[1].select !== undefined) {
+  select = q[1].select;
+  console.log(select);
+}
 User.find(q[0])
-.limit(25)
-.select({id:1, name:1})
+.limit(limit)
+.select(select)
 .exec((err, users) => {
   if (users) {
     res.status(200).json(users);
