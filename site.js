@@ -1,13 +1,13 @@
-let passport = require('passport');
-let login = require('connect-ensure-login');
-let fs = require('fs-extra');
+//let passport = require('passport');
+//let login = require('connect-ensure-login');
+//let fs = require('fs-extra');
 let bodyParser = require('body-parser');
 let config = require('./config');
 let uuid = require('node-uuid');
 let crypto = require('crypto');
 //let dataModel = require('./dataModel');
-let when = require('promised-io/promise').when;
-let bcrypt = require('bcrypt');
+//let when = require('promised-io/promise').when;
+//let bcrypt = require('bcrypt');
 
 // exports.index = [
 // 	login.ensureLoggedIn(),

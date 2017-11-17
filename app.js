@@ -29,7 +29,6 @@ const app = express();
 // const enforce = require('express-sslify');
 // const cors = require('cors');
 // const corsOptions =
-// { origin: JSON.parse(process.env.AllowUrl).urls,
 //   credentials: true,
 //   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 // };
@@ -92,8 +91,7 @@ app.use((req, res, next) => {
 });
 
 mongoose.Promise = bluebird;
-console.log(process.env.MONGO_DB_URI);
-mongoose.connect(process.env.MONGO_DB_URI, {
+mongoose.connect(config.get('MONGO_DB_URI'), {
   useMongoClient: true
 });
 
@@ -117,32 +115,33 @@ app.use(session({
 //app.use(passport.initialize());
 //app.use(passport.session());
 app.use(function(req, res, next) { console.log('Session: ', req.session); next(); });
-if (config.get('enableDevAuth')) {
-	app.use(function(req, res, next) {
-		let user = config.get('devUser');
-		console.log('Dev User: ', user, req.isAuthenticated);
-		if (user && (!req.isAuthenticated)) {
-			// console.log("Auto Login Dev User");
-			req.login(user, function(err) {
-				// console.log("login user: ", user);
-				if (err) {
-					return next(err);
-				}
-				// console.log("Dev User logged in.  Setup Session");
-				if (user && req.session) {
-					delete user.password;
-					req.session.userProfile = user;
-					req.session.authorizationToken = config.get('devAuthorizationToken');
-				} else {
-					console.log('NO Session');
-				}
-				next();
-			});
-		} else {
-			next();
-		}
-	});
-}
+
+// if (config.get('enableDevAuth')) {
+// 	app.use(function(req, res, next) {
+// 		let user = config.get('devUser');
+// 		console.log('Dev User: ', user, req.isAuthenticated);
+// 		if (user && (!req.isAuthenticated)) {
+// 			// console.log("Auto Login Dev User");
+// 			req.login(user, function(err) {
+// 				// console.log("login user: ", user);
+// 				if (err) {
+// 					return next(err);
+// 				}
+// 				// console.log("Dev User logged in.  Setup Session");
+// 				if (user && req.session) {
+// 					delete user.password;
+// 					req.session.userProfile = user;
+// 					req.session.authorizationToken = config.get('devAuthorizationToken');
+// 				} else {
+// 					console.log('NO Session');
+// 				}
+// 				next();
+// 			});
+// 		} else {
+// 			next();
+// 		}
+// 	});
+// }
 
 app.use(function(req, res, next) {
 	// console.log("Config.production: ", config.production);
@@ -223,12 +222,7 @@ app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/ima
 		res.setHeader('Expires', d.toGMTString());
 	}
 }));
-// const corsOptions =
-// { origin: JSON.parse(process.env.AllowUrl).urls,
-//   credentials: true,
-//   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
-// app.use(cors(corsOptions));
+
 app.post('/gensession', site.login);
 app.use('/auth', auth);
 app.use('/hello', hello);

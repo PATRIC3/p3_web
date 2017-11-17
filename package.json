@@ -10,7 +10,7 @@
     "stop:redis": "/etc/init.d/redis-server stop",
     "installglobals": "npm install -g yarn@latest && npm install -g gulp@latest",
     "buildClient": "./buildClient.sh",
-    "buildBack": "./buildBack.sh && cp .env backend/ && cp src/index.html backend/frontend/dist/",
+    "buildBack": "./buildBack.sh",
     "moveuser": "cp src/styles.css public/js/ && cp src/userutil/index.html public/userutil/",
     "test": "jest --config jest.config.json --notify",
     "eslint-fix": "./node_modules/eslint/bin/eslint.js --fix ."
