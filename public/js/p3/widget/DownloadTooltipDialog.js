@@ -53,7 +53,7 @@ define([
 			var sel;
 
 			//subsystem - take only first item
-			if (selection[0].hasOwnProperty("Superclass") && selection[0].hasOwnProperty("Subclass")) {
+			if (this.containerType === "subsystem_data") {
 				sel = selection[0][pkField]
 
 			} else {
