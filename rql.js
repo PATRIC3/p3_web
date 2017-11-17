@@ -1,16 +1,41 @@
 const User  = require('./backend/model/user/user-schema');
+//const userModel = require('./backend/model/user/user-facade');
 const Rql = require('dactic-store-mongodb/rql');
 //let q = new rql(query).toMongo();
 
 exports.findUserRql = function(req, res) {
-let q = new Rql(req.query).toMongo();
-console.log('howdy');
-User.find(q, (err, users) => {
+  console.log('this is the request query ');
+  console.log(req.query);
+  //let reqqstring = (req.query);
+  // let reqq = new Rql(req.query).toMongo();
+  // console.log('this is the mongodb query from req query ');
+  // console.log(reqq);
+  //let testq = 'or(eq(id,JVS),eq(first_name,jv),eq(last_name,jv))' + 'select(id,name)' + 'limit(25)';
+  let queryString = Object.keys(req.query)[0] + Object.keys(req.query)[1] + Object.keys(req.query)[2];
+let q = new Rql(queryString).toMongo();
+//console.log('this is the stringified test query');
+//console.log(JSON.stringify(q));
+console.log('this is the req query converted to mongodb');
+console.log(q);
+// User.find({id: 'JVS'}, (err, users) => {
+//   console.log(users);
+// });
+User.find(q[0])
+.limit(25)
+.select({id:1, name:1})
+.exec((err, users) => {
   if (users) {
     res.status(200).json(users);
-  }
+  } else {
   return res.status(404).json({message: 'Not found'});
+  }
 });
+//   if (users) {
+//     res.status(200).json(users);
+//   } else {
+//   return res.status(404).json({message: 'Not found'});
+// }
+// });
 };
 //res.send({ message: 'howdy' });
 // return when(this.query("or(eq(id," + encodeURIComponent(id) +"),eq(email,"+encodeURIComponent(id)+"))"), function(res){
