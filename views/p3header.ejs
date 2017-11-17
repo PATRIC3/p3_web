@@ -80,7 +80,7 @@
                 <span>DATA</span>
                 <div data-dojo-type="p3/widget/TooltipDialog">
                     <div>
-                        <div style='vertical-align: top;width:150px;display:inline-block;margin-right: 5px;'>
+                        <div style="vertical-align: top;width:150px;display:inline-block;margin-right: 5px;">
                             <div class="menuHeader">Data Types</div>
                             <div class="menuItems">
                                 <div><a class="navigationLink" href="/view/DataType/AntibioticResistance">Antibiotic
@@ -103,7 +103,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style='vertical-align:top;width:200px;display: inline-block'>
+                        <div style="vertical-align:top;width:200px;display: inline-block">
                             <div class="menuHeader">Specialty Data Collections</div>
                             <div class="menuItems">
                                 <div><a class="navigationLink" href="/content/patric-collaborations"
@@ -131,7 +131,7 @@
 
                 <div data-dojo-type="p3/widget/TooltipDialog">
                     <div>
-                        <div style='vertical-align: top;width:175px;display:inline-block'>
+                        <div style="vertical-align: top;width:175px;display:inline-block">
                             <div class="HideWithAuth">
                                 Please <a class="loginLink">login</a> to view your workspaces.
                             </div>
@@ -180,7 +180,7 @@
 
                 <div data-dojo-type="p3/widget/TooltipDialog">
                     <div>
-                        <div style='vertical-align: top;width: 180px;margin-right:5px;display:inline-block'>
+                        <div style="vertical-align: top;width: 180px;margin-right:5px;display:inline-block">
                             <div class="menuHeader">Genomics</div>
                             <div class="menuItems">
                                 <div><a class="navigationLink" href="/app/Assembly">Assembly</a></div>
@@ -242,9 +242,14 @@
                    data-dojo-type="p3/widget/GlobalSearch"/>
         </div>
 
-        <div class="HideWithAuth authLinks showOnLoad dijitHidden" style="padding: 3px 2px 0 0;">
-            <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
-            <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
+        <div class="HideWAuth" style="padding: 6px 2px 0 0;">
+          <button class="regbutton" type="button" onclick="registerClass.register('PATRIC')">Register</button>
+          <button class="regbutton" type="button" onclick="registerClass.loginUser('PATRIC')">Login</button>
+        </div>
+
+        <div class="ShowWAuth" style="padding: 6px 2px 0 0;display:none">
+          <button class="regbutton" type="button" onclick="registerClass.userAccount()">Account</button>
+          <button class="regbutton" type="button" onclick="registerClass.logout()">Logout</button>
         </div>
 
         <div>
