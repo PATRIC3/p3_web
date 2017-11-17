@@ -1,5 +1,5 @@
 let config = require('./config');
-const dotenv = require('dotenv');
+//const dotenv = require('dotenv');
 //const fs = require('fs');
 // ignoring this for testing because it is only used for development purposes
 /* istanbul ignore next */
@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 if (config.get('newrelic_license_key')) {
 	require('newrelic');
 }
-const cors = require('cors');
+//const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const mongoose = require('./backend/node_modules/mongoose');
@@ -19,6 +19,7 @@ const bodyParser = require('body-parser');
 const bluebird = require('bluebird');
 const user  = require('./backend/model/user/user-router');
 const auth = require('./backend/auth');
+const rql = require('./rql.js');
 const hello = require('./backend/hello/index');
 const site = require('./site');
 const authUtils = require('./backend/auth/authUtils');
@@ -53,8 +54,8 @@ let apps = require('./routes/apps');
 let uploads = require('./routes/uploads');
 let jobs = require('./routes/jobs');
 let help = require('./routes/help');
-let httpProxy = require('http-proxy');
-let apiProxy = httpProxy.createProxyServer();
+//let httpProxy = require('http-proxy');
+//let apiProxy = httpProxy.createProxyServer();
 let fs = require('fs-extra');
 
 if (config.get('signing_PEM')) {
@@ -231,6 +232,7 @@ app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/ima
 app.post('/gensession', site.login);
 app.use('/auth', auth);
 app.use('/hello', hello);
+app.get('/rql', rql.findUserRql);
 app.use('/user', authUtils.ensureAuthenticated, user);
 app.use('/patric/', express.static(path.join(__dirname, 'public/patric/')));
 app.use('/public/', express.static(path.join(__dirname, 'public/')));
