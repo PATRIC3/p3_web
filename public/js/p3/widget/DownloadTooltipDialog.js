@@ -53,12 +53,9 @@ define([
 			var sel;
 
 			//subsystem - take only first item
-			if (selection["Superclass"] && selection["Subclass"]) {
-				sel = selection.map(function(sel){
-					return sel[pkField]
-				});
+			if (selection[0].hasOwnProperty("Superclass") && selection[0].hasOwnProperty("Subclass")) {
+				sel = selection[0][pkField]
 
-				sel = sel[0]
 			} else {
 				sel = selection.map(function(sel){
 					return sel[pkField]
