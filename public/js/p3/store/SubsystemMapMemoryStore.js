@@ -225,13 +225,14 @@ define([
 						var role = element.val;
 						if(role != ""){
 							var roleCount = element.count;
+							var clean_name = role.replace(/_/g, ' ');
 
 							var row = {
 								role_name: role,
 								role_count: roleCount,
 								genome_count: roleGenomeIdSet[role].length,
 								genome_missing: (genome_ids.length - roleGenomeIdSet[role].length),
-								description: role.replace('_', ' '),
+								description: clean_name,
 								genomes: roleGenomeIdCountMap[role].join("")
 							};
 							data.push(row);
@@ -340,7 +341,7 @@ define([
 					role.genomes = distributionTransformer(role.genomes, genomeOrderChangeMap);
 				}
 				var order = roleOrderMap[role.role_name];
-				cols[order] = createColumn(order, role.role_name, role.role_name, role.genomes, meta);
+				cols[order] = createColumn(order, role.role_name, role.description, role.genomes, meta);
 			});
 
 			// colorStop
