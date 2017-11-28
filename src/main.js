@@ -1,0 +1,18 @@
+const Register_ = require('./classes/Register_.js');
+const registerClass = new Register_();
+const patric = require('./commons/patric.js');
+registerClass.checkIfLoggedIn();
+document.getElementsByClassName('logout')[0].addEventListener('click', registerClass.logout);
+let registerUser = document.getElementsByClassName('registeruser')[0];
+registerUser.appName = 'PATRIC';
+registerUser.patric = patric;
+registerUser.setEvents = registerClass.setEvents;
+registerUser.fetchClient = registerClass.fetchClient;
+registerUser.runFetch = registerClass.runFetch;
+registerUser.createUser = registerClass.createUser;
+registerUser.updateRegForm = registerClass.updateRegForm;
+registerUser.validateReg = registerClass.validateReg;
+registerUser.displayRegError = registerClass.displayRegError;
+registerUser.validateGoogle = registerClass.validateGoogle;
+registerUser.createRegistrationForm = registerClass.createRegistrationForm;
+registerUser.addEventListener('click', registerClass.register);
