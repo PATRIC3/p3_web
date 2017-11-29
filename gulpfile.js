@@ -6,17 +6,19 @@ const config = require('./config.js');
 //const server = new RedisServer(6379);
 
 gulp.task('srcfiles', function() {
-  gulp.src(['./src/main.js'])
+  gulp.src(['./src/regmain.js'])
+  .pipe(gulp.dest('./gulpified/'));
+  gulp.src(['./src/userutilmain.js'])
   .pipe(gulp.dest('./gulpified/'));
   gulp.src(['./src/commons/patric.js'])
   .pipe(gulp.dest('./gulpified/commons/'));
   gulp.src(['./src/classes/Register_.js'])
   .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
-  //.pipe(replace('module.exports = Register;', ''))
-  //.pipe(replace('const Fetch = require(\'isomorphic-fetch\');', ''))
-  //.pipe(replace('this.fetch = Fetch;', ''))
-  //.pipe(replace('this.fetch', 'fetch'))
+  .pipe(gulp.dest('./gulpified/classes/'));
+  gulp.src(['./src/classes/User_.js'])
+  .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
+  .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/classes/'));
   // gulp.src(['./src/user_.js'])
   // .pipe(replace('http://localhost:7000', config.get('backendUrl')))

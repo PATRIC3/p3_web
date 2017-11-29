@@ -8,7 +8,7 @@ class Register_ {
   }
 
   checkIfLoggedIn() {
-    //console.log('checking if I am already logged in');
+    console.log('checking if I am already logged in');
     if (localStorage.getItem('token') !== null) {
       let hideWithAuth = document.getElementsByClassName('HideWAuth');
       //console.log('this is local storage :' + localStorage.getItem('token'));
