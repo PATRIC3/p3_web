@@ -21,7 +21,7 @@ const user  = require('./backend/model/user/user-router');
 const auth = require('./backend/auth');
 const rql = require('./rql.js');
 const hello = require('./backend/hello/index');
-const site = require('./site');
+//const site = require('./site');
 const authUtils = require('./backend/auth/authUtils');
 //const config2 = require('./backend/config.js');
 //const routes2 = require('./backend/routes.js');
@@ -114,7 +114,7 @@ app.use(session({
 }));
 //app.use(passport.initialize());
 //app.use(passport.session());
-app.use(function(req, res, next) { console.log('Session: ', req.session); next(); });
+//app.use(function(req, res, next) { console.log('Session: ', req.session); next(); });
 
 // if (config.get('enableDevAuth')) {
 // 	app.use(function(req, res, next) {
@@ -223,7 +223,7 @@ app.use('/patric/images', express.static(path.join(__dirname, 'public/patric/ima
 	}
 }));
 
-app.post('/gensession', site.login);
+//app.post('/gensession', site.login);
 app.use('/auth', auth);
 app.use('/hello', hello);
 app.get('/rql', rql.findUserRql);

@@ -23,7 +23,7 @@ let defaults = {
 	"realm": "patricbrc.org",
 	'newsFeedRSS': 'http://enews.patricbrc.org/feed',
 	'sessionTTL': 2628000000,
-	'MONGO_DB_URI': 'mongodb://montage-devteam:montagei5Fun!@ds111895.mlab.com:11895/montage_dev',
+	MONGO_DB_URI: '',
 	appServiceURL: '',
 	dataURL: '',
 	//accountURL: 'http://user.patric.local:3002/',

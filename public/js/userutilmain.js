@@ -150,10 +150,10 @@ class User_ {
         regform1[0].style.display = 'none';
         //let feurl = 'http://localhost:7000';
           /* istanbul ignore if */
-        // if ('http://localhost:3000' !== undefined) {
-        //   feurl = 'http://localhost:3000';
+        // if ('http://www.patric.local:3000' !== undefined) {
+        //   feurl = 'http://www.patric.local:3000';
         // }
-        window.location.href = 'http://localhost:3000' + '/';
+        window.location.href = 'http://www.patric.local:3000' + '/';
       }
     })
     .catch((error) => {
@@ -167,8 +167,8 @@ class User_ {
     regform1[0].style.display = 'none';
     let feurl = 'http://localhost:7000';
       /* istanbul ignore if */
-    if ('http://localhost:3000' !== undefined) {
-      feurl = 'http://localhost:3000';
+    if ('http://www.patric.local:3000' !== undefined) {
+      feurl = 'http://www.patric.local:3000';
     }
     window.location.href = feurl + '/';
   }
