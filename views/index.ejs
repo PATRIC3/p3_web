@@ -9,6 +9,7 @@
 				request.isAuthenticated: <%= request.isAuthenticated && request.isAuthenticated() %>
 			*/
 		</script>
+		<link rel="stylesheet" href="/js/styles.css" />
 	</head>
 	<body class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
 		<div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer" data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false">
@@ -23,5 +24,11 @@
 			<% } %>
 		</div>
 		<% include javascript %>
+		<!-- <script>registerClass.checkIfLoggedIn();</script> -->
+		<script src="/js/regmain.js">
+		// const registerClass = new Register_();
+		// registerClass.checkIfLoggedIn();
+		</script>
+
 	</body>
 </html>

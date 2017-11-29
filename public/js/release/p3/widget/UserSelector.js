@@ -32,7 +32,7 @@ define("p3/widget/UserSelector", [
 			if(!this.store){
 			    //https://user.patricbrc.org/user/?or(eq(last_name,re:%5eMac),eq(first_name,re:%5eMac))&http_accept=application/json
 				this.store = new Store({
-					target: PathJoin(this.apiServiceUrl, "user") + "/",
+					target: PathJoin(this.apiServiceUrl, "rql") + "/",
 					idProperty: "id",
 					headers: {accept: "application/json", "Authorization": (window.App.authorizationToken || "")}
 				});
