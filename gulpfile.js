@@ -20,6 +20,10 @@ gulp.task('srcfiles', function() {
   .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/classes/'));
+  gulp.src(['./src/classes/Login_.js'])
+  .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
+  .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
+  .pipe(gulp.dest('./gulpified/classes/'));
   // gulp.src(['./src/user_.js'])
   // .pipe(replace('http://localhost:7000', config.get('backendUrl')))
   // .pipe(replace('http://localhost:3000', config.get('frontendUrl')))

@@ -1,5 +1,248 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process){
+//import {inject} from 'aurelia-framework';
+const Fetch = require('isomorphic-fetch');
+const patric = require('../commons/patric.js');
+//import {App} from '../app';
+//@inject(App)
+class Login_ {
+  constructor() {
+    this.fetch = Fetch;
+    this.appName = '';
+    //this.app = App;
+  }
+
+  createLoginForm(appName) {
+    patric.nevermind('LoginForm');
+    patric.nevermind('RegistrationForm');
+    let useremailinput = '<tr class="emailheader"><th style="border:none">Email</th></tr><tr class="emailinput"><td>' +
+    '<input class="loginemail" type="email" name="email" style="width:300px;" value="" required></td></tr>';
+    let useridrow = '<tr class="uidheader"><th style="border:none">Email or Userid</th></tr><tr class="uidinput"><td>' +
+    '<input class="userid" name="userid" style="width:300px;" value="" required></tr></td>';
+    let loginform = document.createElement('div');
+    loginform.className = 'LoginForm';
+    loginform.innerHTML = '<h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;"><span class="patric">PATRIC </span>User Login</h2>' +
+    '<form><div style="padding:2px; margin:10px;"><table><tbody>' + useridrow +
+    '<tr><td>&nbsp;</td></tr>' + useremailinput +
+    '<tr><td>&nbsp;</td></tr><tr><th style="border:none">Password</th></tr><tr><td>' +
+    '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required></td></tr>' +
+    '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
+    '<div class="loginerror" style="color:red"></div>' +
+    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton">Login</button>' +
+    '<button style="display:none;margin-top:34px" class="resetpass" type="button">Reset Password</button></div></div></form>' +
+    '<button class="nevermind" style="margin-left:12px;margin-top:20px" type="button">Cancel</button></div></div></form>';
+    let home = document.getElementsByClassName('home');
+    home[0].insertBefore(loginform, home[0].childNodes[0]);
+    let elementsObj = {'PATRIC': ['patric', 'uidheader', 'uidinput'], 'nArr': ['emailheader', 'emailinput']};
+    patric.showHideElements2(appName, elementsObj);
+  }
+
+  loginUser(evt) {
+    let appName = evt.target.appName;
+    let createLoginForm = evt.target.createLoginForm;
+    let setEvents = evt.target.setEvents;
+    let validateLogin = evt.target.validateLogin;
+    let buttonsErrors = evt.target.buttonsErrors;
+
+    let fetchClient = evt.target.fetchClient;
+    let runFetch = evt.target.runFetch;
+    let generateSession = evt.target.generateSession;
+    let logMeIn = evt.target.logMeIn;
+    let resetpass = evt.target.resetpass;
+    createLoginForm(appName);
+    let emailInput = document.getElementsByClassName('loginemail')[0];
+    setEvents(emailInput, appName, validateLogin, buttonsErrors);
+    let useridInput = document.getElementsByClassName('userid')[0];
+    setEvents(useridInput, appName, validateLogin, buttonsErrors);
+    let passwordInput = document.getElementsByClassName('loginpass')[0];
+    setEvents(passwordInput, appName, validateLogin, buttonsErrors);
+    let loginButton = document.getElementsByClassName('loginbutton')[0];
+    loginButton.appName = appName;
+    loginButton.fetchClient = fetchClient;
+    loginButton.runFetch = runFetch;
+    //loginButton.checkIfLoggedIn = this.checkIfLoggedIn;
+    loginButton.generateSession = generateSession;
+    loginButton.addEventListener('click', logMeIn);
+    let resetPB = document.getElementsByClassName('resetpass')[0];
+    resetPB.fetchClient = fetchClient;
+    resetPB.appName = appName;
+    resetPB.runFetch = runFetch;
+    resetPB.addEventListener('click', resetpass);
+    let cancelButton = document.getElementsByClassName('nevermind')[0];
+    cancelButton.addEventListener('click', function() {
+      document.getElementsByClassName('LoginForm')[0].style.display = 'none';
+    });
+    /* istanbul ignore if */
+    if (process.env.NODE_ENV !== 'test') {
+      document.getElementsByClassName('LoginForm')[0].scrollIntoView();
+    }
+  }
+
+  setEvents(element, appName, validateLogin, buttonsErrors) {
+    element.addEventListener('change', validateLogin);
+    element.addEventListener('focus', validateLogin);
+    element.addEventListener('keydown', validateLogin);
+    element.addEventListener('keyup', validateLogin);
+    element.appName = appName;
+    element.buttonsErrors = buttonsErrors;
+  }
+
+  validateLogin(evt) {
+    let appName = evt.target.appName;
+    let buttonsErrors = evt.target.buttonsErrors;
+    let useridValue = document.getElementsByClassName('userid')[0].value;
+    let validpass = document.getElementsByClassName('loginpass')[0].checkValidity();
+    let emailValue = document.getElementsByClassName('loginemail')[0].value;
+    let validemail = document.getElementsByClassName('loginemail')[0].checkValidity();
+    let edot = emailValue.split('.');
+    let message = '';
+    if (edot.length === 1 || !validemail || emailValue === '') {
+      validemail = false;
+      message = '<p>Invalid email format</p>';
+    }
+    if (emailValue.split('@gmail').length > 1 || emailValue.split('@vt.edu').length > 1 || emailValue.split('@bi.vt.edu').length > 1) {
+      validemail = false;
+      message = '<p>Please click the Login with Google button</p>';
+    }
+    buttonsErrors(appName, message, validemail, validpass, useridValue);
+  }
+
+  buttonsErrors(appName, message, validemail, validpass, useridValue) {
+    let resetpassButton = document.getElementsByClassName('resetpass')[0];
+    let logbutton = document.getElementsByClassName('loginbutton')[0];
+    logbutton.style.display = 'none';
+    let loginErrorMessage = document.getElementsByClassName('loginerror')[0];
+    loginErrorMessage.innerHTML = message;
+    if (appName !== 'PATRIC' && validemail) {
+      logbutton.style.display = 'block';
+      loginErrorMessage.innerHTML = '';
+    }
+    if (appName === 'PATRIC' && useridValue !== '') {
+      logbutton.style.display = 'block';
+      loginErrorMessage.innerHTML = '';
+    }
+    if (!validpass) {
+      logbutton.style.display = 'none';
+      loginErrorMessage.innerHTML = '<p>Invalid password</p>';
+    }
+    if (useridValue !== '' || validemail) {
+      resetpassButton.style.display = 'block';
+    } else {
+      resetpassButton.style.display = 'none';
+    }
+  }
+
+  resetpass(evt) {
+    let appName = evt.target.appName;
+    let fetchClient = evt.target.fetchClient;
+    let runFetch = evt.target.runFetch;
+    let loginEmail = '';
+    if (appName !== 'PATRIC') {
+      loginEmail = document.getElementsByClassName('loginemail')[0].value;
+    } else {
+      loginEmail = document.getElementsByClassName('userid')[0].value;
+    }
+    let bodyData = {'email': loginEmail };
+    let fetchData = {
+      method: 'PUT',
+      body: JSON.stringify(bodyData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    };
+    return runFetch(fetchClient, '', '/auth/resetpass', fetchData, null, null, loginEmail);
+  }
+
+  logMeIn(evt) {
+    console.log('going to log you in');
+    let fetchClient = evt.target.fetchClient;
+    let runFetch = evt.target.runFetch;
+    let appName = evt.target.appName;
+    //let checkIfLoggedIn = evt.target.checkIfLoggedIn;
+    let generateSession = evt.target.generateSession;
+    let useridValue = '';
+    let emailValue = '';
+    const passwordValue = document.getElementsByClassName('loginpass')[0].value;
+    useridValue = document.getElementsByClassName('userid')[0].value;
+    if (appName !== 'PATRIC') {
+      emailValue = document.getElementsByClassName('loginemail')[0].value;
+    }
+    let bodyData = {'email': emailValue, 'password': passwordValue, 'id': useridValue, 'appName': appName };
+    let fetchData = {
+      method: 'POST',
+      body: JSON.stringify(bodyData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    };
+    return runFetch(fetchClient, '', '/auth/login', fetchData, generateSession, appName, null);
+  }
+
+  runFetch(fetchClient, url, route, fetchData, generateSession, appName, loginEmail) {
+    let loginform1 = document.getElementsByClassName('LoginForm');
+    let messagediv = document.getElementsByClassName('loginerror')[0];
+    // let feurl = 'http://localhost:7000';
+    // /* istanbul ignore if */
+    // if ('http://www.patric.local:3000' !== undefined) {
+    //   feurl = 'http://www.patric.local:3000';
+    // }
+    return fetchClient(url + route, fetchData)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.token !== undefined) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('useremail', data.email);
+        //Login.app.auth.setToken(data.token);
+        // if (appName === 'PATRIC') {
+        //   //checkIfLoggedIn();
+        //   generateSession(data.email, fetchClient);
+        // }
+        loginform1[0].style.display = 'none';
+        if (appName === 'PATRIC') {
+          window.location.href = 'http://www.patric.local:3000' + '/';
+        } else {
+        window.location.href = 'http://www.patric.local:3000' + '/login/?token=true';
+      }
+      }
+      if (data.message) {
+        messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+      }
+      if (!data.message && !data.token && data.email) {
+        loginform1[0].style.display = 'none';
+        window.location.href = feurl + '/userutil/?email=' + data.email + '&form=reset';
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+  }
+
+  generateSession(useremail, fetchClient) {
+    console.log('put some cool code here for session and cookie and storage or something for this user: ' + useremail);
+    let bodyData = {'email': useremail };
+    let fetchData = {
+      method: 'POST',
+      body: JSON.stringify(bodyData),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    };
+    return fetchClient('' + '/user/', fetchData)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
+  }
+}
+module.exports = Login_;
+
+}).call(this,require('_process'))
+},{"../commons/patric.js":3,"_process":6,"isomorphic-fetch":5}],2:[function(require,module,exports){
+(function (process){
 const Fetch = require('isomorphic-fetch');
 const patric = require('../commons/patric.js');
 class Register_ {
@@ -36,7 +279,7 @@ class Register_ {
     if (process.env.NODE_ENV === 'test') {
       window.location.href = 'http://localhost:9000' + '/';
     } else {
-    window.location.href = 'http://localhost:3000' + '/';
+    window.location.href = 'http://www.patric.local:3000' + '/';
   }
   }
 
@@ -240,7 +483,7 @@ class Register_ {
       } else {
         document.getElementsByClassName('RegistrationForm')[0].style.display = 'none';
         if (data.email) {
-          window.location.href = 'http://localhost:3000' + '/userutil/?email=' + data.email;
+          window.location.href = 'http://www.patric.local:3000' + '/userutil/?email=' + data.email;
         }
       }
     })
@@ -252,10 +495,10 @@ class Register_ {
   // userAccount() {
   //   //let feurl = 'http://localhost:7000';
   //     /* istanbul ignore if */
-  //   // if ('http://localhost:3000' !== undefined) {
-  //   //   feurl = 'http://localhost:3000';
+  //   // if ('http://www.patric.local:3000' !== undefined) {
+  //   //   feurl = 'http://www.patric.local:3000';
   //   // }
-  //   window.location.href = 'http://localhost:3000' + '/userutil/?form=prefs';
+  //   window.location.href = 'http://www.patric.local:3000' + '/userutil/?form=prefs';
   // }
 
 }
@@ -263,26 +506,7 @@ class Register_ {
 module.exports = Register_;
 
 }).call(this,require('_process'))
-},{"../commons/patric.js":2,"_process":5,"isomorphic-fetch":4}],2:[function(require,module,exports){
-// exports.showHideElements = function(appName, pArr, nArr){
-//   let element;
-//   for (let i = 0; i < pArr.length; i++){
-//     element = document.getElementsByClassName(pArr[i])[0];
-//     if (appName === 'PATRIC'){
-//       element.style.display = 'block';
-//     } else {
-//       element.style.display = 'none';
-//     }
-//   }
-//   for (let j = 0; j < nArr.length; j++){
-//     element = document.getElementsByClassName(nArr[j])[0];
-//     if (appName === 'PATRIC'){
-//       element.style.display = 'none';
-//     } else {
-//       element.style.display = 'block';
-//     }
-//   }
-// };
+},{"../commons/patric.js":3,"_process":6,"isomorphic-fetch":5}],3:[function(require,module,exports){
 
 exports.showHideElements2 = function(appName, objofElements) {
   let objKeys = Object.keys(objofElements);
@@ -306,10 +530,12 @@ exports.nevermind = function(className) {
   }
 };
 
-},{}],3:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 const Register_ = require('./classes/Register_.js');
 const registerClass = new Register_();
 const patric = require('./commons/patric.js');
+const Login_ = require('./classes/Login_.js');
+const loginClass = new Login_();
 registerClass.checkIfLoggedIn();
 document.getElementsByClassName('logout')[0].addEventListener('click', registerClass.logout);
 let registerUser = document.getElementsByClassName('registeruser')[0];
@@ -326,7 +552,25 @@ registerUser.validateGoogle = registerClass.validateGoogle;
 registerUser.createRegistrationForm = registerClass.createRegistrationForm;
 registerUser.addEventListener('click', registerClass.register);
 
-},{"./classes/Register_.js":1,"./commons/patric.js":2}],4:[function(require,module,exports){
+let loginUser = document.getElementsByClassName('logintheuser')[0];
+loginUser.createLoginForm = loginClass.createLoginForm;
+loginUser.setEvents = loginClass.setEvents;
+loginUser.validateLogin = loginClass.validateLogin;
+loginUser.buttonsErrors = loginClass.buttonsErrors;
+
+loginUser.fetchClient = loginClass.fetch;
+loginUser.runFetch = loginClass.runFetch;
+loginUser.generateSession = loginClass.generateSession;
+loginUser.logMeIn = loginClass.logMeIn;
+loginUser.resetpass = loginClass.resetpass;
+
+loginUser.appName = 'PATRIC';
+loginUser.addEventListener('click', loginClass.loginUser);
+// exports.showLogin = function(app) {  // eslint-disable-line no-unused-vars
+//     loginClass.loginUser(app);
+//   };
+
+},{"./classes/Login_.js":1,"./classes/Register_.js":2,"./commons/patric.js":3}],5:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function
 // on the global object (window or self)
 //
@@ -334,7 +578,7 @@ registerUser.addEventListener('click', registerClass.register);
 require('whatwg-fetch');
 module.exports = self.fetch.bind(self);
 
-},{"whatwg-fetch":6}],5:[function(require,module,exports){
+},{"whatwg-fetch":7}],6:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -520,7 +764,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 (function(self) {
   'use strict';
 
@@ -983,4 +1227,4 @@ process.umask = function() { return 0; };
   self.fetch.polyfill = true
 })(typeof self !== 'undefined' ? self : this);
 
-},{}]},{},[3]);
+},{}]},{},[4]);
