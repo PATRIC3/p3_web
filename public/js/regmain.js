@@ -10,7 +10,7 @@ class Register_ {
   }
 
   checkIfLoggedIn() {
-    //console.log('checking if I am already logged in');
+    console.log('checking if I am already logged in');
     if (localStorage.getItem('token') !== null) {
       let hideWithAuth = document.getElementsByClassName('HideWAuth');
       //console.log('this is local storage :' + localStorage.getItem('token'));
@@ -173,14 +173,6 @@ class Register_ {
   }
 
   validateGoogle(email, appName) {
-    // console.log(email);
-    // let primaryApp = '';
-    // if (document.getElementsByClassName('pas')[0].style.display !== 'none'){
-    //   primaryApp = document.getElementsByClassName('pas')[0].value;
-    // } else {
-    //   primaryApp = 'PATRIC';
-    // }
-    //console.log(primaryApp);
     let googleAccount = false;
     if (email.split('@gmail').length > 1 || email.split('@vt.edu').length > 1 || email.split('@bi.vt.edu').length > 1) {
       if (appName !== 'PATRIC') {
@@ -324,7 +316,7 @@ let registerUser = document.getElementsByClassName('registeruser')[0];
 registerUser.appName = 'PATRIC';
 registerUser.patric = patric;
 registerUser.setEvents = registerClass.setEvents;
-registerUser.fetchClient = registerClass.fetchClient;
+registerUser.fetchClient = registerClass.fetch;
 registerUser.runFetch = registerClass.runFetch;
 registerUser.createUser = registerClass.createUser;
 registerUser.updateRegForm = registerClass.updateRegForm;

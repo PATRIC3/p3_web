@@ -10,7 +10,7 @@
     "stop:redis": "/etc/init.d/redis-server stop",
     "installglobals": "npm install -g yarn@latest && npm install -g gulp@latest",
     "browserify": "browserify ./gulpified/regmain.js -o public/js/regmain.js && browserify ./gulpified/userutilmain.js -o public/js/userutilmain.js",
-    "buildClient": "./buildClient.sh",
+    "buildClient": "./buildClient.sh && && cp .env backend/",
     "buildBack": "./buildBack.sh",
     "moveuser": "cp src/styles.css public/js/ && cp src/userutil/index.html public/userutil/",
     "test": "jest --config jest.config.json --notify",

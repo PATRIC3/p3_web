@@ -171,14 +171,6 @@ class Register_ {
   }
 
   validateGoogle(email, appName) {
-    // console.log(email);
-    // let primaryApp = '';
-    // if (document.getElementsByClassName('pas')[0].style.display !== 'none'){
-    //   primaryApp = document.getElementsByClassName('pas')[0].value;
-    // } else {
-    //   primaryApp = 'PATRIC';
-    // }
-    //console.log(primaryApp);
     let googleAccount = false;
     if (email.split('@gmail').length > 1 || email.split('@vt.edu').length > 1 || email.split('@bi.vt.edu').length > 1) {
       if (appName !== 'PATRIC') {
