@@ -165,6 +165,8 @@ class Login_ {
     useridValue = document.getElementsByClassName('userid')[0].value;
     if (appName !== 'PATRIC') {
       emailValue = document.getElementsByClassName('loginemail')[0].value;
+    } else {
+      emailValue = document.getElementsByClassName('userid')[0].value;
     }
     let bodyData = {'email': emailValue, 'password': passwordValue, 'id': useridValue, 'appName': appName };
     let fetchData = {
