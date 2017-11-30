@@ -73,6 +73,7 @@ app.use('/hello', hello);
 app.get('/rql', rql.findUserRql);
 app.use('/user', authUtils.ensureAuthenticated, user);
 app.use('/userutil/', express.static(path.join(__dirname, 'public/userutil/')));
+app.use('/useraccount/', express.static(path.join(__dirname, 'public/useraccount/')));
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

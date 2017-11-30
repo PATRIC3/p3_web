@@ -26,7 +26,7 @@ class Login_ {
     '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required></td></tr>' +
     '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
     '<div class="loginerror" style="color:red"></div>' +
-    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton">Login</button>' +
+    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton loginbutton">Login</button>' +
     '<button style="display:none;margin-top:34px" class="resetpass" type="button">Reset Password</button></div></div></form>' +
     '<button class="nevermind" style="margin-left:12px;margin-top:20px" type="button">Cancel</button></div></div></form>';
     let home = document.getElementsByClassName('home');

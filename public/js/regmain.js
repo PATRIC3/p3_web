@@ -28,7 +28,7 @@ class Login_ {
     '<input class="loginpass" pattern=".{8,}" title="8 characters minimum" type="password" name="password" style="width:300px;" value="" required></td></tr>' +
     '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
     '<div class="loginerror" style="color:red"></div>' +
-    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="loginbutton">Login</button>' +
+    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton loginbutton">Login</button>' +
     '<button style="display:none;margin-top:34px" class="resetpass" type="button">Reset Password</button></div></div></form>' +
     '<button class="nevermind" style="margin-left:12px;margin-top:20px" type="button">Cancel</button></div></div></form>';
     let home = document.getElementsByClassName('home');
@@ -540,6 +540,9 @@ const Login_ = require('./classes/Login_.js');
 const loginClass = new Login_();
 registerClass.checkIfLoggedIn();
 document.getElementsByClassName('logout')[0].addEventListener('click', registerClass.logout);
+document.getElementsByClassName('useraccount')[0].addEventListener('click', function() {
+  window.location.href = 'http://www.patric.local:3000' + '/useraccount/';
+});
 let registerUser = document.getElementsByClassName('registeruser')[0];
 registerUser.appName = 'PATRIC';
 registerUser.patric = patric;
