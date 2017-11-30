@@ -10,3 +10,4 @@ routes
 user.js
 register.js
 news.js
+app.js
