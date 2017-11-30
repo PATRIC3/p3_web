@@ -5,6 +5,9 @@ const Login_ = require('./classes/Login_.js');
 const loginClass = new Login_();
 registerClass.checkIfLoggedIn();
 document.getElementsByClassName('logout')[0].addEventListener('click', registerClass.logout);
+document.getElementsByClassName('useraccount')[0].addEventListener('click', function() {
+  window.location.href = process.env.FrontendUrl + '/useraccount/';
+});
 let registerUser = document.getElementsByClassName('registeruser')[0];
 registerUser.appName = 'PATRIC';
 registerUser.patric = patric;
