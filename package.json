@@ -1,6 +1,6 @@
 {
   "name": "p3-web",
-  "version": "3.4.15",
+  "version": "3.5.0",
   "private": true,
   "scripts": {
     "dev": "gulp srcfiles && npm run moveuser && npm run browserify && npm run redis && npm start",
