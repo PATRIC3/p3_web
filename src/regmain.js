@@ -24,7 +24,7 @@ loginUser.createLoginForm = loginClass.createLoginForm;
 loginUser.setEvents = loginClass.setEvents;
 loginUser.validateLogin = loginClass.validateLogin;
 loginUser.buttonsErrors = loginClass.buttonsErrors;
-
+loginUser.patric = patric;
 loginUser.fetchClient = loginClass.fetch;
 loginUser.runFetch = loginClass.runFetch;
 loginUser.generateSession = loginClass.generateSession;

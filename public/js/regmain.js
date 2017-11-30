@@ -219,24 +219,24 @@ class Login_ {
     });
   }
 
-  generateSession(useremail, fetchClient) {
-    console.log('put some cool code here for session and cookie and storage or something for this user: ' + useremail);
-    let bodyData = {'email': useremail };
-    let fetchData = {
-      method: 'POST',
-      body: JSON.stringify(bodyData),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    };
-    return fetchClient('' + '/user/', fetchData)
-    .then((response) => response.json())
-    .then((data) => {
-      console.log(data);
-    });
-  }
+  // generateSession(useremail, fetchClient) {
+  //   console.log('put some cool code here for session and cookie and storage or something for this user: ' + useremail);
+  //   let bodyData = {'email': useremail };
+  //   let fetchData = {
+  //     method: 'POST',
+  //     body: JSON.stringify(bodyData),
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //       'Authorization': 'Bearer ' + localStorage.getItem('token')
+  //     }
+  //   };
+  //   return fetchClient('' + '/user/', fetchData)
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data);
+  //   });
+  // }
 }
 module.exports = Login_;
 

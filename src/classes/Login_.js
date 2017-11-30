@@ -7,10 +7,10 @@ class Login_ {
   constructor() {
     this.fetch = Fetch;
     this.appName = '';
-    //this.app = App;
+    this.patric = patric;
   }
 
-  createLoginForm(appName) {
+  createLoginForm(appName, patric) {
     patric.nevermind('LoginForm');
     patric.nevermind('RegistrationForm');
     let useremailinput = '<tr class="emailheader"><th style="border:none">Email</th></tr><tr class="emailinput"><td>' +
@@ -41,13 +41,13 @@ class Login_ {
     let setEvents = evt.target.setEvents;
     let validateLogin = evt.target.validateLogin;
     let buttonsErrors = evt.target.buttonsErrors;
-
+    let patric = evt.target.patric;
     let fetchClient = evt.target.fetchClient;
     let runFetch = evt.target.runFetch;
     let generateSession = evt.target.generateSession;
     let logMeIn = evt.target.logMeIn;
     let resetpass = evt.target.resetpass;
-    createLoginForm(appName);
+    createLoginForm(appName, patric);
     let emailInput = document.getElementsByClassName('loginemail')[0];
     setEvents(emailInput, appName, validateLogin, buttonsErrors);
     let useridInput = document.getElementsByClassName('userid')[0];
@@ -209,7 +209,7 @@ class Login_ {
       }
       if (!data.message && !data.token && data.email) {
         loginform1[0].style.display = 'none';
-        window.location.href = feurl + '/userutil/?email=' + data.email + '&form=reset';
+        window.location.href = process.env.FrontendUrl + '/userutil/?email=' + data.email + '&form=reset';
       }
     })
     .catch((error) => {
