@@ -97,7 +97,7 @@ module.exports = UserAct;
 },{"isomorphic-fetch":3}],2:[function(require,module,exports){
 const Uact = require('./classes/UserAccount.js');
 const userActClass = new Uact();
-const updateUserPrefs = function() {
+exports.updateUserPrefs = function() {
     console.log('update user prefs');
     let fname = document.getElementsByClassName('uprofFirstName')[0].value;
     let fspace = fname.split(' ');
@@ -110,7 +110,8 @@ const updateUserPrefs = function() {
     document.getElementsByClassName('formerrors')[0].innerHTML = '';
     userActClass.updateUserPrefs();
   };
-const changeUserEmail = function() {
+
+exports.changeUserEmail = function() {
     let isemailvalid = document.getElementsByClassName('uprofEmail')[0].checkValidity();
     let emValue = document.getElementsByClassName('uprofEmail')[0].value;
     let edot = emValue.split('.');
@@ -121,11 +122,14 @@ const changeUserEmail = function() {
       document.getElementsByClassName('formerrors')[0].innerHTML = '<p>Email address is not valid</p>';
     }
   };
-  document.getElementsByClassName('updateprofbutton')[0].addEventListener('click', updateUserPrefs);
-  document.getElementsByClassName('updateemailbutton')[0].addEventListener('click', changeUserEmail);
+  exports.setupButtons = function() {
+  document.getElementsByClassName('updateprofbutton')[0].addEventListener('click', this.updateUserPrefs);
+  document.getElementsByClassName('updateemailbutton')[0].addEventListener('click', this.changeUserEmail);
   document.getElementsByClassName('nevermind')[0].addEventListener('click', function() {
     window.location.href = 'http://www.patric.local:3000' + '/';
   });
+};
+this.setupButtons();
 
 },{"./classes/UserAccount.js":1}],3:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function
