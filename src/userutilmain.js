@@ -1,2 +1,2 @@
-const User_ = require('./classes/User_.js');
-const userClass = new User_(); // eslint-disable-line no-unused-vars
+const UserUtil_ = require('./classes/UserUtil_.js');
+const userClass = new UserUtil_(); // eslint-disable-line no-unused-vars

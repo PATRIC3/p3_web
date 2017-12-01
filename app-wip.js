@@ -2,6 +2,8 @@ const mongoose = require('./backend/node_modules/mongoose');
 const bluebird = require('bluebird');
 const helmet = require('helmet');
 app.use(helmet());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 const user  = require('./backend/model/user/user-router');
 const auth = require('./backend/auth');
 const rql = require('./rql.js');
@@ -38,5 +40,3 @@ app.use((req, res, next) => {
   });
   next();
 });
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
