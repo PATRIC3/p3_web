@@ -9,7 +9,6 @@ class UserAct {
 
 //This populates the UserProfileForm, found in the userutil.html (or userutil/index.html)
   populateForm() {
-    document.getElementsByClassName('UserProfileForm')[0].style.display = 'block';
     let bodyData = {'email': localStorage.getItem('useremail') };
     let fetchData = {
       method: 'POST',
@@ -23,6 +22,9 @@ class UserAct {
     return this.fetch('' + '/user/', fetchData)
     .then((response) => response.json())
     .then((data) => {
+      console.log('did I get a user or not?');
+      console.log(data[0]);
+      if (data[0] !== undefined) {
       document.getElementsByClassName('uprofFirstName')[0].value = data[0].first_name;
       document.getElementsByClassName('uprofLastName')[0].value = data[0].last_name;
       document.getElementsByClassName('uprofAff')[0].value = data[0].affiliation;
@@ -30,6 +32,12 @@ class UserAct {
       document.getElementsByClassName('uprofInterests')[0].value = data[0].interests;
       document.getElementsByClassName('uprofEmail')[0].value = data[0].email;
       this.uid = data[0]._id;
+      document.getElementsByClassName('UserProfileForm')[0].style.display = 'block';
+    } else {
+      console.log('no user');
+      document.getElementsByClassName('UserProfileForm')[0].style.display = 'none';
+      window.location.href = 'http://www.patric.local:3000' + '/';
+    }
     });
   }
 
@@ -52,11 +60,6 @@ class UserAct {
     .then((data) => {
       console.log(data);
       document.getElementsByClassName('UserProfileForm')[0].style.display = 'none';
-      // let feurl = 'http://localhost:7000';
-      //   /* istanbul ignore if */
-      // if ('http://www.patric.local:3000' !== undefined) {
-      //   feurl = 'http://www.patric.local:3000';
-      // }
       window.location.href = 'http://www.patric.local:3000' + '/';
     });
   }
@@ -80,11 +83,6 @@ class UserAct {
       let messagediv = document.getElementsByClassName('formerrors')[0];
       messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
     } else {
-      // let feurl = 'http://localhost:7000';
-      //   /* istanbul ignore if */
-      // if ('http://www.patric.local:3000' !== undefined) {
-      //   feurl = 'http://www.patric.local:3000';
-      // }
       window.location.href = 'http://www.patric.local:3000' + '/userutil/?changeemail=' + document.getElementsByClassName('uprofEmail')[0].value;
     }
   })

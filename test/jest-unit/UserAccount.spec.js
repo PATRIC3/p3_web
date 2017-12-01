@@ -33,6 +33,26 @@ test('it populates the user pref form with the current user attributes', () => {
   });
 });
 
+test('it redirect to the homepage when the user is not found', () => {
+  mockfetch = function(url, data) {
+    this.headers = {};
+    this.headers.url = url;
+    this.headers.method = data.method;
+    return Promise.resolve({
+      Headers: this.headers,
+      json: () => Promise.resolve([])
+    });
+  };
+  ua.fetch = mockfetch;
+  document.body.innerHTML = '<div><div class="home"></div></div><div class="UserProfileForm" style="display:block">' +
+  '<input class="uprofFirstName"><input class="uprofLastName"><input class="uprofAff"><input class="uprofOrganisms">' +
+  '<input class="uprofInterests"><input class="uprofEmail"></div>';
+  ua.populateForm().then((data) => {
+    expect(document.getElementsByClassName('UserProfileForm')[0].style.display).toBe('none');
+    //expect(ua.uid).toBe('12345');
+  });
+});
+
 test('it updates user with the user prefs form', () => {
   mockfetch = function(url, data) {
     this.headers = {};
