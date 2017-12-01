@@ -538,6 +538,7 @@ const registerClass = new Register_();
 const patric = require('./commons/patric.js');
 const Login_ = require('./classes/Login_.js');
 const loginClass = new Login_();
+exports.setupReg = function() {
 registerClass.checkIfLoggedIn();
 document.getElementsByClassName('logout')[0].addEventListener('click', registerClass.logout);
 document.getElementsByClassName('useraccount')[0].addEventListener('click', function() {
@@ -574,6 +575,8 @@ loginUser.addEventListener('click', loginClass.loginUser);
 // exports.showLogin = function(app) {  // eslint-disable-line no-unused-vars
 //     loginClass.loginUser(app);
 //   };
+};
+this.setupReg();
 
 },{"./classes/Login_.js":1,"./classes/Register_.js":2,"./commons/patric.js":3}],5:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function

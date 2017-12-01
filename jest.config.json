@@ -2,8 +2,8 @@
   "verbose": true,
   "testPathIgnorePatterns": ["/node_modules/", "backend", "public"],
   "coverageDirectory": "coverage",
-  "collectCoverageFrom" : ["src/*.{js,jsx}", "src/classes/*.{js,jsx}", "src/commons/*.{js,jsx}", 
-    "!**/node_modules/**", "!**/public/**", "!**/backend/**", "!src/regmain.js", "!src/userutilmain.js", "!src/useraccountmain.js"],
+  "collectCoverageFrom" : ["src/*.{js,jsx}", "src/classes/*.{js,jsx}", "src/commons/*.{js,jsx}",
+    "!**/node_modules/**", "!**/public/**", "!**/backend/**", "!src/userutilmain.js", "!src/useraccountmain.js"],
   "collectCoverage": true,
   "testEnvironment": "jest-environment-jsdom-11.0.0"
 }
