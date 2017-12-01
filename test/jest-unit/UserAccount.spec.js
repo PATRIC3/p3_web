@@ -140,7 +140,7 @@ test('it sends PUT request to change user email and displays error message', () 
 
   return ua.changeUserEmail().then(() => {
     let messagediv = document.getElementsByClassName('formerrors')[0];
-    expect(messagediv.innerHTML).toBe('<p style="text-align:left; padding-left:12px">email is incorrect</p>');
+    expect(messagediv.innerHTML).toBe('<p style="text-align:center; padding:0">email is incorrect</p>');
     messagediv.innerHTML = '';
   });
 });

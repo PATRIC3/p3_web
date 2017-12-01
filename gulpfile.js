@@ -7,6 +7,7 @@ gulp.task('srcfiles', function() {
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/'));
   gulp.src(['./src/useraccountmain.js'])
+  .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/'));
   gulp.src(['./src/userutilmain.js'])
   .pipe(gulp.dest('./gulpified/'));

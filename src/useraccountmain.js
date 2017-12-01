@@ -26,3 +26,6 @@ const changeUserEmail = function() {
   };
   document.getElementsByClassName('updateprofbutton')[0].addEventListener('click', updateUserPrefs);
   document.getElementsByClassName('updateemailbutton')[0].addEventListener('click', changeUserEmail);
+  document.getElementsByClassName('nevermind')[0].addEventListener('click', function() {
+    window.location.href = process.env.FrontendUrl + '/';
+  });

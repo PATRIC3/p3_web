@@ -80,7 +80,7 @@ class UserAct {
     if (data.message) {
       //console.log(data.message);
       let messagediv = document.getElementsByClassName('formerrors')[0];
-      messagediv.innerHTML = '<p style="text-align:left; padding-left:12px">' + data.message + '</p>';
+      messagediv.innerHTML = '<p style="text-align:center; padding:0">' + data.message + '</p>';
     } else {
       window.location.href = process.env.FrontendUrl + '/userutil/?changeemail=' + document.getElementsByClassName('uprofEmail')[0].value;
     }
