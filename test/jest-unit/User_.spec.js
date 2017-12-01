@@ -24,7 +24,7 @@ test('generates a change email varification form', () => {
   expect(document.getElementsByClassName('email')[0].value).toBe('joe@smith.com');
 });
 
-test('hides a the form and routes to homepage with click Cancel button', () => {
+test('hides the form and routes to homepage with click Cancel button', () => {
   document.body.innerHTML = '<div><div class="home"></div></div>';
   user.verifyEmail();
   document.getElementsByClassName('nevermind')[0].click();
