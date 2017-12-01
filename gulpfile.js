@@ -16,7 +16,7 @@ gulp.task('srcfiles', function() {
   .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/classes/'));
-  gulp.src(['./src/classes/User_.js'])
+  gulp.src(['./src/classes/UserUtil_.js'])
   .pipe(replace('process.env.BackendUrl', '\'' + config.get('backendUrl') + '\''))
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/classes/'));

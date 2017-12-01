@@ -211,10 +211,10 @@ class User_ {
 module.exports = User_;
 
 },{"isomorphic-fetch":3}],2:[function(require,module,exports){
-const User_ = require('./classes/User_.js');
-const userClass = new User_(); // eslint-disable-line no-unused-vars
+const UserUtil_ = require('./classes/UserUtil_.js');
+const userClass = new UserUtil_(); // eslint-disable-line no-unused-vars
 
-},{"./classes/User_.js":1}],3:[function(require,module,exports){
+},{"./classes/UserUtil_.js":1}],3:[function(require,module,exports){
 // the whatwg-fetch polyfill installs the fetch() function
 // on the global object (window or self)
 //
