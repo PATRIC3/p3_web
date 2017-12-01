@@ -33,7 +33,7 @@ class User_ {
     '</td></tr><tr><td> </td></tr>' + passInput + '<tr><td> </td></tr><tr><th style="text-align:left">Code</th></tr><tr><td>' +
     '<input type="number" title="5 digit code" name="code" class="code" style="width:150px;" required" value=""></td></tr>' +
     '</tbody></table></div><div style="text-align:center;padding:2px;margin:10px;">' +
-    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton">Submit</button><button type="button" onclick="userClass.nevermind(&apos;RegistrationForm&apos;)">Cancel</button></div></div></form>' +
+    '<div><button style="display:none; margin-bottom:-22px;" type="button" class="regbutton">Submit</button><button class="nevermind" type="button">Cancel</button></div></div></form>' +
     '<div class="loginerror" style="color:red"></div>';
     let home = document.getElementsByClassName('home');
     home[0].insertBefore(emailVarifyForm, home[0].childNodes[0]);
@@ -74,6 +74,11 @@ class User_ {
       document.getElementsByClassName('pwheader')[0].style.display = 'none';
       document.getElementsByClassName('pwinput')[0].style.display = 'none';
     }
+    let cancelButton = document.getElementsByClassName('nevermind')[0];
+    cancelButton.addEventListener('click', function() {
+      document.getElementsByClassName('RegistrationForm')[0].style.display = 'none';
+      window.location.href = process.env.FrontendUrl + '/';
+    });
   }
 
   setEvents(element) {
