@@ -24,6 +24,14 @@ test('generates a change email varification form', () => {
   expect(document.getElementsByClassName('email')[0].value).toBe('joe@smith.com');
 });
 
+test('hides a the form and routes to homepage with click Cancel button', () => {
+  document.body.innerHTML = '<div><div class="home"></div></div>';
+  user.verifyEmail();
+  document.getElementsByClassName('nevermind')[0].click();
+  let regform = document.getElementsByClassName('RegistrationForm');
+  expect(regform[0].style.display).toBe('none');
+});
+
 test('generates a reset password form with email already filled in', () => {
   user.formType = 'reset';
   user.userEmail = 'joe@smith.com';
