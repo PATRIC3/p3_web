@@ -37,8 +37,33 @@ define([
 				state.genome_ids = genomeIds;
 				self.viewer.set('visible', true);
 			});
+
+			// when(this.getSubsystemDescription(subsystemData.subsystem_id), function(description){
+			// 	//state.description = description	
+			// 	$('#subSystemHeatmap').append( "<p>" + description + "</p>" );
+			// 	$('#subSystemHeatmap').css("height", "70px");
+			// });
 				
 			window.document.title = 'Subsystem Map';
+		},
+
+		getSubsystemDescription: function(subsystemId) {
+
+			var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
+
+			return when(request.post(window.App.dataAPI + 'subsystem_ref/', {
+				handleAs: 'json',
+				headers: {
+					'Accept': "application/json",
+					'Content-Type': "application/solrquery+x-www-form-urlencoded",
+					'X-Requested-With': null,
+					'Authorization': window.App.authorizationToken
+				},
+				data: ref_query
+			}), function(res){;
+				return res[0];
+			});
+
 		},
 
 		truncateBefore: function (str, pattern) {
@@ -156,8 +181,16 @@ define([
 				}
 
 
-
 				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
+
+				when(that.getSubsystemDescription(that.state.subsystem_id), function(data){
+					
+					var pmids = data.pmid.join(", ");
+
+					$('#subSystemHeatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmids + "</p>");
+					$('#subSystemHeatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
+					$('#subSystemHeatmap').css("height", "170px");
+				});
 
 				var genomeIdList = [];
 				var genomeIds = response.facet_counts.facet_fields.genome_id;
@@ -195,8 +228,8 @@ define([
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				"id": "subSystemHeatmap"
-				
+				"id": "subSystemHeatmap",
+				"style": "height:170px"
 			}, headerContent);
 
 			this.addChild(this.viewerHeader);
