@@ -30,3 +30,8 @@ gulp.task('srcfiles', function() {
   .pipe(replace('process.env.FrontendUrl', '\'' + config.get('frontendUrl') + '\''))
   .pipe(gulp.dest('./gulpified/classes/'));
 });
+gulp.task('removepostinstall', function() {
+  gulp.src(['./backend/package.json'])
+  .pipe(replace(' && npm run postinstallsh', ''))
+  .pipe(gulp.dest('./gulpified'));
+});
