@@ -1,0 +1,14 @@
+node_modules
+coverage
+dist
+bower_components
+montage_ui
+public
+backend
+config.js
+routes
+user.js
+register.js
+news.js
+app.js
+config-wip.js

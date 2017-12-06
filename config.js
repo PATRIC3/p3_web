@@ -21,7 +21,12 @@ var defaults = {
 	"cookieDomain": ".patric.local",
 	"newsFeedRSS": "http://enews.patricbrc.org/feed",
 	"sessionTTL": 2628000000,
-
+	"signing_PEM": "private.pem",
+  "signing_public_PEM": "public.pem",
+  "realm": "patricbrc.org",
+	MONGO_DB_URI: '',
+	backendUrl: '',
+	frontendUrl: '',
 	workspaceServiceURL: "",
 	appServiceURL: "",
 	dataURL: "",
@@ -55,5 +60,3 @@ if (!fs.statSync(config_file))
 }
 
 module.exports = nconf.argv().env().file(config_file).defaults(defaults);
-
-
