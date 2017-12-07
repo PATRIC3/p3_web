@@ -641,40 +641,107 @@ define([
 					validContainerTypes: ["subsystem_data"]
 				},
 				function(selection){
+
+					switch(this.type){
+						
+						case "subsystems":
+							var url = {};
+							if(this.state.hasOwnProperty('taxon_id')){
+								url['taxon_id'] = this.state.taxon_id;
+							};
+
+							//used to query data
+							url['genome_ids'] = this.state.genome_ids;
+							url['subsystem_id'] = selection[0].subsystem_id;
+
+							var mapSelection = {};
+							if (selection[0].genome_count) {
+								mapSelection.genome_count = selection[0].genome_count;
+							}
+							if (selection[0].role_count) {
+								mapSelection.role_count = selection[0].role_count;
+							}
+							if (selection[0].gene_count) {
+								mapSelection.gene_count = selection[0].gene_count;
+							}
+							if (selection[0].genome_name) {
+								mapSelection.genome_name = selection[0].genome_name;
+							}
+
+							var mapData = [];
+							mapData.push(mapSelection)
+
+							url['subsystemselectionuniqueidentifier'] = JSON.stringify(mapData);
+
+							var params = Object.keys(url).map(function(p){
+								return p + "=" + url[p]
+							}).join("&");
+
+							Topic.publish("/navigate", {href: "/view/SubSystemMap/?" + params, target: "blank", genomeIds: this.state.genome_ids});
+							break;
+						
+						//for the genes tab, include all reference genomes
+						case "genes": 
+							
+							var that = this;
+							var query = "?eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
+							return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
+								headers: {
+									'Accept': "application/json",
+									'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+								},
+								handleAs: "json"
+							}), function(response){
+
+								var reference_genome_ids = response.map(function(genome){
+									return genome.genome_id;
+								})
+
+								reference_genome_ids.unshift(that.state.genome_ids);
+
+								var url = {};
+								if(that.state.hasOwnProperty('taxon_id')){
+									url['taxon_id'] = that.state.taxon_id;
+								};
+
+								//used to query data
+								url['genome_ids'] = reference_genome_ids;
+								url['subsystem_id'] = selection[0].subsystem_id;
+
+								var mapSelection = {};
+								if (selection[0].genome_count) {
+									mapSelection.genome_count = selection[0].genome_count;
+								}
+								if (selection[0].role_count) {
+									mapSelection.role_count = selection[0].role_count;
+								}
+								if (selection[0].gene_count) {
+									mapSelection.gene_count = selection[0].gene_count;
+								}
+								if (selection[0].genome_name) {
+									mapSelection.genome_name = selection[0].genome_name;
+								}
+
+								var mapData = [];
+								mapData.push(mapSelection)
+
+								url['subsystemselectionuniqueidentifier'] = JSON.stringify(mapData);
+
+								var params = Object.keys(url).map(function(p){
+									return p + "=" + url[p]
+								}).join("&");
+
+								Topic.publish("/navigate", {href: "/view/SubSystemMap/?" + params, target: "blank", genomeIds: reference_genome_ids});
+							})
+
+							break;
+
+						default:
+							break;
+					}
+
 	
-					var url = {};
-					if(this.state.hasOwnProperty('taxon_id')){
-						url['taxon_id'] = this.state.taxon_id;
-					};
-
-					//used to query data
-					url['genome_ids'] = this.state.genome_ids;
-					url['subsystem_id'] = selection[0].subsystem_id;
-
-					var mapSelection = {};
-					if (selection[0].genome_count) {
-						mapSelection.genome_count = selection[0].genome_count;
-					}
-					if (selection[0].role_count) {
-						mapSelection.role_count = selection[0].role_count;
-					}
-					if (selection[0].gene_count) {
-						mapSelection.gene_count = selection[0].gene_count;
-					}
-					if (selection[0].genome_name) {
-						mapSelection.genome_name = selection[0].genome_name;
-					}
-
-					var mapData = [];
-					mapData.push(mapSelection)
-
-					url['subsystemselectionuniqueidentifier'] = JSON.stringify(mapData);
-
-					var params = Object.keys(url).map(function(p){
-						return p + "=" + url[p]
-					}).join("&");
-
-					Topic.publish("/navigate", {href: "/view/SubSystemMap/?" + params, target: "blank", genomeIds: this.state.genome_ids});
+				
 				},
 				false
 			]
