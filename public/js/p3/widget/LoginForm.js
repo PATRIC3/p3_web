@@ -12,6 +12,7 @@ define([
 		templateString: Template,
 		callbackURL: "",
 		onSubmit: function(evt){
+			console.log('I clicked the button');
 			evt.preventDefault();
 			evt.stopPropagation();
 			domClass.add(this.domNode, "Working");
@@ -19,24 +20,44 @@ define([
 			this.submitButton.set('disabled', true);
 			var vals = this.getValues();
 			var _self = this;
-			var def = xhr.post("/login", {
-				data: vals,
-				withCredentials: true
+			//TODO set p3-user as env var
+			var def = xhr.post("https://user.patricbrc.org/authenticate", {
+				data: vals
+				// data: vals,
+				// withCredentials: true
 			});
-
-			def.then(lang.hitch(this, function(results){
-				//console.log("Login Results: ", results, arguments);
-				console.log("Login Window location: ", window.location, window.location.query);
-				domClass.remove(this.domNode, "Working");
-				console.log("this.callbackURL", this.callbackURL);
-				if(this.callbackURL){
-					window.location = this.callbackURL;
+			def.then(function(data, status){
+				console.log(data);
+				var dataArr = data.split('|');
+				var keyValueArr = [];
+				console.log(dataArr);
+				var dataobj =  {};
+				for(var i = 0; i < dataArr.length; i++){
+					keyValueArr = dataArr[i].split('=');
+					//console.log(keyValueArr);
+					dataobj[keyValueArr[0]] = keyValueArr[1];
 				}
-			}), lang.hitch(this, function(err){
-				domClass.remove(this.domNode, "Working");
-				domClass.add(this.domNode, "Error");
-				this.submitButton.set('disabled', false);
-			}));
+				console.log(dataobj);
+				window.App.login(dataobj);
+				//window.location.reload();
+				//console.log(status);
+			}, function(err){
+				console.log(err);
+			})
+			//def.then(lang.hitch(this, function(results){
+				//console.log("Login Results: ", results, arguments);
+				//console.log(this);
+				//console.log("Login Window location: ", window.location, window.location.query);
+				//domClass.remove(this.domNode, "Working");
+				//console.log("this.callbackURL", this.callbackURL);
+
+				//window.location.reload();
+      //
+			// }), lang.hitch(this, function(err){
+			// 	domClass.remove(this.domNode, "Working");
+			// 	domClass.add(this.domNode, "Error");
+			// 	this.submitButton.set('disabled', false);
+			// }));
 		},
 		startup: function(){
 			if(this._started){

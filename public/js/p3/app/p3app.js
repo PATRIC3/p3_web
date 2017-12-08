@@ -7,7 +7,7 @@ define([
 	"dojo/ready", "./app", "../router",
 	"dojo/window", "../widget/Drawer", "dijit/layout/ContentPane",
 	"../jsonrpc", "../panels", "../WorkspaceManager", "dojo/keys",
-	"dijit/Dialog", "../util/PathJoin"
+	"dijit/Dialog", "../util/PathJoin", "dojo/request"
 ], function(declare,
 			Topic, on, dom, domClass, domAttr, domConstruct, domQuery,
 			Registry, lang,
@@ -17,7 +17,7 @@ define([
 			Router, Window,
 			Drawer, ContentPane,
 			RPC, Panels, WorkspaceManager, Keys,
-			Dialog, PathJoin){
+			Dialog, PathJoin, xhr){
 	return declare([App], {
 		panels: Panels,
 		activeWorkspace: null,
@@ -353,7 +353,29 @@ define([
 
 			this.inherited(arguments);
 		},
-
+		login:function(data){
+			console.log(data);
+			if(data !== undefined){
+			localStorage.setItem('auth', JSON.stringify(data));
+			var userid = data.un.replace('@patricbrc.org', '');
+			//TODO set the url as env var
+			xhr.get("https://user.patricbrc.org/user/" + userid, {
+				headers: {
+				'Content-Type': 'application/json',
+				'Authorization': data.tokenid
+			},
+				'Content-Type': 'application/json',
+			})
+			.then(function(data){
+				console.log(data);
+			}, function(err){
+				console.log(err);
+			});
+			//window.location.reload();
+		} else {
+			console.log('i am not logged in yet');
+		}
+		},
 		updateUserWorkspaceList: function(data){
 			var wsNode = dom.byId("YourWorkspaces");
 			domConstruct.empty("YourWorkspaces");
