@@ -27,9 +27,9 @@ var defaults = {
 	dataURL: "",
 	accountURL: "http://user.patric.local:3002/",
 	docsServiceURL: "http://docs.patric.local/",
-	enableDevAuth: false,
-	devAuthorizationToken: "",
-	devUser: false,
+	// enableDevAuth: false,
+	// devAuthorizationToken: "",
+	// devUser: false,
 	enableDevTools: false,
 
 	reportProblemEmailAddress: "help@patricbrc.org",
@@ -55,5 +55,3 @@ if (!fs.statSync(config_file))
 }
 
 module.exports = nconf.argv().env().file(config_file).defaults(defaults);
-
-

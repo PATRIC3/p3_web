@@ -60,7 +60,7 @@ define([
 				domClass.add(this.cancelButton.domNode, "dijitHidden");
 			}
 
-			this.gethelp();
+			// this.gethelp();
 			this._started = true;
 		}
 	});

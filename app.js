@@ -55,32 +55,32 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-if(config.get("enableDevAuth")){
-	app.use(function(req, res, next){
-		var user = config.get("devUser");
-		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
-		if(user && (!req.isAuthenticated || !req.isAuthenticated() )){
-			// console.log("Auto Login Dev User");
-			req.login(user, function(err){
-				// console.log("login user: ", user);
-				if(err){
-					return next(err);
-				}
-				// console.log("Dev User logged in.  Setup Session");
-				if(user && req.session){
-					delete user.password;
-					req.session.userProfile = user;
-					req.session.authorizationToken = config.get("devAuthorizationToken");
-				}else{
-					console.log("NO Session");
-				}
-				next();
-			});
-		}else{
-			next();
-		}
-	});
-}
+// if(config.get("enableDevAuth")){
+// 	app.use(function(req, res, next){
+// 		var user = config.get("devUser");
+// 		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
+// 		if(user && (!req.isAuthenticated || !req.isAuthenticated() )){
+// 			// console.log("Auto Login Dev User");
+// 			req.login(user, function(err){
+// 				// console.log("login user: ", user);
+// 				if(err){
+// 					return next(err);
+// 				}
+// 				// console.log("Dev User logged in.  Setup Session");
+// 				if(user && req.session){
+// 					delete user.password;
+// 					req.session.userProfile = user;
+// 					req.session.authorizationToken = config.get("devAuthorizationToken");
+// 				}else{
+// 					console.log("NO Session");
+// 				}
+// 				next();
+// 			});
+// 		}else{
+// 			next();
+// 		}
+// 	});
+// }
 
 app.use(function(req, res, next){
 	// console.log("Config.production: ", config.production);
