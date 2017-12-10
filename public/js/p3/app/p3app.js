@@ -353,7 +353,7 @@ define([
 
 			this.inherited(arguments);
 		},
-		login:function(data){
+		login:function(data, token){
 			console.log(data);
 			if(data !== undefined){
 			localStorage.setItem('auth', JSON.stringify(data));
@@ -361,10 +361,11 @@ define([
 			//TODO set the url as env var
 			xhr.get("https://user.patricbrc.org/user/" + userid, {
 				headers: {
-				'Content-Type': 'application/json',
-				'Authorization': data.tokenid
-			},
-				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+				'Authorization': token
+			}
+			// ,
+			// 	'Content-Type': 'application/json',
 			})
 			.then(function(data){
 				console.log(data);

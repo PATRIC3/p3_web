@@ -26,7 +26,7 @@ define([
 				// data: vals,
 				// withCredentials: true
 			});
-			def.then(function(data, status){
+			def.then(function(data){
 				console.log(data);
 				var dataArr = data.split('|');
 				var keyValueArr = [];
@@ -38,7 +38,7 @@ define([
 					dataobj[keyValueArr[0]] = keyValueArr[1];
 				}
 				console.log(dataobj);
-				window.App.login(dataobj);
+				window.App.login(dataobj, data);
 				//window.location.reload();
 				//console.log(status);
 			}, function(err){
