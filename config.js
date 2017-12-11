@@ -27,6 +27,7 @@ var defaults = {
 	dataURL: "",
 	accountURL: "http://user.patric.local:3002/",
 	docsServiceURL: "http://docs.patric.local/",
+	userServiceURL: "",
 	// enableDevAuth: false,
 	// devAuthorizationToken: "",
 	// devUser: false,

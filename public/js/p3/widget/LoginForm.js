@@ -20,8 +20,7 @@ define([
 			this.submitButton.set('disabled', true);
 			var vals = this.getValues();
 			var _self = this;
-			//TODO set p3-user as env var
-			var def = xhr.post("https://user.patricbrc.org/authenticate", {
+			var def = xhr.post(window.App.userServiceURL + '/authenticate', {
 				data: vals
 				// data: vals,
 				// withCredentials: true

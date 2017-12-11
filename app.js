@@ -102,7 +102,8 @@ app.use(function(req, res, next){
 		enableDevTools: config.get("enableDevTools"),
 		accountURL: config.get("accountURL"),
 		appLabel: config.get("appLabel"),
-		appVersion: package.version
+		appVersion: package.version,
+		userServiceURL: config.get("userServiceURL")
 	};
 	// console.log("Application Options: ", req.applicationOptions);
 	next();
