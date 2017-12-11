@@ -20,7 +20,9 @@ define([
 			this.submitButton.set('disabled', true);
 			var vals = this.getValues();
 			var _self = this;
-			var def = xhr.post(window.App.userServiceURL + '/authenticate', {
+			var userServiceURL = window.App.userServiceURL;
+				userServiceURL.replace("/", "");
+			var def = xhr.post(userServiceURL + '/authenticate', {
 				data: vals
 				// data: vals,
 				// withCredentials: true

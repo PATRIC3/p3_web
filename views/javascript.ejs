@@ -32,30 +32,22 @@ dojoConfig = {
         appOpts.serviceAPI = "<%= request.applicationOptions.appServiceURL %>";
         appOpts.dataAPI = "<%= request.applicationOptions.dataServiceURL %>";
         appOpts.userServiceURL = "<%= request.applicationOptions.userServiceURL %>";
-        // <% if (request && request.session) { %>
-        //   <% if (request.session.userProfile) { %>
-        //     appOpts.authorizationToken = "<%- (request && request.session) ? (request.session.authorizationToken || request.session.accessToken) : "" %>";
-        //     <% } %>
-        //     <% if (request.session.userProfile) { %>
-        //       appOpts.user = <%- JSON.stringify(request.session.userProfile) %>;
-        //       <% } %>
-        //       <% } %>
         window.App = new App(appOpts);
-      });
-      <% if (request && request.production){ %>
-      });
-      <% } %>
-      </script>
-      <% if (request && request.applicationOptions.gaID) { %>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=<%- request.applicationOptions.gaID %>"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', '<%- request.applicationOptions.gaID %>', {
-          'link_attribution': true
         });
-        </script>
+        <% if (request && request.production){ %>
+        });
         <% } %>
+        </script>
+        <% if (request && request.applicationOptions.gaID) { %>
+          <!-- Global site tag (gtag.js) - Google Analytics -->
+          <script async src="https://www.googletagmanager.com/gtag/js?id=<%- request.applicationOptions.gaID %>"></script>
+          <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', '<%- request.applicationOptions.gaID %>', {
+            'link_attribution': true
+          });
+          </script>
+          <% } %>

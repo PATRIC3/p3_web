@@ -9,431 +9,448 @@ define([
 	"../jsonrpc", "../panels", "../WorkspaceManager", "dojo/keys",
 	"dijit/Dialog", "../util/PathJoin", "dojo/request"
 ], function(declare,
-			Topic, on, dom, domClass, domAttr, domConstruct, domQuery,
-			Registry, lang,
-			Deferred,
-			JsonRest, Toaster,
-			Ready, App,
-			Router, Window,
-			Drawer, ContentPane,
-			RPC, Panels, WorkspaceManager, Keys,
-			Dialog, PathJoin, xhr){
-	return declare([App], {
-		panels: Panels,
-		activeWorkspace: null,
-		activeWorkspacePath: "/",
-		publicApps: ["BLAST", "ProteinFamily", "ComparativePathway", "GenomeDistance"],
-		startup: function(){
-			var _self = this;
+	Topic, on, dom, domClass, domAttr, domConstruct, domQuery,
+	Registry, lang,
+	Deferred,
+	JsonRest, Toaster,
+	Ready, App,
+	Router, Window,
+	Drawer, ContentPane,
+	RPC, Panels, WorkspaceManager, Keys,
+	Dialog, PathJoin, xhr){
+		return declare([App], {
+			panels: Panels,
+			activeWorkspace: null,
+			activeWorkspacePath: "/",
+			publicApps: ["BLAST", "ProteinFamily", "ComparativePathway", "GenomeDistance"],
+			// authorizationToken: '',
+			// user: '',
+			startup: function(){
+				var _self = this;
 
-			on(document.body, "keypress", function(evt){
-				var charOrCode = evt.charCode || evt.keyCode;
-				// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
+				on(document.body, "keypress", function(evt){
+					var charOrCode = evt.charCode || evt.keyCode;
+					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
 
-				if((charOrCode == 4) && evt.ctrlKey && evt.shiftKey){
-					if(!this._devDlg){
-						this._devDlg = new Dialog({
-							title: "Debugging Panel",
-							content: '<div data-dojo-type="p3/widget/DeveloperPanel" style="width:250px;height:450px"></div>'
-						});
+					if((charOrCode == 4) && evt.ctrlKey && evt.shiftKey){
+						if(!this._devDlg){
+							this._devDlg = new Dialog({
+								title: "Debugging Panel",
+								content: '<div data-dojo-type="p3/widget/DeveloperPanel" style="width:250px;height:450px"></div>'
+							});
+						}
+						// console.log("Dialog: ", this._devDlg);
+						if(this._devDlg.open){
+							this._devDlg.hide();
+						}else{
+							this._devDlg.show();
+						}
 					}
-					// console.log("Dialog: ", this._devDlg);
-					if(this._devDlg.open){
-						this._devDlg.hide();
-					}else{
-						this._devDlg.show();
-					}
+				});
+
+				// listening document.title change event
+				var titleEl = document.getElementsByTagName("title")[0];
+				var docEl = document.documentElement;
+
+				if(docEl && docEl.addEventListener){
+					docEl.addEventListener("DOMSubtreeModified", function(evt){
+						var t = evt.target;
+						if(t === titleEl || (t.parentNode && t.parentNode === titleEl)){
+							onDocumentTitleChanged();
+						}
+					}, false);
+				}else{
+					document.onpropertychange = function(){
+						if(window.event.propertyName == "title"){
+							onDocumentTitleChanged();
+						}
+					};
 				}
-			});
 
-			// listening document.title change event
-			var titleEl = document.getElementsByTagName("title")[0];
-			var docEl = document.documentElement;
-
-			if(docEl && docEl.addEventListener){
-				docEl.addEventListener("DOMSubtreeModified", function(evt){
-					var t = evt.target;
-					if(t === titleEl || (t.parentNode && t.parentNode === titleEl)){
-						onDocumentTitleChanged();
+				var onDocumentTitleChanged = function(){
+					// var meta = document.getElementsByTagName("meta[name='Keyword']");
+					var meta = domQuery("meta[name='Keywords']")[0];
+					if(meta){
+						meta.content = "PATRIC," + (document.title).replace("::", ",");
 					}
-				}, false);
-			}else{
-				document.onpropertychange = function(){
-					if(window.event.propertyName == "title"){
-						onDocumentTitleChanged();
+					if(window.gtag){
+						// console.log("document title changed to", document.title);
+						var page_path = window.location.pathname + window.location.hash;
+						gtag('config', window.App.gaID, {'page_path': page_path});
 					}
 				};
-			}
 
-			var onDocumentTitleChanged = function(){
-				// var meta = document.getElementsByTagName("meta[name='Keyword']");
-				var meta = domQuery("meta[name='Keywords']")[0];
-				if(meta){
-					meta.content = "PATRIC," + (document.title).replace("::", ",");
-				}
-				if(window.gtag){
-					// console.log("document title changed to", document.title);
-					var page_path = window.location.pathname + window.location.hash;
-					gtag('config', window.App.gaID, {'page_path': page_path});
-				}
-			};
-
-			/*
-			Router.register("\/$", function(params, oldPath, newPath, state){
+				/*
+				Router.register("\/$", function(params, oldPath, newPath, state){
 				console.log("HOME route", params.newPath);
 				var newState = {href: params.newPath}
 				for (var prop in params.state){
-					newState[prop]=params.state[prop]
-				}
+				newState[prop]=params.state[prop]
+			}
 
-				newState.widgetClass="dijit/layout/ContentPane";
-				newState.requireAuth=false;
-				console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-			*/
+			newState.widgetClass="dijit/layout/ContentPane";
+			newState.requireAuth=false;
+			console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+		*/
 
-			Router.register("/remote", function(params, oldPath, newPath, state){
-				console.log("REMOTE WINDOW, WAIT FOR /navigate message");
-				window.postMessage("RemoteReady", "*");
-			});
+		Router.register("/remote", function(params, oldPath, newPath, state){
+			console.log("REMOTE WINDOW, WAIT FOR /navigate message");
+			window.postMessage("RemoteReady", "*");
+		});
 
-			Router.register("\/job(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("Workspace URL Callback", params.newPath);
-				var newState = {href: params.newPath};
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
+		Router.register("\/job(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("Workspace URL Callback", params.newPath);
+			var newState = {href: params.newPath};
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
 
-				var path = params.params[0] || "/";
-				newState.widgetClass = "p3/widget/JobManager";
-				newState.value = path;
-				newState.set = "path";
-				newState.requireAuth = true;
-				newState.pageTitle = 'PATRIC Jobs';
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
+			var path = params.params[0] || "/";
+			newState.widgetClass = "p3/widget/JobManager";
+			newState.value = path;
+			newState.set = "path";
+			newState.requireAuth = true;
+			newState.pageTitle = 'PATRIC Jobs';
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
 
-			Router.register("\/search/(.*)", function(params, oldPath, newPath, state){
-				// console.log("Search Route: ", arguments);
-				var newState = getState(params, oldPath);
-				newState.widgetClass = "p3/widget/AdvancedSearch";
+		Router.register("\/search/(.*)", function(params, oldPath, newPath, state){
+			// console.log("Search Route: ", arguments);
+			var newState = getState(params, oldPath);
+			newState.widgetClass = "p3/widget/AdvancedSearch";
+			newState.requireAuth = false;
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+
+		Router.register("\/uploads(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("Upload URL Callback", params.newPath);
+			var newState = {href: params.newPath}
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
+
+			var path = params.params[0] || "/";
+			newState.widgetClass = "p3/widget/UploadManager";
+			newState.value = path;
+			newState.set = "path";
+			newState.requireAuth = true;
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+
+		Router.register("\/content(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("Upload URL Callback", params.newPath);
+			var newState = {href: params.newPath}
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
+
+			var path = params.params[0] || "/";
+			newState.widgetClass = "dijit/layout/ContentPane";
+			newState.style = "padding:0";
+			newState.value = PathJoin(_self.dataAPI, "content", path);
+			newState.set = "href";
+			newState.requireAuth = false;
+			newState.pageTitle = 'PATRIC';
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+
+		Router.register("\/webpage(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("webpage", params);
+			var path = params.params[0] || "/";
+			var newState = getState(params, oldPath);
+			newState.widgetClass = "p3/widget/WebPagePane";
+			newState.widgetExtraClass = "webpage";
+			newState.value = PathJoin(_self.docsServiceURL, path);
+			newState.set = "href";
+			newState.requireAuth = false;
+
+			_self.navigate(newState);
+		});
+
+		Router.register("\/help(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("Upload URL Callback", params.newPath);
+			var newState = {href: params.newPath}
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
+
+			var path = params.params[0] || "/";
+			newState.widgetClass = "dijit/layout/ContentPane";
+			newState.style = "padding:0";
+			newState.value = /*_self.dataAPI +*/ "/public/help/" + path;
+			newState.set = "href";
+			newState.requireAuth = false;
+			newState.pageTitle = 'PATRIC';
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+
+
+		Router.register("\/workspace(\/.*)", function(params, oldPath, newPath, state){
+			// console.log("Workspace URL Callback", params.newPath);
+			var newState = {href: params.newPath}
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
+
+			var path = params.params[0] || ("/" + _self.user.id ); //  + "/home/")
+			var parts = path.split("/");
+
+			if(path.replace(/\/+/g, '') == 'public'){
+				path = '/public/';
+			}else if(parts.length < 3){
+				path = ("/" + _self.user.id );  //+ "/home/"
+			}
+
+			newState.widgetClass = "p3/widget/WorkspaceManager";
+			newState.value = path;
+			newState.set = "path";
+			newState.requireAuth = false;
+			newState.pageTitle = "PATRIC Workspace";
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
+
+		function getState(params, path){
+			var parser = document.createElement("a");
+			parser.href = path;
+			var newState = params.state || {};
+
+			newState.href = path;
+			newState.prev = params.oldPath;
+			// console.log("parser getState: ", parser);
+			if(newState.search){
+
+			}else if(parser.search){
+				newState.search = (parser.search.charAt(0) == "?") ? parser.search.substr(1) : parser.search
+			}else{
+				newState.search = "";
+			}
+
+			// console.log("New State Search: ", newState.search);
+			newState.hash = parser.hash;
+			newState.pathname = parser.pathname
+
+			if(newState.hash){
+				newState.hash = (newState.hash.charAt(0) == "#") ? newState.hash.substr(1) : newState.hash;
+				// console.log("PARSE HASH: ", newState.hash)
+				newState.hashParams = newState.hashParams || {};
+
+				var hps = newState.hash.split("&");
+				hps.forEach(function(t){
+					var tup = t.split("=");
+					if(tup[0] && tup[1]){
+						newState.hashParams[tup[0]] = tup[1];
+					}
+				});
+				// console.log("newState.hashParams: ", newState.hashParams)
+			}
+			return newState;
+		}
+
+		Router.register("\/view(\/.*)", function(params, path){
+			// console.log("'/view/' Route Handler.  Params: ", params, " \n PATH: ", path, arguments);
+			var newState = getState(params, path);
+
+			// console.log("newState from getState in /view/: ", JSON.stringify(newState,null,4));
+
+			var parts = newState.pathname.split("/")
+			parts.shift();
+			var type = parts.shift();
+
+			newState.widgetClass = "p3/widget/viewer/" + type;
+			// console.log("'/view/' New Navigation State: ", JSON.stringify(newState,null,4));
+			_self.navigate(newState);
+		});
+
+		Router.register("\/app(\/.*)", function(params, path){
+			// console.log("view URL Callback", arguments);
+
+			var parts = path.split("/")
+			parts.shift();
+			var type = parts.shift();
+			if(parts.length > 0){
+				viewerParams = parts.join("/");
+			}else{
+				viewerParams = "";
+			}
+			// console.log("Parts:", parts, type, viewerParams)
+
+			var newState = {href: params.newPath};
+			for(var prop in params.state){
+				newState[prop] = params.state[prop]
+			}
+
+			// console.log("Parts:", parts, type, path)
+			newState.widgetClass = "p3/widget/app/" + type;
+			newState.value = viewerParams;
+			newState.set = "params";
+			newState.requireAuth = true;
+
+			if(_self.publicApps.indexOf(type) >= 0){
 				newState.requireAuth = false;
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-			Router.register("\/uploads(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("Upload URL Callback", params.newPath);
-				var newState = {href: params.newPath}
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
-
-				var path = params.params[0] || "/";
-				newState.widgetClass = "p3/widget/UploadManager";
-				newState.value = path;
-				newState.set = "path";
-				newState.requireAuth = true;
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-			Router.register("\/content(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("Upload URL Callback", params.newPath);
-				var newState = {href: params.newPath}
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
-
-				var path = params.params[0] || "/";
-				newState.widgetClass = "dijit/layout/ContentPane";
-				newState.style = "padding:0";
-				newState.value = PathJoin(_self.dataAPI, "content", path);
-				newState.set = "href";
-				newState.requireAuth = false;
-				newState.pageTitle = 'PATRIC';
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-			Router.register("\/webpage(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("webpage", params);
-				var path = params.params[0] || "/";
-				var newState = getState(params, oldPath);
-				newState.widgetClass = "p3/widget/WebPagePane";
-				newState.widgetExtraClass = "webpage";
-				newState.value = PathJoin(_self.docsServiceURL, path);
-				newState.set = "href";
-				newState.requireAuth = false;
-
-				_self.navigate(newState);
-			});
-
-			Router.register("\/help(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("Upload URL Callback", params.newPath);
-				var newState = {href: params.newPath}
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
-
-				var path = params.params[0] || "/";
-				newState.widgetClass = "dijit/layout/ContentPane";
-				newState.style = "padding:0";
-				newState.value = /*_self.dataAPI +*/ "/public/help/" + path;
-				newState.set = "href";
-				newState.requireAuth = false;
-				newState.pageTitle = 'PATRIC';
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-
-			Router.register("\/workspace(\/.*)", function(params, oldPath, newPath, state){
-				// console.log("Workspace URL Callback", params.newPath);
-				var newState = {href: params.newPath}
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
-
-				var path = params.params[0] || ("/" + _self.user.id ); //  + "/home/")
-				var parts = path.split("/");
-
-				if(path.replace(/\/+/g, '') == 'public'){
-					path = '/public/';
-				}else if(parts.length < 3){
-					path = ("/" + _self.user.id );  //+ "/home/"
-				}
-
-				newState.widgetClass = "p3/widget/WorkspaceManager";
-				newState.value = path;
-				newState.set = "path";
-				newState.requireAuth = false;
-				newState.pageTitle = "PATRIC Workspace";
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-			function getState(params, path){
-				var parser = document.createElement("a");
-				parser.href = path;
-				var newState = params.state || {};
-
-				newState.href = path;
-				newState.prev = params.oldPath;
-				// console.log("parser getState: ", parser);
-				if(newState.search){
-
-				}else if(parser.search){
-					newState.search = (parser.search.charAt(0) == "?") ? parser.search.substr(1) : parser.search
-				}else{
-					newState.search = "";
-				}
-
-				// console.log("New State Search: ", newState.search);
-				newState.hash = parser.hash;
-				newState.pathname = parser.pathname
-
-				if(newState.hash){
-					newState.hash = (newState.hash.charAt(0) == "#") ? newState.hash.substr(1) : newState.hash;
-					// console.log("PARSE HASH: ", newState.hash)
-					newState.hashParams = newState.hashParams || {};
-
-					var hps = newState.hash.split("&");
-					hps.forEach(function(t){
-						var tup = t.split("=");
-						if(tup[0] && tup[1]){
-							newState.hashParams[tup[0]] = tup[1];
-						}
-					});
-					// console.log("newState.hashParams: ", newState.hashParams)
-				}
-				return newState;
 			}
 
-			Router.register("\/view(\/.*)", function(params, path){
-				// console.log("'/view/' Route Handler.  Params: ", params, " \n PATH: ", path, arguments);
-				var newState = getState(params, path);
+			// console.log("Navigate to ", newState);
+			_self.navigate(newState);
+		});
 
-				// console.log("newState from getState in /view/: ", JSON.stringify(newState,null,4));
+		if(!this.api){
+			this.api = {}
+		}
 
-				var parts = newState.pathname.split("/")
-				parts.shift();
-				var type = parts.shift();
+		if(this.workspaceAPI){
+			WorkspaceManager.init(this.workspaceAPI, this.authorizationToken || "", this.user ? this.user.id : "");
+			this.api.workspace = RPC(this.workspaceAPI, this.authorizationToken || "");
+		}
 
-				newState.widgetClass = "p3/widget/viewer/" + type;
-				// console.log("'/view/' New Navigation State: ", JSON.stringify(newState,null,4));
-				_self.navigate(newState);
-			});
+		if(this.serviceAPI){
+			// console.log("Setup API Service @ ", this.serviceAPI);
+			this.api.service = RPC(this.serviceAPI, this.authorizationToken || "");
+		}
 
-			Router.register("\/app(\/.*)", function(params, path){
-				// console.log("view URL Callback", arguments);
-
-				var parts = path.split("/")
-				parts.shift();
-				var type = parts.shift();
-				if(parts.length > 0){
-					viewerParams = parts.join("/");
-				}else{
-					viewerParams = "";
-				}
-				// console.log("Parts:", parts, type, viewerParams)
-
-				var newState = {href: params.newPath};
-				for(var prop in params.state){
-					newState[prop] = params.state[prop]
-				}
-
-				// console.log("Parts:", parts, type, path)
-				newState.widgetClass = "p3/widget/app/" + type;
-				newState.value = viewerParams;
-				newState.set = "params";
-				newState.requireAuth = true;
-
-				if(_self.publicApps.indexOf(type) >= 0){
-					newState.requireAuth = false;
-				}
-
-				// console.log("Navigate to ", newState);
-				_self.navigate(newState);
-			});
-
-			if(!this.api){
-				this.api = {}
+		if(this.dataAPI){
+			if(this.dataAPI.charAt(-1) != "/"){
+				this.dataAPI = this.dataAPI + "/";
 			}
+			this.api.data = RPC(this.dataAPI, this.authorizationToken);
+		}
+		/*
+		Topic.subscribe("/ActiveWorkspace", function(as){
+		console.log("SET App.activeWorkspace",as)
+		_self.activeWorkspace=as.workspace;
+		_self.activeWorkspacePath=as.path;
+	});
+	*/
+	// console.log("go()")
+	// setTimeout(function(){
+	// 	Router.go("/workspace/dmachi/foo/bar");
 
-			if(this.workspaceAPI){
-				WorkspaceManager.init(this.workspaceAPI, this.authorizationToken || "", this.user ? this.user.id : "");
-				this.api.workspace = RPC(this.workspaceAPI, this.authorizationToken || "");
-			}
+	// },2000);
 
-			if(this.serviceAPI){
-				// console.log("Setup API Service @ ", this.serviceAPI);
-				this.api.service = RPC(this.serviceAPI, this.authorizationToken || "");
-			}
+	this.toaster = new Toaster({positionDirection: "bl-up", messageTopic: "/Notification", duration: 3000});
+	// this.leftDrawer = new Drawer({title: '', handleContent: '<i  class="fa fa-3x icon-filter">', topic: "/overlay/left"}).placeAt(document.body);
+	// this.leftDrawer.startup();
 
-			if(this.dataAPI){
-				if(this.dataAPI.charAt(-1) != "/"){
-					this.dataAPI = this.dataAPI + "/";
-				}
-				this.api.data = RPC(this.dataAPI, this.authorizationToken);
-			}
-			/*
-			Topic.subscribe("/ActiveWorkspace", function(as){
-				console.log("SET App.activeWorkspace",as)
-				_self.activeWorkspace=as.workspace;
-				_self.activeWorkspacePath=as.path;
-			});
-			*/
-			// console.log("go()")
-			// setTimeout(function(){
-			// 	Router.go("/workspace/dmachi/foo/bar");
+	//this.rightDrawer = new Drawer({topic: "/overlay/right", "class":"RightDrawer"}).placeAt(document.body);
+	//this.rightDrawer.startup();
+	// setTimeout(function(){
+	// 	Topic.publish("/overlay/right", {action: "set", panel: ContentPane});
+	// }, 1000);
 
-			// },2000);
+	if(this.user && this.user.id){
+		domAttr.set("YourWorkspaceLink", 'href', '/workspace/' + this.user.id)
+		var n = dom.byId("signedInAs");
+		if(n){
+			n.innerHTML = this.user.id.replace("@patricbrc.org", "");
+		}
+	}
+	Topic.subscribe("/userWorkspaces", lang.hitch(this, "updateUserWorkspaceList"));
 
-			this.toaster = new Toaster({positionDirection: "bl-up", messageTopic: "/Notification", duration: 3000});
-			// this.leftDrawer = new Drawer({title: '', handleContent: '<i  class="fa fa-3x icon-filter">', topic: "/overlay/left"}).placeAt(document.body);
-			// this.leftDrawer.startup();
-
-			//this.rightDrawer = new Drawer({topic: "/overlay/right", "class":"RightDrawer"}).placeAt(document.body);
-			//this.rightDrawer.startup();
-			// setTimeout(function(){
-			// 	Topic.publish("/overlay/right", {action: "set", panel: ContentPane});
-			// }, 1000);
-
-			if(this.user && this.user.id){
-				domAttr.set("YourWorkspaceLink", 'href', '/workspace/' + this.user.id)
-				var n = dom.byId("signedInAs");
-				if(n){
-					n.innerHTML = this.user.id.replace("@patricbrc.org", "");
-				}
-			}
-			Topic.subscribe("/userWorkspaces", lang.hitch(this, "updateUserWorkspaceList"));
-
-			this.inherited(arguments);
-		},
-		login:function(data, token){
-			console.log(data);
-			if(data !== undefined){
-			localStorage.setItem('auth', JSON.stringify(data));
-			localStorage.setItem('tokenstring', token);
-			localStorage.setItem('tokenid', data.tokenid);
-			var userid = data.un.replace('@patricbrc.org', '');
-			localStorage.setItem('userid', userid);
-			var userServiceURL = window.App.userServiceURL;
-			console.log('this is the url for dev backend');
-			console.log(userServiceURL);
-			// token = "un=djmTest1@patricbrc.org|tokenid=eba7fe76-aab4-45cd-b7a3-e72d08e8b52e|expiry=1513051461|client_id=djmTest1@patricbrc.org|token_type=Bearer|realm=patricbrc.org|scope=user|SigningSubject=http://djm.vbi.vt.edu:3002/public_key|sig=8d907cecb17a72faf881f4d14c94060f17b1178b909b804c7acceb2539a68475b7fa0f994ae9d746cfd869cb6dc0076e6945d636a126e1711a341a66d6bf360fe1046e83515d9d82fef109ee9a1e8653199d08ea5d5c5af0916d9548f51bd172f61b834af11268f9fad08178648e59721bdd2307c7443f75ccc53387b0b9bd2a";
-			// userid = "djmTest1";
-			//xhr.get('https://user.patricbrc.org' + '/user/' + userid, {
-				xhr.get(userServiceURL + '/user/' + userid, {
-				headers: {
+	this.inherited(arguments);
+	this.checkLogin();
+},
+checkLogin: function(){
+	if(localStorage.getItem('tokenstring') !== null){
+		document.body.className += 'Authenticated';
+		this.user = localStorage.getItem('userProfile');
+		this.authorizationToken = localStorage.getItem('tokenstring');
+	}
+	//else{
+	// 	document.body.className.replace('Authenticated', '');
+	// }
+},
+login:function(data, token){
+	console.log(data);
+	if(data !== undefined){
+		localStorage.setItem('auth', JSON.stringify(data));
+		localStorage.setItem('tokenstring', token);
+		localStorage.setItem('tokenid', data.tokenid);
+		var userid = data.un.replace('@patricbrc.org', '');
+		localStorage.setItem('userid', userid);
+		var userServiceURL = window.App.userServiceURL;
+		console.log('this is the url for dev backend');
+		console.log(userServiceURL);
+		//this.authorizationToken = token;
+		// token = "un=djmTest1@patricbrc.org|tokenid=eba7fe76-aab4-45cd-b7a3-e72d08e8b52e|expiry=1513051461|client_id=djmTest1@patricbrc.org|token_type=Bearer|realm=patricbrc.org|scope=user|SigningSubject=http://djm.vbi.vt.edu:3002/public_key|sig=8d907cecb17a72faf881f4d14c94060f17b1178b909b804c7acceb2539a68475b7fa0f994ae9d746cfd869cb6dc0076e6945d636a126e1711a341a66d6bf360fe1046e83515d9d82fef109ee9a1e8653199d08ea5d5c5af0916d9548f51bd172f61b834af11268f9fad08178648e59721bdd2307c7443f75ccc53387b0b9bd2a";
+		// userid = "djmTest1";
+		//xhr.get('https://user.patricbrc.org' + '/user/' + userid, {
+		userServiceURL.replace("/", "");
+		xhr.get(userServiceURL + '/user/' + userid, {
+			headers: {
 				'Accept': 'application/json',
 				'Authorization': token
 			}
 			// ,
 			// 	'Content-Type': 'application/json',
-			})
-			.then(function(data){
-				console.log(data);
-			}, function(err){
-				console.log(err);
-			});
-			//window.location.reload();
-		} else {
-			console.log('i am not logged in yet');
-		}
-		},
-		updateUserWorkspaceList: function(data){
-			var wsNode = dom.byId("YourWorkspaces");
-			domConstruct.empty("YourWorkspaces");
+		})
+		.then(function(user){
+			console.log(user);
+			localStorage.setItem('userProfile', user);
+			window.location.reload();
+		}, function(err){
+			console.log(err);
+		});
 
-			data.forEach(function(ws){
-				if(ws.name !== "home") return;
+	} else {
+		console.log('i am not logged in yet');
+	}
+},
+updateUserWorkspaceList: function(data){
+	var wsNode = dom.byId("YourWorkspaces");
+	domConstruct.empty("YourWorkspaces");
 
-				var d = domConstruct.create("div", {style: {"padding-left": "12px"}}, wsNode);
+	data.forEach(function(ws){
+		if(ws.name !== "home") return;
 
-				domConstruct.create("i", {
-					"class": "fa icon-caret-down fa-1x noHoverIcon",
-					style: {"margin-right": "4px"}
-				}, d);
+		var d = domConstruct.create("div", {style: {"padding-left": "12px"}}, wsNode);
 
-				domConstruct.create("a", {
-					'class': 'navigationLink',
-					href: "/workspace" + ws.path,
-					innerHTML: ws.name
-				}, d);
+		domConstruct.create("i", {
+			"class": "fa icon-caret-down fa-1x noHoverIcon",
+			style: {"margin-right": "4px"}
+		}, d);
 
-				domConstruct.create("br", {}, d);
+		domConstruct.create("a", {
+			'class': 'navigationLink',
+			href: "/workspace" + ws.path,
+			innerHTML: ws.name
+		}, d);
 
-				domConstruct.create("a", {
-					'class': 'navigationLink',
-					"style": {"padding-left": "16px"},
-					href: "/workspace" + ws.path + "/Genome%20Groups",
-					innerHTML: "Genome Groups"
-				}, d)
+		domConstruct.create("br", {}, d);
 
-				domConstruct.create("br", {}, d);
+		domConstruct.create("a", {
+			'class': 'navigationLink',
+			"style": {"padding-left": "16px"},
+			href: "/workspace" + ws.path + "/Genome%20Groups",
+			innerHTML: "Genome Groups"
+		}, d)
 
-				domConstruct.create("a", {
-					'class': 'navigationLink',
-					"style": {"padding-left": "16px"},
-					href: "/workspace" + ws.path + "/Feature%20Groups",
-					innerHTML: "Feature Groups"
-				}, d)
+		domConstruct.create("br", {}, d);
 
-				domConstruct.create("br", {}, d);
+		domConstruct.create("a", {
+			'class': 'navigationLink',
+			"style": {"padding-left": "16px"},
+			href: "/workspace" + ws.path + "/Feature%20Groups",
+			innerHTML: "Feature Groups"
+		}, d)
 
-				domConstruct.create("a", {
-					'class': 'navigationLink',
-					"style": {"padding-left": "16px"},
-					href: "/workspace" + ws.path + "/Experiment%20Groups",
-					innerHTML: "Experiment Groups"
-				}, d)
-			})
+		domConstruct.create("br", {}, d);
 
-		}
+		domConstruct.create("a", {
+			'class': 'navigationLink',
+			"style": {"padding-left": "16px"},
+			href: "/workspace" + ws.path + "/Experiment%20Groups",
+			innerHTML: "Experiment Groups"
+		}, d)
+	})
 
-	});
+}
+
+});
 });

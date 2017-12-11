@@ -89,6 +89,8 @@ app.use(function(req, res, next){
 	req.production = config.get("production") || false;
 	req.productionLayers = ["p3/layer/core"];
 	req.package = package;
+	var authToken = "";
+	var userProf = "";
 	req.applicationOptions = {
 		version: "3.0",
 		gaID: config.get("gaID") || false,
