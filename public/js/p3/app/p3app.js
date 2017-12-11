@@ -355,6 +355,17 @@ define([
 
 	this.inherited(arguments);
 	this.checkLogin();
+	this.timeout();
+},
+timeout: function(){
+	setTimeout(function () {
+		if(localStorage.getItem('tokenstring') === null){
+			if(document.getElementsByClassName('Authenticated').length > 0){
+				window.location.href = window.App.FrontendURL;
+			}
+		}
+		window.App.timeout();
+	}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
 	if(localStorage.getItem('tokenstring') !== null){
@@ -366,21 +377,21 @@ checkLogin: function(){
 			this.user = localStorage.getItem('userProfile');
 			this.authorizationToken = localStorage.getItem('tokenstring');
 		} else{
-			console.log('token has expired, do we log them out now?')
+			window.location.href = window.App.FrontendURL;
 		}
 	}
 },
 checkExpToken(date){
 	var d = new Date();
 	var checkd = d.valueOf() / 1000;
-	console.log(checkd);
+	//console.log(checkd);
 	if(checkd > date){
-		console.log('expired');
+		//console.log('expired');
 		return false;
 	} return true;
 },
 login:function(data, token){
-	console.log(data);
+	//console.log(data);
 	if(data !== undefined){
 		localStorage.setItem('auth', JSON.stringify(data));
 		localStorage.setItem('tokenstring', token);
@@ -409,6 +420,14 @@ login:function(data, token){
 	} else {
 		console.log('i am not logged in yet');
 	}
+},
+logout:function(){
+	localStorage.removeItem('tokenstring');
+	localStorage.removeItem('userProfile');
+	localStorage.removeItem('auth');
+	localStorage.removeItem('userid');
+	localStorage.removeItem('tokenid');
+	window.location.href = window.App.FrontendURL;
 },
 updateUserWorkspaceList: function(data){
 	var wsNode = dom.byId("YourWorkspaces");

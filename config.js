@@ -28,6 +28,8 @@ var defaults = {
 	accountURL: "http://user.patric.local:3002/",
 	docsServiceURL: "http://docs.patric.local/",
 	userServiceURL: "",
+	FrontendURL: "",
+	localStorageCheckInterval: "",
 	// enableDevAuth: false,
 	// devAuthorizationToken: "",
 	// devUser: false,
@@ -35,13 +37,13 @@ var defaults = {
 
 	reportProblemEmailAddress: "help@patricbrc.org",
 
-        "email": {
-                "localSendmail": false,
-                "defaultFrom": "PATRIC <do-not-reply@patricbrc.org>",
-                "defaultSender": "PATRIC <do-not-reply@patricbrc.org>",
-                "host": "",
-                "port":587
-        },
+	"email": {
+		"localSendmail": false,
+		"defaultFrom": "PATRIC <do-not-reply@patricbrc.org>",
+		"defaultSender": "PATRIC <do-not-reply@patricbrc.org>",
+		"host": "",
+		"port":587
+	},
 
 	proxy: {
 		"brcdownloads": "http://brcdownloads.patricbrc.org"
@@ -52,7 +54,7 @@ var config_filename = "p3-web.conf";
 var config_file = __dirname + "/" + config_filename;
 if (!fs.statSync(config_file))
 {
-    config_file = "./" + config_filename;
+	config_file = "./" + config_filename;
 }
 
 module.exports = nconf.argv().env().file(config_file).defaults(defaults);
