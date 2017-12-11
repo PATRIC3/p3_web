@@ -21,7 +21,7 @@ define([
 			var vals = this.getValues();
 			var _self = this;
 			var userServiceURL = window.App.userServiceURL;
-				userServiceURL.replace("/", "");
+				userServiceURL.replace(/\/+$/, "");
 			var def = xhr.post(userServiceURL + '/authenticate', {
 				data: vals
 				// data: vals,

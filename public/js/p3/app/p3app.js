@@ -358,13 +358,26 @@ define([
 },
 checkLogin: function(){
 	if(localStorage.getItem('tokenstring') !== null){
-		document.body.className += 'Authenticated';
-		this.user = localStorage.getItem('userProfile');
-		this.authorizationToken = localStorage.getItem('tokenstring');
+		var auth = localStorage.getItem('auth');
+		auth = JSON.parse(auth);
+		var validToken = this.checkExpToken(auth.expiry);
+		if(validToken){
+			document.body.className += 'Authenticated';
+			this.user = localStorage.getItem('userProfile');
+			this.authorizationToken = localStorage.getItem('tokenstring');
+		} else{
+			console.log('token has expired, do we log them out now?')
+		}
 	}
-	//else{
-	// 	document.body.className.replace('Authenticated', '');
-	// }
+},
+checkExpToken(date){
+	var d = new Date();
+	var checkd = d.valueOf() / 1000;
+	console.log(checkd);
+	if(checkd > date){
+		console.log('expired');
+		return false;
+	} return true;
 },
 login:function(data, token){
 	console.log(data);
@@ -377,22 +390,17 @@ login:function(data, token){
 		var userServiceURL = window.App.userServiceURL;
 		console.log('this is the url for dev backend');
 		console.log(userServiceURL);
-		//this.authorizationToken = token;
-		// token = "un=djmTest1@patricbrc.org|tokenid=eba7fe76-aab4-45cd-b7a3-e72d08e8b52e|expiry=1513051461|client_id=djmTest1@patricbrc.org|token_type=Bearer|realm=patricbrc.org|scope=user|SigningSubject=http://djm.vbi.vt.edu:3002/public_key|sig=8d907cecb17a72faf881f4d14c94060f17b1178b909b804c7acceb2539a68475b7fa0f994ae9d746cfd869cb6dc0076e6945d636a126e1711a341a66d6bf360fe1046e83515d9d82fef109ee9a1e8653199d08ea5d5c5af0916d9548f51bd172f61b834af11268f9fad08178648e59721bdd2307c7443f75ccc53387b0b9bd2a";
-		// userid = "djmTest1";
-		//xhr.get('https://user.patricbrc.org' + '/user/' + userid, {
-		userServiceURL.replace("/", "");
+		userServiceURL.replace(/\/+$/, "");
 		xhr.get(userServiceURL + '/user/' + userid, {
 			headers: {
 				'Accept': 'application/json',
 				'Authorization': token
 			}
-			// ,
-			// 	'Content-Type': 'application/json',
 		})
 		.then(function(user){
 			console.log(user);
 			localStorage.setItem('userProfile', user);
+			//document.body.className += 'Authenticated';
 			window.location.reload();
 		}, function(err){
 			console.log(err);
