@@ -18,6 +18,7 @@ define([
 		genomeIds: "",
 		subsystemId: "",
 		taxonId: "",
+		displayDefaultGenomes: false,
 
 		onSetState: function(attr, oldVal, state){
 
@@ -32,6 +33,22 @@ define([
 			state.subsystem_id = subsystemData.subsystem_id;
 			state.selectionData = subsystemData.selectionData;
 
+			// var that = this;
+			// var query = "?eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
+			// return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
+			// 	headers: {
+			// 		'Accept': "application/json",
+			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+			// 	},
+			// 	handleAs: "json"
+			// }), function(response){
+
+			// 	var reference_genome_ids = response.map(function(genome){
+			// 		return genome.genome_id;
+			// 	})
+
+			// 	reference_genome_ids.unshift(that.state.genome_ids);
+
 			var self = this;
 			when(this.getGenomeIdsBySubsystemId(state.genome_ids_arr, state.subsystem_id), function(genomeIds){
 				state.genome_ids = genomeIds;
@@ -40,8 +57,8 @@ define([
 
 			// when(this.getSubsystemDescription(subsystemData.subsystem_id), function(description){
 			// 	//state.description = description	
-			// 	$('#subSystemHeatmap').append( "<p>" + description + "</p>" );
-			// 	$('#subSystemHeatmap').css("height", "70px");
+			// 	$('#subsystemheatmap').append( "<p>" + description + "</p>" );
+			// 	$('#subsystemheatmap').css("height", "70px");
 			// });
 				
 			window.document.title = 'Subsystem Map';
@@ -76,35 +93,33 @@ define([
 
 		getStateParams: function(state) {
 
-			var str = state.search;
-			var pattern = "&subsystemselectionuniqueidentifier=";
+			var decodedSelectionData = JSON.stringify(state.search)
+			var params = JSON.parse(decodedSelectionData);
+			var decodedParams = decodeURIComponent(params);
 
-			var search = this.truncateAfter(str, pattern);
-			var selectionData = this.truncateBefore(str, pattern);
-			var decodedSelectionData = decodeURIComponent(selectionData)
-			var parsedSelectionData = JSON.parse(decodedSelectionData);
+			//genome_ids=83332.12&subsystem_id=Bacterial_Sphingolipids&genome_count=1&role_count=1&gene_count=1&genome_name=Mycobacterium%20tuberculosis%20H37Rv&display_default_genomes=false
 
-			var everythingAfterParam = /subsystem_id=(.*)/;
-			var subsystem_id = everythingAfterParam.exec(search)[1];
+			var genome_ids_regex = /genome_ids=(.*?)&/;
+			var genome_ids = genome_ids_regex.exec(decodedParams)[1];
 
-			var everythingUpToParam = /^(.*?)&subsystem_id=/;
-			var genomeIdsParam = everythingUpToParam.exec(search);
-			var genome_ids = genomeIdsParam[1].replace("genome_ids=", "");
+			var subsystem_id_regex = /subsystem_id=(.*?)&/;
+			var subsystem_id = subsystem_id_regex.exec(decodedParams)[1];
 
-			//for taxon level
-			if (genome_ids.indexOf('&') > -1)
-			{
-				var everythingAfterTaxonId = /taxon_id=(.*)/;
-				var taxonString = genomeIdsParam[0];
-				var taxonId = everythingAfterTaxonId.exec(taxonString);
+			var genome_count_regex = /genome_count=(.*?)&/;
+			var genome_count = genome_count_regex.exec(decodedParams)[1];
 
-				var everythingUpToTaxonid = /^(.*?)&/;
-				this.taxonId = everythingUpToTaxonid.exec(taxonId[1])[1];
+			var role_count_regex = /role_count=(.*?)&/;
+			var role_count = role_count_regex.exec(decodedParams)[1];
 
-			  	var everythingUpAmpersand = /&(.*)/;
-				var genome_ids_cleaned = everythingUpAmpersand.exec(genome_ids);
-				genome_ids = genome_ids_cleaned[1];
-			}
+			var gene_count_regex = /gene_count=(.*?)&/;
+			var gene_count = gene_count_regex.exec(decodedParams)[1];
+
+			var genome_name_regex = /genome_name=(.*?)&/;
+			var genome_name = genome_name_regex.exec(decodedParams)[1];
+
+			var display_default_genomes_regex = /display_default_genomes=(.*)/;
+			var display_default_genomes = display_default_genomes_regex.exec(decodedParams)[1];
+
 
 			this.genomeIds = genome_ids;
 			this.subsystem_id = subsystem_id;
@@ -116,6 +131,49 @@ define([
 
 			return subsystemData;
 		},
+
+		// getStateParams: function(state) {
+
+		// 	var str = state.search;
+		// 	var pattern = "&subsystemselectionuniqueidentifier=";
+
+		// 	var search = this.truncateAfter(str, pattern);
+		// 	var selectionData = this.truncateBefore(str, pattern);
+		// 	var decodedSelectionData = decodeURIComponent(selectionData)
+		// 	var parsedSelectionData = JSON.parse(decodedSelectionData);
+
+		// 	var everythingAfterParam = /subsystem_id=(.*)/;
+		// 	var subsystem_id = everythingAfterParam.exec(search)[1];
+
+		// 	var everythingUpToParam = /^(.*?)&subsystem_id=/;
+		// 	var genomeIdsParam = everythingUpToParam.exec(search);
+		// 	var genome_ids = genomeIdsParam[1].replace("genome_ids=", "");
+
+		// 	//for taxon level
+		// 	if (genome_ids.indexOf('&') > -1)
+		// 	{
+		// 		var everythingAfterTaxonId = /taxon_id=(.*)/;
+		// 		var taxonString = genomeIdsParam[0];
+		// 		var taxonId = everythingAfterTaxonId.exec(taxonString);
+
+		// 		var everythingUpToTaxonid = /^(.*?)&/;
+		// 		this.taxonId = everythingUpToTaxonid.exec(taxonId[1])[1];
+
+		// 	  	var everythingUpAmpersand = /&(.*)/;
+		// 		var genome_ids_cleaned = everythingUpAmpersand.exec(genome_ids);
+		// 		genome_ids = genome_ids_cleaned[1];
+		// 	}
+
+		// 	this.genomeIds = genome_ids;
+		// 	this.subsystem_id = subsystem_id;
+
+		// 	var subsystemData = {};
+		// 	subsystemData.genome_ids = genome_ids;
+		// 	subsystemData.subsystem_id = subsystem_id;
+		// 	subsystemData.selectionData = parsedSelectionData;
+
+		// 	return subsystemData;
+		// },
 
 		getStateParamsForSubClass: function(state) {
 			var params = {};
@@ -181,15 +239,19 @@ define([
 				}
 
 
-				$('#subSystemHeatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
+				$('#subsystemheatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
 
 				when(that.getSubsystemDescription(that.state.subsystem_id), function(data){
-					
-					var pmids = data.pmid.join(", ");
 
-					$('#subSystemHeatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmids + "</p>");
-					$('#subSystemHeatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
-					$('#subSystemHeatmap').css("height", "170px");
+					if (data && data.pmid) {
+
+						var pmids = data.pmid.join(", ");
+
+						$('#subsystemheatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmids + "</p>");
+						$('#subsystemheatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
+						//$('#subsystemheatmap').css("height", "170px");
+						$('#subsystemheatmap').attr('style','height: 170px');
+					}
 				});
 
 				var genomeIdList = [];
@@ -226,11 +288,14 @@ define([
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
+			
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				"id": "subSystemHeatmap",
-				"style": "height:170px"
+				"id": "subsystemheatmap",
+				"style": "height:0px"
 			}, headerContent);
+
+
 
 			this.addChild(this.viewerHeader);
 			this.addChild(this.viewer);
