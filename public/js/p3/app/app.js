@@ -316,19 +316,27 @@ define([
 			});
 
 			var showAuthDlg = function(evt){
-				// console.log("Login Link Click", evt);
 				if(evt){
 					evt.preventDefault();
 					evt.stopPropagation();
-					// console.log("Target", evt.target.href);
-					// console.log("Create Dialog()", evt.target.href);
 				}
 				var dlg = new Dialog({
 					title: "Login",
-					content: "<div class=\"LoginForm\" data-dojo-type=\"p3/widget/LoginForm\" style=\"width:300px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
+					content: "<div class=\"LoginForm\" data-dojo-type=\"p3/widget/LoginForm\" style=\"width:300px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:20px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
 				});
 				dlg.show();
-				// console.log("end loginLink Lcik");
+			};
+
+			var showUserProfile = function(evt){
+				if(evt){
+					evt.preventDefault();
+					evt.stopPropagation();
+				}
+				var dlg = new Dialog({
+					title: "User Profile",
+					content: "<div class=\"UserProfileForm\" data-dojo-type=\"p3/widget/UserProfileForm\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
+				});
+				dlg.show();
 			};
 
 			var timer;
@@ -362,6 +370,7 @@ define([
 			});
 
 			on(document, ".loginLink:click", showAuthDlg);
+			on(document, ".userProfile:click", showUserProfile);
 			on(document, ".registrationLink:click", function(){
 				window.open(_self.accountURL + "/register");
 			});
