@@ -332,8 +332,22 @@ define([
 					evt.preventDefault();
 					evt.stopPropagation();
 				}
+				//console.log(evt);
 				var dlg = new Dialog({
 					title: "User Profile",
+					content: "<div class=\"UserProfileForm\" data-dojo-type=\"p3/widget/UserProfileForm\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
+				});
+				dlg.show();
+			};
+
+			var showNewUser = function(evt){
+				if(evt){
+					evt.preventDefault();
+					evt.stopPropagation();
+				}
+				//console.log(evt);
+				var dlg = new Dialog({
+					title: "Register User",
 					content: "<div class=\"UserProfileForm\" data-dojo-type=\"p3/widget/UserProfileForm\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
 				});
 				dlg.show();
@@ -371,9 +385,9 @@ define([
 
 			on(document, ".loginLink:click", showAuthDlg);
 			on(document, ".userProfile:click", showUserProfile);
-			on(document, ".registrationLink:click", function(){
-				window.open(_self.accountURL + "/register");
-			});
+			on(document, ".registrationLink:click", showNewUser);
+			// 	window.open(_self.accountURL + "/register");
+			// });
 			Topic.subscribe("/login", showAuthDlg);
 
                        on(document, ".logoutLink:click", function(evt){

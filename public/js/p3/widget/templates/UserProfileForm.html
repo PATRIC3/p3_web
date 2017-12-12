@@ -6,14 +6,15 @@
       <tbody>
         <tr><th>FIRST NAME</th><th>LAST NAME</th></tr>
         <tr><td>
-          <div style="width:100%" data-dojo-type="dijit/form/TextBox" name="first_name" value=""></div>
+          <div style="width:90%" data-dojo-type="dijit/form/TextBox" name="first_name" value=""></div>
 
         </td><td>
-          <div data-dojo-type="dijit/form/TextBox" style="width:100%" name="last_name" value=""></div></td></tr>
-          <tr><th colspan="1">EMAIL ADDRESS</th></tr>
-          <tr><td colspan="1">
+          <div data-dojo-type="dijit/form/TextBox" style="width:90%" name="last_name" value=""></div></td></tr>
+          <tr><th>EMAIL ADDRESS</th><th>USERNAME</th></tr>
+          <tr><td>
             <input type="text" name="email" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"Email Address",promptMessage:"Enter your Email Address",invalidMessage:"Invalid Email Address",validator:dojox.validate.isEmailAddress,trim:true' required="true" value="">
-            <!-- <input type="text" name="email" data-dojo-type="dijit/form/TextBox" required="true" value=""> -->
+          </td><td>
+            <input class="useridField" type="text" style="display:none" name="username" data-dojo-type="dijit/form/TextBox" required="true" value="">
           </td></tr>
           <tr><th colspan="2">ORGANIZATION</th></tr>
           <tr><td colspan="2"><div style="width:100%" data-dojo-type="dijit/form/TextBox" name="affiliation" value=""></div></td></tr>
@@ -23,7 +24,8 @@
           <tr><td colspan="2"><div rows="5" name="interests" style="height:75px;" data-dojo-type="dijit/form/Textarea" value=""></div></td></tr>
         </tbody>
       </table>
-      <div style="position: absolute; right: 70px;" data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Update Profile</div>
+      <div class="upSubmit" style="position: absolute; right: 70px;" data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Update Profile</div>
+      <div class="newSubmit" style="position: absolute; right: 70px;display:none" data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Submit</div>
       <p>&nbsp;</p>
     </div>
   </form>
