@@ -76,7 +76,7 @@ define([
 				patchObj.organisms = vals.organisms;
 			}
 			console.log(patchObj);
-		var def = xhr(this.userServiceURL + '/' + window.localStorage.userid, {
+		var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
 		data: patchObj,
 		method: 'patch',
 		headers: {
@@ -100,6 +100,11 @@ define([
 			console.log(err);
 		})
 	},
+	// postCreate: function(){
+	// 	this.inherited(arguments);
+	// 	this.UNH.destroy;
+	// 	this.UNF.destroy;
+	// },
 		startup: function(){
 			if(this._started){
 				return;
@@ -128,11 +133,14 @@ define([
 				var userprofileStored = window.localStorage.getItem('userProfile');
 				this.userprofileStored = JSON.parse(userprofileStored);
 				this.setValues(this.userprofileStored);
+					var uidfield = document.getElementsByClassName('useridField')[0];
+					uidfield.parentNode.removeChild(uidfield);
 			} else {
 				this.auth = false;
 				document.getElementsByClassName('upSubmit')[0].style.display = 'none';
 				document.getElementsByClassName('newSubmit')[0].style.display = 'block';
 				document.getElementsByClassName('useridField')[0].style.display = 'block';
+				document.getElementsByClassName('usernamehdr')[0].style.display = 'block';
 			}
 			//console.log(this.userprofileStored.first_name);
 

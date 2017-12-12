@@ -1,7 +1,7 @@
 <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm"
     dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
 	<div style="padding:2px; margin:10px;">
-		<input type="text" name="username"/ data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Username or Email Address"'><br/>
+		<input type="text" name="username" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Username or Email Address"'><br/>
 	</div>
        	<div style="padding:2px;margin:10px;">
 		<input type="password" name="password" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Password"'/>
@@ -11,9 +11,9 @@
 	</div>
 
 	<div class="messageContainer errorMessage">
-		We were unable to log you in  with the credentials provided.	
+		We were unable to log you in  with the credentials provided.
 	</div>
-       	
+
        	<div style="text-align:center;padding:2px;margin:10px;">
 		<div data-dojo-attach-point="cancelButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button" class="dijitHidden">Login</div>
 		<div data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Login</div>
