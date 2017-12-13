@@ -32,7 +32,11 @@ define([
 					def.then(function(data){
 						console.log(data);
 						document.getElementsByClassName('pwReset')[0].style.display='none';
+						if(data){
+							document.getElementsByClassName('pwrError')[0].style.display="block";
+						}else{
 						document.getElementsByClassName('pwrMessage')[0].style.display="block";
+					}
 					}, function(err){
 						console.log(err);
 					})

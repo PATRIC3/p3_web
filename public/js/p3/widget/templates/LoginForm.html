@@ -30,12 +30,15 @@
   <p>&nbsp;</p>
   <form>
     <input data-dojo-attach-point="emailAddress" style="width:100%" type="email" name="email" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"Email Address",promptMessage:"Enter your Email Address",invalidMessage:"Invalid Email Address",validator:dojox.validate.isEmailAddress,trim:true' required="true" value="">
-<p>&nbsp;</p>
-  <div class="RSPWbutton" data-dojo-attach-event="click: onResetClick" style="position:absolute; right:106px" data-dojo-attach-point="resetPWbutton" type="button" data-dojo-type="dijit/form/Button">Reset Password</div>
+    <p>&nbsp;</p>
+    <div class="RSPWbutton" data-dojo-attach-event="click: onResetClick" style="position:absolute; right:106px" data-dojo-attach-point="resetPWbutton" type="button" data-dojo-type="dijit/form/Button">Reset Password</div>
   </form>
 </div>
 <div class="pwrMessage" style="display:none; border:2px">
-    <h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Your Password has been reset</h2>
-    <p>Please check your email for instructions to complete the reset process.</p>
+  <h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Your Password has been reset</h2>
+  <p>Please check your email for instructions to complete the reset process.</p>
+</div>
+<div class="pwrError" style="text-align: center; padding: 2px; margin: 10px; border: 1px solid red; border-radius: 4px;display:none">
+  Unable to reset the account with the provided email address
 </div>
 </div>
