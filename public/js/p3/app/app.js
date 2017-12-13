@@ -519,7 +519,8 @@ define([
 
 
 		// console.log("newNavState.requireAuth: ", newNavState.requireAuth, window.App);
-		if(newNavState.requireAuth && (!window.App.user || !window.App.user.id)){
+		if(newNavState.requireAuth && (window.localStorage.getItem('tokenstring') === null)){
+			console.log(window.App.authorizationToken);
 			var cur = _self.getCurrentContainer();
 			if(cur){
 				appContainer.removeChild(cur, true);
