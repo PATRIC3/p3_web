@@ -2,15 +2,41 @@ define([
 	"dojo/_base/declare", "dijit/_WidgetBase", "dojo/on",
 	"dojo/dom-class", "dijit/_TemplatedMixin", "dijit/_WidgetsInTemplateMixin",
 	"dojo/text!./templates/LoginForm.html", "dijit/form/Form", "dojo/request",
-	"dojo/dom-form", "dojo/_base/lang"
+	"dojo/dom-form", "dojo/_base/lang", "dojox/validate/web"
 ], function(declare, WidgetBase, on,
 			domClass, Templated, WidgetsInTemplate,
 			Template, FormMixin, xhr,
-			domForm, lang){
+			domForm, lang, validate){
 	return declare([WidgetBase, FormMixin, Templated, WidgetsInTemplate], {
 		"baseClass": "App Sleep",
 		templateString: Template,
 		callbackURL: "",
+		onResetClick: function(evt){
+			console.log('I clicked the reset pw button!');
+			evt.preventDefault();
+			evt.stopPropagation();
+			domClass.add(this.domNode, "Working");
+			domClass.remove(this.domNode, "Error");
+				this.resetPWbutton.set('disabled', true);
+				var emailAddress = this.emailAddress.displayedValue;
+				console.log(emailAddress);
+				var userServiceURL = window.App.userServiceURL;
+					userServiceURL.replace(/\/+$/, "");
+					var def = xhr.post(userServiceURL + '/reset_password', {
+						data: {email: emailAddress},
+						method: 'post',
+						headers: {
+							'Accept': 'application/json'
+						}
+					});
+					def.then(function(data){
+						console.log(data);
+						document.getElementsByClassName('pwReset')[0].style.display='none';
+						document.getElementsByClassName('pwrMessage')[0].style.display="block";
+					}, function(err){
+						console.log(err);
+					})
+		},
 		onSubmit: function(evt){
 			console.log('I clicked the button');
 			evt.preventDefault();
@@ -42,6 +68,7 @@ define([
 			})
 		},
 		startup: function(){
+			this.prform = false;
 			if(this._started){
 				return;
 			}
@@ -62,9 +89,18 @@ define([
 			if(!this.showCancel && this.cancelButton){
 				domClass.add(this.cancelButton.domNode, "dijitHidden");
 			}
-
 			// this.gethelp();
 			this._started = true;
+			this.forgotPW();
+		},
+		forgotPW: function(){
+				var fpw = document.getElementsByClassName('forgotPW')[0];
+				fpw.addEventListener('click', this.makeFPform);
+		},
+		makeFPform: function(){
+			console.log('howdy');
+			document.getElementsByClassName('loginForm')[0].style.display='none';
+			document.getElementsByClassName('pwReset')[0].style.display='block';
 		}
 	});
 });
