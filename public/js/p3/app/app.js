@@ -519,7 +519,9 @@ define([
 
 
 		// console.log("newNavState.requireAuth: ", newNavState.requireAuth, window.App);
-		if(newNavState.requireAuth && (window.localStorage.getItem('tokenstring') === null)){
+		console.log('auth is good or not?');
+		console.log(window.App.authorizationToken);
+		if(newNavState.requireAuth && (window.App.authorizationToken === null || window.App.authorizationToken === undefined)){
 			console.log(window.App.authorizationToken);
 			var cur = _self.getCurrentContainer();
 			if(cur){

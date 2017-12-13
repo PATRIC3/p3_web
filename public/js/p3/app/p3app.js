@@ -27,7 +27,7 @@ define([
 			// user: '',
 			startup: function(){
 				var _self = this;
-
+				this.checkLogin();
 				on(document.body, "keypress", function(evt){
 					var charOrCode = evt.charCode || evt.keyCode;
 					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
@@ -354,7 +354,6 @@ define([
 	Topic.subscribe("/userWorkspaces", lang.hitch(this, "updateUserWorkspaceList"));
 
 	this.inherited(arguments);
-	this.checkLogin();
 	this.timeout();
 },
 timeout: function(){
