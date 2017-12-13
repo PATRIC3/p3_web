@@ -386,7 +386,8 @@ define([
 		on(document, ".loginLink:click", showAuthDlg);
 		on(document, ".userProfile:click", showUserProfile);
 		on(document, ".registrationLink:click", showNewUser);
-		on(document, ".showRegwidget:click", showNewUser);
+		on(document, ".showRegWidget:click", showNewUser);
+			on(document, ".showLoginWidget:click", showAuthDlg);
 		// 	window.open(_self.accountURL + "/register");
 		// });
 		Topic.subscribe("/login", showAuthDlg);
@@ -526,7 +527,7 @@ define([
 
 			var lp = ContentPane({
 				region: "center",
-				content: '<div style="text-align: center;width:100%;"><h3>PATRIC Login</h3><p>This service requires authentication. Please login or <a class="showRegwidget">register as a new user.</a></p>'+
+				content: '<div style="text-align: center;width:100%;"><h3>PATRIC Login</h3><p>This service requires authentication. Please <a class="showLoginWidget">login</a> or <a class="showRegWidget">register as a new user.</a></p>'+
 				'<div class="LoginForm" data-dojo-type="p3/widget/LoginForm" style="width:300px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:20px;margin-top:10px;padding:10px;"></div>'
 			});
 			appContainer.addChild(lp);

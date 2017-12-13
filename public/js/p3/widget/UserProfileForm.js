@@ -127,7 +127,7 @@ define([
 				domClass.add(this.cancelButton.domNode, "dijitHidden");
 			}
 
-			console.log(window.App.authorizationToken);
+			//console.log(window.App.authorizationToken);
 			if(window.App.authorizationToken !== null && window.App.authorizationToken !== undefined){
 				this.auth = true;
 				var userprofileStored = window.localStorage.getItem('userProfile');
@@ -135,12 +135,14 @@ define([
 				this.setValues(this.userprofileStored);
 					var uidfield = document.getElementsByClassName('useridField')[0];
 					uidfield.parentNode.removeChild(uidfield);
+						var usernamehdr = document.getElementsByClassName('usernamehdr')[0];
+						usernamehdr.parentNode.removeChild(usernamehdr);
 			} else {
 				this.auth = false;
 				document.getElementsByClassName('upSubmit')[0].style.display = 'none';
 				document.getElementsByClassName('newSubmit')[0].style.display = 'block';
-				document.getElementsByClassName('useridField')[0].style.display = 'block';
-				document.getElementsByClassName('usernamehdr')[0].style.display = 'block';
+				// document.getElementsByClassName('useridField')[0].style.display = 'block';
+				// document.getElementsByClassName('usernamehdr')[0].style.display = 'block';
 			}
 			//console.log(this.userprofileStored.first_name);
 

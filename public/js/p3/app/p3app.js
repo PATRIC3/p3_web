@@ -395,7 +395,7 @@ login:function(data, token){
 	if(data !== undefined){
 		localStorage.setItem('auth', JSON.stringify(data));
 		localStorage.setItem('tokenstring', token);
-		localStorage.setItem('tokenid', data.tokenid);
+		//localStorage.setItem('tokenid', data.tokenid);
 		var userid = data.un.replace('@patricbrc.org', '');
 		localStorage.setItem('userid', userid);
 		var userServiceURL = window.App.userServiceURL;
@@ -426,7 +426,7 @@ logout:function(){
 	localStorage.removeItem('userProfile');
 	localStorage.removeItem('auth');
 	localStorage.removeItem('userid');
-	localStorage.removeItem('tokenid');
+	//localStorage.removeItem('tokenid');
 	window.location.href = window.App.FrontendURL;
 },
 updateUserWorkspaceList: function(data){

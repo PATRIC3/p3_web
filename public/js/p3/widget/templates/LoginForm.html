@@ -1,5 +1,5 @@
 <div>
-  <div class="loginForm">
+  <div class="loginForm" style="border: 2px">
     <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm"
     dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
     <div style="padding:2px; margin:10px;">
@@ -21,17 +21,17 @@
     </div>
     <div style="font-size:.85em;">
       <!-- New to PATRIC?  <a href="/register">REGISTER HERE</a> </br> -->
-      <a class="forgotPW">Forgot Your password?</a>
+      <a class="forgotPW" data-dojo-attach-event="click: makeFPform">Forgot Your password?</a>
     </div>
   </form>
 </div>
-<div class="pwReset" style="display:none; border:2px">
+<div class="pwReset" style="display:none; max-width:200px; margin:auto; border:2px">
   <h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PASSWORD RESET</h2>
   <p>&nbsp;</p>
   <form>
     <input data-dojo-attach-point="emailAddress" style="width:100%" type="email" name="email" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"Email Address",promptMessage:"Enter your Email Address",invalidMessage:"Invalid Email Address",validator:dojox.validate.isEmailAddress,trim:true' required="true" value="">
     <p>&nbsp;</p>
-    <div class="RSPWbutton" data-dojo-attach-event="click: onResetClick" style="position:absolute; right:106px" data-dojo-attach-point="resetPWbutton" type="button" data-dojo-type="dijit/form/Button">Reset Password</div>
+    <div class="RSPWbutton" data-dojo-attach-event="click: onResetClick" style="margin:auto" data-dojo-attach-point="resetPWbutton" type="button" data-dojo-type="dijit/form/Button">Reset Password</div>
   </form>
 </div>
 <div class="pwrMessage" style="display:none; border:2px">
