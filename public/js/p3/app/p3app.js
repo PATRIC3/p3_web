@@ -380,7 +380,7 @@ checkLogin: function(){
 		}
 	}
 },
-checkExpToken(date){
+checkExpToken: function(date){
 	var d = new Date();
 	var checkd = d.valueOf() / 1000;
 	//console.log(checkd);
@@ -389,7 +389,7 @@ checkExpToken(date){
 		return false;
 	} return true;
 },
-login:function(data, token){
+login: function(data, token){
 	//console.log(data);
 	if(data !== undefined){
 		localStorage.setItem('auth', JSON.stringify(data));

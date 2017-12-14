@@ -9,3 +9,5 @@ public/js/release/build-report.txt
 .idea/
 .vscode/
 public/video/
+public/js/release/
+yarn.lock

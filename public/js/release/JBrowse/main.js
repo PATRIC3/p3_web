@@ -28,6 +28,6 @@ require([
 
             // track lists
             'JBrowse/Store/TrackMetaData',
-            'xstyle/core/load-css',
+            // 'xstyle/core/load-css',
             'dojox/gfx/svg'
         ]);
