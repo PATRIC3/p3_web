@@ -135,6 +135,19 @@ define([
 				}
 			}), function(genomes){
 
+			 	var genomeIndexMap = {}
+               	_self.state.genome_ids.forEach(function(genome_id, idx){
+                   	genomeIndexMap[genome_id] = idx;
+                })
+
+                genomes.forEach(function(genome, idx){
+                    var gfs = new FilterStatus();
+                   	// gfs.init(idx, genome.genome_name);
+                   	gfs.init(genomeIndexMap[genome.genome_id], genome.genome_name)
+                    _self.pmState.genomeFilterStatus[genome.genome_id] = gfs;
+                    // _self.pmState.genome_ids.push(genome.genome_id);
+                });
+
 				genomes.forEach(function(genome, idx){
 					var gfs = new FilterStatus();
 					gfs.init(idx, genome.genome_name);

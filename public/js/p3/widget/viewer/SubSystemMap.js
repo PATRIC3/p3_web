@@ -27,7 +27,7 @@ define([
 			var display_reference_genomes = this.getStateParams(state);
 
 			var that = this;
-			var query = "?eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
+			var query = "?ne(genome_id," + state.genome_ids_without_reference + ")&eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
 			return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
 				headers: {
 					'Accept': "application/json",
@@ -39,6 +39,8 @@ define([
 				var reference_genome_ids = response.map(function(genome){
 					return genome.genome_id;
 				})
+
+				state.reference_genome_ids_only = reference_genome_ids;
 
 				that.state.genome_ids.forEach(function(genome_id){
 					reference_genome_ids.unshift(genome_id);
