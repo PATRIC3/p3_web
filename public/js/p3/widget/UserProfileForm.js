@@ -163,6 +163,8 @@ define([
 				this.auth = false;
 				document.getElementsByClassName('upSubmit')[0].style.display = 'none';
 				document.getElementsByClassName('newSubmit')[0].style.display = 'block';
+				var changepwsection = document.getElementsByClassName('changepwsection')[0];
+				changepwsection.parentNode.removeChild(changepwsection);
 				// document.getElementsByClassName('useridField')[0].style.display = 'block';
 				// document.getElementsByClassName('usernamehdr')[0].style.display = 'block';
 			}
