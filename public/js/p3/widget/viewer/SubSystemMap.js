@@ -150,7 +150,6 @@ define([
 			return display_reference_genomes;
 		},
 
-		//TODO - get a return of reference genome IDs
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
 			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";

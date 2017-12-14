@@ -306,7 +306,7 @@ define([
 
 			pmState.genome_ids.forEach(function(genomeId, idx){
 				var gfs = pmState.genomeFilterStatus[genomeId];
-				if(gfs && gfs.getStatus() != '1'){
+				if(gfs.getStatus() != '1'){
 					keeps.push(2 * gfs.getIndex());
 					var labelColor = ((idx % 2) == 0) ? 0x000066 : null;
 					var rowColor = ((idx % 2) == 0) ? 0xF4F4F4 : 0xd6e4f4;
