@@ -4,24 +4,15 @@ var nconf = require('nconf');
 
 var defaults = {
 	"http_port": 3000,
-	"authorizationURL": "http://user.patric.local:3002/login",
+	//"authorizationURL": "http://user.patric.local:3002/login",
 	"application_id": "patric3",
 	"p3_clientId": "patric3",
 	"p3_clientSecret": "patric3",
-	"redis": {
-		"host": "127.0.0.1",
-		"port": 6379,
-		"prefix": "",
-		"db": 1,
-		"pass": ""
-	},
-
 	"appLabel": "dev",
-	"cookieKey": "JSESSIONID",
-	"cookieDomain": ".patric.local",
+	//"cookieKey": "JSESSIONID",
+	//"cookieDomain": ".patric.local",
 	"newsFeedRSS": "https://docs.patricbrc.org/news.rss",
 	"sessionTTL": 2628000000,
-
 	workspaceServiceURL: "",
 	appServiceURL: "",
 	dataURL: "",
@@ -30,13 +21,8 @@ var defaults = {
 	userServiceURL: "",
 	FrontendURL: "",
 	localStorageCheckInterval: "",
-	// enableDevAuth: false,
-	// devAuthorizationToken: "",
-	// devUser: false,
 	enableDevTools: false,
-
 	reportProblemEmailAddress: "help@patricbrc.org",
-
 	"email": {
 		"localSendmail": false,
 		"defaultFrom": "PATRIC <do-not-reply@patricbrc.org>",
@@ -44,7 +30,6 @@ var defaults = {
 		"host": "",
 		"port":587
 	},
-
 	proxy: {
 		"brcdownloads": "http://brcdownloads.patricbrc.org"
 	}

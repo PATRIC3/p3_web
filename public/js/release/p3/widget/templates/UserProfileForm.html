@@ -30,7 +30,9 @@
     </form>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
+    <div class="changepwsection" data-dojo-attach-point="changePWsec">
     <hr>
+        <p>&nbsp;</p>
     <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm" dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
       <table>
         <tbody>
@@ -47,4 +49,5 @@
       <div class="changePWbutton" data-dojo-attach-event="click: onResetClick" style="margin:auto" data-dojo-attach-point="cPWbutton" type="button" data-dojo-type="dijit/form/Button">Change Password</div>
     </form>
     <div class="pwError" style="color:red; margin-top:20px;display:none"><p>The passwords do not match, please fix</p></div>
+  </div>
   </div>
