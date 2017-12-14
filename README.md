@@ -14,11 +14,6 @@ curl --silent --location https://rpm.nodesource.com/setup_6.x | bash -
 yum -y install nodejs
 ```
 
-redis  (3.2+) http://redis.io/ or
-```
-brew install redis
-```
-
 
 ## Installation
 
@@ -45,7 +40,7 @@ In `./p3-web.conf`, place a token and user id/name as follows:
 {
     "devAuthorizationToken": "token",   
     -->
-    
+
 <!--    "devUser": {
         "id":"user@patricbrc.org",
         "name": "user name"
