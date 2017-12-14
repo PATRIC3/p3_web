@@ -253,8 +253,8 @@ define([
 			var def = new Deferred();
 
 			//used to toggle display reference genomes
-			if (this.state.display_default_genomes) {
-				pmState.genome_ids = this.state.genome_ids;
+			if (this.state.display_reference_genomes) {
+				pmState.genome_ids = this.state.genome_ids_with_reference;
 			} else {
 				pmState.genome_ids = this.state.genome_ids_without_reference;
 			}
@@ -306,7 +306,7 @@ define([
 
 			pmState.genome_ids.forEach(function(genomeId, idx){
 				var gfs = pmState.genomeFilterStatus[genomeId];
-				if(gfs.getStatus() != '1'){
+				if(gfs && gfs.getStatus() != '1'){
 					keeps.push(2 * gfs.getIndex());
 					var labelColor = ((idx % 2) == 0) ? 0x000066 : null;
 					var rowColor = ((idx % 2) == 0) ? 0xF4F4F4 : 0xd6e4f4;
