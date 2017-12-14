@@ -355,16 +355,29 @@ define([
 
 	this.inherited(arguments);
 	this.timeout();
+	//check for if mouse has moved
+	var mouseMove;
+	this.activeMouse = true;
+	document.onmousemove = function(){
+		clearTimeout(mouseMove);
+		this.activeMouse = true;
+		console.log(this.activeMouse);
+		mouseMove = setTimeout(function(){console.log("move your mouse"); window.App.activeMouse = false;}, 20000);
+	}
 },
 timeout: function(){
 	setTimeout(function () {
+		//check if logged out and another tab is open
 		if(localStorage.getItem('tokenstring') === null){
 			if(document.getElementsByClassName('Authenticated').length > 0){
 				window.location.href = window.App.FrontendURL;
 			}
+		} else {
+			//check if token has expired
+			window.App.checkLogin();
 		}
 		window.App.timeout();
-	}, window.App.localStorageCheckInterval);
+		}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
 	if(localStorage.getItem('tokenstring') !== null){
@@ -376,16 +389,40 @@ checkLogin: function(){
 			this.user = localStorage.getItem('userProfile');
 			this.authorizationToken = localStorage.getItem('tokenstring');
 		} else{
-			window.location.href = window.App.FrontendURL;
+			//if mouse has moved in past x minutes then refresh the token
+			console.log('what is the active mouse state?');
+			console.log(this.activeMouse);
+			if(this.activeMouse){
+				var userServiceURL = window.App.userServiceURL;
+				userServiceURL.replace(/\/+$/, "");
+				xhr.get(userServiceURL + '/authenticate/refresh/', {
+
+					headers: {
+						'Accept': 'application/json',
+						'Authorization': window.localStorage.getItem('tokenstring')
+					}
+				})
+				.then(function(data){
+					console.log(data);
+					localStorage.setItem('tokenstring', data);
+					//document.body.className += 'Authenticated';
+					//window.location.reload();
+				}, function(err){
+					console.log(err);
+				});
+			} else{
+				//else logout
+				window.App.logout();
+			}
 		}
 	}
 },
 checkExpToken: function(date){
 	var d = new Date();
 	var checkd = d.valueOf() / 1000;
-	//console.log(checkd);
+	console.log(checkd);
 	if(checkd > date){
-		//console.log('expired');
+		console.log('expired');
 		return false;
 	} return true;
 },
@@ -398,8 +435,6 @@ login: function(data, token){
 		var userid = data.un.replace('@patricbrc.org', '');
 		localStorage.setItem('userid', userid);
 		var userServiceURL = window.App.userServiceURL;
-		console.log('this is the url for dev backend');
-		console.log(userServiceURL);
 		userServiceURL.replace(/\/+$/, "");
 		xhr.get(userServiceURL + '/user/' + userid, {
 			headers: {
