@@ -642,12 +642,12 @@ define([
 				},
 				function(selection){
 
-					var display_default_genomes = "false";
+					var display_default_genomes = "true";
 
 					var url = {};
 					if(this.state.hasOwnProperty('taxon_id')){
 						url['taxon_id'] = this.state.taxon_id;
-						display_default_genomes = "true";
+						display_default_genomes = "false";
 					};
 
 					//used to query data

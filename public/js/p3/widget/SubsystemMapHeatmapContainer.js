@@ -39,6 +39,21 @@ define([
 					Topic.publish("SubSystemMap", "refreshHeatmap");
 				},
 				true
+			],
+			[
+				"Reference Genomes",
+				"fa icon-eye fa-2x",
+				{label: "Reference Genomes", multiple: false, validTypes: ["*"]},
+				function(){
+					if(this.state.display_default_genomes){
+						this.state.display_default_genomes = false;
+					}else{
+						this.state.display_default_genomes = true;
+					}
+
+					Topic.publish("SubSystemMap", "refreshHeatmap");
+				},
+				true
 			]
 		],
 		constructor: function(){

@@ -15,8 +15,6 @@ define([
 		subsystemClass: "",
 		subclass: "",
 		
-		genomeIds: "",
-		subsystemId: "",
 		taxonId: "",
 		displayDefaultGenomes: false,
 
@@ -26,42 +24,45 @@ define([
 				return;
 			}
 
-			var subsystemData = this.getStateParams(state);
+			var display_default_genomes = this.getStateParams(state);
 
-			state.genome_ids = subsystemData.genome_ids;
-			state.genome_ids_arr = subsystemData.genome_ids.split(',');
-			state.subsystem_id = subsystemData.subsystem_id;
-			state.selectionData = subsystemData.selectionData;
+			if (display_default_genomes) {
+				var that = this;
+				var query = "?eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
+				return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
+					headers: {
+						'Accept': "application/json",
+						'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+					},
+					handleAs: "json"
+				}), function(response){
 
-			// var that = this;
-			// var query = "?eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)";
-			// return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
-			// 	headers: {
-			// 		'Accept': "application/json",
-			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-			// 	},
-			// 	handleAs: "json"
-			// }), function(response){
+					var reference_genome_ids = response.map(function(genome){
+						return genome.genome_id;
+					})
 
-			// 	var reference_genome_ids = response.map(function(genome){
-			// 		return genome.genome_id;
-			// 	})
+					that.state.genome_ids.forEach(function(genome_id){
+						reference_genome_ids.unshift(genome_id);
+					})
+					state.genome_ids = reference_genome_ids;
 
-			// 	reference_genome_ids.unshift(that.state.genome_ids);
+					when(that.getGenomeIdsBySubsystemId(that.state.genome_ids, that.state.subsystem_id), function(genomeIds){
+						that.viewer.set('visible', true);
+					});
+						
+					window.document.title = 'Subsystem Map';
 
-			var self = this;
-			when(this.getGenomeIdsBySubsystemId(state.genome_ids_arr, state.subsystem_id), function(genomeIds){
-				state.genome_ids = genomeIds;
-				self.viewer.set('visible', true);
-			});
-
-			// when(this.getSubsystemDescription(subsystemData.subsystem_id), function(description){
-			// 	//state.description = description	
-			// 	$('#subsystemheatmap').append( "<p>" + description + "</p>" );
-			// 	$('#subsystemheatmap').css("height", "70px");
-			// });
-				
-			window.document.title = 'Subsystem Map';
+				});
+			} else {
+				var self = this;
+				when(this.getGenomeIdsBySubsystemId(state.genome_ids, state.subsystem_id), function(genomeIds){
+					state.genome_ids = genomeIds;
+					self.viewer.set('visible', true);
+				});
+					
+				window.document.title = 'Subsystem Map';
+			}
+					
 		},
 
 		getSubsystemDescription: function(subsystemId) {
@@ -97,8 +98,6 @@ define([
 			var params = JSON.parse(decodedSelectionData);
 			var decodedParams = decodeURIComponent(params);
 
-			//genome_ids=83332.12&subsystem_id=Bacterial_Sphingolipids&genome_count=1&role_count=1&gene_count=1&genome_name=Mycobacterium%20tuberculosis%20H37Rv&display_default_genomes=false
-
 			var genome_ids_regex = /genome_ids=(.*?)&/;
 			var genome_ids = genome_ids_regex.exec(decodedParams)[1];
 
@@ -120,72 +119,25 @@ define([
 			var display_default_genomes_regex = /display_default_genomes=(.*)/;
 			var display_default_genomes = display_default_genomes_regex.exec(decodedParams)[1];
 
+			if (display_default_genomes === "false") {
+				display_default_genomes = false;
+			} else {
+				display_default_genomes = true;
+			}
 
-			this.genomeIds = genome_ids;
-			this.subsystem_id = subsystem_id;
+			state.genome_ids = genome_ids.split(',');
+			state.genome_ids_without_reference = genome_ids.split(',');
+			state.subsystem_id = subsystem_id;
+			state.genome_count = genome_count;
+			state.role_count = role_count;
+			state.gene_count = gene_count;
+			state.genome_name = genome_name;
+			state.display_default_genomes = display_default_genomes;
 
-			var subsystemData = {};
-			subsystemData.genome_ids = genome_ids;
-			subsystemData.subsystem_id = subsystem_id;
-			subsystemData.selectionData = parsedSelectionData;
-
-			return subsystemData;
+			return display_default_genomes;
 		},
 
-		// getStateParams: function(state) {
-
-		// 	var str = state.search;
-		// 	var pattern = "&subsystemselectionuniqueidentifier=";
-
-		// 	var search = this.truncateAfter(str, pattern);
-		// 	var selectionData = this.truncateBefore(str, pattern);
-		// 	var decodedSelectionData = decodeURIComponent(selectionData)
-		// 	var parsedSelectionData = JSON.parse(decodedSelectionData);
-
-		// 	var everythingAfterParam = /subsystem_id=(.*)/;
-		// 	var subsystem_id = everythingAfterParam.exec(search)[1];
-
-		// 	var everythingUpToParam = /^(.*?)&subsystem_id=/;
-		// 	var genomeIdsParam = everythingUpToParam.exec(search);
-		// 	var genome_ids = genomeIdsParam[1].replace("genome_ids=", "");
-
-		// 	//for taxon level
-		// 	if (genome_ids.indexOf('&') > -1)
-		// 	{
-		// 		var everythingAfterTaxonId = /taxon_id=(.*)/;
-		// 		var taxonString = genomeIdsParam[0];
-		// 		var taxonId = everythingAfterTaxonId.exec(taxonString);
-
-		// 		var everythingUpToTaxonid = /^(.*?)&/;
-		// 		this.taxonId = everythingUpToTaxonid.exec(taxonId[1])[1];
-
-		// 	  	var everythingUpAmpersand = /&(.*)/;
-		// 		var genome_ids_cleaned = everythingUpAmpersand.exec(genome_ids);
-		// 		genome_ids = genome_ids_cleaned[1];
-		// 	}
-
-		// 	this.genomeIds = genome_ids;
-		// 	this.subsystem_id = subsystem_id;
-
-		// 	var subsystemData = {};
-		// 	subsystemData.genome_ids = genome_ids;
-		// 	subsystemData.subsystem_id = subsystem_id;
-		// 	subsystemData.selectionData = parsedSelectionData;
-
-		// 	return subsystemData;
-		// },
-
-		getStateParamsForSubClass: function(state) {
-			var params = {};
-			var qparts = state.search.split("&");
-			qparts.forEach(function(qp){
-				var parts = qp.split("=");
-				params[parts[0]] = parts[1];
-			});
-
-			return params;
-		},
-
+		//TODO - get a return of reference genome IDs
 		getGenomeIdsBySubsystemId: function(genome_ids, subsystem_id){
 
 			var query = "q=genome_id:(" + genome_ids.join(" OR ") + ") AND subsystem_id:\"" + encodeURIComponent(subsystem_id) + "\"&rows=1&facet=true&facet.field=genome_id&facet.mincount=1&json.nl=map";
@@ -201,8 +153,6 @@ define([
 				},
 				data: query
 			}), function(response){
-
-				var selectionData = that.state.selectionData[0];
 
 				this.superclass = response.response.docs[0].superclass;
 				this.subsystemClass = response.response.docs[0].class;
@@ -225,17 +175,17 @@ define([
 				
 				var geneInfo = "";
 
-				if ( selectionData.genome_count > 1 && selectionData.hasOwnProperty("role_count") ) {
-					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.genome_count + " genomes, " + selectionData.gene_count + " genes)";
+				if ( that.state.genome_count > 1 && that.state.hasOwnProperty("role_count") ) {
+					geneInfo += " (" + that.state.role_count + " roles, " + that.state.genome_count + " genomes, " + that.state.gene_count + " genes)";
 				} 
-				else if ( selectionData.genome_count > 1 && !selectionData.hasOwnProperty("role_count") ) {
-					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.gene_count + " genes)";
+				else if ( that.state.genome_count > 1 && !that.state.hasOwnProperty("role_count") ) {
+					geneInfo += " (" + that.state.role_count + " roles, " + that.state.gene_count + " genes)";
 				}
-				else if (selectionData.hasOwnProperty("role_count")) {
-					geneInfo += " (" + selectionData.role_count + " roles, " + selectionData.gene_count + " genes)";
+				else if (that.state.hasOwnProperty("role_count")) {
+					geneInfo += " (" + that.state.role_count + " roles, " + that.state.gene_count + " genes)";
 				} 
 				else {
-					geneInfo += " (" + selectionData.genome_name + ")";
+					geneInfo += " (" + that.state.genome_name + ")";
 				}
 
 

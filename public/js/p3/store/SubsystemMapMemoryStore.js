@@ -9,7 +9,7 @@ define([
 
 	var pmState = {
 		heatmapAxis: 'Transposed',
-		genomeIds: [],
+		genome_ids: [],
 		genomeFilterStatus: {},
 		clusterRowOrder: [],
 		clusterColumnOrder: []
@@ -139,9 +139,10 @@ define([
 					var gfs = new FilterStatus();
 					gfs.init(idx, genome.genome_name);
 					_self.pmState.genomeFilterStatus[genome.genome_id] = gfs;
-					// _self.pmState.genomeIds.push(genome.genome_id);
+					// _self.pmState.genome_ids.push(genome.genome_id);
 				});
-				_self.pmState.genomeIds = Object.keys(_self.pmState.genomeFilterStatus);
+				// _self.pmState.genome_ids = Object.keys(_self.pmState.genomeFilterStatus);
+				_self.pmState.genome_ids = _self.state.genome_ids;
 				// publish pmState & update filter panel
 				Topic.publish("SubSystemMap", "updatePmState", _self.pmState);
 
@@ -181,7 +182,7 @@ define([
 					var roleGenomeIdCountMap = {};
 					var roleGenomeIdSet = {};
 					var genomePosMap = {};
-					var genome_ids = _self.pmState.genomeIds;
+					var genome_ids = _self.pmState.genome_ids;
 					genome_ids.forEach(function(genomeId, idx){
 						genomePosMap[genomeId] = idx;
 					});
@@ -251,6 +252,13 @@ define([
 
 			var def = new Deferred();
 
+			//used to toggle display reference genomes
+			if (this.state.display_default_genomes) {
+				pmState.genome_ids = this.state.genome_ids;
+			} else {
+				pmState.genome_ids = this.state.genome_ids_without_reference;
+			}
+
 			var rows = [];
 			var cols = [];
 			var maxIntensity = 0; // global and will be modified inside createColumn function
@@ -288,7 +296,7 @@ define([
 			var genomeOrderChangeMap = [];
 
 			if(genomeOrder !== [] && genomeOrder.length > 0){
-				pmState.genomeIds = genomeOrder;
+				pmState.genome_ids = genomeOrder;
 				genomeOrder.forEach(function(genomeId, idx){
 					// console.log(genomeId, pmState.genomeFilterStatus[genomeId], idx);
 					genomeOrderChangeMap.push(pmState.genomeFilterStatus[genomeId].getIndex()); // keep the original position
@@ -296,7 +304,7 @@ define([
 				});
 			}
 
-			pmState.genomeIds.forEach(function(genomeId, idx){
+			pmState.genome_ids.forEach(function(genomeId, idx){
 				var gfs = pmState.genomeFilterStatus[genomeId];
 				if(gfs.getStatus() != '1'){
 					keeps.push(2 * gfs.getIndex());
