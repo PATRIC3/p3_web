@@ -33,6 +33,21 @@
     <div class="changepwsection" data-dojo-attach-point="changePWsec">
     <hr>
         <p>&nbsp;</p>
+    <form>
+      <table>
+        <tbody>
+          <tr><th style="padding:0">NEW PASSWORD</th></tr>
+          <tr><td style="padding-top:0">
+            <input class="pw1field" type="password" style="display:block" name="pw1" data-dojo-attach-point="pw1" data-dojo-type="dijit/form/TextBox" value="" required="true" data-dojo-props="intermediateChanges: true" data-dojo-attach-event="onChange: pwChanged">
+          </td></tr>
+          <tr><th style="padding:0">NEW PASSWORD (reenter)</th></tr>
+          <tr><td style="padding-top:0">
+            <input class="pw2field" type="password" style="display:block" name="pw2" data-dojo-attach-point="pw2" data-dojo-type="dijit/form/TextBox" value="" required="true" data-dojo-props="intermediateChanges: true" data-dojo-attach-event="onChange: pwChanged">
+          </td></tr>
+        </tbody>
+      </table>
+      <div class="changePWbutton" data-dojo-attach-event="click: onResetClick" style="margin:auto" data-dojo-attach-point="cPWbutton" type="button" data-dojo-type="dijit/form/Button">Change Password</div>
+    </form>
     <div class="pwError" style="color:red; margin-top:20px;display:none"><p>The passwords do not match, please fix</p></div>
   </div>
   </div>
