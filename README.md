@@ -32,28 +32,9 @@ git submodule update --init
 // Note: git submodule fetches a module in node_modules directory. So npm install first!
 ```
 
-<!-- ## Authentication config for development
-
-In `./p3-web.conf`, place a token and user id/name as follows:
-
-``` json
-{
-    "devAuthorizationToken": "token",   
-    -->
-
-<!--    "devUser": {
-        "id":"user@patricbrc.org",
-        "name": "user name"
-    }
-}
-```
-
-Note: authentication is stored as a session cookie.  You can clear it via your browser devtools if needed. -->
-
 ## Running
 
 ```
-redis-server &
 npm start
 ```
 
