@@ -380,10 +380,10 @@ timeout: function(){
 			window.App.checkLogin();
 		}
 		window.App.timeout();
-		}, window.App.localStorageCheckInterval);
+	}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
-	console.log(window.App.uploadInProgress);
+	//console.log(window.App.uploadInProgress);
 	//console.log('checking for login');
 	if(localStorage.getItem('tokenstring') !== null){
 		var auth = localStorage.getItem('auth');
@@ -392,11 +392,11 @@ checkLogin: function(){
 		//console.log(validToken);
 		if(validToken){
 			if(!document.body.className.includes('Authenticated')){
-			document.body.className += 'Authenticated';
-		}
+				document.body.className += 'Authenticated';
+			}
 			//var docbody = document.getElementsByClassName('patric')[0];
 			//console.log(docbody);
-			this.user = localStorage.getItem('userProfile');
+			window.App.user = JSON.parse(localStorage.getItem('userProfile'));
 			window.App.authorizationToken = localStorage.getItem('tokenstring');
 			//console.log(window.App.authorizationToken);
 		} else{
@@ -405,14 +405,14 @@ checkLogin: function(){
 			console.log(window.App.uploadInProgress);
 			//console.log('what is the active mouse state?');
 			//console.log(this.activeMouse);
-			if(window.App.activeMouse){
+			if(window.App.activeMouse || window.App.uploadInProgress){
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
 				xhr.get(userServiceURL + '/authenticate/refresh/', {
 
 					headers: {
 						'Accept': 'application/json',
-						'Authorization': window.localStorage.getItem('tokenstring')
+						'Authorization': localStorage.getItem('tokenstring')
 					}
 				})
 				.then(function(data){
@@ -469,14 +469,15 @@ login: function(data, token){
 	}
 },
 logout:function(){
-	//logout only if upload is not in progress
-	localStorage.removeItem('tokenstring');
-	localStorage.removeItem('userProfile');
-	localStorage.removeItem('auth');
-	localStorage.removeItem('userid');
-	//localStorage.removeItem('tokenid');
-	window.location.href = window.App.FrontendURL;
-	//else alert upload is in progress try logout again later
+	if(!window.App.uploadInProgress){
+		localStorage.removeItem('tokenstring');
+		localStorage.removeItem('userProfile');
+		localStorage.removeItem('auth');
+		localStorage.removeItem('userid');
+		window.location.href = window.App.FrontendURL;
+	} else {
+		alert('upload is in progress, try Logout again later');
+	}
 },
 updateUserWorkspaceList: function(data){
 	var wsNode = dom.byId("YourWorkspaces");
