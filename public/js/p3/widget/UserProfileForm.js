@@ -13,20 +13,20 @@ define([
 		callbackURL: "",
 		pwChanged: function(evt){
 			this.cPWbutton.set('disabled', true);
-			console.log('I changed a pw field');
+			//console.log('I changed a pw field');
 			if(this.pw1.get('value') !== '' && this.pw2.get('value') !== ''){
 				this.cPWbutton.set('disabled', false);
 			}
 		},
 		onResetClick: function(evt){
-			console.log('I clicked the change password button');
+			//console.log('I clicked the change password button');
 			evt.preventDefault();
 			evt.stopPropagation();
 			domClass.add(this.domNode, "Working");
 			domClass.remove(this.domNode, "Error");
 			this.cPWbutton.set('disabled', true);
 			if(this.pw1.get('value') !== this.pw2.get('value')){
-				console.log('they do not match!');
+				//console.log('they do not match!');
 				document.getElementsByClassName('pwError')[0].style.display="block";
 				this.cPWbutton.set('disabled', false);
 			}else{
@@ -34,7 +34,7 @@ define([
 			}
 		},
 		onSubmit: function(evt){
-			console.log('I clicked the button');
+			//console.log('I clicked the button');
 			evt.preventDefault();
 			evt.stopPropagation();
 			domClass.add(this.domNode, "Working");
@@ -52,7 +52,7 @@ define([
 				}
 		},
 		createNewUser: function(vals){
-			console.log(vals);
+			//console.log(vals);
 			var def = xhr(this.userServiceURL + '/register', {
 			data: vals,
 			method: 'post',

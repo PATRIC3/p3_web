@@ -361,7 +361,7 @@ define([
 	document.onmousemove = function(){
 		clearTimeout(mouseMove);
 		this.activeMouse = true;
-		console.log(this.activeMouse);
+		//console.log(this.activeMouse);
 		mouseMove = setTimeout(function(){console.log("move your mouse"); window.App.activeMouse = false;}, 20000);
 	}
 },
@@ -380,18 +380,24 @@ timeout: function(){
 		}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
+	//console.log('checking for login');
 	if(localStorage.getItem('tokenstring') !== null){
 		var auth = localStorage.getItem('auth');
 		auth = JSON.parse(auth);
 		var validToken = this.checkExpToken(auth.expiry);
+		//console.log(validToken);
 		if(validToken){
+			if(!document.body.className.includes('Authenticated')){
 			document.body.className += 'Authenticated';
+		}
+			var docbody = document.getElementsByClassName('patric')[0];
+			//console.log(docbody);
 			this.user = localStorage.getItem('userProfile');
 			this.authorizationToken = localStorage.getItem('tokenstring');
 		} else{
 			//if mouse has moved in past x minutes then refresh the token
-			console.log('what is the active mouse state?');
-			console.log(this.activeMouse);
+			//console.log('what is the active mouse state?');
+			//console.log(this.activeMouse);
 			if(this.activeMouse){
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
@@ -403,7 +409,7 @@ checkLogin: function(){
 					}
 				})
 				.then(function(data){
-					console.log(data);
+					//console.log(data);
 					localStorage.setItem('tokenstring', data);
 					//document.body.className += 'Authenticated';
 					//window.location.reload();
@@ -420,9 +426,9 @@ checkLogin: function(){
 checkExpToken: function(date){
 	var d = new Date();
 	var checkd = d.valueOf() / 1000;
-	console.log(checkd);
+	//console.log(checkd);
 	if(checkd > date){
-		console.log('expired');
+		//console.log('expired');
 		return false;
 	} return true;
 },
@@ -443,7 +449,7 @@ login: function(data, token){
 			}
 		})
 		.then(function(user){
-			console.log(user);
+			//console.log(user);
 			localStorage.setItem('userProfile', user);
 			//document.body.className += 'Authenticated';
 			window.location.reload();

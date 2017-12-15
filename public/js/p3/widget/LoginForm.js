@@ -12,14 +12,14 @@ define([
 			templateString: Template,
 			callbackURL: "",
 			onResetClick: function(evt){
-				console.log('I clicked the reset pw button!');
+				//console.log('I clicked the reset pw button!');
 				evt.preventDefault();
 				evt.stopPropagation();
 				domClass.add(this.domNode, "Working");
 				domClass.remove(this.domNode, "Error");
 				this.resetPWbutton.set('disabled', true);
 				var emailAddress = this.emailAddress.displayedValue;
-				console.log(emailAddress);
+				//console.log(emailAddress);
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
 				var def = xhr.post(userServiceURL + '/reset_password', {
@@ -30,7 +30,7 @@ define([
 					}
 				});
 				def.then(function(data){
-					console.log(data);
+					//console.log(data);
 					document.getElementsByClassName('pwReset')[0].style.display='none';
 					if(data){
 						document.getElementsByClassName('pwrError')[0].style.display="block";
@@ -42,7 +42,7 @@ define([
 				})
 			},
 			onSubmit: function(evt){
-				console.log('I clicked the button');
+				//console.log('I clicked the button');
 				evt.preventDefault();
 				evt.stopPropagation();
 				domClass.add(this.domNode, "Working");
