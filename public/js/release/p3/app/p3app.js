@@ -23,11 +23,14 @@ define("p3/app/p3app", [
 			activeWorkspace: null,
 			activeWorkspacePath: "/",
 			publicApps: ["BLAST", "ProteinFamily", "ComparativePathway", "GenomeDistance"],
+			uploadInProgress: false,
+			activeMouts: true,
 			// authorizationToken: '',
 			// user: '',
 			startup: function(){
 				var _self = this;
 				this.checkLogin();
+				//this.upploadInProgress = false;
 				on(document.body, "keypress", function(evt){
 					var charOrCode = evt.charCode || evt.keyCode;
 					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
@@ -355,28 +358,75 @@ define("p3/app/p3app", [
 
 	this.inherited(arguments);
 	this.timeout();
+	//check for if mouse has moved
+	var mouseMove;
+	//this.activeMouse = true;
+	document.onmousemove = function(){
+		clearTimeout(mouseMove);
+		this.activeMouse = true;
+		//console.log(this.activeMouse);
+		mouseMove = setTimeout(function(){console.log("move your mouse"); window.App.activeMouse = false;}, 20000);
+	}
 },
 timeout: function(){
 	setTimeout(function () {
+		//check if logged out and another tab is open
 		if(localStorage.getItem('tokenstring') === null){
 			if(document.getElementsByClassName('Authenticated').length > 0){
 				window.location.href = window.App.FrontendURL;
 			}
+		} else {
+			//check if token has expired
+			window.App.checkLogin();
 		}
 		window.App.timeout();
 	}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
+	//console.log(window.App.uploadInProgress);
+	//console.log('checking for login');
 	if(localStorage.getItem('tokenstring') !== null){
 		var auth = localStorage.getItem('auth');
 		auth = JSON.parse(auth);
 		var validToken = this.checkExpToken(auth.expiry);
+		//console.log(validToken);
 		if(validToken){
-			document.body.className += 'Authenticated';
-			this.user = localStorage.getItem('userProfile');
-			this.authorizationToken = localStorage.getItem('tokenstring');
+			if(!document.body.className.includes('Authenticated')){
+				document.body.className += 'Authenticated';
+			}
+			//var docbody = document.getElementsByClassName('patric')[0];
+			//console.log(docbody);
+			window.App.user = JSON.parse(localStorage.getItem('userProfile'));
+			window.App.authorizationToken = localStorage.getItem('tokenstring');
+			//console.log(window.App.authorizationToken);
 		} else{
-			window.location.href = window.App.FrontendURL;
+			//if mouse has moved in past x minutes then refresh the token
+			// or if upload is in progress then refresh the token
+			console.log(window.App.uploadInProgress);
+			//console.log('what is the active mouse state?');
+			//console.log(this.activeMouse);
+			if(window.App.activeMouse || window.App.uploadInProgress){
+				var userServiceURL = window.App.userServiceURL;
+				userServiceURL.replace(/\/+$/, "");
+				xhr.get(userServiceURL + '/authenticate/refresh/', {
+
+					headers: {
+						'Accept': 'application/json',
+						'Authorization': localStorage.getItem('tokenstring')
+					}
+				})
+				.then(function(data){
+					//console.log(data);
+					localStorage.setItem('tokenstring', data);
+					//document.body.className += 'Authenticated';
+					//window.location.reload();
+				}, function(err){
+					console.log(err);
+				});
+			} else{
+				//else logout
+				window.App.logout();
+			}
 		}
 	}
 },
@@ -398,8 +448,6 @@ login: function(data, token){
 		var userid = data.un.replace('@patricbrc.org', '');
 		localStorage.setItem('userid', userid);
 		var userServiceURL = window.App.userServiceURL;
-		console.log('this is the url for dev backend');
-		console.log(userServiceURL);
 		userServiceURL.replace(/\/+$/, "");
 		xhr.get(userServiceURL + '/user/' + userid, {
 			headers: {
@@ -408,7 +456,7 @@ login: function(data, token){
 			}
 		})
 		.then(function(user){
-			console.log(user);
+			//console.log(user);
 			localStorage.setItem('userProfile', user);
 			//document.body.className += 'Authenticated';
 			window.location.reload();
@@ -421,12 +469,15 @@ login: function(data, token){
 	}
 },
 logout:function(){
-	localStorage.removeItem('tokenstring');
-	localStorage.removeItem('userProfile');
-	localStorage.removeItem('auth');
-	localStorage.removeItem('userid');
-	//localStorage.removeItem('tokenid');
-	window.location.href = window.App.FrontendURL;
+	if(!window.App.uploadInProgress){
+		localStorage.removeItem('tokenstring');
+		localStorage.removeItem('userProfile');
+		localStorage.removeItem('auth');
+		localStorage.removeItem('userid');
+		window.location.href = window.App.FrontendURL;
+	} else {
+		alert('upload is in progress, try Logout again later');
+	}
 },
 updateUserWorkspaceList: function(data){
 	var wsNode = dom.byId("YourWorkspaces");
