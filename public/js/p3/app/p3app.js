@@ -23,11 +23,14 @@ define([
 			activeWorkspace: null,
 			activeWorkspacePath: "/",
 			publicApps: ["BLAST", "ProteinFamily", "ComparativePathway", "GenomeDistance"],
+			uploadInProgress: false,
+			activeMouts: true,
 			// authorizationToken: '',
 			// user: '',
 			startup: function(){
 				var _self = this;
 				this.checkLogin();
+				//this.upploadInProgress = false;
 				on(document.body, "keypress", function(evt){
 					var charOrCode = evt.charCode || evt.keyCode;
 					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
@@ -357,7 +360,7 @@ define([
 	this.timeout();
 	//check for if mouse has moved
 	var mouseMove;
-	this.activeMouse = true;
+	//this.activeMouse = true;
 	document.onmousemove = function(){
 		clearTimeout(mouseMove);
 		this.activeMouse = true;
@@ -380,6 +383,7 @@ timeout: function(){
 		}, window.App.localStorageCheckInterval);
 },
 checkLogin: function(){
+	console.log(window.App.uploadInProgress);
 	//console.log('checking for login');
 	if(localStorage.getItem('tokenstring') !== null){
 		var auth = localStorage.getItem('auth');
@@ -390,15 +394,18 @@ checkLogin: function(){
 			if(!document.body.className.includes('Authenticated')){
 			document.body.className += 'Authenticated';
 		}
-			var docbody = document.getElementsByClassName('patric')[0];
+			//var docbody = document.getElementsByClassName('patric')[0];
 			//console.log(docbody);
 			this.user = localStorage.getItem('userProfile');
-			this.authorizationToken = localStorage.getItem('tokenstring');
+			window.App.authorizationToken = localStorage.getItem('tokenstring');
+			//console.log(window.App.authorizationToken);
 		} else{
 			//if mouse has moved in past x minutes then refresh the token
+			// or if upload is in progress then refresh the token
+			console.log(window.App.uploadInProgress);
 			//console.log('what is the active mouse state?');
 			//console.log(this.activeMouse);
-			if(this.activeMouse){
+			if(window.App.activeMouse){
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
 				xhr.get(userServiceURL + '/authenticate/refresh/', {
@@ -462,12 +469,14 @@ login: function(data, token){
 	}
 },
 logout:function(){
+	//logout only if upload is not in progress
 	localStorage.removeItem('tokenstring');
 	localStorage.removeItem('userProfile');
 	localStorage.removeItem('auth');
 	localStorage.removeItem('userid');
 	//localStorage.removeItem('tokenid');
 	window.location.href = window.App.FrontendURL;
+	//else alert upload is in progress try logout again later
 },
 updateUserWorkspaceList: function(data){
 	var wsNode = dom.byId("YourWorkspaces");

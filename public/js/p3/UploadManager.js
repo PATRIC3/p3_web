@@ -87,6 +87,8 @@ define(["dojo/request", "dojo/_base/declare", "dojo/_base/lang",
 		},
 
 		_uploadFile: function(file, url, workspacePath){
+			window.App.upploadInProgress = true;
+			//console.log()
 			var def = new Deferred();
 			var fd = new FormData();
 			fd.append("upload", file);
