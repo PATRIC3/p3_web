@@ -198,7 +198,7 @@ define([
 				else if (that.state.role_count != null) {
 					geneInfo += " (" + that.state.role_count + " roles, " + that.state.gene_count + " genes)";
 				} 
-				else {
+				else if (that.state.genome_name != null) {
 					geneInfo += " (" + that.state.genome_name + ")";
 				}
 

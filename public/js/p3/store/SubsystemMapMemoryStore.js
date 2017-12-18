@@ -142,21 +142,11 @@ define([
 
                 genomes.forEach(function(genome, idx){
                     var gfs = new FilterStatus();
-                   	// gfs.init(idx, genome.genome_name);
                    	gfs.init(genomeIndexMap[genome.genome_id], genome.genome_name)
                     _self.pmState.genomeFilterStatus[genome.genome_id] = gfs;
-                    // _self.pmState.genome_ids.push(genome.genome_id);
                 });
 
-				genomes.forEach(function(genome, idx){
-					var gfs = new FilterStatus();
-					gfs.init(idx, genome.genome_name);
-					_self.pmState.genomeFilterStatus[genome.genome_id] = gfs;
-					// _self.pmState.genome_ids.push(genome.genome_id);
-				});
-				// _self.pmState.genome_ids = Object.keys(_self.pmState.genomeFilterStatus);
 				_self.pmState.genome_ids = _self.state.genome_ids;
-				// publish pmState & update filter panel
 				Topic.publish("SubSystemMap", "updatePmState", _self.pmState);
 
 				// sub query - genome distribution
