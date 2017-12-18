@@ -47,14 +47,11 @@ define([
 				});
 
 				state.genome_ids_with_reference = reference_genome_ids;
-
-				// if (display_reference_genomes) {
-				// 	state.genome_ids = reference_genome_ids;
-				// }
 				state.genome_ids = reference_genome_ids;
 				
 				when(that.getGenomeIdsBySubsystemId(that.state.genome_ids, that.state.subsystem_id), function(genomeIds){
 					that.viewer.set('visible', true);
+					$('#subsystemheatmap').attr('style','height: 170px');
 				});
 					
 				window.document.title = 'Subsystem Map';
@@ -202,19 +199,27 @@ define([
 					geneInfo += " (" + that.state.genome_name + ")";
 				}
 
-
-				$('#subsystemheatmap').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
+				$('#subsystemheatmap').append( "<div id=\"subsystemheatmapheader\"></div>");
+				// $('#subsystemheatmapheader').attr('style','height: 170px');
+				$('#subsystemheatmapheader').html( headerString + "<span style=\"color:#76a72d;font-size: 1.1em;font-weight: bold\">" + this.subsystemName + geneInfo + "</span>");
 
 				when(that.getSubsystemDescription(that.state.subsystem_id), function(data){
 
 					if (data && data.pmid) {
 
-						var pmids = data.pmid.join(", ");
+						var pmids = [];
+						data.pmid.forEach(function(pmid) {
+							var pmidHref = "https://www.ncbi.nlm.nih.gov/pubmed/" + pmid;
+							var pmidButton = "<a target=\"_blank\" href=\"" + pmidHref + "\">" + pmid + "</a>";
+							pmids.push(pmidButton);
+						})
 
-						$('#subsystemheatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmids + "</p>");
-						$('#subsystemheatmap').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
-						//$('#subsystemheatmap').css("height", "170px");
-						$('#subsystemheatmap').attr('style','height: 170px');
+						var pmidString = pmids.join(", ");
+
+						$('#subsystemheatmapheader').append( "<br>");
+						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
+						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
+						
 					}
 				});
 
@@ -249,14 +254,15 @@ define([
 				region: "top"
 			});
 			
-			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
+			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader", "height": "170px"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
-				"id": "subsystemheatmap",
-				"style": "height:0px"
+				"id": "subsystemheatmap"
+				// ,
+				// "style": "height:170px"
 			}, headerContent);
 
 
