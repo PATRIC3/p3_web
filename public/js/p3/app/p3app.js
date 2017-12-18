@@ -425,7 +425,7 @@ checkLogin: function(){
 					console.log(err);
 				});
 			} else{
-				console.log('logging you now now, sorry');
+				console.log('logging you out now, sorry');
 				window.App.logout();
 			}
 		}

@@ -11,6 +11,14 @@ define([
 		"baseClass": "App Sleep",
 		templateString: Template,
 		callbackURL: "",
+		uidChanged: function(evt){
+			this.submitButton.set('disabled', true);
+			console.log('this is the email field');
+			console.log(this.emailField);
+			if(this.UNF.get('value') !== '' && this.emailField.state === ''){
+				this.submitButton.set('disabled', false);
+			}
+		},
 		pwChanged: function(evt){
 			this.cPWbutton.set('disabled', true);
 			//console.log('I changed a pw field');
