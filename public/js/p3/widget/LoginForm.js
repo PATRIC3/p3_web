@@ -47,7 +47,7 @@ define([
 				evt.stopPropagation();
 				domClass.add(this.domNode, "Working");
 				domClass.remove(this.domNode, "Error");
-				this.submitButton.set('disabled', true);
+				//this.submitButton.set('disabled', true);
 				var vals = this.getValues();
 				var _self = this;
 				var userServiceURL = window.App.userServiceURL;
@@ -56,19 +56,36 @@ define([
 					data: vals
 				});
 				def.then(function(data){
-					//console.log(data);
-					var dataArr = data.split('|');
-					var keyValueArr = [];
-					//console.log(dataArr);
-					var dataobj =  {};
-					for(var i = 0; i < dataArr.length; i++){
-						keyValueArr = dataArr[i].split('=');
-						dataobj[keyValueArr[0]] = keyValueArr[1];
-					}
-					//console.log(dataobj);
-					window.App.login(dataobj, data);
+					console.log(data);
+					// if(data.message){
+					// 	console.log(data.message);
+          //
+					// } else{
+						//console.log(data);
+						var dataArr = data.split('|');
+						var keyValueArr = [];
+						//console.log(dataArr);
+						var dataobj =  {};
+						for(var i = 0; i < dataArr.length; i++){
+							keyValueArr = dataArr[i].split('=');
+							dataobj[keyValueArr[0]] = keyValueArr[1];
+						}
+						//console.log(dataobj);
+						window.App.login(dataobj, data);
+					// }
 				}, function(err){
-					console.log(err);
+					//console.log('i am here');
+					//console.log(data);
+					//console.log(data.message);
+					//console.log(err.response.data);
+					var data = err.response.data;
+					console.log(data);
+					var dataObj = JSON.parse(data);
+					console.log(dataObj.message);
+					document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
+					//this.submitButton.set('disabled', false);
+					//var errorMessage = err.response.data.message;
+					//console.log(errorMessage);
 				})
 			},
 			startup: function(){
