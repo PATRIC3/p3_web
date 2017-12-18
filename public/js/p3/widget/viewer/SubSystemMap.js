@@ -1,9 +1,9 @@
 define([
 	"dojo/_base/declare", "dojo/_base/lang", "dojo/when", "dojo/request", "dojo/dom-construct",
-	"dijit/layout/ContentPane",
+	"dijit/layout/ContentPane", "dojo/_base/Deferred",
 	"./Base", "../../util/PathJoin", "../SubsystemMapContainer", "../../util/EncodeURIComponentExpanded"
 ], function(declare, lang, when, request, domConstruct,
-			ContentPane,
+			ContentPane, Deferred,
 			ViewerBase, PathJoin, SubsystemMapContainer, EncodeURIComponentExpanded){
 	return declare([ViewerBase], {
 		"disabled": false,
@@ -61,6 +61,21 @@ define([
 
 		getSubsystemDescription: function(subsystemId) {
 
+			// var def = new Deferred();
+			// var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
+
+			// return when(request.get(PathJoin(window.App.dataAPI, "subsystem_ref", ref_query), {
+			// 	headers: {
+			// 		'Accept': "application/json",
+			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+			// 	},
+			// 	handleAs: "json"
+			// }), function(response){
+			// 	def.resolve(res[0]);
+			// 	return def.promise;
+			// })
+
+			var def = new Deferred();
 			var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
 
 			return when(request.post(window.App.dataAPI + 'subsystem_ref/', {
@@ -72,10 +87,10 @@ define([
 					'Authorization': window.App.authorizationToken
 				},
 				data: ref_query
-			}), function(res){;
-				return res[0];
+			}), function(res){
+				def.resolve(res[0]);
+				return def.promise;
 			});
-
 		},
 
 		truncateBefore: function (str, pattern) {
@@ -217,8 +232,9 @@ define([
 						var pmidString = pmids.join(", ");
 
 						$('#subsystemheatmapheader').append( "<br>");
-						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
 						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
+						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
+
 						
 					}
 				});
@@ -251,7 +267,8 @@ define([
 
 			this.viewerHeader = new ContentPane({
 				content: "",
-				region: "top"
+				region: "top",
+				style: 'height: 170px'
 			});
 			
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader", "height": "170px"});
@@ -261,8 +278,6 @@ define([
 			domConstruct.create("div", {
 				"class": "PerspectiveType",
 				"id": "subsystemheatmap"
-				// ,
-				// "style": "height:170px"
 			}, headerContent);
 
 
