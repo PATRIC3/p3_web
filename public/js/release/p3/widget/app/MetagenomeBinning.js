@@ -19,7 +19,7 @@ define("p3/widget/app/MetagenomeBinning", [
 		pageTitle: "Metagenome Binning Service",
 		templateString: Template,
 		applicationName: "MetagenomeBinning",
-		applicationHelp: "user_guide/genome_data_and_tools/metagenome_binning_service.html",
+		applicationHelp: "user_guides/services/metagenome_binning_service.html",
 		tutorialLink: "tutorial/metagenomic_binning/metagenomic_binning.html",
 		libraryData: null,
 		defaultPath: "",

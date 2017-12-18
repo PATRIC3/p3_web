@@ -8,9 +8,9 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var session = require("express-session-unsigned");
-var RedisStore = require('connect-redis')(session);
-var passport = require('passport');
+//var session = require("express-session-unsigned");
+//var RedisStore = require('connect-redis')(session);
+//var passport = require('passport');
 var package = require("./package.json");
 
 var routes = require('./routes/index');
@@ -42,45 +42,45 @@ app.use(logger('dev'));
 
 app.use(cookieParser(config.get('cookieSecret')));
 
-var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
-app.use(session({
-	store: sessionStore,
-	key: config.get("cookieKey"),
-	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
-//    secret: config.get('cookieSecret'),
-	resave: false,
-	saveUninitialized: true
-}));
+// var sessionStore = app.sessionStore = new RedisStore(config.get("redis"));
+// app.use(session({
+// 	store: sessionStore,
+// 	key: config.get("cookieKey"),
+// 	cookie: {domain: config.get('cookieDomain'), maxAge: config.get("sessionTTL")},
+// //    secret: config.get('cookieSecret'),
+// 	resave: false,
+// 	saveUninitialized: true
+// }));
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-if(config.get("enableDevAuth")){
-	app.use(function(req, res, next){
-		var user = config.get("devUser");
-		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
-		if(user && (!req.isAuthenticated || !req.isAuthenticated() )){
-			// console.log("Auto Login Dev User");
-			req.login(user, function(err){
-				// console.log("login user: ", user);
-				if(err){
-					return next(err);
-				}
-				// console.log("Dev User logged in.  Setup Session");
-				if(user && req.session){
-					delete user.password;
-					req.session.userProfile = user;
-					req.session.authorizationToken = config.get("devAuthorizationToken");
-				}else{
-					console.log("NO Session");
-				}
-				next();
-			});
-		}else{
-			next();
-		}
-	});
-}
+// if(config.get("enableDevAuth")){
+// 	app.use(function(req, res, next){
+// 		var user = config.get("devUser");
+// 		// console.log("Dev User: ", user, req.isAuthenticated, req.isAuthenticated());
+// 		if(user && (!req.isAuthenticated || !req.isAuthenticated() )){
+// 			// console.log("Auto Login Dev User");
+// 			req.login(user, function(err){
+// 				// console.log("login user: ", user);
+// 				if(err){
+// 					return next(err);
+// 				}
+// 				// console.log("Dev User logged in.  Setup Session");
+// 				if(user && req.session){
+// 					delete user.password;
+// 					req.session.userProfile = user;
+// 					req.session.authorizationToken = config.get("devAuthorizationToken");
+// 				}else{
+// 					console.log("NO Session");
+// 				}
+// 				next();
+// 			});
+// 		}else{
+// 			next();
+// 		}
+// 	});
+// }
 
 app.use(function(req, res, next){
 	// console.log("Config.production: ", config.production);
@@ -89,6 +89,8 @@ app.use(function(req, res, next){
 	req.production = config.get("production") || false;
 	req.productionLayers = ["p3/layer/core"];
 	req.package = package;
+	// var authToken = "";
+	// var userProf = "";
 	req.applicationOptions = {
 		version: "3.0",
 		gaID: config.get("gaID") || false,
@@ -102,7 +104,10 @@ app.use(function(req, res, next){
 		enableDevTools: config.get("enableDevTools"),
 		accountURL: config.get("accountURL"),
 		appLabel: config.get("appLabel"),
-		appVersion: package.version
+		appVersion: package.version,
+		userServiceURL: config.get("userServiceURL"),
+		FrontendURL: config.get("FrontendURL"),
+		localStorageCheckInterval: config.get("localStorageCheckInterval")
 	};
 	// console.log("Application Options: ", req.applicationOptions);
 	next();
@@ -114,13 +119,13 @@ app.use(function(req, res, next){
 // database directly.  However, req.session.user is populated by p3-user
 // to contain the users' profile, so this isnt' so necessary
 
-passport.serializeUser(function(user, done){
-	done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done){
-	done(null, {id: id});
-});
+// passport.serializeUser(function(user, done){
+// 	done(null, user.id);
+// });
+//
+// passport.deserializeUser(function(id, done){
+// 	done(null, {id: id});
+// });
 
 var proxies = config.get("proxy");
 
@@ -182,34 +187,34 @@ app.use("/job", jobs);
 app.use("/help", help);
 app.use("/uploads", uploads);
 app.use('/users', users);
-app.get("/login",
-	function(req, res, next){
-		if(!req.isAuthenticated || !req.isAuthenticated()){
-			res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
-		}else{
-			res.render('authcb', {title: 'User Service', request: req});
-		}
-	}
-);
+// app.get("/login",
+// 	function(req, res, next){
+// 		if(!req.isAuthenticated || !req.isAuthenticated()){
+// 			res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
+// 		}else{
+// 			res.render('authcb', {title: 'User Service', request: req});
+// 		}
+// 	}
+// );
 
 app.get("/logout", [
 	function(req, res, next){
 		console.log("req.params.location: ", req.param('location'));
 		var redir = req.param('location');
-		req.session.destroy();
-		req.logout();
+		//req.session.destroy();
+		//req.logout();
 		res.redirect(redir || '/');
 	}
 ]);
 
-app.get("/auth/callback",
-	function(req, res, next){
-		console.log("Authorization Callback");
-		console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
-		res.render('authcb', {title: 'User Service', request: req});
-//		res.redirect("/");
-	}
-);
+// app.get("/auth/callback",
+// 	function(req, res, next){
+// 		console.log("Authorization Callback");
+// 		console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
+// 		res.render('authcb', {title: 'User Service', request: req});
+// //		res.redirect("/");
+// 	}
+// );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next){

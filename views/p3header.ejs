@@ -278,10 +278,9 @@
                     <div>Signed in as <span id="signedInAs" style="font-weight:bold;"></span></div>
                     <hr>
 
-                    <div><a class="navigationLinkOut"
-                            href="<%- request.applicationOptions.accountURL %>">Account Settings</a></div>
+                    <div><a class="userProfile">Account Settings</a></div>
 
-                    <div><a class="logoutLink" href="<%- request.applicationOptions.accountURL %>/logout">Logout</a></div>
+                    <div><a class="logoutLink" onclick="window.App.logout()">Logout</a></div>
                 </div>
             </div>
         </div>
