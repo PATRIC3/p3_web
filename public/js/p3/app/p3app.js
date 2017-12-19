@@ -176,6 +176,18 @@ define([
 			_self.navigate(newState);
 		});
 
+		Router.register("\/user(\/.*)", function(params, oldPath, newPath, state){
+			console.log("user", params);
+			var path = params.params[0] || "/";
+			var newState = getState(params, oldPath);
+			newState.widgetClass = "p3/widget/UserDetails";
+			newState.widgetExtraClass = "user";
+			newState.value = PathJoin(_self.docsServiceURL, path);
+			newState.set = "href";
+			newState.requireAuth = true;
+			_self.navigate(newState);
+		});
+
 		Router.register("\/help(\/.*)", function(params, oldPath, newPath, state){
 			// console.log("Upload URL Callback", params.newPath);
 			var newState = {href: params.newPath}

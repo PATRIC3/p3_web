@@ -179,6 +179,7 @@ app.post("/reportProblem", reportProblem);
 app.use("/workspace", workspace);
 app.use("/content", contentViewer);
 app.use("/webpage", contentViewer);
+app.use("/user", contentViewer);
 app.use("/remote", remotePage);
 app.use("/view", viewers);
 app.use("/search", search);
