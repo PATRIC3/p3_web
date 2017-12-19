@@ -24,7 +24,7 @@ define("p3/app/p3app", [
 			activeWorkspacePath: "/",
 			publicApps: ["BLAST", "ProteinFamily", "ComparativePathway", "GenomeDistance"],
 			uploadInProgress: false,
-			activeMouts: true,
+			activeMouse: true,
 			// authorizationToken: '',
 			// user: '',
 			startup: function(){
@@ -373,7 +373,7 @@ timeout: function(){
 		//check if logged out and another tab is open
 		if(localStorage.getItem('tokenstring') === null){
 			if(document.getElementsByClassName('Authenticated').length > 0){
-				window.location.href = window.App.FrontendURL;
+				window.location.href = '/';
 			}
 		} else {
 			//check if token has expired
@@ -402,9 +402,10 @@ checkLogin: function(){
 		} else{
 			//if mouse has moved in past x minutes then refresh the token
 			// or if upload is in progress then refresh the token
+			console.log('I am uploading a file');
 			console.log(window.App.uploadInProgress);
-			//console.log('what is the active mouse state?');
-			//console.log(this.activeMouse);
+			console.log('The mouse has been active');
+			console.log(window.App.activeMouse);
 			if(window.App.activeMouse || window.App.uploadInProgress){
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
@@ -424,7 +425,7 @@ checkLogin: function(){
 					console.log(err);
 				});
 			} else{
-				//else logout
+				console.log('logging you out now, sorry');
 				window.App.logout();
 			}
 		}
@@ -474,7 +475,7 @@ logout:function(){
 		localStorage.removeItem('userProfile');
 		localStorage.removeItem('auth');
 		localStorage.removeItem('userid');
-		window.location.href = window.App.FrontendURL;
+		window.location.href = '/';
 	} else {
 		alert('upload is in progress, try Logout again later');
 	}

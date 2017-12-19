@@ -19,7 +19,6 @@ var defaults = {
 	accountURL: "http://user.patric.local:3002/",
 	docsServiceURL: "http://docs.patric.local/",
 	userServiceURL: "",
-	FrontendURL: "",
 	localStorageCheckInterval: "",
 	enableDevTools: false,
 	reportProblemEmailAddress: "help@patricbrc.org",

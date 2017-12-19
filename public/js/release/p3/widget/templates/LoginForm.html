@@ -3,10 +3,10 @@
     <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm"
     dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
     <div style="padding:2px; margin:10px;">
-      <input type="text" name="username" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Username or Email Address"'><br/>
+      <input type="text" name="username" data-dojo-attach-point="unField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Username or Email Address", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true"><br/>
     </div>
     <div style="padding:2px;margin:10px;">
-      <input type="password" name="password" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Password"'>
+      <input type="password" name="password" data-dojo-attach-point="pwField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Password", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true">
     </div>
     <div class="messageContainer workingMessage">
       Logging into PATRIC....
@@ -18,6 +18,8 @@
     <div style="text-align:center;padding:2px;margin:10px;">
       <div data-dojo-attach-point="cancelButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button" class="dijitHidden">Login</div>
       <div data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Login</div>
+      <p>&nbsp;</p>
+      <p class="loginError" style="color:red"></p>
     </div>
     <div style="font-size:.85em;">
       <!-- New to PATRIC?  <a href="/register">REGISTER HERE</a> </br> -->
@@ -37,7 +39,7 @@
 <div class="pwrMessage" style="display:none; border:2px">
   <h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">Your Password has been reset</h2>
   <p>Please check your email for instructions to complete the reset process.</p>
-</div>
+</div><p>&nbsp;</p>
 <div class="pwrError" style="text-align: center; padding: 2px; margin: 10px; border: 1px solid red; border-radius: 4px;display:none">
   Unable to reset the account with the provided email address
 </div>

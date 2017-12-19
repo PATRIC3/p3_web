@@ -11,6 +11,12 @@ define([
 			"baseClass": "App Sleep",
 			templateString: Template,
 			callbackURL: "",
+			fieldChanged: function(evt){
+				this.submitButton.set('disabled', true);
+				if(this.unField.get('value') !== '' && this.pwField.get('value') !== ''){
+					this.submitButton.set('disabled', false);
+				}
+			},
 			onResetClick: function(evt){
 				//console.log('I clicked the reset pw button!');
 				evt.preventDefault();
@@ -39,6 +45,11 @@ define([
 					}
 				}, function(err){
 					console.log(err);
+					var errObj = JSON.parse(err.response.data);
+					var errorMessage = errObj.message;
+					console.log(errorMessage);
+					document.getElementsByClassName('pwrError')[0].innerHTML = errorMessage;
+					document.getElementsByClassName('pwrError')[0].style.display="block";
 				})
 			},
 			onSubmit: function(evt){
@@ -47,7 +58,7 @@ define([
 				evt.stopPropagation();
 				domClass.add(this.domNode, "Working");
 				domClass.remove(this.domNode, "Error");
-				this.submitButton.set('disabled', true);
+				//this.submitButton.set('disabled', true);
 				var vals = this.getValues();
 				var _self = this;
 				var userServiceURL = window.App.userServiceURL;
@@ -56,6 +67,11 @@ define([
 					data: vals
 				});
 				def.then(function(data){
+					console.log(data);
+					// if(data.message){
+					// 	console.log(data.message);
+					//
+					// } else{
 					//console.log(data);
 					var dataArr = data.split('|');
 					var keyValueArr = [];
@@ -67,8 +83,20 @@ define([
 					}
 					//console.log(dataobj);
 					window.App.login(dataobj, data);
+					// }
 				}, function(err){
-					console.log(err);
+					//console.log('i am here');
+					//console.log(data);
+					//console.log(data.message);
+					//console.log(err.response.data);
+					var data = err.response.data;
+					console.log(data);
+					var dataObj = JSON.parse(data);
+					console.log(dataObj.message);
+					document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
+					//this.submitButton.set('disabled', false);
+					//var errorMessage = err.response.data.message;
+					//console.log(errorMessage);
 				})
 			},
 			startup: function(){
@@ -95,6 +123,7 @@ define([
 				}
 				// this.gethelp();
 				this._started = true;
+				this.submitButton.set("disabled", true);
 				//this.forgotPW();
 			},
 			// forgotPW: function(){
