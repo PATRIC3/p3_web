@@ -10,6 +10,12 @@ define([
 		return declare([WidgetBase, FormMixin, Templated, WidgetsInTemplate], {
 			"baseClass": "App Sleep",
 			templateString: Template,
+			fieldChanged: function(evt){
+				this.submitButton.set('disabled', true);
+				if(this.uidField.get('value') !== '' && this.pwField.get('value') !== ''){
+					this.submitButton.set('disabled', false);
+				}
+			},
 			onSubmit: function(evt){
 				console.log('I clicked the button');
 				evt.preventDefault();
@@ -93,6 +99,7 @@ define([
 				}
 				this.inherited(arguments);
 				this._started = true;
+				this.submitButton.set('disabled', true);
 			}
 		});
 	});

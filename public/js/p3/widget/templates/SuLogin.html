@@ -7,7 +7,12 @@
         <tbody>
           <tr><th style="padding:0; border:0">Userid (to use as)</th></tr>
           <tr><td style="padding-top:0">
-            <input type="text" name="userid" style="width:80%" data-dojo-attach-point="emailField" data-dojo-type="dijit/form/ValidationTextBox" >
+            <input type="text" name="userid" style="width:80%" data-dojo-attach-point="uidField" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"User id for other account", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true">
+          </td></tr>
+          <tr><td><p>&nbsp;</p></td></tr>
+          <tr><th style="padding:0; border:0">Password (to your admin account)</th></tr>
+          <tr><td style="padding-top:0">
+            <input type="password" name="password" style="width:80%" data-dojo-attach-point="pwField" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"Your admin password", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true">
           </td></tr>
         </tbody>
       </table>
