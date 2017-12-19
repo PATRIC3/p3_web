@@ -220,7 +220,7 @@ define([
 
 				when(that.getSubsystemDescription(that.state.subsystem_id), function(data){
 
-					if (data && data.pmid) {
+					if (data && data.pmid && data.description) {
 
 						var pmids = [];
 						data.pmid.forEach(function(pmid) {
@@ -236,6 +236,9 @@ define([
 						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
 
 						
+					} else if ( data && data.description ) {
+						$('#subsystemheatmapheader').append( "<br>");
+						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
 					}
 				});
 
