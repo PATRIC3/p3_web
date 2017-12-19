@@ -23,7 +23,12 @@ define([
 				this.cPWbutton.set('disabled', true);
 				//console.log('I changed a pw field');
 				if(this.pw1.get('value') !== '' && this.pw2.get('value') !== ''){
-					this.cPWbutton.set('disabled', false);
+					if(this.pw1.get('value') !== this.pw2.get('value')){
+						document.getElementsByClassName('pwError')[0].style.display="block";
+					} else{
+						this.cPWbutton.set('disabled', false);
+						document.getElementsByClassName('pwError')[0].style.display="none";
+					}
 				}
 			},
 			onResetClick: function(evt){

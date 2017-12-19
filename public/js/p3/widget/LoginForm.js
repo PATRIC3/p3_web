@@ -39,6 +39,11 @@ define([
 					}
 				}, function(err){
 					console.log(err);
+					var errObj = JSON.parse(err.response.data);
+					var errorMessage = errObj.message;
+					console.log(errorMessage);
+					document.getElementsByClassName('pwrError')[0].innerHTML = errorMessage;
+					document.getElementsByClassName('pwrError')[0].style.display="block";
 				})
 			},
 			onSubmit: function(evt){
