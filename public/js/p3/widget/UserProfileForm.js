@@ -60,7 +60,7 @@ define([
 				}
 			},
 			createNewUser: function(vals){
-				//console.log(vals);
+				this.submitButton.set('disabled', false);
 				var def = xhr(this.userServiceURL + '/register', {
 					data: vals,
 					method: 'post',
@@ -69,19 +69,23 @@ define([
 					}
 				});
 				def.then(function(data){
-					console.log(data);
-					// var dataArr = data.split('|');
-					// var keyValueArr = [];
-					// //console.log(dataArr);
-					// var dataobj =  {};
-					// for(var i = 0; i < dataArr.length; i++){
-					// 	keyValueArr = dataArr[i].split('=');
-					// 	dataobj[keyValueArr[0]] = keyValueArr[1];
-					// }
-					//console.log(dataobj);
-					//window.App.login(dataobj, data);
+					//console.log(data);
+					//document.getElementsByClassName('UserProfileForm')[0].style.display='none';
+					document.getElementsByClassName('regMessage')[0].style.display='block';
+					//newSubmit
+					var newSubmitButton = document.getElementsByClassName('newSubmit')[0];
+					//console.log(newSubmitButton);
+					newSubmitButton.style.display = 'none';
+					//var regForm = document.getElementsByClassName('UserProfileForm')[0];
+					//regForm.parentNode.removeChild(regForm);
+
+					//document.getElementsByClassName('UserProfileForm')[0].style.display='none';
 				}, function(err){
 					console.log(err);
+					var dataObj = JSON.parse(err.response.data);
+					document.getElementsByClassName('regFormErrors')[0].innerHTML = dataObj.message;
+					// console.log('trying to activate the submit button');
+					// console.log(this.submitButton);
 				})
 			},
 			runPatch: function(vals){
