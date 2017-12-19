@@ -87,10 +87,6 @@ define([
 			}
 		},
 
-		// $ curl -X POST -H 'Content-Type: application/jsonrpc+json' 
-		// -d '{"id”:1,"method":"subSystem","params":[{"genomeIds":["83332.12"]},{"token":""}],
-		//"jsonrpc":"2.0"}' 'https://www.alpha.patricbrc.org/api/‘
-
 		loadData: function(){
 			if(this._loadingDeferred){
 				return this._loadingDeferred;

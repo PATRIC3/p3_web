@@ -78,7 +78,7 @@ define([
 			var def = new Deferred();
 			var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
 
-			return when(request.post(window.App.dataAPI + 'subsystem_ref/', {
+			when(request.post(window.App.dataAPI + 'subsystem_ref/', {
 				handleAs: 'json',
 				headers: {
 					'Accept': "application/json",
@@ -89,8 +89,8 @@ define([
 				data: ref_query
 			}), function(res){
 				def.resolve(res[0]);
-				return def.promise;
 			});
+			return def.promise;
 		},
 
 		truncateBefore: function (str, pattern) {
@@ -271,7 +271,7 @@ define([
 				style: 'height: 170px'
 			});
 			
-			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader", "height": "170px"});
+			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
 			domConstruct.place(headerContent, this.viewerHeader.containerNode, "last");
 			domConstruct.create("i", {"class": "fa PerspectiveIcon icon-map-o"}, headerContent);
 			
