@@ -106,7 +106,7 @@ app.use(function(req, res, next){
 		appLabel: config.get("appLabel"),
 		appVersion: package.version,
 		userServiceURL: config.get("userServiceURL"),
-		FrontendURL: config.get("FrontendURL"),
+		//FrontendURL: config.get("FrontendURL"),
 		localStorageCheckInterval: config.get("localStorageCheckInterval")
 	};
 	// console.log("Application Options: ", req.applicationOptions);

@@ -44,6 +44,7 @@ define([
 					this.cPWbutton.set('disabled', false);
 				}else{
 					console.log('they match, yeah');
+					window.location.href = '/';
 				}
 			},
 			onSubmit: function(evt){

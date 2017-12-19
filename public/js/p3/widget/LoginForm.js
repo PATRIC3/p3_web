@@ -11,6 +11,12 @@ define([
 			"baseClass": "App Sleep",
 			templateString: Template,
 			callbackURL: "",
+			fieldChanged: function(evt){
+				this.submitButton.set('disabled', true);
+				if(this.unField.get('value') !== '' && this.pwField.get('value') !== ''){
+					this.submitButton.set('disabled', false);
+				}
+			},
 			onResetClick: function(evt){
 				//console.log('I clicked the reset pw button!');
 				evt.preventDefault();
@@ -64,19 +70,19 @@ define([
 					console.log(data);
 					// if(data.message){
 					// 	console.log(data.message);
-          //
+					//
 					// } else{
-						//console.log(data);
-						var dataArr = data.split('|');
-						var keyValueArr = [];
-						//console.log(dataArr);
-						var dataobj =  {};
-						for(var i = 0; i < dataArr.length; i++){
-							keyValueArr = dataArr[i].split('=');
-							dataobj[keyValueArr[0]] = keyValueArr[1];
-						}
-						//console.log(dataobj);
-						window.App.login(dataobj, data);
+					//console.log(data);
+					var dataArr = data.split('|');
+					var keyValueArr = [];
+					//console.log(dataArr);
+					var dataobj =  {};
+					for(var i = 0; i < dataArr.length; i++){
+						keyValueArr = dataArr[i].split('=');
+						dataobj[keyValueArr[0]] = keyValueArr[1];
+					}
+					//console.log(dataobj);
+					window.App.login(dataobj, data);
 					// }
 				}, function(err){
 					//console.log('i am here');
@@ -117,6 +123,7 @@ define([
 				}
 				// this.gethelp();
 				this._started = true;
+				this.submitButton.set("disabled", true);
 				//this.forgotPW();
 			},
 			// forgotPW: function(){

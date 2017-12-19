@@ -373,7 +373,7 @@ timeout: function(){
 		//check if logged out and another tab is open
 		if(localStorage.getItem('tokenstring') === null){
 			if(document.getElementsByClassName('Authenticated').length > 0){
-				window.location.href = window.App.FrontendURL;
+				window.location.href = '/';
 			}
 		} else {
 			//check if token has expired
@@ -475,7 +475,7 @@ logout:function(){
 		localStorage.removeItem('userProfile');
 		localStorage.removeItem('auth');
 		localStorage.removeItem('userid');
-		window.location.href = window.App.FrontendURL;
+		window.location.href = '/';
 	} else {
 		alert('upload is in progress, try Logout again later');
 	}
