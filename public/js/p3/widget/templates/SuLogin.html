@@ -1,0 +1,18 @@
+<div>
+  <p>&nbsp;</p>
+  <p>&nbsp;</p>
+  <div style="max-width:280px; margin:auto">
+    <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm" dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
+      <table style="border-spacing:0">
+        <tbody>
+          <tr><th style="padding:0; border:0">Userid (to use as)</th></tr>
+          <tr><td style="padding-top:0">
+            <input type="text" name="userid" style="width:80%" data-dojo-attach-point="emailField" data-dojo-type="dijit/form/ValidationTextBox" >
+          </td></tr>
+        </tbody>
+      </table>
+      <p>&nbsp;</p>
+      <div data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Take Control</div>
+    </form>
+  </div>
+</div>
