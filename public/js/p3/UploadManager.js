@@ -87,6 +87,9 @@ define(["dojo/request", "dojo/_base/declare", "dojo/_base/lang",
 		},
 
 		_uploadFile: function(file, url, workspacePath){
+			window.App.uploadInProgress = true;
+			console.log('I am uploading now?');
+			console.log(window.App.uploadInProgress);
 			var def = new Deferred();
 			var fd = new FormData();
 			fd.append("upload", file);
@@ -127,12 +130,16 @@ define(["dojo/request", "dojo/_base/declare", "dojo/_base/lang",
 					Topic.publish("/upload", {
 						type: "UploadComplete",
 						filename: file.name,
+						size: file.size,
 						url: url,
 						workspacePath: workspacePath
 					});
 
 					if(_self.activeCount < 1){
 						_self.unloadPageListener();
+						window.App.uploadInProgress = false;
+						console.log('I am done uploading now?');
+						//console.log(window.App.uploadInProgress);
 					}
 					def.resolve(data);
 				}));
@@ -179,4 +186,3 @@ define(["dojo/request", "dojo/_base/declare", "dojo/_base/lang",
 
 	return UploadManager;
 });
-

@@ -10,6 +10,7 @@ define([
 	return declare([WidgetBase, FormMixin, Templated, WidgetsInTemplate], {
 		"baseClass": "App Sleep",
 		templateString: Template,
+		docsServiceURL: window.App.docsServiceURL,
 		path: "",
 		applicationName: "Date",
 		showCancel: false,
@@ -170,6 +171,11 @@ define([
 				this.submitButton.set("disabled", true);
 				window.App.api.service("AppService.start_app", [this.applicationName, values]).then(function(results){
 					console.log("Job Submission Results: ", results);
+
+					if(window.gtag){
+						gtag('event', this.applicationName, {'event_category': 'Services'});
+					}
+
 					domClass.remove(_self.domNode, "Working")
 					domClass.add(_self.domNode, "Submitted");
 					_self.submitButton.set("disabled", false);
