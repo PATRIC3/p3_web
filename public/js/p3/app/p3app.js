@@ -499,6 +499,10 @@ logout:function(){
 		localStorage.removeItem('userProfile');
 		localStorage.removeItem('auth');
 		localStorage.removeItem('userid');
+		localStorage.removeItem('Aauth');
+		localStorage.removeItem('Atokenstring');
+		localStorage.removeItem('AuserProfile');
+		localStorage.removeItem('Auserid');
 		window.location.href = '/';
 	} else {
 		alert('upload is in progress, try Logout again later');

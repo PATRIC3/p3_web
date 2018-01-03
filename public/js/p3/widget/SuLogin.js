@@ -51,12 +51,13 @@ define([
 				//TODO set these variables:
 				// window.App.authorizationToken
 				// window.App.user
+				
 				// set the localStorage variables
 				localStorage.setItem('Aauth', localStorage.getItem('auth'));
 				localStorage.setItem('Atokenstring', localStorage.getItem('tokenstring'));
 				localStorage.setItem('AuserProfile', localStorage.getItem('userProfile'));
 				localStorage.setItem('Auserid', localStorage.getItem('userid'));
-				//redirect to homepage
+				window.location.href = '/';
 			},
 			constructor: function(){
 				var wrongRole = true;
