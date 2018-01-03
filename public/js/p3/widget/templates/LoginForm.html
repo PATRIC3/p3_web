@@ -3,10 +3,10 @@
     <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm"
     dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
     <div style="padding:2px; margin:10px;">
-      <input type="text" name="username" data-dojo-attach-point="unField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Username or Email Address", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true"><br/>
+      <input type="text" name="username" data-dojo-attach-point="unField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props="placeholder:'Your Username or Email Address', intermediateChanges: true" data-dojo-attach-event="onChange: fieldChanged" required="true"><br/>
     </div>
     <div style="padding:2px;margin:10px;">
-      <input type="password" name="password" data-dojo-attach-point="pwField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props='placeholder:"Your Password", intermediateChanges: true' data-dojo-attach-event="onChange: fieldChanged" required="true">
+      <input type="password" name="password" data-dojo-attach-point="pwField" data-dojo-type="dijit/form/TextBox" style="width:100%" data-dojo-props="placeholder:'Your Password', intermediateChanges: true" data-dojo-attach-event="onChange: fieldChanged" required="true">
     </div>
     <div class="messageContainer workingMessage">
       Logging into PATRIC....
@@ -16,7 +16,7 @@
       We were unable to log you in with the credentials provided.
     </div>
     <div style="text-align:center;padding:2px;margin:10px;">
-      <div data-dojo-attach-point="cancelButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button" class="dijitHidden">Login</div>
+      <!-- <div data-dojo-attach-point="cancelButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button" class="dijitHidden">Login</div> -->
       <div data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Login</div>
       <p>&nbsp;</p>
       <p class="loginError" style="color:red"></p>
@@ -31,7 +31,7 @@
   <h2 style="margin:0px;padding:4px;font-size:1.2em;text-align:center;background:#eee;">PASSWORD RESET</h2>
   <p>&nbsp;</p>
   <form>
-    <input data-dojo-attach-point="emailAddress" style="width:100%" type="email" name="email" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props='placeholder:"Email Address",promptMessage:"Enter your Email Address",invalidMessage:"Invalid Email Address",validator:dojox.validate.isEmailAddress,trim:true' required="true" value="">
+    <input data-dojo-attach-point="emailAddress" style="width:100%" type="email" name="email" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="placeholder:'Email Address',promptMessage:'Enter your Email Address',invalidMessage:'Invalid Email Address',validator:dojox.validate.isEmailAddress,trim:true" required="true" value="">
     <p>&nbsp;</p>
     <div class="RSPWbutton" data-dojo-attach-event="click: onResetClick" style="margin:auto" data-dojo-attach-point="resetPWbutton" type="button" data-dojo-type="dijit/form/Button">Reset Password</div>
   </form>
