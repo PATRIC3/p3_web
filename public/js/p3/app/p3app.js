@@ -382,13 +382,13 @@ define([
 
 	this.inherited(arguments);
 	this.timeout();
-	//check for if mouse has moved
+	//check if mouse has moved
 	var mouseMove;
 	//this.activeMouse = true;
 	document.onmousemove = function(){
 		clearTimeout(mouseMove);
-		this.activeMouse = true;
-		//console.log(this.activeMouse);
+		window.App.activeMouse = true;
+		console.log(window.App.activeMouse);
 		mouseMove = setTimeout(function(){console.log("move your mouse"); window.App.activeMouse = false;}, 20000);
 	}
 },
