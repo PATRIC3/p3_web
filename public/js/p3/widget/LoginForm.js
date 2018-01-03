@@ -67,6 +67,7 @@ define([
 					data: vals
 				});
 				def.then(function(data){
+					console.log('response section ...?');
 					console.log(data);
 					// if(data.message){
 					// 	console.log(data.message);
@@ -86,15 +87,15 @@ define([
 					// }
 				}, function(err){
 					console.log('i am here');
-					console.log(err);
-					console.log(err.message);
+					// console.log(err);
+					// console.log(err.response.data.message);
 					//console.log(data.message);
 					//console.log(err.response.data);
-					// var data = err.response.data;
-					// console.log(data);
-					// var dataObj = JSON.parse(data);
-					// console.log(dataObj.message);
-					document.getElementsByClassName('loginError')[0].innerHTML = err.message;
+					var data = err.response.data;
+					console.log(data);
+					var dataObj = JSON.parse(data);
+					console.log(dataObj.message);
+					document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
 					//this.submitButton.set('disabled', false);
 					//var errorMessage = err.response.data.message;
 					//console.log(errorMessage);
