@@ -391,11 +391,11 @@ define([
 		// 	window.open(_self.accountURL + "/register");
 		// });
 		Topic.subscribe("/login", showAuthDlg);
-
-		on(document, ".logoutLink:click", function(evt){
-			console.log("logoutLink: click");
-			window.location="/logout";
-		});
+    // 
+		// on(document, ".logoutLink:click", function(evt){
+		// 	console.log("logoutLink: click");
+		// 	window.location="/logout";
+		// });
 		on(document, ".navigationLink:click", function(evt){
 			// console.log("NavigationLink Click", evt);
 			evt.preventDefault();

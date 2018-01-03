@@ -199,15 +199,15 @@ app.use('/users', users);
 // 	}
 // );
 
-app.get("/logout", [
-	function(req, res, next){
-		console.log("req.params.location: ", req.param('location'));
-		var redir = req.param('location');
-		//req.session.destroy();
-		//req.logout();
-		res.redirect(redir || '/');
-	}
-]);
+// app.get("/logout", [
+// 	function(req, res, next){
+// 		console.log("req.params.location: ", req.param('location'));
+// 		var redir = req.param('location');
+// 		//req.session.destroy();
+// 		//req.logout();
+// 		res.redirect(redir || '/');
+// 	}
+// ]);
 
 // app.get("/auth/callback",
 // 	function(req, res, next){
