@@ -28,7 +28,7 @@ define([
 				//console.log(emailAddress);
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
-				var def = xhr.post(userServiceURL + '/reset_password', {
+				var def = xhr.post(userServiceURL + '/reset', {
 					data: {email: emailAddress},
 					method: 'post',
 					headers: {
@@ -36,12 +36,12 @@ define([
 					}
 				});
 				def.then(function(data){
-					//console.log(data);
+					console.log(data);
 					document.getElementsByClassName('pwReset')[0].style.display='none';
-					if(data){
-						document.getElementsByClassName('pwrError')[0].style.display="block";
-					}else{
+					if(data === 'OK'){
 						document.getElementsByClassName('pwrMessage')[0].style.display="block";
+					} else{
+						document.getElementsByClassName('pwrError')[0].style.display="block";
 					}
 				}, function(err){
 					console.log(err);

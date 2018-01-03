@@ -11,10 +11,9 @@ define([
 			"baseClass": "App Sleep",
 			templateString: Template,
 			callbackURL: "",
+			userServiceURL: window.App.userServiceURL.replace(/\/+$/, ""),
 			fieldChanged: function(evt){
 				this.submitButton.set('disabled', true);
-				//console.log('this is the email field');
-				//console.log(this.emailField);
 				if(this.UNF.get('value') !== '' && this.emailField.state === '' && this.fname.get('value') !== '' && this.lname.get('value') !== ''){
 					this.submitButton.set('disabled', false);
 				}
@@ -22,7 +21,7 @@ define([
 			pwChanged: function(evt){
 				this.cPWbutton.set('disabled', true);
 				//console.log('I changed a pw field');
-				if(this.pw1.get('value') !== '' && this.pw2.get('value') !== ''){
+				if(this.pw1.get('value') !== '' && this.pw2.get('value') !== '' && this.pw0.get('value') !== ''){
 					if(this.pw1.get('value') !== this.pw2.get('value')){
 						document.getElementsByClassName('pwError')[0].style.display="block";
 					} else{
@@ -44,7 +43,43 @@ define([
 					this.cPWbutton.set('disabled', false);
 				}else{
 					console.log('they match, yeah');
-					window.location.href = '/';
+					var vals = {"id": 1, "jsonrpc":"2.0", "method": "setPassword", "params": [window.localStorage.userid,this.pw0.get('value'),this.pw1.get('value')]}
+					var def = xhr(this.userServiceURL + '/user/', {
+						data: JSON.stringify(vals),
+						method: 'post',
+						headers: {
+							'Content-Type': 'application/json',
+							'X-Requested-With': null,
+							'Accept': 'application/json',
+							'Authorization': window.App.authorizationToken
+						}
+					});
+					def.then(function(data){
+						if(data){
+							window.location.reload();
+						} else{
+							document.getElementsByClassName('regFormErrors')[0].innerHTML = 'There was an error';
+						}
+						//console.log(data);
+						//document.getElementsByClassName('UserProfileForm')[0].style.display='none';
+						document.getElementsByClassName('regMessage')[0].style.display='block';
+						//newSubmit
+						var newSubmitButton = document.getElementsByClassName('newSubmit')[0];
+						//console.log(newSubmitButton);
+						newSubmitButton.style.display = 'none';
+						//var regForm = document.getElementsByClassName('UserProfileForm')[0];
+						//regForm.parentNode.removeChild(regForm);
+
+						//document.getElementsByClassName('UserProfileForm')[0].style.display='none';
+					}, function(err){
+						console.log(err);
+						console.log(err.response.data);
+						//var errObj = JSON.parse(err.response);
+					// console.log()
+						document.getElementsByClassName('regFormErrors')[0].innerHTML = err.response.data;
+						// console.log('trying to activate the submit button');
+						// console.log(this.submitButton);
+					})
 				}
 			},
 			onSubmit: function(evt){
@@ -96,32 +131,36 @@ define([
 			},
 			runPatch: function(vals){
 				//build patch
-				var patchObj = {};
+				var patchObj = [];
 				if(vals.affiliation !== this.userprofileStored.affiliation){
-					patchObj.affiliation = vals.affiliation;
+					patchObj.push({ "op": "replace", "path": "/affiliation", "value": vals.affiliation });
+					//patchObj.affiliation = vals.affiliation;
 				}
 				if(vals.email !== this.userprofileStored.email){
-					patchObj.email = vals.email;
+					patchObj.push({ "op": "replace", "path": "/email", "value": vals.email });
+					//patchObj.email = vals.email;
 				}
 				if(vals.first_name !== this.userprofileStored.first_name){
-					patchObj.first_name = vals.first_name;
+						patchObj.push({ "op": "replace", "path": "/first_name", "value": vals.first_name });
 				}
 				if(vals.last_name !== this.userprofileStored.last_name){
-					patchObj.last_name = vals.last_name;
+						patchObj.push({ "op": "replace", "path": "/last_name", "value": vals.last_name });
 				}
 				if(vals.interests !== this.userprofileStored.interests){
-					patchObj.interests = vals.interests;
+						patchObj.push({ "op": "replace", "path": "/interests", "value": vals.interests });
 				}
 				if(vals.organisms !== this.userprofileStored.organisms){
-					patchObj.organisms = vals.organisms;
+						patchObj.push({ "op": "replace", "path": "/organisms", "value": vals.organisms });
 				}
 				console.log(patchObj);
 				var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
-					data: patchObj,
+					data: JSON.stringify(patchObj),
 					method: 'patch',
 					headers: {
+						'Content-Type': 'application/json',
+						'X-Requested-With': null,
 						'Accept': 'application/json',
-						'Authorization': window.localStorage.getItem('tokenstring')
+						'Authorization': window.App.authorizationToken
 					}
 				});
 				def.then(function(data){
