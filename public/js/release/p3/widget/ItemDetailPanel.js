@@ -177,9 +177,8 @@ define("p3/widget/ItemDetailPanel", [
 								domConstruct.place(' <i class="fa icon-caret-down" style="text-decoration: none;"></i>',
 									_self[key + "Node"].domNode)
 
-								var type_options = [];
-								Object.keys(this.changeableTypes).forEach(function(change_type){
-									type_options.push(this.changeableTypes[change_type]);
+								var type_options = Object.keys(this.changeableTypes).map(function(key){
+									return this.changeableTypes[key]
 								}, this);
 								_self[key + "Node"].editorParams.options = type_options;
 							}
@@ -290,7 +289,13 @@ define("p3/widget/ItemDetailPanel", [
 			// only update meta if value has changed
 			if(this.item.type == val) return;
 
-			WorkspaceManager.updateMetadata(this.item.path, false, val)
+			var newMeta = {
+				path: this.item.path,
+				userMeta: this.item.userMeta,
+				type: val
+			}
+
+			WorkspaceManager.updateMetadata(newMeta)
 				.then(function(meta){
 					this.item = WorkspaceManager.metaListToObj(meta);
 				});
