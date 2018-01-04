@@ -11,3 +11,5 @@ public/js/release/build-report.txt
 public/video/
 yarn.lock
 .htmlhintrc
+public/js/release/p3/layer/core.js.consoleStripped.js
+public/js/release/p3/layer/core.js.uncompressed.js
