@@ -29,7 +29,7 @@ class Test {
 						}
 
 						if (!this._started) {
-							console.log(this);
+							//console.log(this);
 							this.startup();
 						}
 

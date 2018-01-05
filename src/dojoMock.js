@@ -4,9 +4,9 @@ exports.define = function(thisArray, thisFunction) {
 };
 
 exports.declare = function(dArray, dObj) {
-  console.log('why!?');
+  //console.log('why!?');
   let declareObj = {testarr: dArray, testobj: dObj};
-  console.log(declareObj);
+  //console.log(declareObj);
   if (declareObj.testarr !== null) {
     if (declareObj.testarr[0].indexOf('open') !== -1) {
       declareObj.testobj.open = true;
@@ -31,6 +31,11 @@ exports.declare = function(dArray, dObj) {
     declareObj.testobj._position = function() {};
     declareObj.testobj._modalconnects = {push:function() {}};
     declareObj.testobj.show();
+    if ( declareObj.testobj._fadeInDeferred) {
+      console.log(declareObj.testobj._fadeInDeferred);
+      declareObj.testobj._fadeInDeferred.something.fadeIn = {stop:function() {}};
+      declareObj.testobj._fadeInDeferred.something.thisFunction();
+    }
     //console.log(declareObj);
   }
   return declareObj;
