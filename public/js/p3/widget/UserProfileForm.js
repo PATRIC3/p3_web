@@ -155,9 +155,9 @@ define([
 				console.log(patchObj);
 				var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
 					data: JSON.stringify(patchObj),
-					method: 'patch',
+					method: 'post',
 					headers: {
-						'Content-Type': 'application/json',
+						'Content-Type': 'application/json-patch+json',
 						'X-Requested-With': null,
 						'Accept': 'application/json',
 						'Authorization': window.App.authorizationToken
