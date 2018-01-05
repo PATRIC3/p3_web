@@ -14,8 +14,16 @@ define([
 			userServiceURL: window.App.userServiceURL.replace(/\/+$/, ""),
 			fieldChanged: function(evt){
 				this.submitButton.set('disabled', true);
-				if(this.UNF.get('value') !== '' && this.emailField.state === '' && this.fname.get('value') !== '' && this.lname.get('value') !== ''){
+				this.udProfButton.set('disabled', true);
+				console.log('field changed');
+				console.log(this.emailField.state);
+				var userNameValue = 'none';
+				if(uidfield = document.getElementsByClassName('useridField')[0] !== undefined){
+					userNameValue = this.UNF.get('value');
+				}
+				if(userNameValue !== '' && this.emailField.state !== 'Incomplete' && this.fname.get('value') !== '' && this.lname.get('value') !== ''){
 					this.submitButton.set('disabled', false);
+					this.udProfButton.set('disabled', false);
 				}
 			},
 			pwChanged: function(evt){
@@ -89,6 +97,7 @@ define([
 				domClass.add(this.domNode, "Working");
 				domClass.remove(this.domNode, "Error");
 				this.submitButton.set('disabled', true);
+				this.udProfButton.set('disabled', true);
 				var vals = this.getValues();
 				var _self = this;
 				this.userServiceURL = window.App.userServiceURL;
@@ -152,7 +161,7 @@ define([
 				if(vals.organisms !== this.userprofileStored.organisms){
 						patchObj.push({ "op": "replace", "path": "/organisms", "value": vals.organisms });
 				}
-				console.log(patchObj);
+				//console.log(patchObj);
 				var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
 					data: JSON.stringify(patchObj),
 					method: 'post',
@@ -165,25 +174,16 @@ define([
 				});
 				def.then(function(data){
 					console.log(data);
-					// var dataArr = data.split('|');
-					// var keyValueArr = [];
-					// //console.log(dataArr);
-					// var dataobj =  {};
-					// for(var i = 0; i < dataArr.length; i++){
-					// 	keyValueArr = dataArr[i].split('=');
-					// 	dataobj[keyValueArr[0]] = keyValueArr[1];
-					// }
-					//console.log(dataobj);
-					//window.App.login(dataobj, data);
+					if(data){
+					window.App.refreshUser();
+					} else {
+						document.getElementsByClassName('regFormErrors')[0].innerHTML = 'There was an error';
+					}
 				}, function(err){
 					console.log(err);
 				})
 			},
-			// postCreate: function(){
-			// 	this.inherited(arguments);
-			// 	this.UNH.destroy;
-			// 	this.UNF.destroy;
-			// },
+
 			startup: function(){
 				if(this._started){
 					return;
@@ -192,13 +192,16 @@ define([
 				var state = this.get("state")
 				if((state == "Incomplete") || (state == "Error")){
 					this.submitButton.set("disabled", true);
+					this.udProfButton.set('disabled', true);
 				}
 
 				this.watch("state", function(prop, val, val2){
 					if(val2 == "Incomplete" || val2 == "Error"){
 						this.submitButton.set("disabled", true);
+						this.udProfButton.set('disabled', true);
 					}else{
 						this.submitButton.set('disabled', false);
+						this.udProfButton.set('disabled', false);
 					}
 				});
 

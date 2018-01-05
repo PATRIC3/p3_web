@@ -493,6 +493,22 @@ login: function(data, token){
 		console.log('i am not logged in yet');
 	}
 },
+refreshUser: function(){
+	xhr.get(this.userServiceURL + '/user/' + window.localStorage.userid, {
+		headers: {
+			'Accept': 'application/json',
+			'Authorization': window.App.authorizationToken
+		}
+	})
+	.then(function(user){
+		//console.log(user);
+		localStorage.setItem('userProfile', user);
+		//document.body.className += 'Authenticated';
+		window.location.reload();
+	}, function(err){
+		console.log(err);
+	});
+},
 logout:function(){
 	if(!window.App.uploadInProgress){
 		localStorage.removeItem('tokenstring');
