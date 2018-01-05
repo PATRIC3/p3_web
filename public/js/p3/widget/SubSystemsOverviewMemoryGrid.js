@@ -167,9 +167,9 @@ define([
 
         this.getSubsystemCoverageData(summaryBarWidth, summaryBarHeight);
       }
-
-      this.setSubsystemPieGraph();
     },
+
+    selectedSuperclass: "",
 
     drawSubsystemLegend: function(subsystemData, svg, radius, legendExpandedClassData) {
       
@@ -185,10 +185,10 @@ define([
 
       //deep copy, not a reference
       var originalSubsystemData = $.extend(true, [], subsystemData);
-
+      d3.select("#legendHolder").remove();
       //add class data to superclass data in correct order
       if (legendExpandedClassData) { 
-        d3.select("#legendHolder").remove();
+        
         legendExpandedClassData.class.buckets.forEach(function(classData) {
           classData.baseClass = true;
           classData.colorCodeKey = legendExpandedClassData.colorCodeKey;
@@ -231,55 +231,6 @@ define([
         .style("font-size", "14px")
         .text("Subsystem Superclass Counts");
 
-      // subsystemslegend.append('text')
-      //   .attr('font-family', 'FontAwesome')
-      //   .attr('font-size', '20px')
-      //   .attr('x', function(d) { 
-      //     if (d.hasOwnProperty("baseClass")) {
-      //       return 20;
-      //     } else {
-      //       return 0;
-      //     }
-      //   })
-      //   .attr('class', function(d) { 
-      //     if (d.hasOwnProperty("baseClass")) {
-      //       return;
-      //     } else {
-      //       return "&#xf054;";
-      //     }
-      //   })
-      //   .attr('width', legendRectSize)
-      //   .attr('height', legendRectSize)
-      //   .on("click", function(d) {
-      //     if (!d.baseClass) {
-      //       that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
-      //     }
-      //   })                                   
-        // .style('fill', function(d) { 
-        //   return "#FFFFFF"
-        // })
-        // .style('stroke',function(d) { 
-        //   return "#FFFFFF"
-        // });
-
-        // subsystemslegend.append('svg:foreignObject')
-        //   //.attr('class', 'handle')
-        //   .attr('x', function(d) { 
-        //     if (d.hasOwnProperty("baseClass")) {
-        //       return 20;
-        //     } else {
-        //       return 0;
-        //     }
-        //   })
-        //   .html('<i class="dgrid-expando-icon ui-icon ui-icon-triangle-1-se"></i>')
-        //   .on("click", function(d) {
-        //     if (!d.baseClass) {
-        //       that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
-        //     }
-        //   })   
-
-
-
       subsystemslegend.append("text")
         .attr("style","font-family:FontAwesome;")
         .attr('font-size', "20px" )
@@ -300,6 +251,11 @@ define([
         })
         .on("click", function(d) {
           if (!d.baseClass) {
+            //used to close an opened node
+            if (that.selectedSuperclass === d.colorCodeKey) {
+              d = false;
+            }
+            that.selectedSuperclass = d.colorCodeKey;
             that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
           }
         });
@@ -313,12 +269,7 @@ define([
           }
         })
         .attr('width', legendRectSize)
-        .attr('height', legendRectSize)
-        // .on("click", function(d) {
-        //   if (!d.baseClass) {
-        //     that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
-        //   }
-        // })                                   
+        .attr('height', legendRectSize)                                  
         .style('fill', function(d) { 
           return that.superClassColorCodes[d.colorCodeKey]
         })
@@ -351,6 +302,7 @@ define([
           }
           
         });
+        this.setSubsystemPieGraph();
     },
 
     getTotalSubsystems: function() {

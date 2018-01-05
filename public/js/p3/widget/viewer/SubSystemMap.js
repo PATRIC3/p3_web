@@ -283,8 +283,6 @@ define([
 				"id": "subsystemheatmap"
 			}, headerContent);
 
-
-
 			this.addChild(this.viewerHeader);
 			this.addChild(this.viewer);
 			//setTimeout(this.addChild(this.viewer), 3000);
