@@ -189,15 +189,15 @@ define([
       //add class data to superclass data in correct order
       if (legendExpandedClassData) { 
         
-        legendExpandedClassData.class.buckets.forEach(function(classData) {
+        legendExpandedClassData['class'].buckets.forEach(function(classData) {
           classData.baseClass = true;
           classData.colorCodeKey = legendExpandedClassData.colorCodeKey;
         })
         var superClassIndex = subsystemData.map(function(e) { return e.val; }).indexOf(legendExpandedClassData.val);
-        for (var i = 0; i < legendExpandedClassData.class.buckets.length; i++) {
+        for (var i = 0; i < legendExpandedClassData['class'].buckets.length; i++) {
           //place behind index
           var index = superClassIndex + i + 1;
-          subsystemData.splice(index, 0, legendExpandedClassData.class.buckets[i]);
+          subsystemData.splice(index, 0, legendExpandedClassData['class'].buckets[i]);
         }
       }
 
@@ -220,7 +220,7 @@ define([
 
       var legendCount = legendHolder.selectAll('.subsystemslegend').size();
       if (legendExpandedClassData) {
-        legendCount += legendExpandedClassData.class.buckets.length;
+        legendCount += legendExpandedClassData['class'].buckets.length;
       }
       var legendTitleOffset = legendCount * legendRectSize / 2 + 30;
 
