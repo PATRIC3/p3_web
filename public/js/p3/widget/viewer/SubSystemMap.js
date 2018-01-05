@@ -231,13 +231,13 @@ define([
 
 						var pmidString = pmids.join(", ");
 
-						$('#subsystemheatmapheader').append( "<br>");
+						$('#subsystemheatmapheader').append( "<br><br>");
 						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
 						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
 
 						
 					} else if ( data && data.description ) {
-						$('#subsystemheatmapheader').append( "<br>");
+						$('#subsystemheatmapheader').append( "<br><br>");
 						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
 					}
 				});
