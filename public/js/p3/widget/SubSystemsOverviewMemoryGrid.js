@@ -18,6 +18,26 @@ define([
       this.watch("state", lang.hitch(this, "onSetState"));
     },
 
+    superClassColorCodes: {
+      "CELLULAR PROCESSES":                   Theme.colors[0],
+      "MEMBRANE TRANSPORT":                   Theme.colors[1],
+      "METABOLISM":                           Theme.colors[2],
+      "REGULATION AND CELL SIGNALING":        Theme.colors[3],
+      "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[4],
+      "CELL ENVELOPE":                        Theme.colors[5],
+      "CELLULAR PROCESSES":                   Theme.colors[6],
+      "DNA PROCESSING":                       Theme.colors[7],
+      "ENERGY":                               Theme.colors[8],
+      "MEMBRANE TRANSPORT":                   Theme.colors[9],
+      "METABOLISM":                           Theme.colors[10],
+      "MISCELLANEOUS":                        Theme.colors[11],
+      "PROTEIN PROCESSING":                   Theme.colors[12],
+      "REGULATION AND CELL SIGNALING":        Theme.colors[13],
+      "RNA PROCESSING":                       Theme.colors[14],
+      "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[15]
+    },
+
+
     // x + "Other" as aggregation of what is left over
     subsystemMaxNumToDisplay: 16,
 
@@ -76,25 +96,6 @@ define([
         titleText = "";
       }
 
-      var superClassColorCodes = {
-        "CELLULAR PROCESSES":                   Theme.colors[0],
-        "MEMBRANE TRANSPORT":                   Theme.colors[1],
-        "METABOLISM":                           Theme.colors[2],
-        "REGULATION AND CELL SIGNALING":        Theme.colors[3],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[4],
-        "CELL ENVELOPE":                        Theme.colors[5],
-        "CELLULAR PROCESSES":                   Theme.colors[6],
-        "DNA PROCESSING":                       Theme.colors[7],
-        "ENERGY":                               Theme.colors[8],
-        "MEMBRANE TRANSPORT":                   Theme.colors[9],
-        "METABOLISM":                           Theme.colors[10],
-        "MISCELLANEOUS":                        Theme.colors[11],
-        "PROTEIN PROCESSING":                   Theme.colors[12],
-        "REGULATION AND CELL SIGNALING":        Theme.colors[13],
-        "RNA PROCESSING":                       Theme.colors[14],
-        "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[15]
-      }
-
       //var formattedSubsystemData = this.formatSubsystemData(subsystemData);
 
       var width = $( window ).width() * .85;
@@ -148,10 +149,10 @@ define([
         .attr("stroke-width", "1px")
         .attr('fill', function(d) {
           //return color(d.data.val + " (" + d.data.count + ")");
-          return superClassColorCodes[d.data.val.toUpperCase()]
+          return that.superClassColorCodes[d.data.val.toUpperCase()]
       });
 
-      this.drawSubsystemLegend(subsystemData, superClassColorCodes, svg, radius, false);
+      this.drawSubsystemLegend(subsystemData, svg, radius, false);
 
       var tooltip = d3.select("body")
         .append("div")
@@ -170,7 +171,7 @@ define([
       this.setSubsystemPieGraph();
     },
 
-    drawSubsystemLegend: function(subsystemData, superClassColorCodes, svg, radius, legendExpandedClassData) {
+    drawSubsystemLegend: function(subsystemData, svg, radius, legendExpandedClassData) {
       
       var that = this;
 
@@ -251,7 +252,7 @@ define([
       //   .attr('height', legendRectSize)
       //   .on("click", function(d) {
       //     if (!d.baseClass) {
-      //       that.drawSubsystemLegend(originalSubsystemData, superClassColorCodes, svg, radius, d);
+      //       that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
       //     }
       //   })                                   
         // .style('fill', function(d) { 
@@ -273,7 +274,7 @@ define([
         //   .html('<i class="dgrid-expando-icon ui-icon ui-icon-triangle-1-se"></i>')
         //   .on("click", function(d) {
         //     if (!d.baseClass) {
-        //       that.drawSubsystemLegend(originalSubsystemData, superClassColorCodes, svg, radius, d);
+        //       that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
         //     }
         //   })   
 
@@ -299,7 +300,7 @@ define([
         })
         .on("click", function(d) {
           if (!d.baseClass) {
-            that.drawSubsystemLegend(originalSubsystemData, superClassColorCodes, svg, radius, d);
+            that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
           }
         });
 
@@ -315,14 +316,14 @@ define([
         .attr('height', legendRectSize)
         // .on("click", function(d) {
         //   if (!d.baseClass) {
-        //     that.drawSubsystemLegend(originalSubsystemData, superClassColorCodes, svg, radius, d);
+        //     that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
         //   }
         // })                                   
         .style('fill', function(d) { 
-          return superClassColorCodes[d.colorCodeKey]
+          return that.superClassColorCodes[d.colorCodeKey]
         })
         .style('stroke',function(d) { 
-          return superClassColorCodes[d.colorCodeKey]
+          return that.superClassColorCodes[d.colorCodeKey]
         })
         .on("click", function(d) {
           if (d.hasOwnProperty("baseClass")) {
