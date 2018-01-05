@@ -235,10 +235,12 @@ define([
 			}
 
 			var text = [];
+
+			var cleanRoleName = roleId.replace(/_/g, ' ');
 			text.push('<b>Genome:</b> ' + genomeName);
-			text.push('<b>Product:</b> ' + description);
-			text.push('<b>Role ID:</b> ' + roleId);
-			//text.push('<b>Members:</b> ' + memberCount);
+			//text.push('<b>Product:</b> ' + description);
+			text.push('<b>Role ID:</b> ' + cleanRoleName);
+			text.push('<b>Members:</b> ' + memberCount);
 
 			return text.join("<br>");
 		},
@@ -247,7 +249,7 @@ define([
 			var text = [];
 			text.push('<b>Genomes Selected:</b> ' + genomeIds.length);
 			text.push('<b>Roles Selected:</b> ' + roleIds.length);
-			//text.push('<b>Members:</b> ' + features.length);
+			text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
 		},
