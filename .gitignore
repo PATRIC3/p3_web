@@ -12,3 +12,7 @@ public/video/
 yarn.lock
 .htmlhintrc
 coverage
+.stylelintrc.json
+.editorconfig
+.eslintignore
+public/js/release
