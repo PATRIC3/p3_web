@@ -128,7 +128,7 @@ define([
 			var isTransposed = (this.pmState.heatmapAxis === 'Transposed');
 			var originalAxis = this._getOriginalAxis(isTransposed, colID, rowID);
 
-			var roleId = originalAxis.columnIds;
+			var roleId = "\"" + originalAxis.columnIds + "\"";
 			var genomeId = originalAxis.rowIds;
 
 			var that = this;
@@ -145,8 +145,6 @@ define([
 				},
 				data: query
 			}), function(response){
-				Topic.publish("SubSystemMap", "hideLoadingMask");
-
 				var featureSet = {};
 				response.response.docs.forEach(function(d){
 					if(!featureSet.hasOwnProperty(d.feature_id)){
@@ -155,8 +153,8 @@ define([
 				});
 				var features = Object.keys(featureSet);
 
-				that.dialog.set('content', that._buildPanelCellsSelected(isTransposed, roleIds, genomeIds, features));
-				var actionBar = that._buildPanelButtons(colIDs, rowIDs, roleIds, genomeIds, features);
+				that.dialog.set('content', that._buildPanelCellClicked(isTransposed, roleId, genomeId, features));
+				var actionBar = that._buildPanelButtons(colID, rowID, roleId, genomeId, features);
 				domConstruct.place(actionBar, that.dialog.containerNode, "last");
 
 				that.dialog.show();
