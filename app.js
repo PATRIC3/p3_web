@@ -182,34 +182,6 @@ app.use('/job', jobs);
 app.use('/help', help);
 app.use('/uploads', uploads);
 app.use('/users', users);
-// app.get("/login",
-// 	function(req, res, next){
-// 		if(!req.isAuthenticated || !req.isAuthenticated()){
-// 			res.redirect(302, config.get("authorizationURL") + "?application_id=" + config.get("application_id"));
-// 		}else{
-// 			res.render('authcb', {title: 'User Service', request: req});
-// 		}
-// 	}
-// );
-
-// app.get("/logout", [
-// 	function(req, res, next){
-// 		console.log("req.params.location: ", req.param('location'));
-// 		var redir = req.param('location');
-// 		//req.session.destroy();
-// 		//req.logout();
-// 		res.redirect(redir || '/');
-// 	}
-// ]);
-
-// app.get("/auth/callback",
-// 	function(req, res, next){
-// 		console.log("Authorization Callback");
-// 		console.log("req.session.userProfile: ", (req.session && req.session.userProfile) ? req.session.userProfile : "No User Profile");
-// 		res.render('authcb', {title: 'User Service', request: req});
-// //		res.redirect("/");
-// 	}
-// );
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
