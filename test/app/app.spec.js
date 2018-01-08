@@ -2,7 +2,9 @@ const Test = require('../../src/app/app.js');
 const appTest = new Test();
 const winUtils = {get:function() {}};
 //const lang = require('../../public/js/dojo/_base/lang');
-const lang = {hitch:function(myModule, myFunction) {console.log(myModule); return {thisModule: myModule, thisFunction: myFunction};}};
+const lang = {hitch:function(myModule, myFunction) {
+  //console.log(myModule);
+  return {thisModule: myModule, thisFunction: myFunction};}};
 const on = function() {};
 const domStyle = {set:function() {}};
 const Deferred = class {constructor(something) {this.something = something;}};

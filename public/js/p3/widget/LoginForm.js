@@ -60,6 +60,7 @@ define([
 				domClass.remove(this.domNode, "Error");
 				//this.submitButton.set('disabled', true);
 				var vals = this.getValues();
+        console.log(vals);
 				var _self = this;
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");

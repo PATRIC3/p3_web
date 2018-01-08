@@ -32,7 +32,7 @@ exports.declare = function(dArray, dObj) {
     declareObj.testobj._modalconnects = {push:function() {}};
     declareObj.testobj.show();
     if ( declareObj.testobj._fadeInDeferred) {
-      console.log(declareObj.testobj._fadeInDeferred.something);
+      //console.log(declareObj.testobj._fadeInDeferred.something);
       declareObj.testobj._fadeInDeferred.something.fadeIn = {stop:function() {}};
       //declareObj.testobj.show();
       //declareObj.testobj._fadeInDeferred.something.thisFunction = function() {};
