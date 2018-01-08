@@ -231,25 +231,14 @@ define([
         .style("font-size", "14px")
         .text("Subsystem Superclass Counts");
 
-      subsystemslegend.append("text")
-        .attr("style","font-family:FontAwesome;")
-        .attr('font-size', "20px" )
-        .attr('x', function(d) { 
-          if (d.hasOwnProperty("baseClass")) {
-            return 20;
-          } else {
-            return 0;
-          }
-        })
-        .attr('y', '16px')
-        .text(function(d) { 
-          if (d.hasOwnProperty("baseClass")) {
-            return;
-          } else {
-            return '\uf054' 
-          }
-        })
-        .on("click", function(d) {
+       subsystemslegend.append("foreignObject")
+        //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
+        //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-e")
+        .attr("width", "20px")
+        .attr("height", "20px")
+        .append("xhtml:body")
+        .html("<div class=\"dgrid-expando-icon ui-icon ui-icon-triangle-1-e\"></div>")
+        .on("click", function(d){
           if (!d.baseClass) {
             //used to close an opened node
             if (that.selectedSuperclass === d.colorCodeKey) {
@@ -258,8 +247,15 @@ define([
             that.selectedSuperclass = d.colorCodeKey;
             that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
           }
-        });
-
+        })
+        .attr('style', function(d) { 
+          if (d.hasOwnProperty("baseClass")) {
+            return "margin-left: 10px";
+          } else {
+            return 0;
+          }
+        })
+        
       subsystemslegend.append('rect')
         .attr('x', function(d) { 
           if (d.hasOwnProperty("baseClass")) {
