@@ -16,3 +16,5 @@ coverage
 .editorconfig
 .eslintignore
 public/js/release
+gulpified
+gulpfile.js

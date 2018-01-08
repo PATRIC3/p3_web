@@ -1,4 +1,4 @@
-define([
+const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testobj = dojoMock.define([
 	'dojo/_base/declare',
 	'dojo/topic', 'dojo/on', 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', 'dojo/query',
 	'dijit/registry', 'dojo/_base/lang',
@@ -18,7 +18,7 @@ define([
 	Drawer, ContentPane,
 	RPC, Panels, WorkspaceManager, Keys,
 	Dialog, PathJoin, xhr) {
-		return declare([App], {
+		return dojoMock.declare([App], {
 			panels: Panels,
 			activeWorkspace: null,
 			activeWorkspacePath: '/',
@@ -575,4 +575,4 @@ updateUserWorkspaceList: function(data) {
 }
 
 });
-});//endDefine
+});}} module.exports = Test;

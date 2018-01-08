@@ -1,39 +1,40 @@
 define([
-	"dojo/_base/declare", "dojo/parser",
-	"dojo/topic", "dojo/on", "dojo/dom", "dojo/dom-class", "dojo/dom-attr","dojo/dom-style",
-	"dijit/registry", "dojo/request", "dijit/layout/ContentPane","dojo/_base/fx",
-	"dojo/_base/Deferred","dojo/query","dojo/NodeList-dom",
-	"dojo/ready", "dojo/parser", "rql/query", "dojo/_base/lang",
-	"p3/router", "dijit/Dialog", "dojo/dom-construct","dojo/window"
+	'dojo/_base/declare', 'dojo/parser',
+	'dojo/topic', 'dojo/on', 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-style',
+	'dijit/registry', 'dojo/request', 'dijit/layout/ContentPane', 'dojo/_base/fx',
+	'dojo/_base/Deferred', 'dojo/query', 'dojo/NodeList-dom',
+	'dojo/ready', 'dojo/parser', 'rql/query', 'dojo/_base/lang',
+	'p3/router', 'dijit/Dialog', 'dojo/dom-construct', 'dojo/window'
 ], function(declare, parser,
-	Topic, on, dom, domClass, domAttr,domStyle,
-	Registry, xhr, ContentPane,fx,
-	Deferred,query,nodeListDom,
+	Topic, on, dom, domClass, domAttr, domStyle,
+	Registry, xhr, ContentPane, fx,
+	Deferred, query, nodeListDom,
 	Ready, Parser, rql, lang,
-	Router, Dialog, domConstruct, winUtils){
+	Router, Dialog, domConstruct, winUtils) {
 
 		var NMDialog = declare([Dialog], {
-			show: function(){
+			show: function() {
 				// summary:
 				//              Display the dialog
 				// returns: dojo/promise/Promise
 				//              Promise object that resolves when the display animation is complete
 
-				if(this.open){
+				if (this.open) {
 					return resolvedDeferred.promise;
 				}
 
-				if(!this._started){
+				if (!this._started) {
+					//console.log(this);
 					this.startup();
 				}
 
 				// first time we show the dialog, there's some initialization stuff to do
-				if(!this._alreadyInitialized){
+				if (!this._alreadyInitialized) {
 					this._setup();
 					this._alreadyInitialized = true;
 				}
 
-				if(this._fadeOutDeferred){
+				if (this._fadeOutDeferred) {
 					// There's a hide() operation in progress, so cancel it, but still call DialogLevelManager.hide()
 					// as though the hide() completed, in preparation for the DialogLevelManager.show() call below.
 					this._fadeOutDeferred.cancel();
@@ -44,16 +45,16 @@ define([
 				// Be sure that event object doesn't get passed to resize() method, because it's expecting an optional
 				// {w: ..., h:...} arg.
 				var win = winUtils.get(this.ownerDocument);
-				this._modalconnects.push(on(win, "scroll", lang.hitch(this, "resize", null)));
+				this._modalconnects.push(on(win, 'scroll', lang.hitch(this, 'resize', null)));
 
-				this._modalconnects.push(on(this.domNode, "keydown", lang.hitch(this, "_onKey")));
+				this._modalconnects.push(on(this.domNode, 'keydown', lang.hitch(this, '_onKey')));
 
 				domStyle.set(this.domNode, {
 					opacity: 0,
-					display: ""
+					display: ''
 				});
 
-				this._set("open", true);
+				this._set('open', true);
 				this._onShow(); // lazy load trigger
 
 				this.resize();
@@ -61,19 +62,19 @@ define([
 
 				// fade-in Animation object, setup below
 				var fadeIn;
-
-				this._fadeInDeferred = new Deferred(lang.hitch(this, function(){
+        /* istanbul ignore next */
+				this._fadeInDeferred = new Deferred(lang.hitch(this, function() {
 					fadeIn.stop();
 					delete this._fadeInDeferred;
 				}));
 
 				// If delay is 0, code below will delete this._fadeInDeferred instantly, so grab promise while we can.
 				var promise = this._fadeInDeferred.promise;
-
+          /* istanbul ignore next */
 				fadeIn = fx.fadeIn({
 					node: this.domNode,
 					duration: this.duration,
-					onEnd: lang.hitch(this, function(){
+					onEnd: lang.hitch(this, function() {
 						this._fadeInDeferred.resolve(true);
 						delete this._fadeInDeferred;
 					})
@@ -81,14 +82,14 @@ define([
 
 				return promise;
 			}
-		})
+		});
 
 		return declare(null, {
 			panels: {},
-			constructor: function(opts){
-				if(opts){
-					for(var prop in opts){
-						this[prop] = opts[prop]
+			constructor: function(opts) {
+				if (opts) {
+					for (var prop in opts) {
+						this[prop] = opts[prop];
 					}
 				}
 
@@ -97,103 +98,103 @@ define([
 				// console.log("Launching Application...");
 
 				/* these two on()s enable the p2 header mouse overs */
-				on(document.body, ".has-sub:mouseover", function(evt){
+				on(document.body, '.has-sub:mouseover', function(evt) {
 					// console.log("has sub");
 					var target = evt.target;
-					while(!domClass.contains(target, "has-sub") && target.parentNode){
-						target = target.parentNode
+					while (!domClass.contains(target, 'has-sub') && target.parentNode) {
+						target = target.parentNode;
 					}
-					domClass.add(target, "hover");
+					domClass.add(target, 'hover');
 				});
-				on(document.body, ".has-sub:mouseout", function(evt){
+				on(document.body, '.has-sub:mouseout', function(evt) {
 					var target = evt.target;
-					while(!domClass.contains(target, "has-sub") && target.parentNode){
-						target = target.parentNode
+					while (!domClass.contains(target, 'has-sub') && target.parentNode) {
+						target = target.parentNode;
 					}
-					domClass.remove(target, "hover");
+					domClass.remove(target, 'hover');
 				});
 
-				on(window, "message", function(evt){
+				on(window, 'message', function(evt) {
 					var msg = evt.data;
 					// console.log("window.message: ", msg);
-					if(!msg || !msg.type){
+					if (!msg || !msg.type) {
 						return;
 					}
 
-					switch(msg.type){
-						case "AuthenticationSuccess":
-						if(_self.loginWindow){
-							_self.loginWindow.close();
-						}
-						window.location.reload();
-						break;
-						//						self.accessToken = msg.accessToken;
-						//						self.user = msg.userProfile;
-						//						domClass.add(document.body, "Authenticated");
-						//						break;
-					}
+					// switch (msg.type) {
+					// 	case 'AuthenticationSuccess':
+					// 	if (_self.loginWindow) {
+					// 		_self.loginWindow.close();
+					// 	}
+					// 	window.location.reload();
+					// 	break;
+					// 	//						self.accessToken = msg.accessToken;
+					// 	//						self.user = msg.userProfile;
+					// 	//						domClass.add(document.body, "Authenticated");
+					// 	//						break;
+					// }
 
-					Topic.publish("/" + msg.type, msg);
+					Topic.publish('/' + msg.type, msg);
 				});
 
-				Ready(this, function(){
+				Ready(this, function() {
 					// console.log("Instantiate App Widgets");
-					query(".showOnLoad").removeClass("dijitHidden");
-					Parser.parse().then(function(){
+					query('.showOnLoad').removeClass('dijitHidden');
+					Parser.parse().then(function() {
 						// console.log("ApplicationContainer: ", _self.getApplicationContainer());
 						_self.startup();
 					});
 				});
 			},
-			startup: function(){
-				var _self = this;
+			startup: function() {
+				//var _self = this;
 				Router.startup();
 				this.listen();
 			},
 
-			listen: function(){
+			listen: function() {
 				var _self = this;
 
-				on(document, ".DialogButton:click", function(evt){
+				on(document, '.DialogButton:click', function(evt) {
 					// console.log("DialogButton Click", evt);
 					evt.preventDefault();
 					evt.stopPropagation();
 					var params = {};
 
 					var rel = evt.target.attributes.rel.value;
-					var parts = rel.split(":");
-					console.log("Pars: ", parts);
+					var parts = rel.split(':');
+					console.log('Pars: ', parts);
 					var type = parts[0];
-					params = parts.slice(1).join(":");
+					params = parts.slice(1).join(':');
 
-					if (params.charAt(0)=="{"){
+					if (params.charAt(0) === '{') {
 						params = JSON.parse(params);
 					}
 
 					var panel = _self.panels[type];
-					if (!panel){
-						throw error("Ivalid Panel: " + type);
-						return;
+					if (!panel) {
+						throw error('Ivalid Panel: ' + type);
+						// return;
 					}
 
-					if (panel.requireAuth && (!_self.user || !_self.user.id)){
-						Topic.publish("/login");
+					if (panel.requireAuth && (!_self.user || !_self.user.id)) {
+						Topic.publish('/login');
 						return;
 					}
-					console.log("W Params: ", params, "W type: ", type);;
+					console.log('W Params: ', params, 'W type: ', type);
 					var w = _self.loadPanel(type, params);
-					Deferred.when(w, function(w){
-						if(!_self.dialog){
+					Deferred.when(w, function(w) {
+						if (!_self.dialog) {
 							_self.dialog = new Dialog({parseOnLoad: false, title: w.title});
-						}else{
+						} else {
 							_self.dialog.set('title', w.title);
 						}
 						_self.dialog.set('content', '');
 						domConstruct.place(w.domNode, _self.dialog.containerNode);
-						w.on("ContentReady", function(){
+						w.on('ContentReady', function() {
 							_self.dialog.resize();
 							_self.dialog._position();
-						})
+						});
 						w.startup();
 						_self.dialog.show();
 					});
@@ -202,49 +203,49 @@ define([
 				});
 
 
-				on(document, ".NonmodalDialogButton:click", function(evt){
+				on(document, '.NonmodalDialogButton:click', function(evt) {
 					// console.log("DialogButton Click", evt);
 					evt.preventDefault();
 					evt.stopPropagation();
 					var params = {};
 
 					var rel = evt.target.attributes.rel.value;
-					var parts = rel.split(":");
-					console.log("Pars: ", parts);
+					var parts = rel.split(':');
+					console.log('Pars: ', parts);
 					var type = parts[0];
-					params = parts.slice(1).join(":");
+					params = parts.slice(1).join(':');
 
-					if (params.charAt(0)=="{"){
+					if (params.charAt(0) === '{') {
 						params = JSON.parse(params);
 					}
 
 					var panel = _self.panels[type];
-					if (!panel){
-						throw error("Ivalid Panel: " + type);
-						return;
+					if (!panel) {
+						throw error('Ivalid Panel: ' + type);
+						// return;
 					}
 
-					if (panel.requireAuth && (!_self.user || !_self.user.id)){
-						Topic.publish("/login");
+					if (panel.requireAuth && (!_self.user || !_self.user.id)) {
+						Topic.publish('/login');
 						return;
 					}
-					console.log("W Params: ", params, "W type: ", type);;
+					console.log('W Params: ', params, 'W type: ', type);
 					var w = _self.loadPanel(type, params);
 
-					if (_self.nmDialog && _self.nmDialog.open == true) {
+					if (_self.nmDialog && _self.nmDialog.open === true) {
 						// console.log("in destroy", _self.nmDialog);
 						_self.nmDialog.open = false;
 						_self.nmDialog.destroy();
 					} else {
-						Deferred.when(w, function(w){
+						Deferred.when(w, function(w) {
 							// console.log("create new NMDialog");
 							_self.nmDialog = new NMDialog({parseOnLoad: false, title: w.title});
 							_self.nmDialog.set('content', '');
 							domConstruct.place(w.domNode, _self.nmDialog.containerNode);
-							w.on("ContentReady", function(){
+							w.on('ContentReady', function() {
 								_self.nmDialog.resize();
 								_self.nmDialog._position();
-							})
+							});
 							w.startup();
 							_self.nmDialog.show();
 						});
@@ -252,22 +253,22 @@ define([
 					// console.log("Open Dialog", type);
 				});
 
-				on(document, "dialogAction", function(evt){
+				on(document, 'dialogAction', function(evt) {
 					// console.log("dialogAction", evt)
-					if(_self.dialog && evt.action == "close"){
+					if (_self.dialog && evt.action === 'close') {
 						_self.dialog.hide();
 					}
 
 				});
 
-				Topic.subscribe("/openDialog", function(msg){
-					var type = msg.type
+				Topic.subscribe('/openDialog', function(msg) {
+					var type = msg.type;
 					var params = msg.params || {};
 					var w = _self.loadPanel(type, params);
-					Deferred.when(w, function(w){
-						if(!_self.dialog){
+					Deferred.when(w, function(w) {
+						if (!_self.dialog) {
 							_self.dialog = new Dialog({parseOnLoad: false, title: w.title});
-						}else{
+						} else {
 							_self.dialog.set('title', w.title);
 						}
 						_self.dialog.set('content', '');
@@ -279,34 +280,34 @@ define([
 					// console.log("Open Dialog", type);
 				});
 
-				on(window,"message", function(msg){
-					console.log("onMessage: ", msg);
-					if (msg && msg.data=="RemoteReady"){
+				on(window, 'message', function(msg) {
+					console.log('onMessage: ', msg);
+					if (msg && msg.data === 'RemoteReady') {
 						return;
 					}
 					msg = JSON.parse(msg.data);
-					console.log("Message From Remote: ", msg);
-					if (msg && msg.topic){
+					console.log('Message From Remote: ', msg);
+					if (msg && msg.topic) {
 						Topic.publish(msg.topic, msg.payload);
 					}
-				},"*")
+				}, '*');
 
-				Topic.subscribe("/navigate", function(msg){
+				Topic.subscribe('/navigate', function(msg) {
 					//console.log("app.js handle /navigate msg");
 					//console.log("msg.href length: ", msg.href.length)
-					if (!msg || !msg.href ){
-						console.error("Missing navigation message");
+					if (!msg || !msg.href ) {
+						console.error('Missing navigation message');
 						return;
 					}
 
-					if (msg.target && msg.target=="blank"){
+					if (msg.target && msg.target === 'blank') {
 						var child = window.open('/remote', '_blank');
-						var handle = on(child,"message", function(cmsg){
-							if (cmsg && cmsg.data && cmsg.data=="RemoteReady") {
+						var handle = on(child, 'message', function(cmsg) {
+							if (cmsg && cmsg.data && cmsg.data === 'RemoteReady') {
 								child.postMessage(JSON.stringify({
-									"topic": "/navigate",
-									"payload": {"href": msg.href}
-								}), "*")
+									'topic': '/navigate',
+									'payload': {'href': msg.href}
+								}), '*');
 								handle.remove();
 							}
 						});
@@ -315,61 +316,61 @@ define([
 					Router.go(msg.href);
 				});
 
-				var showAuthDlg = function(evt){
-					if(evt){
+				var showAuthDlg = function(evt) {
+					if (evt) {
 						evt.preventDefault();
 						evt.stopPropagation();
 					}
 					var dlg = new Dialog({
-						title: "Login",
+						title: 'Login',
 						content: "<div class=\"LoginForm\" data-dojo-type=\"p3/widget/LoginForm\" style=\"width:300px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:20px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
 					});
 					dlg.show();
 				};
 
-				var showUserProfile = function(evt){
-					if(evt){
+				var showUserProfile = function(evt) {
+					if (evt) {
 						evt.preventDefault();
 						evt.stopPropagation();
 					}
 					//console.log(evt);
 					var dlg = new Dialog({
-						title: "User Profile",
+						title: 'User Profile',
 						content: "<div class=\"UserProfileForm\" data-dojo-type=\"p3/widget/UserProfileForm\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
 					});
 					dlg.show();
 				};
 
-				var showNewUser = function(evt){
-					if(evt){
+				var showNewUser = function(evt) {
+					if (evt) {
 						evt.preventDefault();
 						evt.stopPropagation();
 					}
 					//console.log(evt);
 					var dlg = new Dialog({
-						title: "Register User",
+						title: 'Register User',
 						content: "<div class=\"UserProfileForm\" data-dojo-type=\"p3/widget/UserProfileForm\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
 					});
 					dlg.show();
 				};
 
-				var timer;
-				on(document, ".HomeServiceLink:click", function(evt){
+				//var timer;
+				on(document, '.HomeServiceLink:click', function(evt) {
 					var target = evt.target;
 					var rel;
-					console.log("TARGET: ", target);
-					if (target.attributes.rel && target.attributes.rel.value){
+					//console.log("TARGET: ", target);
+					if (target.attributes.rel && target.attributes.rel.value) {
 						rel = target.attributes.rel.value;
-					}else{
+					} else {
 						target = target.parentNode;
 						rel = target.attributes.rel.value;
 					}
 
-					console.log("SELECT ", rel);
-					console.log("Child: ", Registry.byId(rel))
-					Registry.byId("p3carousel").selectChild(Registry.byId(rel));
-					query(".HomeServiceLink").removeClass("selected");
-					domClass.add(target,"selected");
+					console.log('SELECT ', rel);
+					console.log('Child: ', Registry.byId(rel));
+					Registry.byId('p3carousel').selectChild(Registry.byId(rel));
+					query('.HomeServiceLink').removeClass('selected');
+					domClass.add(target, 'selected');
 
 
 					/*
@@ -383,77 +384,76 @@ define([
 			*/
 		});
 
-		on(document, ".loginLink:click", showAuthDlg);
-		on(document, ".userProfile:click", showUserProfile);
-		on(document, ".registrationLink:click", showNewUser);
-		on(document, ".showRegWidget:click", showNewUser);
-			on(document, ".showLoginWidget:click", showAuthDlg);
+		on(document, '.loginLink:click', showAuthDlg);
+		on(document, '.userProfile:click', showUserProfile);
+		on(document, '.registrationLink:click', showNewUser);
+		on(document, '.showRegWidget:click', showNewUser);
+		on(document, '.showLoginWidget:click', showAuthDlg);
 		// 	window.open(_self.accountURL + "/register");
 		// });
-		Topic.subscribe("/login", showAuthDlg);
-    // 
+		Topic.subscribe('/login', showAuthDlg);
+		//
 		// on(document, ".logoutLink:click", function(evt){
 		// 	console.log("logoutLink: click");
 		// 	window.location="/logout";
 		// });
-		on(document, ".navigationLink:click", function(evt){
+		on(document, '.navigationLink:click', function(evt) {
 			// console.log("NavigationLink Click", evt);
 			evt.preventDefault();
 			// evt.stopPropagation();
 			// console.log("APP Link Target: ", evt.target.pathname, evt.target.href, evt.target);
 			var parts = evt.target.href.split(evt.target.pathname);
 			// console.log("navigationLink:click - " + evt.target.pathname + (parts[1]||"") )
-			Router.go(evt.target.pathname + (parts[1] || ""));
-		})
+			Router.go(evt.target.pathname + (parts[1] || ''));
+		});
 
-		on(document, ".navigationLinkOut:click", function(evt){
+		on(document, '.navigationLinkOut:click', function(evt) {
 			// console.log(evt);
 			evt.preventDefault();
 			var target = evt.srcElement || evt.target;
-
 			window.open(target.href);
-		})
+		});
 
 	},
-	loadPanel: function(id, params, callback){
+	loadPanel: function(id, params, callback) {
 		var def = new Deferred();
-		console.log("Load Panel!", id, params);
+		console.log('Load Panel!', id, params);
 		var p = this.panels[id];
-		if(!p.params){
+		if (!p.params) {
 			p.params = {};
 		}
 
 		p.params.title = p.params.title || p.title;
 		p.params.closable = true;
 
-		if(p.ctor && typeof p.ctor == "function"){
+		if (p.ctor && typeof p.ctor === 'function') {
 			var w = new p.ctor(p.params);
 			def.resolve(w);
-		}else if(p.ctor && typeof p.ctor == "string"){
+		} else if (p.ctor && typeof p.ctor === 'string') {
 			var reqs = [];
-			if(window.App && window.App.production && p.layer){
+			if (window.App && window.App.production && p.layer) {
 				reqs.push(p.layer);
 			}
 
 			reqs.push(p.ctor);
-			require(reqs, function(){
+			require(reqs, function() {
 				var prop;
 				var ctor = arguments[arguments.length - 1];
 				var w = new ctor(p.params);
 
-				if(typeof params == "object"){
-					for(prop in params){
+				if (typeof params === 'object') {
+					for (prop in params) {
 						w.set(prop, params[prop]);
 					}
-				}else if (params && p.dataParam){
+				} else if (params && p.dataParam) {
 					w.set(p.dataParam, params);
 				}
-				if(p.wrap){
+				if (p.wrap) {
 					var cp = new ContentPane({title: p.params.title || p.title, closable: true});
 					cp.containerNode.appendChild(w.domNode);
 					w.startup();
 					def.resolve(cp);
-				}else{
+				} else {
 					def.resolve(w);
 				}
 			});
@@ -462,41 +462,41 @@ define([
 	},
 	applicationContainer: null,
 
-	getApplicationContainer: function(){
-		if(this.applicationContainer){
+	getApplicationContainer: function() {
+		if (this.applicationContainer) {
 			// console.log("Already existing AppContainer");
 			return this.applicationContainer;
 		}
-		this.applicationContainer = Registry.byId("ApplicationContainer");
+		this.applicationContainer = Registry.byId('ApplicationContainer');
 		// console.log("Application Container from registry: ", this.applicationContainer);
 		return this.applicationContainer;
 	},
-	getCurrentContainer: function(){
+	getCurrentContainer: function() {
 		var ac = this.getApplicationContainer();
 		// console.log("AppContainer: ", ac);
-		var ch = ac.getChildren().filter(function(child){
+		var ch = ac.getChildren().filter(function(child) {
 			// console.log("Child Region: ", child.region, child);
-			return child.region == "center";
+			return child.region === 'center';
 		});
-		if(!ch || ch.length < 1){
-			console.warn("Unable to find current container");
+		if (!ch || ch.length < 1) {
+			console.warn('Unable to find current container');
 			return false;
 		}
 
 		return ch[0];
 	},
 
-	getConstructor: function(cls){
+	getConstructor: function(cls) {
 		var def = new Deferred();
-		require([cls], function(ctor){
+		require([cls], function(ctor) {
 			def.resolve(ctor);
 		});
 		return def.promise;
 	},
 
-	_doNavigation: function(newNavState){
+	_doNavigation: function(newNavState) {
 		var _self = this;
-		if(!newNavState){
+		if (!newNavState) {
 			return;
 		}
 
@@ -509,9 +509,9 @@ define([
 		// 	return;
 		// }
 
-		if(newNavState.widgetClass){
-			ctor = this.getConstructor(newNavState.widgetClass)
-		}else{
+		if (newNavState.widgetClass) {
+			ctor = this.getConstructor(newNavState.widgetClass);
+		} else {
 			ctor = ContentPane;
 		}
 
@@ -521,43 +521,43 @@ define([
 		// console.log("newNavState.requireAuth: ", newNavState.requireAuth, window.App);
 		console.log('auth is good or not?');
 		console.log(window.App.authorizationToken);
-		if(newNavState.requireAuth && (window.App.authorizationToken === null || window.App.authorizationToken === undefined)){
+		if (newNavState.requireAuth && (window.App.authorizationToken === null || window.App.authorizationToken === undefined)) {
 			console.log(window.App.authorizationToken);
 			var cur = _self.getCurrentContainer();
-			if(cur){
+			if (cur) {
 				appContainer.removeChild(cur, true);
 			}
 
 			var lp = ContentPane({
-				region: "center",
-				content: '<div style="text-align: center;width:100%;"><h3>PATRIC Login</h3><p>This service requires authentication. Please <a class="showLoginWidget">login</a> or <a class="showRegWidget">register as a new user.</a></p>'+
+				region: 'center',
+				content: '<div style="text-align: center;width:100%;"><h3>PATRIC Login</h3><p>This service requires authentication. Please <a class="showLoginWidget">login</a> or <a class="showRegWidget">register as a new user.</a></p>' +
 				'<div class="LoginForm" data-dojo-type="p3/widget/LoginForm" style="width:300px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:20px;margin-top:10px;padding:10px;"></div>'
 			});
 			appContainer.addChild(lp);
 			return;
 		}
 
-		Deferred.when(ctor, function(ctor){
-			if(!ctor){
-				console.error("Unable to load CTOR");
+		Deferred.when(ctor, function(ctor) {
+			if (!ctor) {
+				console.error('Unable to load CTOR');
 				return;
 			}
-			var acceptType = newNavState.widgetClass ? "application/json" : "text/html";
+			//var acceptType = newNavState.widgetClass ? "application/json" : "text/html";
 			var instance;
 			var cur = _self.getCurrentContainer();
-			if(cur instanceof ctor){
+			if (cur instanceof ctor) {
 				instance = cur;
 				// console.log("newNavState: ", newNavState);
-				if(newNavState.widgetExtraClass){
-					instance.domNode.classList.add(newNavState.widgetExtraClass)
+				if (newNavState.widgetExtraClass) {
+					instance.domNode.classList.add(newNavState.widgetExtraClass);
 				}
 
 				instance.set('state', newNavState);
 
-				if(newNavState.set){
+				if (newNavState.set) {
 					instance.set(newNavState.set, newNavState.value);
 				}
-				if(instance.resize){
+				if (instance.resize) {
 					instance.resize();
 				}
 				// if ((instance instanceof ContentPane) && !newNavState.content) {
@@ -574,14 +574,14 @@ define([
 				return;
 			}
 
-			var opts = {region: "center", apiServer: _self.apiServer, state: newNavState}
-			if(newNavState.set){
+			var opts = {region: 'center', apiServer: _self.apiServer, state: newNavState};
+			if (newNavState.set) {
 				opts[newNavState.set] = newNavState.value;
 			}
 			// console.log("New Instance Opts: ", opts);
 			instance = new ctor(opts);
 			// console.log("new instance: ", instance);
-			if(cur){
+			if (cur) {
 				appContainer.removeChild(cur, true);
 			}
 
@@ -590,18 +590,18 @@ define([
 		});
 	},
 
-	getNavigationContent: function(href, acceptType){
+	getNavigationContent: function(href, acceptType) {
 		href = this.apiServer + href;
 		var headers = {
-			"Accept": acceptType,
+			'Accept': acceptType,
 			'X-Requested-With': null
-		}
+		};
 
 		// console.log("getNavigationContent: ", href, acceptType);
 		return xhr.get(href, {
 			headers: headers,
-			handleAs: (acceptType == "application/json") ? "json" : "",
-			query: (acceptType == "text/html") ? {"http_templateStyle": "embedded"} : "",
+			handleAs: (acceptType === 'application/json') ? 'json' : '',
+			query: (acceptType === 'text/html') ? {'http_templateStyle': 'embedded'} : '',
 			withCredentials: true
 		});
 		/*.then(function(res){
@@ -618,14 +618,14 @@ ac.addChild(cp);
 _self._currentContainer = cp;
 });*/
 },
-navigate: function(msg){
+navigate: function(msg) {
 	// console.log("Navigate to ", msg);
-	if(!msg.href){
-		if(msg.id){
+	if (!msg.href) {
+		if (msg.id) {
 			msg.href = msg.id;
 		}
 	}
-	if(msg.pageTitle){
+	if (msg.pageTitle) {
 		window.document.title = msg.pageTitle;
 	}
 	// }else{
@@ -639,4 +639,4 @@ navigate: function(msg){
 }
 
 });
-});
+});//endDefine
