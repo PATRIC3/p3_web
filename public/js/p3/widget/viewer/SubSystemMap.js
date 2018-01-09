@@ -51,7 +51,7 @@ define([
 				
 				when(that.getGenomeIdsBySubsystemId(that.state.genome_ids, that.state.subsystem_id), function(genomeIds){
 					that.viewer.set('visible', true);
-					$('#subsystemheatmap').attr('style','height: 170px');
+					//$('#subsystemheatmap').attr('style','height: 100px');
 				});
 					
 				window.document.title = 'Subsystem Map';
@@ -233,13 +233,24 @@ define([
 
 						$('#subsystemheatmapheader').append( "<br><br>");
 						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
-						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + "</span>" + pmidString + "</p>");
+						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + pmidString + "</span>" + "</p>");
 
 						
 					} else if ( data && data.description ) {
 						$('#subsystemheatmapheader').append( "<br><br>");
 						$('#subsystemheatmapheader').append( "<p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Description: " + "</span>" + data.description + "</p>" );
+					} else if ( data && data.pmid ) {
+						var pmids = [];
+						data.pmid.forEach(function(pmid) {
+							var pmidHref = "https://www.ncbi.nlm.nih.gov/pubmed/" + pmid;
+							var pmidButton = "<a target=\"_blank\" href=\"" + pmidHref + "\">" + pmid + "</a>";
+							pmids.push(pmidButton);
+						})
+						var pmidString = pmids.join(", ");
+						$('#subsystemheatmapheader').append( "<br><br>");
+						$('#subsystemheatmapheader').append( "<br><p>" + "<span style=\"font-size: 1.1em;font-weight: bold\">" + "Associated Publication IDs: " + pmidString + "</span>" + "</p>");
 					}
+
 				});
 
 				var genomeIdList = [];
@@ -271,7 +282,7 @@ define([
 			this.viewerHeader = new ContentPane({
 				content: "",
 				region: "top",
-				style: 'height: 170px'
+				style: 'height: 110px'
 			});
 			
 			var headerContent = domConstruct.create("div", {"class": "PerspectiveHeader"});
