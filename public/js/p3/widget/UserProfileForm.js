@@ -161,7 +161,7 @@ define([
 				if(vals.organisms !== this.userprofileStored.organisms){
 						patchObj.push({ "op": "replace", "path": "/organisms", "value": vals.organisms });
 				}
-				//console.log(patchObj);
+				console.log(JSON.stringify(patchObj));
 				var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
 					data: JSON.stringify(patchObj),
 					method: 'post',
@@ -175,7 +175,7 @@ define([
 				def.then(function(data){
 					console.log(data);
 					if(data){
-					window.App.refreshUser();
+					//window.App.refreshUser();
 					} else {
 						document.getElementsByClassName('regFormErrors')[0].innerHTML = 'There was an error';
 					}
