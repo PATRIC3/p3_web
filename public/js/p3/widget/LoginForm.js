@@ -60,8 +60,8 @@ define([
 				domClass.remove(this.domNode, "Error");
 				//this.submitButton.set('disabled', true);
 				var vals = this.getValues();
-        console.log('these are the values for body of requeset');
-        console.log(vals);
+        //console.log('these are the values for body of requeset');
+        //console.log(vals);
 				var _self = this;
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
@@ -85,7 +85,7 @@ define([
 						dataobj[keyValueArr[0]] = keyValueArr[1];
 					}
 					//console.log(dataobj);
-					//window.App.login(dataobj, data);
+					window.App.login(dataobj, data);
 					// }
 				}, function(err){
 					console.log('i am here');
