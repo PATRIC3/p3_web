@@ -161,7 +161,7 @@ define([
 				if(vals.organisms !== this.userprofileStored.organisms){
 						patchObj.push({ "op": "replace", "path": "/organisms", "value": vals.organisms });
 				}
-				//console.log(patchObj);
+				//console.log(JSON.stringify(patchObj));
 				var def = xhr(this.userServiceURL + '/user/' + window.localStorage.userid, {
 					data: JSON.stringify(patchObj),
 					method: 'post',

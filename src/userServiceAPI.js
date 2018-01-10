@@ -1,16 +1,17 @@
-const Fetch = require('isomorphic-fetch');
-
-exports.login = function(route, body) {
+const request = require('request');
+//const rp = require('request-promise');
+exports.fetch = function(url, data) {
+  //let token = '';
   //console.log(body);
-  return Fetch(route, body)
-  .then((response) => {
-    console.log(response);
-    console.log(response.Body.status);
-  })
-    // .then((data) => {
-    //   console.log(data);
-    // })
-    .catch((error) => {
-    console.log(error);
-  });
+return new Promise(function(resolve, reject) {
+  request(url, data, (err, response, body) => {
+          //console.log('this is the response');
+          //console.log(res);\
+          //console.log(body);
+          //token = body;
+          resolve(body);
+    });
+});
 };
+
+//exports.
