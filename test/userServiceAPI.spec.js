@@ -33,9 +33,6 @@ test('it fails to login with incorrect password', (done) => {
     let message = JSON.parse(token);
     console.log(message);
     expect(message.message.indexOf('Invalid')).not.toBe(-1);
-    //console.log(message);
-    //expect(true).toBe(false);
-    //expect(message.message.indexOf('Invalid')).not.toBe(-1);
     done();
   });
 });
@@ -101,15 +98,10 @@ test('it tries to register when username is already taken', (done) => {
   };
   usapi.fetch(userServiceURL + '/register', fetchData).then(function(message) {
   console.log(message);
-    // if (message === undefined || message === null) {
-    //   console.log('no message received, check for an error');
-    // }
     const messageText = JSON.parse(message);
     console.log(messageText);
     expect(messageText.message.indexOf('The requested username is already in use')).not.toBe(-1);
-
     done();
-    //authString = newToken;
   });
 });
 
@@ -142,7 +134,6 @@ test('it updates a user', (done) => {
     body: '[{"op":"replace","path":"/first_name","value":"Joshuawha"}]'
   };
   usapi.fetch(userServiceURL + '/user/' + userid, fetchData).then(function(message) {
-    // const messageText = JSON.parse(message);
     console.log(message);
     expect(message).toBe('true');
     done();
@@ -163,6 +154,31 @@ test('it updates a user', (done) => {
   usapi.fetch(userServiceURL + '/user/' + userid, fetchData).then(function(message) {
     console.log(message);
     expect(message).toBe('true');
+    done();
+  });
+});
+
+test('it does not modify a user by changing the token string un=username and submitting it with the update user request', (done) => {
+  let fetchData = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json-patch+json',
+      'X-Requested-With': null,
+      'Accept': 'application/json',
+      'Authorization': authString
+    },
+    body: '[{"op":"replace","path":"/first_name","value":"Joshuawha"}]'
+  };
+  userid = 'joshhome';
+  authString.replace('JoshuaVSherman', 'joshhome');
+  console.log(authString);
+  usapi.fetch(userServiceURL + '/user/' + userid, fetchData).then(function(message) {
+    console.log(message);
+    let messageObj = JSON.parse(message);
+    console.log(messageObj);
+    expect(messageObj.error.status).toBe(401);
+    userid = 'JoshuaVSherman';
+    authString.replace('joshhome', 'JoshuaVSherman');
     done();
   });
 });
@@ -197,6 +213,7 @@ test('it updates a password', (done) => {
   usapi.fetch(userServiceURL + '/user/', fetchData).then(function(message) {
     console.log(message);
     const messageText = JSON.parse(message);
+    console.log(messageText);
     console.log(messageText.result);
     //expect(false).toBe(true);
     expect(messageText.result).toBe('Password Changed');
@@ -215,12 +232,43 @@ test('it updates a password again', (done) => {
     },
     body: '{"id":1, "jsonrpc":"2.0", "method":"setPassword", "params":["JoshuaVSherman", "green", "greentea1"]}'
   };
-  usapi.fetch(userServiceURL + '/user/', fetchData).then(function(message) {
-    console.log(message);
+  usapi.fetch(userServiceURL + '/user/', fetchData).then(function(message2) {
+    console.log(message2);
+    //expect(false).toBe(true);
+    let messageText2 = JSON.parse(message2);
+    console.log(messageText2);
+    expect(messageText2.result).toBe('Password Changed');
+    done();
+  });
+});
+
+test('it does not allow updating a different user password', (done) => {
+  //authString.replace('JoshuaVSherman', 'coolDude');
+  let fetchData = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-Requested-With': null,
+      'Authorization': authString
+    },
+    body: '{"id":1, "jsonrpc":"2.0", "method":"setPassword", "params":["joshhome", "greentea1", "greenary"]}'
+  };
+  usapi.fetch(userServiceURL + '/user/', fetchData).then(function(statusCode) {
+    console.log(statusCode);
     //expect(false).toBe(true);
     // const messageText = JSON.parse(message);
     // console.log(messageText.result);
-    // expect(messageText.result).toBe('Password Changed');
+    expect(statusCode).toBe(401);
+    //authString.replace('coolDude', 'JoshuaVSherman');
     done();
   });
+});
+
+test('it does nothing', (done) =>{
+  console.log('do nothing');
+  console.log('do nothing');
+  console.log('do nothing');
+  expect(true).toBe(true);
+  done();
 });
