@@ -234,7 +234,7 @@ define([
        subsystemslegend.append("foreignObject")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-e")
-        .attr("width", "20px")
+        .attr("width", "40px")
         .attr("height", "20px")
         .append("xhtml:body")
         .html("<div class=\"dgrid-expando-icon ui-icon ui-icon-triangle-1-e\"></div>")
@@ -250,7 +250,7 @@ define([
         })
         .attr('style', function(d) { 
           if (d.hasOwnProperty("baseClass")) {
-            return "margin-left: 10px";
+            return "margin-left: 20px";
           } else {
             return 0;
           }

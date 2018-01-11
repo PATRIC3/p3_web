@@ -122,12 +122,19 @@ define([
 							field: "class",
 							limit: -1,
 							facet: {
-								gene_count: "unique(feature_id)"
+								gene_count: "unique(feature_id)",
+								"subclass": {
+									type: "field",
+									field: "subclass",
+									limit: -1,
+									facet: {
+										gene_count: "unique(feature_id)"
+									}
+								}
 							}
 						}
 					}
 				}
-
 			})) + ")"
 		},
 		buildQuery: function(){
