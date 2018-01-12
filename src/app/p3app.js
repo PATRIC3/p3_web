@@ -18,7 +18,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 	Drawer, ContentPane,
 	RPC, Panels, WorkspaceManager, Keys,
 	Dialog, PathJoin, xhr) {
-		return dojoMock.declare([App], {
+		return declare([App], {
 			panels: Panels,
 			activeWorkspace: null,
 			activeWorkspacePath: '/',

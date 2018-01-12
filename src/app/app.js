@@ -12,7 +12,7 @@ const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'re
 	Ready, Parser, rql, lang,
 	Router, Dialog, domConstruct, winUtils) {
 
-		var NMDialog = dojoMock.declare([Dialog], {
+		var NMDialog = declare([Dialog], {
 			show: function() {
 				// summary:
 				//              Display the dialog
@@ -84,9 +84,10 @@ const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'re
 			}
 		});
 
-		return dojoMock.declare(null, {
+		return declare(null, {
 			panels: {},
 			constructor: function(opts) {
+        /* istanbul ignore next */
 				if (opts) {
 					for (var prop in opts) {
 						this[prop] = opts[prop];
@@ -117,7 +118,8 @@ const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'re
 				on(window, 'message', function(evt) {
 					var msg = evt.data;
 					// console.log("window.message: ", msg);
-					if (!msg || !msg.type) {
+          	 /* istanbul ignore else */
+          if (!msg || !msg.type) {
 						return;
 					}
 
@@ -133,7 +135,7 @@ const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'re
 					// 	//						domClass.add(document.body, "Authenticated");
 					// 	//						break;
 					// }
-
+           /* istanbul ignore next */
 					Topic.publish('/' + msg.type, msg);
 				});
 
@@ -166,17 +168,17 @@ const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'re
 					console.log('Pars: ', parts);
 					var type = parts[0];
 					params = parts.slice(1).join(':');
-
+          /* istanbul ignore if */
 					if (params.charAt(0) === '{') {
 						params = JSON.parse(params);
 					}
-
 					var panel = _self.panels[type];
+          /* istanbul ignore if */
 					if (!panel) {
 						throw error('Ivalid Panel: ' + type);
 						// return;
 					}
-
+          /* istanbul ignore next */
 					if (panel.requireAuth && (!_self.user || !_self.user.id)) {
 						Topic.publish('/login');
 						return;
