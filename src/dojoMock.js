@@ -4,41 +4,45 @@ exports.define = function(thisArray, thisFunction) {
 };
 
 exports.declare = function(dArray, dObj) {
-  //console.log('why!?');
   let declareObj = {testarr: dArray, testobj: dObj};
-  //console.log(declareObj);
   if (declareObj.testarr !== null) {
-    if (declareObj.testarr[0].indexOf('open') !== -1) {
+    let dialog = new declareObj.testarr[0];
+    if (dialog.open) {
       declareObj.testobj.open = true;
     }
-    if (declareObj.testarr[0].indexOf('_started') !== -1) {
+    if (dialog.otherDialogs.indexOf('_started') !== -1) {
       declareObj.testobj._started = true;
     }
-    if (declareObj.testarr[0].indexOf('_alreadyInitialized') !== -1) {
+    if (dialog.otherDialogs.indexOf('_alreadyInitialized') !== -1) {
       declareObj.testobj._alreadyInitialized = true;
     }
-    if (declareObj.testarr[0].indexOf('_fadeOutDeferred') !== -1) {
-      //declareObj.testobj._fadeOutDeferred = true;
+    if (dialog.otherDialogs.indexOf('_fadeOutDeferred') !== -1) {
       declareObj.testobj._fadeOutDeferred = {cancel:function() {}};
     }
-  }
-  if (declareObj.testobj.show) {
-    declareObj.testobj.startup = function() {};
-    declareObj.testobj._setup = function() {};
-    declareObj.testobj._set = function() {};
-    declareObj.testobj._onShow = function() {};
-    declareObj.testobj.resize = function() {};
-    declareObj.testobj._position = function() {};
-    declareObj.testobj._modalconnects = {push:function() {}};
-    declareObj.testobj.show();
-    if ( declareObj.testobj._fadeInDeferred) {
-      //console.log(declareObj.testobj._fadeInDeferred.something);
-      declareObj.testobj._fadeInDeferred.something.fadeIn = {stop:function() {}};
-      //declareObj.testobj.show();
-      //declareObj.testobj._fadeInDeferred.something.thisFunction = function() {};
-      //declareObj.testobj._fadeInDeferred.something.thisFunction();
+    if (declareObj.testobj.show) {
+      declareObj.testobj.startup = function() {};
+      declareObj.testobj._setup = function() {};
+      declareObj.testobj._set = function() {};
+      declareObj.testobj._onShow = function() {};
+      declareObj.testobj.resize = function() {};
+      declareObj.testobj._position = function() {};
+      declareObj.testobj._modalconnects = {push:function() {}};
+      declareObj.testobj.show();
     }
-    //console.log(declareObj);
+  } else {
+    //if (declareObj.testobj.panels.type === undefined) {
+    declareObj.testobj.panels = {low: {}, hi:{}};
+    //}
+    //console.log('yeah');
+    let returnObj = declareObj.testobj.constructor();
+    if (returnObj !== undefined) {
+      console.log(returnObj);
+    }
   }
-  return declareObj;
+  return class {constructor(declareObj) {
+    this.declareObj = declareObj;
+    this.set = function() {};
+    this.show = function() {};
+  }
+};
 };

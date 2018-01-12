@@ -87,6 +87,7 @@ define([
 		return declare(null, {
 			panels: {},
 			constructor: function(opts) {
+        /* istanbul ignore next */
 				if (opts) {
 					for (var prop in opts) {
 						this[prop] = opts[prop];
@@ -117,7 +118,8 @@ define([
 				on(window, 'message', function(evt) {
 					var msg = evt.data;
 					// console.log("window.message: ", msg);
-					if (!msg || !msg.type) {
+          	 /* istanbul ignore else */
+          if (!msg || !msg.type) {
 						return;
 					}
 
@@ -133,7 +135,7 @@ define([
 					// 	//						domClass.add(document.body, "Authenticated");
 					// 	//						break;
 					// }
-
+           /* istanbul ignore next */
 					Topic.publish('/' + msg.type, msg);
 				});
 
@@ -166,17 +168,17 @@ define([
 					console.log('Pars: ', parts);
 					var type = parts[0];
 					params = parts.slice(1).join(':');
-
+          /* istanbul ignore if */
 					if (params.charAt(0) === '{') {
 						params = JSON.parse(params);
 					}
-
 					var panel = _self.panels[type];
+          /* istanbul ignore if */
 					if (!panel) {
 						throw error('Ivalid Panel: ' + type);
 						// return;
 					}
-
+          /* istanbul ignore next */
 					if (panel.requireAuth && (!_self.user || !_self.user.id)) {
 						Topic.publish('/login');
 						return;
