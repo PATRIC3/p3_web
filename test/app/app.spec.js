@@ -4,6 +4,8 @@ function isFunction(functionToCheck) {
  var getType = {};
  return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
 }
+const xhr = {get:function(url, data) {}};
+const ContentPane = class {constructor(something) {this.something = something;}};
 const dojoMock = require('../../src/dojoMock.js');
 const declare = dojoMock.declare;
 const Topic = {publish:function() {}, subscribe:function() {}};
@@ -26,22 +28,26 @@ const on = function(location, eventtype, action) {
 const domClass = {contains: function() {}, add: function() {}, remove: function() {}};
 const domStyle = {set:function() {}};
 let Deferred = class {constructor(something) {this.something = something;
+  this.resolve = function() {};
 }};
 Deferred.when = function(myobj, myfunc) {
   // myobj.title = 'awesome';
   // myobj.startup = function() {};
   if (myobj === undefined) {
       myfunc({title:'awesome', startup:function() {}, on:function() {}});
+  } else {
+    myfunc(myobj);
   }
 
 };
+// Deferred.resolve = function() {};
 const query = function() {return {removeClass: function() {}};};
 const fx = {fadeIn:function() {return {play:function() {}};}};
 const parser = {parse: function() {return {then:function(aFunc) {
   aFunc();
 }};}};
 const Router = {startup:function() {}, go:function() {}};
-const Registry = {byId:function() {return {selectChild:function() {}};}};
+const Registry = {byId:function() {return {getChildren:function() {return {filter:function(myfun) {myfun({region:''});}};}, selectChild:function() {}};}};
 const domConstruct = {place:function() {}};
 let dialogState = 'closed';
 let otherDialogs = [];
@@ -65,7 +71,7 @@ it('creates the NMDialog', () => {
   appTest.testobj.testfunc(
     declare, 'parser',
     Topic, on, 'dom', domClass, 'domAttr', domStyle,
-    Registry, 'xhr', 'ContentPane', fx,
+    Registry, xhr, ContentPane, fx,
     Deferred, query, 'nodeListDom',
     Ready, parser, 'rql', lang,
     Router, Dialog, domConstruct, winUtils
@@ -77,7 +83,7 @@ it('opens the NMDialog', () => {
   appTest.testobj.testfunc(
     declare, 'parser',
     Topic, on, 'dom', domClass, 'domAttr', domStyle,
-    Registry, 'xhr', 'ContentPane', fx,
+    Registry, xhr, ContentPane, fx,
     Deferred, query, 'nodeListDom',
     Ready, parser, 'rql', lang,
     Router, Dialog, domConstruct, winUtils
@@ -90,12 +96,39 @@ it('detects when NMDialog has started, _alreadyInitialized, and fade out deferre
   appTest.testobj.testfunc(
     declare, 'parser',
     Topic, on, 'dom', domClass, 'domAttr', domStyle,
-    Registry, 'xhr', 'ContentPane', fx,
+    Registry, xhr, ContentPane, fx,
     Deferred, query, 'nodeListDom',
     Ready, parser, 'rql', lang,
     Router, Dialog, domConstruct, winUtils
   );
 });
+
+it('navigates', () => {
+  //let myDialog = new Dialog();
+  appTest.testobj.testfunc(
+    declare, 'parser',
+    Topic, on, 'dom', domClass, 'domAttr', domStyle,
+    Registry, xhr, ContentPane, fx,
+    Deferred, query, 'nodeListDom',
+    Ready, parser, 'rql', lang,
+    Router, Dialog, domConstruct, winUtils
+  );
+  //console.log(appTest.testobj.testfunc.getApplicationContainer());
+});
+
+it('checks for auth required routes', () => {
+  //let myDialog = new Dialog();
+  appTest.testobj.testfunc(
+    declare, 'parser',
+    Topic, on, 'dom', domClass, 'domAttr', domStyle,
+    Registry, xhr, ContentPane, fx,
+    Deferred, query, 'nodeListDom',
+    Ready, parser, 'rql', lang,
+    Router, Dialog, domConstruct, winUtils
+  );
+  //console.log(appTest.testobj.testfunc.getApplicationContainer());
+});
+
 it('does nothing', (done) =>{
   console.log('do nothing');
   console.log('do nothing');
