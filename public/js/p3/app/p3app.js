@@ -34,7 +34,7 @@ define([
 				on(document.body, 'keypress', function(evt) {
 					var charOrCode = evt.charCode || evt.keyCode;
 					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
-
+/* istanbul ignore next */
 					if ((charOrCode === 4) && evt.ctrlKey && evt.shiftKey) {
 						if (!this._devDlg) {
 							this._devDlg = new Dialog({
@@ -54,7 +54,7 @@ define([
 				// listening document.title change event
 				var titleEl = document.getElementsByTagName('title')[0];
 				var docEl = document.documentElement;
-
+/* istanbul ignore next */
 				if (docEl && docEl.addEventListener) {
 					docEl.addEventListener('DOMSubtreeModified', function(evt) {
 						var t = evt.target;
@@ -69,7 +69,7 @@ define([
 						}
 					};
 				}
-
+/* istanbul ignore next */
 				var onDocumentTitleChanged = function() {
 					// var meta = document.getElementsByTagName("meta[name='Keyword']");
 					var meta = domQuery("meta[name='Keywords']")[0];

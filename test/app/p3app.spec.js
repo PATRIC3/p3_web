@@ -1,13 +1,30 @@
 const Test = require('../../src/app/p3app.js');
-const appTest = new Test();
-//const winUtils = {get:function() {}};
-//const lang = {hitch:function(myModule, myFunction) {console.log(myModule); return {thisModule: myModule, thisFunction: myFunction};}};
-//const on = function() {};
-//const domStyle = {set:function() {}};
-//const Deferred = class {constructor(something) {this.something = something;}};
-//const fx = {fadeIn:function() {return {play:function() {}};}};
-//let Dialog = ['closed'];
+const p3appTest = new Test();
+const dojoStub = require('../dojoStub.js');
+let djs = new dojoStub('closed', []);
+const dojoMock = require('../../src/dojoMock.js');
+//const app = require('../../src/app/app.js');
 
-test('it does something', () => {
-console.log(appTest);
+describe('the Dojo p3app module', () => {
+
+  beforeEach(() => {
+    //do nothing for now
+  });
+
+  test('it does something', () => {
+    //let thisTest =
+    p3appTest.testobj.testfunc(
+      dojoMock.declare,
+      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      'dijit/registry', djs.lang,
+      djs.Deferred,
+      'dojo/store/JsonRest', djs.Toaster,
+      'dojo/ready', 'app', djs.Router,
+      'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
+      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
+      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+    );
+    // console.log('can I see the test object please?');
+    // console.log(thisTest);
+  });
 });
