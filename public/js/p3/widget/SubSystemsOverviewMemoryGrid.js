@@ -11,7 +11,9 @@ define([
     store: null,
     subsystemSvg: null,
     genomeView: false,
-    subsystemReferenceData: {},
+    subsystemReferenceData: [],
+    expandedSubsystemData: [],
+    firstLoad: true,
 
     constructor: function(){
 
@@ -70,7 +72,6 @@ define([
 
       Deferred.when(this.store.query(), function(data) {
         if (!oldState) {
-          that.subsystemReferenceData = $.extend(true, [], data);
           that.drawSubsystemPieChartGraph(data);
         }
         
@@ -152,7 +153,7 @@ define([
           return that.superClassColorCodes[d.data.val.toUpperCase()]
       });
 
-      this.drawSubsystemLegend(subsystemData, svg, radius, false);
+      this.drawSubsystemLegend(subsystemData, svg, radius, false, false);
 
       var tooltip = d3.select("body")
         .append("div")
@@ -171,7 +172,25 @@ define([
 
     selectedSuperclass: "",
 
-    drawSubsystemLegend: function(subsystemData, svg, radius, legendExpandedClassData) {
+    getArrayIndex: function(arr, value) {
+      for (var i = 0; i < arr.length; i++) {
+        if (arr[i].val === value) {
+          return i;
+        }
+      }
+    },
+
+    deepCopy: function (o) {
+      var output, v, key;
+      output = Array.isArray(o) ? [] : {};
+      for (key in o) {
+         v = o[key];
+         output[key] = (typeof v === "object") ? this.deepCopy(v) : v;
+      }
+      return output;
+    },
+
+    drawSubsystemLegend: function(subsystemData, svg, radius, legendExpandedClassData, legendExpandedSubclassData) {
       
       var that = this;
 
@@ -183,22 +202,46 @@ define([
         data.colorCodeKey = data.val.toUpperCase();
       });
 
+      if (that.firstLoad) {
+        that.subsystemReferenceData = $.extend(true, [], subsystemData);
+        that.firstLoad = false;
+      }
+      
       //deep copy, not a reference
       var originalSubsystemData = $.extend(true, [], subsystemData);
+      var newSubsystemData = $.extend(true, [], subsystemData);
       d3.select("#legendHolder").remove();
-      //add class data to superclass data in correct order
-      if (legendExpandedClassData) { 
+
+      if (legendExpandedSubclassData) { 
         
-        legendExpandedClassData['class'].buckets.forEach(function(classData) {
-          classData.baseClass = true;
+        legendExpandedSubclassData.forEach(function(classData) {
+          classData.subclassExpanded = true;
           classData.colorCodeKey = legendExpandedClassData.colorCodeKey;
         })
-        var superClassIndex = subsystemData.map(function(e) { return e.val; }).indexOf(legendExpandedClassData.val);
+        
+        //var classIndex = originalSubsystemData.map(function(e) { return e.val; }).indexOf(legendExpandedClassData.val);
+        var classIndex = this.getArrayIndex(originalSubsystemData, legendExpandedClassData.val)
+        for (var i = 0; i < legendExpandedClassData['subclass'].buckets.length; i++) {
+          //place behind index
+          var index = classIndex + i + 1;
+          newSubsystemData.splice(index, 0, legendExpandedClassData['subclass'].buckets[i]);
+        }
+      }
+
+      //add class data to superclass data in correct order
+      if (legendExpandedClassData && !legendExpandedSubclassData) { 
+        
+        legendExpandedClassData['class'].buckets.forEach(function(classData) {
+          classData.classExpanded = true;
+          classData.colorCodeKey = legendExpandedClassData.colorCodeKey;
+        })
+        var superClassIndex = newSubsystemData.map(function(e) { return e.val; }).indexOf(legendExpandedClassData.val);
         for (var i = 0; i < legendExpandedClassData['class'].buckets.length; i++) {
           //place behind index
           var index = superClassIndex + i + 1;
-          subsystemData.splice(index, 0, legendExpandedClassData['class'].buckets[i]);
+          newSubsystemData.splice(index, 0, legendExpandedClassData['class'].buckets[i]);
         }
+        that.expandedSubsystemData = $.extend(true, [], newSubsystemData);
       }
 
       var legendHolder = svg.append('g')
@@ -206,7 +249,7 @@ define([
         .attr("id", "legendHolder");
 
       var subsystemslegend = legendHolder.selectAll('.subsystemslegend')
-        .data(subsystemData)
+        .data(newSubsystemData)
         .enter()
         .append('g')
         .attr('class', 'subsystemslegend')
@@ -219,7 +262,10 @@ define([
       });
 
       var legendCount = legendHolder.selectAll('.subsystemslegend').size();
-      if (legendExpandedClassData) {
+      
+      if (legendExpandedSubclassData) {
+        legendCount += legendExpandedClassData['subclass'].buckets.length;
+      } else if (legendExpandedClassData) {
         legendCount += legendExpandedClassData['class'].buckets.length;
       }
       var legendTitleOffset = legendCount * legendRectSize / 2 + 30;
@@ -234,22 +280,42 @@ define([
        subsystemslegend.append("foreignObject")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-e")
-        .attr("width", "40px")
+        .attr("width", "60px")
         .attr("height", "20px")
         .append("xhtml:body")
         .html("<div class=\"dgrid-expando-icon ui-icon ui-icon-triangle-1-e\"></div>")
         .on("click", function(d){
-          if (!d.baseClass) {
+
+          if (d.subclassExpanded) {
+            return;
+          }
+          //class based level - start from scratch with reference data
+          else if (!d.classExpanded) {
             //used to close an opened node
             if (that.selectedSuperclass === d.colorCodeKey) {
               d = false;
             }
             that.selectedSuperclass = d.colorCodeKey;
-            that.drawSubsystemLegend(originalSubsystemData, svg, radius, d);
+            that.drawSubsystemLegend(that.subsystemReferenceData, svg, radius, d, false);
+          } 
+          else if (d.classExpanded && !d.subclassExpanded) {
+            //used to close an opened node
+            if (that.selectedClass === d.val) {
+               return;            
+            }
+            that.subclasses = d.subclass.buckets;
+            that.selectedClass = d.val;
+            that.drawSubsystemLegend(that.expandedSubsystemData, svg, radius, d, that.subclasses);
+          } 
+          else if (!d.classExpanded && d.hasOwnProperty("subclass")) {
+            that.drawSubsystemLegend(that.expandedSubsystemData, svg, radius, d, that.subclasses);
           }
+
         })
         .attr('style', function(d) { 
-          if (d.hasOwnProperty("baseClass")) {
+          if (d.hasOwnProperty("subclassExpanded")) {
+            return "margin-left: 40px";
+          } else if (d.hasOwnProperty("classExpanded")) {
             return "margin-left: 20px";
           } else {
             return 0;
@@ -258,7 +324,9 @@ define([
         
       subsystemslegend.append('rect')
         .attr('x', function(d) { 
-          if (d.hasOwnProperty("baseClass")) {
+          if (d.hasOwnProperty("subclassExpanded")) {
+            return 40 + legendRectSize;
+          } else if (d.hasOwnProperty("classExpanded")) {
             return 20 + legendRectSize;
           } else {
             return 0 + legendRectSize;
@@ -273,7 +341,11 @@ define([
           return that.superClassColorCodes[d.colorCodeKey]
         })
         .on("click", function(d) {
-          if (d.hasOwnProperty("baseClass")) {
+          // if (d.hasOwnProperty("subclassExpanded")) {
+          //   that.navigateToSubsystemsSubTabSubclass(d);
+          // } else 
+
+          if (d.hasOwnProperty("classExpanded")) {
             that.navigateToSubsystemsSubTabClass(d);
           } else {
             that.navigateToSubsystemsSubTabSuperclass(d);
@@ -282,7 +354,9 @@ define([
         
       subsystemslegend.append('text')
         .attr('x', function(d) { 
-          if (d.hasOwnProperty("baseClass")) {
+          if (d.hasOwnProperty("subclassExpanded")) {
+            return legendRectSize + legendRectSize + legendSpacing + 40;
+          } else if (d.hasOwnProperty("classExpanded")) {
             return legendRectSize + legendRectSize + legendSpacing + 20;
           } else {
             return legendRectSize + legendRectSize + legendSpacing;
@@ -291,12 +365,13 @@ define([
         .attr('y', legendRectSize - legendSpacing)
         .text(function(d) { return d.val + " (" + d.count + ")"; })
         .on("click", function(d) {
-          if (d.hasOwnProperty("baseClass")) {
+          if (d.hasOwnProperty("subclassExpanded")) {
+            that.navigateToSubsystemsSubTabSubclass(d);
+          } else if (d.hasOwnProperty("classExpanded")) {
             that.navigateToSubsystemsSubTabClass(d);
           } else {
             that.navigateToSubsystemsSubTabSuperclass(d);
           }
-          
         });
         this.setSubsystemPieGraph();
     },
@@ -517,6 +592,17 @@ define([
           break;
         default:
           Topic.publish("navigateToSubsystemsSubTabClass", d.val);
+          break;
+      }
+    },
+
+    navigateToSubsystemsSubTabSubclass: function(d) {
+      switch (d.val) {
+        case "Other":
+          //do nothing
+          break;
+        default:
+          Topic.publish("navigateToSubsystemsSubTabSubclass", d.val);
           break;
       }
     },
