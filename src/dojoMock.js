@@ -10,8 +10,12 @@ exports.require = function(astring, afunc) {
 };
 
 exports.declare = function(dArray, dObj) {
-  window.App = {uploadInProgress:false, logout:function() {}};
-  const mockStorage = {setItem: function(item, value) {
+//   Object.defineProperty(window.location, 'href', {
+//   writable: true,
+//   value: 'some url'
+// });
+  window.App = {uploadInProgress:false, logout:function() {}, checkLogin:function() {}, timeout:function() {}};
+  let mockStorage = {setItem: function(item, value) {
     //do nothing
   }, getItem: function(item, value) {
     return '{"expiry":12345}';
@@ -20,7 +24,7 @@ exports.declare = function(dArray, dObj) {
   let declareObj = {testarr: dArray, testobj: dObj};
   if (declareObj.testarr !== null) {
     console.log(declareObj.testarr[0]);
-    if (declareObj.testarr[0] !== 'app') {
+    if (declareObj.testarr[0] !== 'app' && declareObj.testarr[0] !== 'notLogIn' && declareObj.testarr[0] !== 'notExpired' && declareObj.testarr[0] !== 'bodyAuth' && declareObj.testarr[0] !== 'bodyAuthAndLoggedOut') {
       let dialog = new declareObj.testarr[0];
       if (dialog.open) {
         declareObj.testobj.open = true;
@@ -34,15 +38,62 @@ exports.declare = function(dArray, dObj) {
       if (dialog.otherDialogs.indexOf('_fadeOutDeferred') !== -1) {
         declareObj.testobj._fadeOutDeferred = {cancel:function() {}};
       }
-    } else {
+    } else if (declareObj.testarr[0] === 'notLogIn') {
+      console.log('test for not logged in');
+      mockStorage = {setItem: function(item, value) {
+        //do nothing
+      }, getItem: function(item, value) {
+        return null;
+      }};
+      window.localStorage = mockStorage;
       declareObj.testobj.inherited = function() {};
-      const mouseEvent = new Event('mousemove');
-      const timeout = function() {
-        document.dispatchEvent(mouseEvent);
-      	setTimeout(function() {
-        		timeout();
-      	}, 100);
-      };
+      declareObj.testobj.startup();
+    } else if (declareObj.testarr[0] === 'notExpired') {
+      console.log('test for not expired token');
+      mockStorage = {setItem: function(item, value) {
+        //do nothing
+      }, getItem: function(item, value) {
+        return '{"expiry":9516384984}';
+      }};
+      window.localStorage = mockStorage;
+      declareObj.testobj.inherited = function() {};
+      declareObj.testobj.startup();
+    }
+    else if (declareObj.testarr[0] === 'bodyAuth') {
+      console.log('test for already set body Auth');
+      mockStorage = {setItem: function(item, value) {
+        //do nothing
+      }, getItem: function(item, value) {
+        return '{"expiry":9516384984}';
+      }};
+      window.localStorage = mockStorage;
+      document.body.className = 'Authenticated';
+      declareObj.testobj.inherited = function() {};
+      declareObj.testobj.startup();
+    }
+
+    else if (declareObj.testarr[0] === 'bodyAuthAndLoggedOut') {
+      console.log('test for already body auth but logged out');
+      mockStorage = {setItem: function(item, value) {
+        //do nothing
+      }, getItem: function(item, value) {
+        return null;
+      }};
+      window.localStorage = mockStorage;
+      document.body.className = 'Authenticated';
+      declareObj.testobj.inherited = function() {};
+      declareObj.testobj.startup();
+    }
+    else {
+      declareObj.testobj.inherited = function() {};
+      // const mouseEvent = new Event('mousemove');
+      // const timeout = function() {
+      //   document.dispatchEvent(mouseEvent);
+      // 	setTimeout(function() {
+      //   		timeout();
+      // 	}, 100);
+      // };
+      // timeout();
       declareObj.testobj.startup();
       //return declareObj.testobj;
     }

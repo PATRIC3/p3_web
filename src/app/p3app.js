@@ -384,20 +384,30 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 	this.timeout();
 	//check if mouse has moved
 	var mouseMove;
-	//this.activeMouse = true;
-	document.onmousemove = function() {
-		clearTimeout(mouseMove);
+  on(document, 'mousemove', function() {
+    clearTimeout(mouseMove);
 		window.App.activeMouse = true;
 		console.log(window.App.activeMouse);
 		mouseMove = setTimeout(function() {console.log('move your mouse'); window.App.activeMouse = false;}, 20000);
-	};
+	});
+
+	// document.onmousemove = function() {
+	// 	clearTimeout(mouseMove);
+	// 	window.App.activeMouse = true;
+	// 	console.log(window.App.activeMouse);
+	// 	mouseMove = setTimeout(function() {console.log('move your mouse'); window.App.activeMouse = false;}, 20000);
+	// };
 },
 timeout: function() {
 	setTimeout(function() {
 		//check if logged out and another tab is open
 		if (localStorage.getItem('tokenstring') === null) {
 			if (document.getElementsByClassName('Authenticated').length > 0) {
-				window.location.href = '/';
+          //console.log(document.body.className);
+      document.body.className = document.body.className.replace('Authenticated', '');
+      //console.log(document.body.className);
+        window.location.assign('/');
+        console.log('you are logged out now');
 			}
 		} else {
 			//check if token has expired
@@ -408,7 +418,7 @@ timeout: function() {
 },
 checkLogin: function() {
 	//console.log(window.App.uploadInProgress);
-	//console.log('checking for login');
+	console.log('checking for login');
 	if (localStorage.getItem('tokenstring') !== null) {
 		var auth = localStorage.getItem('auth');
 		auth = JSON.parse(auth);
@@ -417,6 +427,8 @@ checkLogin: function() {
 		if (validToken) {
 			if (!document.body.className.includes('Authenticated')) {
 				document.body.className += 'Authenticated';
+        console.log('add to body class');
+        console.log(document.body.className);
 			}
 			//var docbody = document.getElementsByClassName('patric')[0];
 			//console.log(docbody);
