@@ -307,12 +307,7 @@ define([
               that.selectedClassDictionary[d.val] = false;
               that.drawSubsystemLegend(that.expandedSubsystemData, svg, radius, d, "closeSubclass");
             }
-            
           } 
-          // else if (d.classScope && d.subclassExpanded) {
-          //   d3.select(this).attr("subclassExpanded", false);
-          //   that.drawSubsystemLegend(that.expandedSubsystemData, svg, radius, false, false);
-          // }
         })
         .attr('style', function(d) { 
           if (d.hasOwnProperty("subclassScope")) {
@@ -361,7 +356,7 @@ define([
           }
         })
         .attr('y', legendRectSize - legendSpacing)
-        .text(function(d) { return d.val + " (" + d.count + ")"; })
+        .text(function(d) { return d.val + " (" + d.subsystem_count + " subsystems, " + d.count + " genes)"; })
         .on("click", function(d) {
           if (d.hasOwnProperty("subclassScope")) {
             that.navigateToSubsystemsSubTabSubclass(d);
@@ -376,7 +371,6 @@ define([
 
     getTotalSubsystems: function() {
       var def = new Deferred();
-      //total subsystems
       var query = "?and(eq(genome_id," + this.state.genome.genome_id + "))&limit(1)"
       when(request.get(PathJoin(window.App.dataAPI, 'subsystem/', query), {
         handleAs: 'json',
