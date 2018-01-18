@@ -508,9 +508,9 @@ define([
                             .style("fill", "#3F6993")
                             .attr("id", "subsystemsNotCovered")
                             .attr("height", divHeightNotCovered)
-                            .on("click", function() {
-                              that.navigateToSubsystemsSubTabFromCoverageBar();
-                            });
+                            // .on("click", function() {
+                            //   that.navigateToSubsystemsSubTabFromCoverageBar();
+                            // });
 
       svg.append("text")
         .attr("x", 150)             
