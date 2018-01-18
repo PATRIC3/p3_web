@@ -201,14 +201,15 @@ define([
 				
 				var geneInfo = "";
 
+				//Genome, gene, role
 				if ( that.state.genome_count > 1 && that.state.role_count != null ) {
-					geneInfo += " (" + that.state.role_count + " roles, " + that.state.genome_count + " genomes, " + that.state.gene_count + " genes)";
+					geneInfo += " (" + that.state.genome_count + " genomes, " + that.state.gene_count + " genes, " + that.state.role_count + " roles)";
 				} 
 				else if ( that.state.genome_count > 1 && that.state.role_count === null ) {
-					geneInfo += " (" + that.state.role_count + " roles, " + that.state.gene_count + " genes)";
+					geneInfo += " (" + that.state.gene_count + " genes, " + that.state.role_count + " roles)";
 				}
 				else if (that.state.role_count != null) {
-					geneInfo += " (" + that.state.role_count + " roles, " + that.state.gene_count + " genes)";
+					geneInfo += " (" + that.state.gene_count + " genes, " + that.state.role_count + " roles)";
 				} 
 				else if (that.state.genome_name != null) {
 					geneInfo += " (" + that.state.genome_name + ")";
