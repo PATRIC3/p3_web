@@ -6,7 +6,8 @@
     "start": "node ./bin/p3-web",
     "test": "cross-env NODE_ENV=test gulp srcfiles && npm run move-src && eslint . && jest --config jest.config.json --notify",
     "move-src": "cp gulpified/app/app.js src/app/ && cp gulpified/app/p3app.js src/app/",
-    "eslint-fix": "./node_modules/eslint/bin/eslint.js --fix ."
+    "eslint-fix": "./node_modules/eslint/bin/eslint.js --fix .",
+    "test:intern": "./node_modules/.bin/intern"
   },
   "dependencies": {
     "body-parser": "~1.8.1",
@@ -49,6 +50,7 @@
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0",
     "gulp-replace": "^0.6.1",
+    "intern": "^4.0.0-rc.1",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "jest-environment-jsdom-11.0.0": "^20.0.9",

@@ -1,4 +1,4 @@
-const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'resolved'}; let ctor;class Test {constructor() {this.testobj = dojoMock.define([
+const dojoMock = require('../dojoMock.js');const resolvedDeferred = {promise:'resolved'}; let ctor;class TestApp {constructor() {this.testobj = dojoMock.define([
   'dojo/_base/declare', 'dojo/parser',
   'dojo/topic', 'dojo/on', 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-style',
   'dijit/registry', 'dojo/request', 'dijit/layout/ContentPane', 'dojo/_base/fx',
@@ -668,4 +668,4 @@ navigate: function(msg) {
 }
 
 });
-});}} module.exports = Test;
+});}} module.exports = TestApp;

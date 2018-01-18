@@ -34,7 +34,7 @@ define([
 				on(document.body, 'keypress', function(evt) {
 					var charOrCode = evt.charCode || evt.keyCode;
 					// console.log("keypress: ", charOrCode, evt.ctrlKey, evt.shiftKey);
-
+/* istanbul ignore next */
 					if ((charOrCode === 4) && evt.ctrlKey && evt.shiftKey) {
 						if (!this._devDlg) {
 							this._devDlg = new Dialog({
@@ -54,7 +54,7 @@ define([
 				// listening document.title change event
 				var titleEl = document.getElementsByTagName('title')[0];
 				var docEl = document.documentElement;
-
+/* istanbul ignore next */
 				if (docEl && docEl.addEventListener) {
 					docEl.addEventListener('DOMSubtreeModified', function(evt) {
 						var t = evt.target;
@@ -69,7 +69,7 @@ define([
 						}
 					};
 				}
-
+/* istanbul ignore next */
 				var onDocumentTitleChanged = function() {
 					// var meta = document.getElementsByTagName("meta[name='Keyword']");
 					var meta = domQuery("meta[name='Keywords']")[0];
@@ -384,20 +384,30 @@ define([
 	this.timeout();
 	//check if mouse has moved
 	var mouseMove;
-	//this.activeMouse = true;
-	document.onmousemove = function() {
-		clearTimeout(mouseMove);
+  on(document, 'mousemove', function() {
+    clearTimeout(mouseMove);
 		window.App.activeMouse = true;
 		console.log(window.App.activeMouse);
 		mouseMove = setTimeout(function() {console.log('move your mouse'); window.App.activeMouse = false;}, 20000);
-	};
+	});
+
+	// document.onmousemove = function() {
+	// 	clearTimeout(mouseMove);
+	// 	window.App.activeMouse = true;
+	// 	console.log(window.App.activeMouse);
+	// 	mouseMove = setTimeout(function() {console.log('move your mouse'); window.App.activeMouse = false;}, 20000);
+	// };
 },
 timeout: function() {
 	setTimeout(function() {
 		//check if logged out and another tab is open
 		if (localStorage.getItem('tokenstring') === null) {
 			if (document.getElementsByClassName('Authenticated').length > 0) {
-				window.location.href = '/';
+          //console.log(document.body.className);
+      document.body.className = document.body.className.replace('Authenticated', '');
+      //console.log(document.body.className);
+        window.location.assign('/');
+        console.log('you are logged out now');
 			}
 		} else {
 			//check if token has expired
@@ -408,7 +418,7 @@ timeout: function() {
 },
 checkLogin: function() {
 	//console.log(window.App.uploadInProgress);
-	//console.log('checking for login');
+	console.log('checking for login');
 	if (localStorage.getItem('tokenstring') !== null) {
 		var auth = localStorage.getItem('auth');
 		auth = JSON.parse(auth);
@@ -417,6 +427,8 @@ checkLogin: function() {
 		if (validToken) {
 			if (!document.body.className.includes('Authenticated')) {
 				document.body.className += 'Authenticated';
+        console.log('add to body class');
+        console.log(document.body.className);
 			}
 			//var docbody = document.getElementsByClassName('patric')[0];
 			//console.log(docbody);
