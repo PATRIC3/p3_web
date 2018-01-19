@@ -23,6 +23,11 @@ exports.declare = function(dArray, dObj) {
   window.localStorage = mockStorage;
   let declareObj = {testarr: dArray, testobj: dObj};
   if (declareObj.testarr !== null) {
+    declareObj.testobj.navigate = function() {};
+    declareObj.testobj.workspaceAPI = true;
+    declareObj.testobj.serviceAPI = true;
+      declareObj.testobj.dataAPI = '/howdy';
+    declareObj.testobj.user = {id:'123'};
     console.log(declareObj.testarr[0]);
     if (declareObj.testarr[0] !== 'app' && declareObj.testarr[0] !== 'notLogIn' && declareObj.testarr[0] !== 'notExpired' && declareObj.testarr[0] !== 'bodyAuth' && declareObj.testarr[0] !== 'bodyAuthAndLoggedOut') {
       let dialog = new declareObj.testarr[0];

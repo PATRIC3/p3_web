@@ -1,4 +1,4 @@
-const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testobj = dojoMock.define([
+const dojoMock = require('../dojoMock.js'); let viewerParams;class Test {constructor() {this.testobj = dojoMock.define([
 	'dojo/_base/declare',
 	'dojo/topic', 'dojo/on', 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', 'dojo/query',
 	'dijit/registry', 'dojo/_base/lang',
@@ -109,7 +109,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			for (var prop in params.state) {
 				newState[prop] = params.state[prop];
 			}
-
+/* istanbul ignore next */
 			var path = params.params[0] || '/';
 			newState.widgetClass = 'p3/widget/JobManager';
 			newState.value = path;
@@ -135,7 +135,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			for (var prop in params.state) {
 				newState[prop] = params.state[prop];
 			}
-
+/* istanbul ignore next */
 			var path = params.params[0] || '/';
 			newState.widgetClass = 'p3/widget/UploadManager';
 			newState.value = path;
@@ -151,7 +151,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			for (var prop in params.state) {
 				newState[prop] = params.state[prop];
 			}
-
+/* istanbul ignore next */
 			var path = params.params[0] || '/';
 			newState.widgetClass = 'dijit/layout/ContentPane';
 			newState.style = 'padding:0';
@@ -165,6 +165,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 
 		Router.register('\/webpage(\/.*)', function(params, oldPath, newPath, state) {
 			// console.log("webpage", params);
+      /* istanbul ignore next */
 			var path = params.params[0] || '/';
 			var newState = getState(params, oldPath);
 			newState.widgetClass = 'p3/widget/WebPagePane';
@@ -177,7 +178,8 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 		});
 
 		Router.register('\/user(\/.*)', function(params, oldPath, newPath, state) {
-			console.log('user', params);
+			//console.log('user', params);
+      /* istanbul ignore next */
 			var path = params.params[0] || '/';
 			var newState = getState(params, oldPath);
 			newState.widgetClass = 'p3/widget/UserDetails';
@@ -189,7 +191,8 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 		});
 
 		Router.register('\/sulogin', function(params, oldPath, newPath, state) {
-			console.log('sulogin', params);
+			//console.log('sulogin', params);
+      /* istanbul ignore next */
 			var path = params.params[0] || '/';
 			var newState = getState(params, oldPath);
 			newState.widgetClass = 'p3/widget/SuLogin';
@@ -206,7 +209,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			for (var prop in params.state) {
 				newState[prop] = params.state[prop];
 			}
-
+  /* istanbul ignore next */
 			var path = params.params[0] || '/';
 			newState.widgetClass = 'dijit/layout/ContentPane';
 			newState.style = 'padding:0';
@@ -225,10 +228,10 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			for (var prop in params.state) {
 				newState[prop] = params.state[prop];
 			}
-
+  /* istanbul ignore next */
 			var path = params.params[0] || ('/' + _self.user.id ); //  + "/home/")
 			var parts = path.split('/');
-
+  /* istanbul ignore next */
 			if (path.replace(/\/+/g, '') === 'public') {
 				path = '/public/';
 			} else if (parts.length < 3) {
@@ -252,6 +255,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			newState.href = path;
 			newState.prev = params.oldPath;
 			// console.log("parser getState: ", parser);
+        /* istanbul ignore next */
 			if (newState.search) {
         console.log(newState.search);
 			} else if (parser.search) {
@@ -263,7 +267,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			// console.log("New State Search: ", newState.search);
 			newState.hash = parser.hash;
 			newState.pathname = parser.pathname;
-
+  /* istanbul ignore next */
 			if (newState.hash) {
 				newState.hash = (newState.hash.charAt(0) === '#') ? newState.hash.substr(1) : newState.hash;
 				// console.log("PARSE HASH: ", newState.hash)
@@ -302,6 +306,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			var parts = path.split('/');
 			parts.shift();
 			var type = parts.shift();
+        /* istanbul ignore if */
 			if (parts.length > 0) {
 				viewerParams = parts.join('/');
 			} else {
@@ -319,7 +324,7 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			newState.value = viewerParams;
 			newState.set = 'params';
 			newState.requireAuth = true;
-
+  /* istanbul ignore if */
 			if (_self.publicApps.indexOf(type) >= 0) {
 				newState.requireAuth = false;
 			}
@@ -327,22 +332,23 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 			// console.log("Navigate to ", newState);
 			_self.navigate(newState);
 		});
-
+  /* istanbul ignore else */
 		if (!this.api) {
 			this.api = {};
 		}
-
+  /* istanbul ignore else */
 		if (this.workspaceAPI) {
 			WorkspaceManager.init(this.workspaceAPI, this.authorizationToken || '', this.user ? this.user.id : '');
 			this.api.workspace = RPC(this.workspaceAPI, this.authorizationToken || '');
 		}
-
+  /* istanbul ignore else */
 		if (this.serviceAPI) {
 			// console.log("Setup API Service @ ", this.serviceAPI);
 			this.api.service = RPC(this.serviceAPI, this.authorizationToken || '');
 		}
-
+  /* istanbul ignore else */
 		if (this.dataAPI) {
+        /* istanbul ignore else */
 			if (this.dataAPI.charAt(-1) !== '/') {
 				this.dataAPI = this.dataAPI + '/';
 			}
@@ -370,11 +376,12 @@ const dojoMock = require('../dojoMock.js');class Test {constructor() {this.testo
 	// setTimeout(function(){
 	// 	Topic.publish("/overlay/right", {action: "set", panel: ContentPane});
 	// }, 1000);
-
+  /* istanbul ignore else */
 	if (this.user && this.user.id) {
 		domAttr.set('YourWorkspaceLink', 'href', '/workspace/' + this.user.id);
 		var n = dom.byId('signedInAs');
-		if (n) {
+		  /* istanbul ignore else */
+    if (n) {
 			n.innerHTML = this.user.id.replace('@patricbrc.org', '');
 		}
 	}
