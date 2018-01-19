@@ -14,14 +14,14 @@ describe('the Dojo p3app module', () => {
   it('starts up and checks for mousemove', () => {
     p3appTest.testobj.testfunc(
       dojoMock.declare,
-      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
       'dijit/registry', djs.lang,
       djs.Deferred,
       'dojo/store/JsonRest', djs.Toaster,
       'dojo/ready', 'app', djs.Router,
       'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
-      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
     );
     jest.runAllTimers();
   });
@@ -29,14 +29,14 @@ describe('the Dojo p3app module', () => {
   it('does nothing when user is not logged in', () => {
     p3appTest.testobj.testfunc(
       dojoMock.declare,
-      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
       'dijit/registry', djs.lang,
       djs.Deferred,
       'dojo/store/JsonRest', djs.Toaster,
       'dojo/ready', 'notLogIn', djs.Router,
       'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
-      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
     );
     jest.runAllTimers();
   });
@@ -44,14 +44,14 @@ describe('the Dojo p3app module', () => {
   it('identifies a token that has not expired yet', () => {
     p3appTest.testobj.testfunc(
       dojoMock.declare,
-      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
       'dijit/registry', djs.lang,
       djs.Deferred,
       'dojo/store/JsonRest', djs.Toaster,
       'dojo/ready', 'notExpired', djs.Router,
       'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
-      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
     );
     jest.runAllTimers();
     expect(document.body.className).toBe('Authenticated');
@@ -60,14 +60,14 @@ describe('the Dojo p3app module', () => {
   it('does not add Authenticated to the body class more than one time', () => {
     p3appTest.testobj.testfunc(
       dojoMock.declare,
-      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
       'dijit/registry', djs.lang,
       djs.Deferred,
       'dojo/store/JsonRest', djs.Toaster,
       'dojo/ready', 'bodyAuth', djs.Router,
       'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
-      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
     );
     jest.runAllTimers();
     //console.log(document.body.className);
@@ -79,14 +79,33 @@ describe('the Dojo p3app module', () => {
     //document.body.className = 'Authenticated';
     p3appTest.testobj.testfunc(
       dojoMock.declare,
-      djs.Topic, djs.on, 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-construct', djs.query,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
       'dijit/registry', djs.lang,
       djs.Deferred,
       'dojo/store/JsonRest', djs.Toaster,
       'dojo/ready', 'bodyAuthAndLoggedOut', djs.Router,
       'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
-      '../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-      'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
+    );
+    jest.runAllTimers();
+    //console.log(document.body.className);
+    expect(document.body.className).not.toBe('Authenticated');
+  });
+
+  it('refreshes an expired token if the mouse is active', () => {
+    window.location.assign = jest.fn();
+    //document.body.className = 'Authenticated';
+    p3appTest.testobj.testfunc(
+      dojoMock.declare,
+      djs.Topic, djs.on, djs.dom, 'dojo/dom-class', djs.domAttr, 'dojo/dom-construct', djs.query,
+      'dijit/registry', djs.lang,
+      djs.Deferred,
+      'dojo/store/JsonRest', djs.Toaster,
+      'dojo/ready', 'refreshToken', djs.Router,
+      'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
+      djs.RPC, '../panels', djs.WorkspaceManager, 'dojo/keys',
+      'dijit/Dialog', djs.PathJoin, 'dojo/request'
     );
     jest.runAllTimers();
     //console.log(document.body.className);

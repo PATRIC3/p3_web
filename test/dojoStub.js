@@ -50,11 +50,16 @@ class dojoStub {constructor(dialogState, otherDialogs) {
   this.query = function() {return {removeClass: function() {}};};
   this.fx = {fadeIn:function() {return {play:function() {}};}};
   this.parser = {parse: function() {return {then:function(aFunc) {aFunc();}};}};
-  this.Router = {startup:function() {}, go:function() {}, register:function() {}};
+  this.Router = {startup:function() {}, go:function() {}, register:function(route, func) {func({newPath: 'newPath', params:['/'], state:['old', 'new']}, 'oldPath', 'newPath', 'state');}};
   this.Registry = {byId:function() {return {getChildren:function() {return {filter:function(myfun) {myfun({region:''});}};}, selectChild:function() {}};}};
   this.domConstruct = {place:function() {}};
   this.dialogState = 'closed';
   this.otherDialogs = [];
+  this.RPC = function() {};
+  this.dom = {byId:function(myid) {document.body.innerHTML += '<div id="testid"></div>';return document.getElementById('testid');}};
+  this.domAttr = {set:function() {}};
+  this.WorkspaceManager = {init:function() {}};
+  this.PathJoin = function() {};
   this.Dialog = class {constructor(dialogTypes) {
     this.dialogTypes = dialogTypes;
     this.show = function() {};

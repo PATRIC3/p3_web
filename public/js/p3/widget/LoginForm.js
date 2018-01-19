@@ -69,8 +69,8 @@ define([
 					data: vals
 				});
 				def.then(function(data){
-					console.log('response section ...?');
-					console.log(data);
+					//console.log('response section ...?');
+					//console.log(data);
 					// if(data.message){
 					// 	console.log(data.message);
 					//
