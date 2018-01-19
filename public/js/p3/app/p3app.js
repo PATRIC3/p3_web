@@ -250,6 +250,7 @@ define([
 		function getState(params, path) {
 			var parser = document.createElement('a');
 			parser.href = path;
+      /* istanbul ignore next */
 			var newState = params.state || {};
 
 			newState.href = path;
@@ -338,6 +339,7 @@ define([
 		}
   /* istanbul ignore else */
 		if (this.workspaceAPI) {
+          /* istanbul ignore next */
 			WorkspaceManager.init(this.workspaceAPI, this.authorizationToken || '', this.user ? this.user.id : '');
 			this.api.workspace = RPC(this.workspaceAPI, this.authorizationToken || '');
 		}
@@ -467,13 +469,15 @@ checkLogin: function() {
           var dataArr = data.split('|');
 					var keyValueArr = [];
 					var dataobj = {};
-					for(var i = 0; i < dataArr.length; i++){
+					for (var i = 0; i < dataArr.length; i++) {
 						keyValueArr = dataArr[i].split('=');
 						dataobj[keyValueArr[0]] = keyValueArr[1];
 					}
 				localStorage.setItem('auth', JSON.stringify(dataobj));
         window.App.CheckLogin();
-				}, function(err) {
+				},
+            /* istanbul ignore next */
+        function(err) {
 					console.log(err);
 				});
 			} else {
@@ -494,6 +498,7 @@ checkExpToken: function(date) {
 },
 login: function(data, token) {
 	//console.log(data);
+  /* istanbul ignore else */
 	if (data !== undefined) {
 		localStorage.setItem('auth', JSON.stringify(data));
 		localStorage.setItem('tokenstring', token);
@@ -513,10 +518,11 @@ login: function(data, token) {
 			localStorage.setItem('userProfile', user);
 			//document.body.className += 'Authenticated';
 			window.location.reload();
-		}, function(err) {
+		},
+      /* istanbul ignore next */
+    function(err) {
 			console.log(err);
 		});
-
 	} else {
 		console.log('i am not logged in yet');
 	}
@@ -533,7 +539,9 @@ refreshUser: function() {
 		localStorage.setItem('userProfile', user);
 		//document.body.className += 'Authenticated';
 		window.location.reload();
-	}, function(err) {
+	},
+  /* istanbul ignore next */
+  function(err) {
 		console.log(err);
 	});
 },
@@ -547,7 +555,7 @@ logout:function() {
 		localStorage.removeItem('Atokenstring');
 		localStorage.removeItem('AuserProfile');
 		localStorage.removeItem('Auserid');
-		window.location.href = '/';
+		window.location.assign('/');
 	} else {
 		alert('upload is in progress, try Logout again later');
 	}
@@ -555,43 +563,34 @@ logout:function() {
 updateUserWorkspaceList: function(data) {
 	var wsNode = dom.byId('YourWorkspaces');
 	domConstruct.empty('YourWorkspaces');
-
 	data.forEach(function(ws) {
+    /* istanbul ignore if */
 		if (ws.name !== 'home') return;
-
 		var d = domConstruct.create('div', {style: {'padding-left': '12px'}}, wsNode);
-
 		domConstruct.create('i', {
 			'class': 'fa icon-caret-down fa-1x noHoverIcon',
 			style: {'margin-right': '4px'}
 		}, d);
-
 		domConstruct.create('a', {
 			'class': 'navigationLink',
 			href: '/workspace' + ws.path,
 			innerHTML: ws.name
 		}, d);
-
 		domConstruct.create('br', {}, d);
-
 		domConstruct.create('a', {
 			'class': 'navigationLink',
 			'style': {'padding-left': '16px'},
 			href: '/workspace' + ws.path + '/Genome%20Groups',
 			innerHTML: 'Genome Groups'
 		}, d);
-
 		domConstruct.create('br', {}, d);
-
 		domConstruct.create('a', {
 			'class': 'navigationLink',
 			'style': {'padding-left': '16px'},
 			href: '/workspace' + ws.path + '/Feature%20Groups',
 			innerHTML: 'Feature Groups'
 		}, d);
-
 		domConstruct.create('br', {}, d);
-
 		domConstruct.create('a', {
 			'class': 'navigationLink',
 			'style': {'padding-left': '16px'},
@@ -599,8 +598,6 @@ updateUserWorkspaceList: function(data) {
 			innerHTML: 'Experiment Groups'
 		}, d);
 	});
-
 }
-
 });
 });//endDefine

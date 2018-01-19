@@ -3,7 +3,7 @@ class dojoStub {constructor(dialogState, otherDialogs) {
     var getType = {};
     return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
   }
-  this.xhr = {get:function(url, data) {}};
+  this.xhr = {get:function(url, data) {return {then:function(func) {func('yo|yo');}};}};
   this.ContentPane = class {constructor(something) {this.something = something;}};
   //this.dojoMock = require('../../src/dojoMock.js');
   //this.declare = dojoMock.declare;
@@ -52,7 +52,7 @@ class dojoStub {constructor(dialogState, otherDialogs) {
   this.parser = {parse: function() {return {then:function(aFunc) {aFunc();}};}};
   this.Router = {startup:function() {}, go:function() {}, register:function(route, func) {func({newPath: 'newPath', params:['/'], state:['old', 'new']}, 'oldPath', 'newPath', 'state');}};
   this.Registry = {byId:function() {return {getChildren:function() {return {filter:function(myfun) {myfun({region:''});}};}, selectChild:function() {}};}};
-  this.domConstruct = {place:function() {}};
+  this.domConstruct = {place:function() {}, empty:function() {}, create:function() {}};
   this.dialogState = 'closed';
   this.otherDialogs = [];
   this.RPC = function() {};
