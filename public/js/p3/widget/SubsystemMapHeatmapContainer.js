@@ -308,7 +308,7 @@ define([
 				_self.currentData.rows.forEach(function(row, idx){
 					if(rowIDs.indexOf(row.rowID) > -1){
 						var r = [];
-						r.push(row.rowLabel);
+						r.push("\" + row.rowLabel + "\"");
 						colIndexes.forEach(function(colIdx){
 							var val = parseInt(_self.currentData.columns[colIdx].distribution.substr(idx * 2, 2), 16);
 							r.push(val);
