@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node ./bin/p3-web",
     "test": "cross-env NODE_ENV=test gulp srcfiles && npm run move-src && eslint . && jest --config jest.config.json --notify",
-    "move-src": "cp gulpified/app/app.js src/app/ && cp gulpified/app/p3app.js src/app/",
-    "eslint-fix": "./node_modules/eslint/bin/eslint.js --fix .",
+    "move-src": "cp gulpified/app/app.js src/app/ && cp gulpified/app/p3app.js src/app/ && cp gulpified/widget/LoginForm.js src/widget",
+    "eslint:fix": "./node_modules/eslint/bin/eslint.js --fix .",
     "test:intern": "./node_modules/.bin/intern"
   },
   "dependencies": {
@@ -30,7 +30,7 @@
     "formidable": "^1.1.1",
     "gulp": "^3.9.0",
     "http-proxy": "^1.15.2",
-    "jquery": "^2.2.4",
+    "jquery": "^3.0.0",
     "jscs": "^3.0.7",
     "morgan": "~1.3.0",
     "nconf": "^0.7.1",
