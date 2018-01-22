@@ -1,4 +1,4 @@
-define([
+const dojoMock = require('../dojoMock.js');class TestLogin {constructor() {this.testobj = dojoMock.define([
 	'dojo/_base/declare', 'dijit/_WidgetBase', 'dojo/on',
 	'dojo/dom-class', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
 	'dojo/text!./templates/LoginForm.html', 'dijit/form/Form', 'dojo/request',
@@ -119,4 +119,4 @@ define([
 				}
 			}
 		});
-	});//endDefine
+	});}} module.exports = TestLogin;

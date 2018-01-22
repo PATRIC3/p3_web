@@ -69,6 +69,7 @@ class dojoStub {constructor(dialogState, otherDialogs) {
     }
     this.otherDialogs = otherDialogs;
   }};
+  this.WidgetBase = class {constructor() {}};
   this.Toaster = class {constructor() {
     // this.dialogTypes = dialogTypes;
     // this.show = function() {};
