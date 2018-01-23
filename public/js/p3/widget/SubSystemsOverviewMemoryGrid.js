@@ -194,7 +194,7 @@ define([
 
       var margin = {left: 60};
       var legendRectSize = 14;
-      var legendSpacing = 3;
+      var legendSpacing = 5;
 
       subsystemData.forEach(function(data) {
         data.colorCodeKey = data.val.toUpperCase();
@@ -283,7 +283,7 @@ define([
         .style("font-weight", "bold")
         .style("font-size", "14px")
         .style('fill', 'blue')
-        .text(" (subsystems, ");
+        .text(" (Subsystems, ");
 
       legendHolder.append('text')
         .attr('x', 230)
@@ -291,7 +291,7 @@ define([
         .style("font-weight", "bold")
         .style("font-size", "14px")
         .style('fill', 'red')
-        .text("genes)");
+        .text("Genes)");
 
        subsystemslegend.append("foreignObject")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
@@ -366,28 +366,7 @@ define([
             that.navigateToSubsystemsSubTabSuperclass(d);
           }
         });
-        
-      // subsystemslegend.append('text')
-      //   .attr('x', function(d) { 
-      //     if (d.hasOwnProperty("subclassScope")) {
-      //       return legendRectSize + legendRectSize + legendSpacing + 40;
-      //     } else if (d.hasOwnProperty("classScope")) {
-      //       return legendRectSize + legendRectSize + legendSpacing + 20;
-      //     } else {
-      //       return legendRectSize + legendRectSize + legendSpacing;
-      //     }
-      //   })
-      //   .attr('y', legendRectSize - legendSpacing)
-      //   .text(function(d) { return d.val + " (" + d.subsystem_count + " subsystems, " + d.count + " genes)"; })
-      //   .on("click", function(d) {
-      //     if (d.hasOwnProperty("subclassScope")) {
-      //       that.navigateToSubsystemsSubTabSubclass(d);
-      //     } else if (d.hasOwnProperty("classScope")) {
-      //       that.navigateToSubsystemsSubTabClass(d);
-      //     } else {
-      //       that.navigateToSubsystemsSubTabSuperclass(d);
-      //     }
-      //   });
+
        subsystemslegend.append('text')
         .attr('x', function(d) { 
           if (d.hasOwnProperty("subclassScope")) {
@@ -398,7 +377,7 @@ define([
             return legendRectSize + legendRectSize + legendSpacing;
           }
         })
-        .attr('y', legendRectSize - legendSpacing)
+        .attr('y', legendRectSize - legendSpacing + 2)
         .text(function(d) { 
           return d.val; 
         })
@@ -422,7 +401,7 @@ define([
               return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + 10;
             }
           })
-          .attr('y', legendRectSize - legendSpacing)
+          .attr('y', legendRectSize - legendSpacing + 2)
           .text(function(d) { 
             return " (" + d.subsystem_count + ", "; 
           })
@@ -447,7 +426,7 @@ define([
               return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15;
             }
           })
-          .attr('y', legendRectSize - legendSpacing)
+          .attr('y', legendRectSize - legendSpacing + 2)
           .text(function(d) { 
             return d.count + ")"; 
           })
