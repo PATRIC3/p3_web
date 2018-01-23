@@ -9,3 +9,12 @@ public/js/release/build-report.txt
 .idea/
 .vscode/
 public/video/
+yarn.lock
+.htmlhintrc
+coverage
+.stylelintrc.json
+.editorconfig
+.eslintignore
+public/js/release
+gulpified
+gulpfile.js
