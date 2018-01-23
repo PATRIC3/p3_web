@@ -19,6 +19,7 @@ define([
 			// console.log("DownloadTooltipDialog set selection: ", val);
 			this.selection = val;
 		},
+
 		timeout: function(val){
 			var _self = this;
 			this._timer = setTimeout(function(){
@@ -33,10 +34,10 @@ define([
 
 			this.inherited(arguments);
 		},
+
 		onMouseLeave: function(){
 			popup.close(this);
 		},
-
 
 		downloadSelection: function(type, selection){
 

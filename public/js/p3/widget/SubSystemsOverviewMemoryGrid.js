@@ -152,7 +152,13 @@ define([
         .attr("stroke-width", "1px")
         .attr('fill', function(d) {
           //return color(d.data.val + " (" + d.data.count + ")");
-          return that.superClassColorCodes[d.data.val.toUpperCase()]
+          if (that.superClassColorCodes.hasOwnProperty(d.data.val.toUpperCase())) {
+            return that.superClassColorCodes[d.data.val.toUpperCase()]
+          } 
+          else {
+            return '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+          }
+          
       });
 
       this.drawSubsystemLegend(subsystemData, svg, radius, false, false);
@@ -269,7 +275,23 @@ define([
         .attr('y', -legendTitleOffset)
         .style("font-weight", "bold")
         .style("font-size", "14px")
-        .text("Subsystem Superclass Counts");
+        .text("Subsystem Counts");
+
+      legendHolder.append('text')
+        .attr('x', 135)
+        .attr('y', -legendTitleOffset)
+        .style("font-weight", "bold")
+        .style("font-size", "14px")
+        .style('fill', 'blue')
+        .text(" (subsystems, ");
+
+      legendHolder.append('text')
+        .attr('x', 230)
+        .attr('y', -legendTitleOffset)
+        .style("font-weight", "bold")
+        .style("font-size", "14px")
+        .style('fill', 'red')
+        .text("genes)");
 
        subsystemslegend.append("foreignObject")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
@@ -345,7 +367,28 @@ define([
           }
         });
         
-      subsystemslegend.append('text')
+      // subsystemslegend.append('text')
+      //   .attr('x', function(d) { 
+      //     if (d.hasOwnProperty("subclassScope")) {
+      //       return legendRectSize + legendRectSize + legendSpacing + 40;
+      //     } else if (d.hasOwnProperty("classScope")) {
+      //       return legendRectSize + legendRectSize + legendSpacing + 20;
+      //     } else {
+      //       return legendRectSize + legendRectSize + legendSpacing;
+      //     }
+      //   })
+      //   .attr('y', legendRectSize - legendSpacing)
+      //   .text(function(d) { return d.val + " (" + d.subsystem_count + " subsystems, " + d.count + " genes)"; })
+      //   .on("click", function(d) {
+      //     if (d.hasOwnProperty("subclassScope")) {
+      //       that.navigateToSubsystemsSubTabSubclass(d);
+      //     } else if (d.hasOwnProperty("classScope")) {
+      //       that.navigateToSubsystemsSubTabClass(d);
+      //     } else {
+      //       that.navigateToSubsystemsSubTabSuperclass(d);
+      //     }
+      //   });
+       subsystemslegend.append('text')
         .attr('x', function(d) { 
           if (d.hasOwnProperty("subclassScope")) {
             return legendRectSize + legendRectSize + legendSpacing + 40;
@@ -356,7 +399,9 @@ define([
           }
         })
         .attr('y', legendRectSize - legendSpacing)
-        .text(function(d) { return d.val + " (" + d.subsystem_count + " subsystems, " + d.count + " genes)"; })
+        .text(function(d) { 
+          return d.val; 
+        })
         .on("click", function(d) {
           if (d.hasOwnProperty("subclassScope")) {
             that.navigateToSubsystemsSubTabSubclass(d);
@@ -366,7 +411,58 @@ define([
             that.navigateToSubsystemsSubTabSuperclass(d);
           }
         });
-        this.setSubsystemPieGraph();
+
+        subsystemslegend.append('text')
+          .attr('x', function(d) { 
+            if (d.hasOwnProperty("subclassScope")) {
+              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[2].getComputedTextLength() + 10;
+            } else if (d.hasOwnProperty("classScope")) {
+              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[2].getComputedTextLength() + 10;
+            } else {
+              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + 10;
+            }
+          })
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { 
+            return " (" + d.subsystem_count + ", "; 
+          })
+          .style('fill', 'blue')
+          .on("click", function(d) {
+            if (d.hasOwnProperty("subclassScope")) {
+              that.navigateToSubsystemsSubTabSubclass(d);
+            } else if (d.hasOwnProperty("classScope")) {
+              that.navigateToSubsystemsSubTabClass(d);
+            } else {
+              that.navigateToSubsystemsSubTabSuperclass(d);
+            }
+          });
+
+        subsystemslegend.append('text')
+          .attr('x', function(d) { 
+            if (d.hasOwnProperty("subclassScope")) {
+              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15;
+            } else if (d.hasOwnProperty("classScope")) {
+              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15; 
+            } else {
+              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15;
+            }
+          })
+          .attr('y', legendRectSize - legendSpacing)
+          .text(function(d) { 
+            return d.count + ")"; 
+          })
+          .style('fill', 'red')
+          .on("click", function(d) {
+            if (d.hasOwnProperty("subclassScope")) {
+              that.navigateToSubsystemsSubTabSubclass(d);
+            } else if (d.hasOwnProperty("classScope")) {
+              that.navigateToSubsystemsSubTabClass(d);
+            } else {
+              that.navigateToSubsystemsSubTabSuperclass(d);
+            }
+          });
+
+      this.setSubsystemPieGraph();
     },
 
     getTotalSubsystems: function() {
@@ -508,9 +604,6 @@ define([
                             .style("fill", "#3F6993")
                             .attr("id", "subsystemsNotCovered")
                             .attr("height", divHeightNotCovered)
-                            // .on("click", function() {
-                            //   that.navigateToSubsystemsSubTabFromCoverageBar();
-                            // });
 
       svg.append("text")
         .attr("x", 150)             
