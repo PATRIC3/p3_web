@@ -268,7 +268,7 @@ define([
       });
 
       var legendCount = legendHolder.selectAll('.subsystemslegend').size();
-      var legendTitleOffset = 210;
+      var legendTitleOffset = 270;
 
       legendHolder.append('text')
         .attr('x', 0)
@@ -548,11 +548,14 @@ define([
       var proportionCovered = (subsystemCoverageData.totalSubsystems / subsystemCoverageData.totalGenomes).toFixed(2);
       var proportionNotCovered = (subsystemCoverageData.totalNotCovered / subsystemCoverageData.totalGenomes).toFixed(2);
 
-      var marginAdjustedTotalbarHeight = height * .7;
-      var marginTop = height - marginAdjustedTotalbarHeight;
+      var marginAdjustedTotalbarHeight = height * .9;
+      var marginTop = 100;
+      //var marginTop = height - marginAdjustedTotalbarHeight - 200;
 
-      var divHeightCovered = proportionCovered * marginAdjustedTotalbarHeight;
-      var divHeightNotCovered = proportionNotCovered * marginAdjustedTotalbarHeight;
+      var marginTopWithBuffer = marginTop + 30;
+
+      var divHeightCovered = proportionCovered * height - marginTop;
+      var divHeightNotCovered = proportionNotCovered * height - marginTop;
 
       var percentCovered = proportionCovered * 100;
       var percentNotCovered = proportionNotCovered * 100;
@@ -567,7 +570,7 @@ define([
 
       var coveredRect = svg.append("rect")
                           .attr("x", 120)
-                          .attr("y", marginTop)
+                          .attr("y", marginTopWithBuffer)
                           .attr("width", 50)
                           .style("fill", "#399F56")
                           .attr("id", "subsystemsCovered")
@@ -578,7 +581,7 @@ define([
 
       var notCoveredRect = svg.append("rect")
                             .attr("x", 120)
-                            .attr("y", divHeightCovered + marginTop)
+                            .attr("y", divHeightCovered + marginTopWithBuffer)
                             .attr("width", 50)
                             .style("fill", "#3F6993")
                             .attr("id", "subsystemsNotCovered")
@@ -592,17 +595,19 @@ define([
         .style("font-size", "14px")
         .text("Subsystem Coverage");
 
-      //percentages
+      var divHeightCoveredPercentageOffset = divHeightCovered / 2 + marginTopWithBuffer;
+      var divHeightNotCoveredPercentageOffset = divHeightNotCovered / 2 + divHeightCovered + marginTopWithBuffer;
+
       svg.append("text")
         .attr("x", 145)             
-        .attr("y", divHeightCovered / 2 + height / 3)
+        .attr("y", divHeightCoveredPercentageOffset)
         .attr("text-anchor", "middle")
         .style("fill", "#ffffff")
         .text(percentCovered + "%");
 
       svg.append("text")
         .attr("x", 145)             
-        .attr("y", divHeightNotCovered / 2 + divHeightCovered + height / 3)
+        .attr("y", divHeightNotCoveredPercentageOffset)
         .attr("text-anchor", "middle")
         .style("fill", "#ffffff")
         .text(percentNotCovered + "%");
