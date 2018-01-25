@@ -80,8 +80,6 @@ define([
       });
     },
 
-    //function is coupled because color data is used across circle and tree to match
-    //color data is rendered via d3 library programmatically
     drawSubsystemPieChartGraph: function(subsystemData) {
 
       var that = this;
@@ -98,8 +96,6 @@ define([
       else {
         titleText = "";
       }
-
-      //var formattedSubsystemData = this.formatSubsystemData(subsystemData);
 
       var width = $( window ).width() * .85;
       var height = $( window ).height() * .6;
@@ -200,9 +196,39 @@ define([
         data.colorCodeKey = data.val.toUpperCase();
       });
 
+      var legendTitleOffset = 100;
+      var legendHorizontalOffset = (radius + 50) * 2 + 200;
+
       if (that.firstLoad) {
         that.subsystemReferenceData = $.extend(true, [], subsystemData);
         that.firstLoad = false;
+
+        //only render legend title once
+        d3.select("#subsystemspiechart svg").append('text')
+          .attr('x', legendHorizontalOffset)
+          .attr('y', legendTitleOffset)
+          .attr("text-anchor", "top") 
+          .style("font-weight", "bold")
+          .style("font-size", "14px")
+          .text("Subsystem Counts");
+
+        d3.select("#subsystemspiechart svg").append('text')
+          .attr('x', legendHorizontalOffset + 135)
+          .attr('y', legendTitleOffset)
+          .attr("text-anchor", "top") 
+          .style("font-weight", "bold")
+          .style("font-size", "14px")
+          .style('fill', 'blue')
+          .text(" (Subsystems, ");
+
+        d3.select("#subsystemspiechart svg").append('text')
+          .attr('x', legendHorizontalOffset + 230)
+          .attr('y', legendTitleOffset)
+          .attr("text-anchor", "top") 
+          .style("font-weight", "bold")
+          .style("font-size", "14px")
+          .style('fill', 'red')
+          .text("Genes)");
       }
       
       //deep copy, not a reference
@@ -261,37 +287,11 @@ define([
         .attr('class', 'subsystemslegend')
         .attr('transform', function(d, i) {
           var height = legendRectSize + legendSpacing;
-          var offset = 190;
+          var offset = 160;
           var horz = -1 * legendRectSize;
           var vert = i * height - offset;
           return 'translate(' + horz + ',' + vert + ')';
       });
-
-      var legendCount = legendHolder.selectAll('.subsystemslegend').size();
-      var legendTitleOffset = 270;
-
-      legendHolder.append('text')
-        .attr('x', 0)
-        .attr('y', -legendTitleOffset)
-        .style("font-weight", "bold")
-        .style("font-size", "14px")
-        .text("Subsystem Counts");
-
-      legendHolder.append('text')
-        .attr('x', 135)
-        .attr('y', -legendTitleOffset)
-        .style("font-weight", "bold")
-        .style("font-size", "14px")
-        .style('fill', 'blue')
-        .text(" (Subsystems, ");
-
-      legendHolder.append('text')
-        .attr('x', 230)
-        .attr('y', -legendTitleOffset)
-        .style("font-weight", "bold")
-        .style("font-size", "14px")
-        .style('fill', 'red')
-        .text("Genes)");
 
        subsystemslegend.append("foreignObject")
         //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
@@ -564,8 +564,8 @@ define([
 
       var svg = d3.select("#subsystemspiechart svg"),
           margin = {top: 0, right: 20, bottom: 30, left: 100},
-          width = +svg.attr("width") - margin.left - margin.right,
-          height = +svg.attr("height") - margin.top - margin.bottom,
+          // width = +svg.attr("width") - margin.left - margin.right,
+          // height = +svg.attr("height") - margin.top - margin.bottom,
           g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
       var coveredRect = svg.append("rect")
