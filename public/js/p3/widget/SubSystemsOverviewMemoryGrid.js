@@ -108,8 +108,8 @@ define([
         .append('svg')
         .attr("id", "piechart")
         .attr("class", "summarychart")
-        .attr('width', width)
-        .attr('height', height)
+        .attr('width', width * 2)
+        .attr('height', height * 2)
         .append('g')
         .attr('transform', 'translate(' + (height / 2 + 200) +
           ',' + (height / 2 + 50) + ')');
