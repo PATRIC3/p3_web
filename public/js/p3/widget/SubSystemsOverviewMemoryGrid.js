@@ -18,7 +18,8 @@ define([
     selectedClassDictionary: {},
 
     constructor: function(){
-
+      //https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css
+      $('head').append("<link rel=\"stylesheet\" href=\"//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css\">");
       this.watch("state", lang.hitch(this, "onSetState"));
     },
 
@@ -293,13 +294,25 @@ define([
           return 'translate(' + horz + ',' + vert + ')';
       });
 
-       subsystemslegend.append("foreignObject")
-        //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-se")
-        //.attr("class","dgrid-expando-icon ui-icon ui-icon-triangle-1-e")
+      subsystemslegend.append("rect")
         .attr("width", "60px")
         .attr("height", "20px")
-        .append("xhtml:body")
-        .html("<div class=\"dgrid-expando-icon ui-icon ui-icon-triangle-1-e\"></div>")
+        .attr('fill', 'white')
+        .attr('class', 'dgrid-expando-icon ui-icon ui-icon-triangle-1-e')
+        .attr('style', function(d) { 
+          if (d.hasOwnProperty("subclassScope")) {
+            return "margin-left: 40px";
+          } else if (d.hasOwnProperty("classScope")) {
+            return "margin-left: 20px";
+          } else {
+            return 0;
+          }
+        })
+
+      subsystemslegend.append("text")
+        .attr('font-family', 'FontAwesome')
+        .attr('y', 12)
+        .attr('font-size', function(d) { return d.size+'em'} )
         .on("click", function(d){
 
           if (d.subclassScope) {
@@ -311,6 +324,13 @@ define([
               d = false;
             }
             that.selectedSuperclass = d.colorCodeKey;
+            if (this.text === '\uf105') {
+              //down
+              this.text = '\uf107'
+            } else {
+              //right
+              this.text = '\uf105'
+            }
             that.drawSubsystemLegend(that.subsystemReferenceData, svg, radius, d, false);
           } 
           else if (d.classScope) {
@@ -331,16 +351,20 @@ define([
             }
           } 
         })
-        .attr('style', function(d) { 
+        .attr('x', function(d) { 
           if (d.hasOwnProperty("subclassScope")) {
-            return "margin-left: 40px";
+            return 40;
           } else if (d.hasOwnProperty("classScope")) {
-            return "margin-left: 20px";
+            return 20;
           } else {
             return 0;
           }
         })
-        
+        //fa-angle-down
+        //.text(function(d) { return '\uf107' });
+        //fa-angle-right
+        .text(function(d) { return '\uf105' });
+         
       subsystemslegend.append('rect')
         .attr('x', function(d) { 
           if (d.hasOwnProperty("subclassScope")) {
@@ -394,11 +418,11 @@ define([
         subsystemslegend.append('text')
           .attr('x', function(d) { 
             if (d.hasOwnProperty("subclassScope")) {
-              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[2].getComputedTextLength() + 10;
+              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[3].getComputedTextLength() + 10;
             } else if (d.hasOwnProperty("classScope")) {
-              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[2].getComputedTextLength() + 10;
+              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[3].getComputedTextLength() + 10;
             } else {
-              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + 10;
+              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[3].getComputedTextLength() + 10;
             }
           })
           .attr('y', legendRectSize - legendSpacing + 2)
@@ -419,11 +443,11 @@ define([
         subsystemslegend.append('text')
           .attr('x', function(d) { 
             if (d.hasOwnProperty("subclassScope")) {
-              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15;
+              return legendRectSize + legendRectSize + legendSpacing + 40 + this.parentElement.children[3].getComputedTextLength() + this.parentElement.children[4].getComputedTextLength() + 15;
             } else if (d.hasOwnProperty("classScope")) {
-              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15; 
+              return legendRectSize + legendRectSize + legendSpacing + 20 + this.parentElement.children[3].getComputedTextLength() + this.parentElement.children[4].getComputedTextLength() + 15; 
             } else {
-              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[2].getComputedTextLength() + this.parentElement.children[3].getComputedTextLength() + 15;
+              return legendRectSize + legendRectSize + legendSpacing + this.parentElement.children[3].getComputedTextLength() + this.parentElement.children[4].getComputedTextLength() + 15;
             }
           })
           .attr('y', legendRectSize - legendSpacing + 2)
