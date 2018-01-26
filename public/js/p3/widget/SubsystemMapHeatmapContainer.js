@@ -54,6 +54,21 @@ define([
 					Topic.publish("SubSystemMap", "refreshHeatmap");
 				},
 				true
+			],
+			[
+				"Toggle Description",
+				"fa icon-enlarge fa-2x",
+				{label: "Toggle Description", multiple: false, validTypes: ["*"]},
+				function(){
+					if(this.state.display_reference_genomes){
+						this.state.display_reference_genomes = false;
+					}else{
+						this.state.display_reference_genomes = true;
+					}
+
+					Topic.publish("SubSystemMapResize", "toggleDescription");
+				},
+				true
 			]
 		],
 		constructor: function(){
@@ -260,9 +275,7 @@ define([
 			var actionBar = domConstruct.create("div", {
 				"class": "dijitDialogPaneActionBar"
 			});
-
-			var dhc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div>';
-
+			//var dhc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div>';
 			var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div><div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
 			var downloadHM = new TooltipDialog({
 				content: dhc,
@@ -403,8 +416,6 @@ define([
 		},
 		_getOriginalAxis: function(isTransposed, columnIds, rowIds){
 			var originalAxis = {};
-			//console.log("_getOriginalAxis: ", isTransposed, columnIds, rowIds);
-
 			if(isTransposed){
 				originalAxis.columnIds = rowIds;
 				originalAxis.rowIds = columnIds;
@@ -414,7 +425,7 @@ define([
 			}
 			return originalAxis;
 		}, 
-		// Store
+
 		_setApiServer: function(server){
 			this.apiServer = server;
 		},
@@ -422,10 +433,7 @@ define([
 			if(!this.store){
 				this.set('store', this.createStore(this.apiServer, this.apiToken || window.App.authorizationToken, state));
 			}else{
-				// console.log("ProteinFamiliesGrid _setState()");
 				this.store.set('state', state);
-
-				// console.log("ProteinFamiliesGrid Call Grid Refresh()");
 				this.refresh();
 			}
 		},

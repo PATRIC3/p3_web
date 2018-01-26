@@ -195,6 +195,7 @@ define([
 
       subsystemData.forEach(function(data) {
         data.colorCodeKey = data.val.toUpperCase();
+        data.chevronOpened = true;
       });
 
       var legendTitleOffset = 100;
@@ -256,6 +257,7 @@ define([
       }
       else if (parentClassData && !childClassData) { 
         parentClassData['class'].buckets.forEach(function(classData) {
+          classData.chevronOpened = true;
           classData.classScope = true;
           classData.colorCodeKey = parentClassData.colorCodeKey;
           if (that.establishProps) {
@@ -324,12 +326,14 @@ define([
               d = false;
             }
             that.selectedSuperclass = d.colorCodeKey;
-            if (this.text === '\uf105') {
+            if (d.chevronOpened) {
               //down
-              this.text = '\uf107'
+              d3.select(this).text(function(d) { return '\uf107' });
+              d.chevronOpened = false;
             } else {
               //right
-              this.text = '\uf105'
+              d3.select(this).text(function(d) { return '\uf105' });
+              d.chevronOpened = true;
             }
             that.drawSubsystemLegend(that.subsystemReferenceData, svg, radius, d, false);
           } 

@@ -181,7 +181,7 @@ define([
 							autoFilterMessage = "This tab has been filtered to view data limited to Reference and Representative Genomes in your view.";
 							activeQueryState = lang.mixin({}, this.state, {
 								genome_ids: ids,
-								autoFilterMessage: autoFilterMessage,
+								//autoFilterMessage: autoFilterMessage,
 								search: "in(" + prop + ",(" + ids.join(",") + "))",
 								hashParams: lang.mixin({}, this.state.hashParams)
 							});

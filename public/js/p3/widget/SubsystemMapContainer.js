@@ -48,7 +48,6 @@ define([
 				apiServer: this.apiServer
 			});
 
-			//this.tabContainer.addChild(this.mainMapContainer);
 			this.tabContainer.addChild(this.heatmapContainer);
 			this.addChild(tabController);
 			this.addChild(this.tabContainer);
