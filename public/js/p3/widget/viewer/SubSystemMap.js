@@ -43,9 +43,9 @@ define([
 
 				state.reference_genome_ids_only = reference_genome_ids;
 
-				that.state.genome_ids.forEach(function(genome_id){
-					reference_genome_ids.unshift(genome_id);
-				});
+				for ( var i = that.state.genome_ids.length - 1; i >= 0; i-- ) {
+					reference_genome_ids.unshift(that.state.genome_ids[i]);
+				}
 
 				state.genome_ids_with_reference = reference_genome_ids;
 				state.genome_ids = reference_genome_ids;
