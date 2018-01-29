@@ -266,6 +266,8 @@ define([
 				that.dialog.show();
 			});
 		},
+
+		maxPatricIDsShown: 10,
 		_buildPanelCellClicked: function(isTransposed, roleId, genomeId, features){
 
 			var gfs = this.pmState.genomeFilterStatus;
@@ -298,11 +300,23 @@ define([
 
 			var text = [];
 
+			var patricIds = [];
+			var extraFeaturesLength = features.length - this.maxPatricIDsShown;
+
+			if (features.length > this.maxPatricIDsShown) {
+				for (var i = 0; i < this.maxPatricIDsShown; i++) {
+					patricIds.push(features[i]);
+				}
+				patricIds.push("<br>" + extraFeaturesLength + " more");
+			} else {
+				patricIds = features;
+			}
+
 			var cleanRoleName = roleId.replace(/_/g, ' ');
 			text.push('<b>Genome:</b> ' + genomeName);
 			//text.push('<b>Product:</b> ' + description);
 			text.push('<b>Role ID:</b> ' + cleanRoleName);
-			text.push('<b>Patric IDs:</b> ' + features.join(", "));
+			text.push('<b>Patric IDs:</b> ' + patricIds.join(", "));
 			text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
@@ -310,9 +324,22 @@ define([
 		_buildPanelCellsSelected: function(isTransposed, roleIds, genomeIds, features){
 
 			var text = [];
+
+			var patricIds = [];
+			var extraFeaturesLength = features.length - this.maxPatricIDsShown;
+
+			if (features.length > this.maxPatricIDsShown) {
+				for (var i = 0; i < this.maxPatricIDsShown; i++) {
+					patricIds.push(features[i]);
+				}
+				patricIds.push("<br>" + extraFeaturesLength + " more");
+			} else {
+				patricIds = features;
+			}
+
 			text.push('<b>Genomes Selected:</b> ' + genomeIds.length);
 			text.push('<b>Roles Selected:</b> ' + roleIds.length);
-			text.push('<b>Patric IDs:</b> ' + features.join(", "));
+			text.push('<b>Patric IDs:</b> ' + patricIds.join(", "));
 			text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
