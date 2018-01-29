@@ -302,7 +302,8 @@ define([
 			text.push('<b>Genome:</b> ' + genomeName);
 			//text.push('<b>Product:</b> ' + description);
 			text.push('<b>Role ID:</b> ' + cleanRoleName);
-			text.push('<b>Members:</b> ' + memberCount);
+			text.push('<b>Patric IDs:</b> ' + features.join(", "));
+			text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
 		},
@@ -311,6 +312,7 @@ define([
 			var text = [];
 			text.push('<b>Genomes Selected:</b> ' + genomeIds.length);
 			text.push('<b>Roles Selected:</b> ' + roleIds.length);
+			text.push('<b>Patric IDs:</b> ' + features.join(", "));
 			text.push('<b>Members:</b> ' + features.length);
 
 			return text.join("<br>");
@@ -322,7 +324,7 @@ define([
 			var actionBar = domConstruct.create("div", {
 				"class": "dijitDialogPaneActionBar"
 			});
-			//var dhc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div>';
+			var dhc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div>';
 			var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div><div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
 			var downloadHM = new TooltipDialog({
 				content: dhc,
