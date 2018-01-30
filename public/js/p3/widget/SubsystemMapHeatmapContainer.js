@@ -307,7 +307,7 @@ define([
 				for (var i = 0; i < this.maxPatricIDsShown; i++) {
 					patricIds.push(features[i]);
 				}
-				patricIds.push("<br>" + extraFeaturesLength + " more");
+				patricIds.push(extraFeaturesLength + " more");
 			} else {
 				patricIds = features;
 			}
@@ -332,7 +332,7 @@ define([
 				for (var i = 0; i < this.maxPatricIDsShown; i++) {
 					patricIds.push(features[i]);
 				}
-				patricIds.push("<br>" + extraFeaturesLength + " more");
+				patricIds.push(extraFeaturesLength + " more");
 			} else {
 				patricIds = features;
 			}
