@@ -522,7 +522,7 @@ login: function(data, token) {
       user = JSON.stringify(userObj);
 			localStorage.setItem('userProfile', user);
 			//document.body.className += 'Authenticated';
-			//window.location.reload();
+			window.location.reload();
 		},
       /* istanbul ignore next */
     function(err) {
