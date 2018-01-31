@@ -24,14 +24,26 @@ define([
 				domClass.remove(this.domNode, "Error");
 				this.submitButton.set('disabled', true);
 				var vals = this.getValues();
+        vals.username = localStorage.getItem('userid');
+        console.log(vals);
 				var _self = this;
 				var userServiceURL = window.App.userServiceURL;
 				userServiceURL.replace(/\/+$/, "");
-				// var def = xhr.post(userServiceURL + '/sulogin', {
-				// 	data: vals
-				// });
-				// def.then(function(data){
-				// 	console.log(data);
+				var def = xhr.post(userServiceURL + '/sulogin', {
+				//       data: vals
+				});
+				def.then(function(data){
+				console.log(data);
+        // set the localStorage variables
+        localStorage.setItem('Aauth', localStorage.getItem('auth'));
+        localStorage.setItem('Atokenstring', localStorage.getItem('tokenstring'));
+        localStorage.setItem('AuserProfile', localStorage.getItem('userProfile'));
+        localStorage.setItem('Auserid', localStorage.getItem('userid'));
+        //TODO set these variables:
+        // window.App.authorizationToken
+        // window.App.user
+
+        //window.location.href = '/';
 				// 	var dataArr = data.split('|');
 				// 	var keyValueArr = [];
 				// 	//console.log(dataArr);
@@ -39,25 +51,16 @@ define([
 				// 	for(var i = 0; i < dataArr.length; i++){
 				// 		keyValueArr = dataArr[i].split('=');
 				// 		dataobj[keyValueArr[0]] = keyValueArr[1];
-				// 	}
+				//}
 				// 	window.App.login(dataobj, data);
-				// }, function(err){
-				// 	var data = err.response.data;
-				// 	console.log(data);
-				// 	var dataObj = JSON.parse(data);
-				// 	console.log(dataObj.message);
-				// 	document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
-				// })
-				//TODO set these variables:
-				// window.App.authorizationToken
-				// window.App.user
-				
-				// set the localStorage variables
-				localStorage.setItem('Aauth', localStorage.getItem('auth'));
-				localStorage.setItem('Atokenstring', localStorage.getItem('tokenstring'));
-				localStorage.setItem('AuserProfile', localStorage.getItem('userProfile'));
-				localStorage.setItem('Auserid', localStorage.getItem('userid'));
-				window.location.href = '/';
+				}, function(err){
+				//var errorMessage = data.response.message;
+				console.log(err);
+				var dataObj = JSON.parse(err.response.data);
+				console.log(dataObj.message);
+				document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
+        this.submitButton.set('disabled', false);
+				})
 			},
 			constructor: function(){
 				var wrongRole = true;

@@ -7,7 +7,7 @@
         <tbody>
           <tr><th style="padding:0; border:0">Userid (to use as)</th></tr>
           <tr><td style="padding-top:0">
-            <input type="text" name="userid" style="width:80%" data-dojo-attach-point="uidField" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="placeholder:'User id for other account', intermediateChanges: true" data-dojo-attach-event="onChange: fieldChanged" required="true">
+            <input type="text" name="targetUser" style="width:80%" data-dojo-attach-point="uidField" data-dojo-type="dijit/form/ValidationTextBox" data-dojo-props="placeholder:'User id for other account', intermediateChanges: true" data-dojo-attach-event="onChange: fieldChanged" required="true">
           </td></tr>
           <tr><td><p>&nbsp;</p></td></tr>
           <tr><th style="padding:0; border:0">Password (to your admin account)</th></tr>
@@ -17,7 +17,10 @@
         </tbody>
       </table>
       <p>&nbsp;</p>
+      <div style="margin:auto">
       <div data-dojo-attach-point="submitButton" type="submit" value="Submit" data-dojo-type="dijit/form/Button">Take Control</div>
+      <p class="loginError" style="color:red; text-align:center"></p>
+    </div>
     </form>
   </div>
 </div>
