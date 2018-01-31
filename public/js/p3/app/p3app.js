@@ -515,9 +515,14 @@ login: function(data, token) {
 		})
 		.then(function(user) {
 			//console.log(user);
+      var userObj = JSON.parse(user);
+      //console.log(userObj);
+      userObj.id = userObj.id + '@patricbrc.org';
+      //console.log(userObj);
+      user = JSON.stringify(userObj);
 			localStorage.setItem('userProfile', user);
 			//document.body.className += 'Authenticated';
-			window.location.reload();
+			//window.location.reload();
 		},
       /* istanbul ignore next */
     function(err) {
