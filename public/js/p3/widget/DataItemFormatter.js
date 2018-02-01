@@ -583,7 +583,7 @@ define([
 						name: 'Active',
 						text: 'active'
 					}, {
-						name: 'Patric ID',
+						name: 'PATRIC ID',
 						text: 'patric_id'
 					}, {
 						name: 'Gene',

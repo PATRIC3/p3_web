@@ -216,7 +216,7 @@ define([
 						subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 						role_id: 			{label: "Role ID", field: "role_id", hidden: true},
 						role_name: 			{label: "Role Name", field: "role_name"},
-						patric_id: 			{label: "Patric ID", field: "patric_id"},
+						patric_id: 			{label: "PATRIC ID", field: "patric_id"},
 						gene: 				{label: "Gene", field: "gene"},
 						product: 			{label: "Product", field: "product"},
 						refseq_locus_tag: 	{label: 'RefSeq Locus Tag', field: 'refseq_locus_tag'},
@@ -282,7 +282,7 @@ define([
 						role_id: 			{label: "Role ID", field: "role_id", hidden: true},
 						role_name: 			{label: "Role Name", field: "role_name"},
 						active: 			{label: "Active", field: "active"},
-						patric_id: 			{label: "Patric ID", field: "patric_id"},
+						patric_id: 			{label: "PATRIC ID", field: "patric_id"},
 						gene: 				{label: "Gene", field: "gene"},
 						product: 			{label: "Product", field: "product"},
 						subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}

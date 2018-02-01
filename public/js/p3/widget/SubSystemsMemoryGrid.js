@@ -28,7 +28,7 @@ define([
 			role_id: 			{label: "Role ID", field: "role_id", hidden: true},
 			role_name: 			{label: "Role Name", field: "role_name"},
 			active: 			{label: "Active", field: "active"},
-			patric_id: 			{label: "Patric ID", field: "patric_id"},
+			patric_id: 			{label: "PATRIC ID", field: "patric_id"},
 			gene: 				{label: "Gene", field: "gene"},
 			product: 			{label: "Product", field: "product"}
 

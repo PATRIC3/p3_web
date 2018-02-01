@@ -270,7 +270,7 @@ define([
 									"Role ID",
 									"Role Name",
 									"Active",
-									"Patric ID",
+									"PATRIC ID",
 									"Gene",
 									"Product"
 								]
@@ -464,7 +464,7 @@ define([
 								selectedRow["Role ID"] = row["role_id"];
 								selectedRow["Role Name"] = row["role_name"];
 								selectedRow["Active"] = row["active"];
-								selectedRow["Patric Id"] = row["patric_id"];
+								selectedRow["PATRIC ID"] = row["patric_id"];
 								selectedRow["Gene"] = row["gene"];
 								selectedRow["Product"] = row["product"];
 								selectedRow["subsystem_id"] = row["subsystem_id"];
