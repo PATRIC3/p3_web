@@ -1,7 +1,7 @@
 <div>
   <p>&nbsp;</p>
   <p>&nbsp;</p>
-  <div style="max-width:280px; margin:auto">
+  <div style="max-width:280px; margin:auto" class="suLoginDiv">
     <form dojoAttachPoint="containerNode" class="${baseClass} PanelForm" dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onchange:validate">
       <table style="border-spacing:0">
         <tbody>
@@ -22,5 +22,13 @@
       <p class="loginError" style="color:red; text-align:center"></p>
     </div>
     </form>
+  </div>
+  <div class="switchBack" style="margin:auto; display:none">
+    <p style="font-weight:bold;text-align:center; margin:bottom:10px">Switch back to your own user account</p>
+    <p>&nbsp;</p>
+    <div style="margin:auto; max-width:1in">
+    <!-- <button>Switch Back</button> -->
+      <div data-dojo-attach-point="switchButton" type="button" data-dojo-type="dijit/form/Button" data-dojo-attach-event="onClick: switchBack">Switch Back</div>
+  </div>
   </div>
 </div>

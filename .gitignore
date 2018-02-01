@@ -24,5 +24,4 @@ intern.js
 jest.config.json
 gulpfile.js
 .eslintrc.json
-/public/js/p3/widget/SuLogin.js
 /public/js/p3/widget/UserDetails.js
