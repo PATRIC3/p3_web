@@ -29,6 +29,9 @@ define([
 			// user: '',
 			startup: function() {
 				var _self = this;
+        // var appContainer = document.getElementById('ApplicationContainer');
+        // console.log(appContainer);
+        // appContainer.innerHTML = appContainer.innerHTML + '<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>';
 				this.checkLogin();
 				//this.upploadInProgress = false;
 				on(document.body, 'keypress', function(evt) {
@@ -443,7 +446,8 @@ checkLogin: function() {
 			//console.log(docbody);
 			window.App.user = JSON.parse(localStorage.getItem('userProfile'));
 			window.App.authorizationToken = localStorage.getItem('tokenstring');
-			//console.log(window.App.authorizationToken);
+			//show the upload and jobs widget
+      window.App.uploadJobsWidget('show');
 		} else {
 			//if mouse has moved in past x minutes then refresh the token
 			// or if upload is in progress then refresh the token
@@ -532,6 +536,26 @@ login: function(data, token) {
 		console.log('i am not logged in yet');
 	}
 },
+uploadJobsWidget: function(action){
+  if(action === 'show'){
+    console.log('I want to see the upload and jobs widget');
+    //var acNode = dom.byId('ApplicationContainer');
+  	// domConstruct.empty('ApplicationContainer');
+  	// data.forEach(function(ws) {
+      /* istanbul ignore if */
+  		//if (ws.name !== 'home') return;
+  		//domConstruct.place('<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>', 'ApplicationContainer');
+  		// domConstruct.create('i', {
+  		// 	'class': 'fa icon-caret-down fa-1x noHoverIcon',
+  		// 	style: {'margin-right': '4px'}
+  		// }, d);
+    // var appContainer = document.getElementById('ApplicationContainer');
+    // console.log(appContainer);
+    // appContainer.innerHTML = appContainer.innerHTML + '<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>';
+  } else {
+    console.log('I should not see the upload and jobs widget');
+  }
+},
 refreshUser: function() {
 	xhr.get(this.userServiceURL + '/user/' + window.localStorage.userid, {
 		headers: {
@@ -561,6 +585,8 @@ logout:function() {
 		localStorage.removeItem('AuserProfile');
 		localStorage.removeItem('Auserid');
 		window.location.assign('/');
+    //remove the upload and jobs widget
+    window.App.uploadJobsWidget('hide');
 	} else {
 		alert('upload is in progress, try Logout again later');
 	}
