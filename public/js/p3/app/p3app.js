@@ -7,7 +7,7 @@ define([
 	'dojo/ready', './app', '../router',
 	'dojo/window', '../widget/Drawer', 'dijit/layout/ContentPane',
 	'../jsonrpc', '../panels', '../WorkspaceManager', 'dojo/keys',
-	'dijit/Dialog', '../util/PathJoin', 'dojo/request'
+	'dijit/Dialog', '../util/PathJoin', 'dojo/request', '../widget/WorkspaceController'
 ], function(declare,
 	Topic, on, dom, domClass, domAttr, domConstruct, domQuery,
 	Registry, lang,
@@ -17,7 +17,7 @@ define([
 	Router, Window,
 	Drawer, ContentPane,
 	RPC, Panels, WorkspaceManager, Keys,
-	Dialog, PathJoin, xhr) {
+	Dialog, PathJoin, xhr, WorkspaceController) {
 		return declare([App], {
 			panels: Panels,
 			activeWorkspace: null,
@@ -29,9 +29,6 @@ define([
 			// user: '',
 			startup: function() {
 				var _self = this;
-        // var appContainer = document.getElementById('ApplicationContainer');
-        // console.log(appContainer);
-        // appContainer.innerHTML = appContainer.innerHTML + '<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>';
 				this.checkLogin();
 				//this.upploadInProgress = false;
 				on(document.body, 'keypress', function(evt) {
@@ -539,19 +536,9 @@ login: function(data, token) {
 uploadJobsWidget: function(action){
   if(action === 'show'){
     console.log('I want to see the upload and jobs widget');
-    //var acNode = dom.byId('ApplicationContainer');
-  	// domConstruct.empty('ApplicationContainer');
-  	// data.forEach(function(ws) {
-      /* istanbul ignore if */
-  		//if (ws.name !== 'home') return;
-  		//domConstruct.place('<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>', 'ApplicationContainer');
-  		// domConstruct.create('i', {
-  		// 	'class': 'fa icon-caret-down fa-1x noHoverIcon',
-  		// 	style: {'margin-right': '4px'}
-  		// }, d);
-    // var appContainer = document.getElementById('ApplicationContainer');
-    // console.log(appContainer);
-    // appContainer.innerHTML = appContainer.innerHTML + '<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region: &#39;bottom&#39;"></div>';
+    var wsc = new WorkspaceController({region: 'bottom'});
+    var ac = this.getApplicationContainer();
+    ac.addChild(wsc);
   } else {
     console.log('I should not see the upload and jobs widget');
   }
