@@ -17,18 +17,19 @@ define([
         }
       },
       switchBack: function(evt){
-        console.log('I clicked the switch back button');
-        localStorage.setItem('auth', localStorage.getItem('Aauth'));
-        localStorage.setItem('tokenstring', localStorage.getItem('Atokenstring'));
-        localStorage.setItem('userProfile', localStorage.getItem('AuserProfile'));
-        localStorage.setItem('userid', localStorage.getItem('Auserid'));
-        localStorage.removeItem('Aauth');
-        localStorage.removeItem('Atokenstring');
-        localStorage.removeItem('AuserProfile');
-        localStorage.removeItem('Auserid');
-        window.App.authorizationToken = localStorage.getItem('tokenstring');
-        window.App.user = JSON.parse(localStorage.getItem('userProfile'));
-          window.location.href = '/';
+        window.App.suSwitchBack();
+        // console.log('I clicked the switch back button');
+        // localStorage.setItem('auth', localStorage.getItem('Aauth'));
+        // localStorage.setItem('tokenstring', localStorage.getItem('Atokenstring'));
+        // localStorage.setItem('userProfile', localStorage.getItem('AuserProfile'));
+        // localStorage.setItem('userid', localStorage.getItem('Auserid'));
+        // localStorage.removeItem('Aauth');
+        // localStorage.removeItem('Atokenstring');
+        // localStorage.removeItem('AuserProfile');
+        // localStorage.removeItem('Auserid');
+        // window.App.authorizationToken = localStorage.getItem('tokenstring');
+        // window.App.user = JSON.parse(localStorage.getItem('userProfile'));
+        //   window.location.href = '/';
       },
       onSubmit: function(evt){
         console.log('I clicked the button');
@@ -65,13 +66,15 @@ define([
             dataobj[keyValueArr[0]] = keyValueArr[1];
           }
           window.App.login(dataobj, data);
-          window.location.href = '/';
+            //document.getElementsByClassName('sulogin')[0].style.display='block';
+          //window.location.href = '/';
         }, function(err){
           //var errorMessage = data.response.message;
           console.log(err);
           var dataObj = JSON.parse(err.response.data);
           console.log(dataObj.message);
-          document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
+          //document.getElementsByClassName('loginError')[0].innerHTML = dataObj.message;
+          window.location.href = '/';
         })
       },
       constructor: function(){

@@ -353,6 +353,20 @@ define([
           dlg.show();
         };
 
+        var showSuLogin = function(evt) {
+          /* istanbul ignore else */
+          if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+          }
+          //console.log(evt);
+          var dlg = new Dialog({
+            title: 'SU Login',
+            content: "<div class=\"SuLogin\" data-dojo-type=\"p3/widget/SuLogin\" style=\"width:600px; margin-left:auto;margin-right:auto;font-size:1.1em;margin-bottom:10px;margin-top:10px;padding:10px;\" data-dojo-props='callbackURL: \"<%- callbackURL %>\"'></div>"
+          });
+          dlg.show();
+        };
+
         var showNewUser = function(evt) {
           /* istanbul ignore else */
           if (evt) {
@@ -400,6 +414,7 @@ define([
 
     on(document, '.loginLink:click', showAuthDlg);
     on(document, '.userProfile:click', showUserProfile);
+    on(document, '.sulogin:click', showSuLogin);
     on(document, '.registrationLink:click', showNewUser);
     on(document, '.showRegWidget:click', showNewUser);
     on(document, '.showLoginWidget:click', showAuthDlg);
