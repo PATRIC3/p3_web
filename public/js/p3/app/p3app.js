@@ -25,6 +25,7 @@ define([
 			publicApps: ['BLAST', 'ProteinFamily', 'ComparativePathway', 'GenomeDistance'],
 			uploadInProgress: false,
 			activeMouse: true,
+      alreadyLoggedIn: false,
 			// authorizationToken: '',
 			// user: '',
 			startup: function() {
@@ -432,8 +433,11 @@ checkLogin: function() {
 		var auth = localStorage.getItem('auth');
 		auth = JSON.parse(auth);
 		var validToken = this.checkExpToken(auth.expiry);
+    if(validToken && window.App.alreadyLoggedIn){
+      return;
+    }
 		//console.log(validToken);
-		if (validToken) {
+		if (validToken && !window.App.alreadyLoggedIn) {
 			if (!document.body.className.includes('Authenticated')) {
 				document.body.className += 'Authenticated';
         console.log('add to body class');
@@ -445,6 +449,7 @@ checkLogin: function() {
 			window.App.authorizationToken = localStorage.getItem('tokenstring');
 			//show the upload and jobs widget
       window.App.uploadJobsWidget('show');
+      this.alreadyLoggedIn = true;
 		} else {
 			//if mouse has moved in past x minutes then refresh the token
 			// or if upload is in progress then refresh the token
