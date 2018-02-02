@@ -18,9 +18,12 @@
 				<% include home%>
 			</div>
 
-			<% if (request.isAuthenticated && request.isAuthenticated()) { %>
-				<div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region:'bottom'"></div>
-			<% } %>
+        <div class="ShowWithAuth" data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region:'bottom'"></div>
+
+
+			<!-- <% if (request.isAuthenticated && request.isAuthenticated()) { %>
+				<div class="ShowWithAuth" data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region:'bottom'"></div>
+			<% } %> -->
 		</div>
 		<% include javascript %>
 	</body>
