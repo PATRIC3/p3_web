@@ -433,6 +433,7 @@ checkLogin: function() {
     var auth = localStorage.getItem('auth');
     auth = JSON.parse(auth);
     var validToken = this.checkExpToken(auth.expiry);
+    console.log('this is a valid token: '+ validToken );
     if(validToken && window.App.alreadyLoggedIn){
       return;
     }
@@ -481,7 +482,7 @@ checkLogin: function() {
             dataobj[keyValueArr[0]] = keyValueArr[1];
           }
           localStorage.setItem('auth', JSON.stringify(dataobj));
-          window.App.CheckLogin();
+          window.App.checkLogin();
         },
         /* istanbul ignore next */
         function(err) {
