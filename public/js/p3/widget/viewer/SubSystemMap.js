@@ -28,7 +28,7 @@ define([
 			var display_reference_genomes = this.getStateParams(state);
 
 			var that = this;
-			var query = "?ne(genome_id," + state.genome_ids_without_reference + ")&eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum)";
+			var query = "?ne(genome_id," + state.genome_ids_without_reference + ")&eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum,+class,+order,+family,+genus)";
 			return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
 				headers: {
 					'Accept': "application/json",
