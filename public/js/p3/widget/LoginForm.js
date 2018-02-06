@@ -17,6 +17,12 @@ define([
 					this.submitButton.set('disabled', false);
 				}
 			},
+      fieldChanged2: function(evt) {
+				this.resetPWbutton.set('disabled', true);
+				if (this.emailAddress.get('value') !== '') {
+					this.resetPWbutton.set('disabled', false);
+				}
+			},
 			onResetClick: function(evt) {
 				evt.preventDefault();
 				evt.stopPropagation();
@@ -103,6 +109,7 @@ define([
 				}
 				this._started = true;
 				this.submitButton.set('disabled', true);
+        this.resetPWbutton.set('disabled', true);
 			},
 			makeFPform: function() {
 				console.log('howdy');
