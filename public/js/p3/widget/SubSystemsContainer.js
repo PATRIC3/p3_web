@@ -165,8 +165,10 @@ define([
 				visible: true
 			});
 
-			//taxonomy view does not have the active filter tab
+			//taxonomy view does not have the active filter tab or the multiple genomes tab
 			var currentUri = this.containerNode.baseURI;
+
+			//TODO - test for multiple genomes in URL as well, treat as taxon view
 			var isTaxonomyView = /Taxonomy/.test(currentUri);
 
 			//the taxonomy and gene level tabs have some differences

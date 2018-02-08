@@ -220,7 +220,7 @@ define([
           .attr("text-anchor", "top") 
           .style("font-weight", "bold")
           .style("font-size", "14px")
-          .style('fill', 'blue')
+          .style('fill', '#76a72d')
           .text(" (Subsystems, ");
 
         d3.select("#subsystemspiechart svg").append('text')
@@ -229,7 +229,7 @@ define([
           .attr("text-anchor", "top") 
           .style("font-weight", "bold")
           .style("font-size", "14px")
-          .style('fill', 'red')
+          .style('fill', '#ffcb00')
           .text("Genes)");
       }
       
@@ -433,7 +433,7 @@ define([
           .text(function(d) { 
             return " (" + d.subsystem_count + ", "; 
           })
-          .style('fill', 'blue')
+          .style('fill', '#76a72d')
           .on("click", function(d) {
             if (d.hasOwnProperty("subclassScope")) {
               that.navigateToSubsystemsSubTabSubclass(d);
@@ -458,7 +458,7 @@ define([
           .text(function(d) { 
             return d.count + ")"; 
           })
-          .style('fill', 'red')
+          .style('fill', '#ffcb00')
           .on("click", function(d) {
             if (d.hasOwnProperty("subclassScope")) {
               that.navigateToSubsystemsSubTabSubclass(d);
