@@ -506,7 +506,13 @@ define([
 					}
 				},
 				function(selection, container){
-					if (selection[0].document_type === "subsystems_subsystem") {
+
+					//if single genome go to overview page
+					if (selection.length === 1 && (selection[0].gene_count === 1 || selection[0].document_type === "subsystems_gene")) {
+						var sel = selection[0];
+						Topic.publish("/navigate", {href: "/view/Feature/" + sel.feature_id + "#view_tab=overview", target: "blank"});
+					}
+					else if (selection[0].document_type === "subsystems_subsystem") {
 
 						var subsystem_ids = selection.map(function(s){
 							return encodeURIComponent(s.subsystem_id)
