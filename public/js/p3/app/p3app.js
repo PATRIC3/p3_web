@@ -451,7 +451,7 @@ checkLogin: function() {
       //show the upload and jobs widget
       window.App.uploadJobsWidget('show');
       window.App.checkSU();
-      this.alreadyLoggedIn = true;
+      window.App.alreadyLoggedIn = true;
     } else {
       //if mouse has moved in past x minutes then refresh the token
       // or if upload is in progress then refresh the token
@@ -588,7 +588,15 @@ uploadJobsWidget: function(action){
     console.log('I want to see the upload and jobs widget');
     var wsc = new WorkspaceController({region: 'bottom'});
     var ac = this.getApplicationContainer();
+      console.log(ac);
+      var uploadBar = ac.domNode.getElementsByClassName('WorkspaceController');
+      console.log('this is the upload bar:');
+      console.log(uploadBar);
+      if(uploadBar.length === 0) {
+      //console.log(ac.domNode.getElementsByClassName('WorkspaceController'));
+      //if(ac.domNode)
     ac.addChild(wsc);
+  }
   } else {
     console.log('I should not see the upload and jobs widget');
   }
