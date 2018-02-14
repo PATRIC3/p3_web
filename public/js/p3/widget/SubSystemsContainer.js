@@ -95,30 +95,7 @@ define([
 				this.mainGridContainer.set('state', state);
 			}
 
-			// if(state.autoFilterMessage){
-			// 	var msg = '<table><tr style="background: #f9ff85;"><td><div class="WarningBanner">' + state.autoFilterMessage + "&nbsp;<i class='fa-1x icon-question-circle-o DialogButton' rel='help:/misc/GenomesLimit' /></div></td><td style='width:30px;'><i style='font-weight:400;color:#333;cursor:pointer;' class='fa-1x icon-cancel-circle close closeWarningBanner' style='color:#333;font-weight:200;'></td></tr></table>";
-			// 	if(!this.messagePanel){
-			// 		this.messagePanel = new ContentPane({
-			// 			"class": "WarningPanel",
-			// 			region: "top",
-			// 			content: msg
-			// 		});
-
-			// 		var _self = this;
-			// 		on(this.messagePanel.domNode, ".closeWarningBanner:click", function(evt){
-			// 			if(_self.messagePanel){
-			// 				_self.removeChild(_self.messagePanel);
-			// 			}
-			// 		});
-			// 	}else{
-			// 		this.messagePanel.set("content", msg);
-			// 	}
-			// 	this.addChild(this.messagePanel);
-			// }else{
-			// 	if(this.messagePanel){
-			// 		this.removeChild(this.messagePanel)
-			// 	}
-			// }
+			this.redrawTabComponents();
 		},
 
 		visible: false,
@@ -136,43 +113,21 @@ define([
 			Topic.publish(this.id + "-selectChild", child);
 		},
 
-		onFirstView: function(){
-			if(this._firstView){
-				return;
-			}
-			this.tabContainer = new TabContainer({region: "center", id: this.id + "_TabContainer"});
-
-			var subsystemsOverviewStore = this.subsystemsStore = new SubsystemsOverviewMemoryStore({type: "subsystems_overview"});
+		redrawTabComponents: function() {
 			var subsystemsStore = this.subsystemsStore = new SubSystemMemoryStore({type: "subsystems"});
 			var geneSubsystemsStore = this.geneSubsystemsStore = new SubSystemMemoryStore({type: "genes"});
 
-			var tabController = new StackController({
-				containerId: this.id + "_TabContainer",
-				region: "top",
-				"class": "TextTabButtons"
-			});
+			this.tabContainer.removeChild(this.subsystemsGrid);
+			this.tabContainer.removeChild(this.genesGrid);
 
-			this.subsystemsOverviewGrid = new SubSystemsOverview({
-				title: "Subsystems Overview",
-				type: "subsystems_overview",
-				apiServer: this.apiServer,
-				store: subsystemsOverviewStore,
-				facetFields: ["class"],
-				queryOptions: {
-					sort: [{attribute: "subsystem_name"}]
-				},
-				enableFilterPanel: true,
-				visible: true
-			});
+			var multipleGenomes;
+			if (this.state.hasOwnProperty('taxon_id') || ( this.state.hasOwnProperty('genome_ids') && this.state.genome_ids.length > 1) ) {
+				multipleGenomes = true;
+			} else {
+				multipleGenomes = false;
+			}
 
-			//taxonomy view does not have the active filter tab or the multiple genomes tab
-			var currentUri = this.containerNode.baseURI;
-
-			//TODO - test for multiple genomes in URL as well, treat as taxon view
-			var isTaxonomyView = /Taxonomy/.test(currentUri);
-
-			//the taxonomy and gene level tabs have some differences
-			if (isTaxonomyView) {
+			if (multipleGenomes) {
 				this.subsystemsGrid = new SubSystemsGridContainer({
 					title: "Subsystems",
 					type: "subsystems",
@@ -297,13 +252,109 @@ define([
 				});
 			}
 
+			this.tabContainer.addChild(this.subsystemsGrid);
+			this.tabContainer.addChild(this.genesGrid);
+		},
+
+		onFirstView: function(){
+			if(this._firstView){
+				return;
+			}
+			this.tabContainer = new TabContainer({region: "center", id: this.id + "_TabContainer"});
+
+			var subsystemsOverviewStore = this.subsystemsStore = new SubsystemsOverviewMemoryStore({type: "subsystems_overview"});
+			var subsystemsStore = this.subsystemsStore = new SubSystemMemoryStore({type: "subsystems"});
+			var geneSubsystemsStore = this.geneSubsystemsStore = new SubSystemMemoryStore({type: "genes"});
+
+			var tabController = new StackController({
+				containerId: this.id + "_TabContainer",
+				region: "top",
+				"class": "TextTabButtons"
+			});
+
+			this.subsystemsOverviewGrid = new SubSystemsOverview({
+				title: "Subsystems Overview",
+				type: "subsystems_overview",
+				apiServer: this.apiServer,
+				store: subsystemsOverviewStore,
+				facetFields: ["class"],
+				queryOptions: {
+					sort: [{attribute: "subsystem_name"}]
+				},
+				enableFilterPanel: true,
+				visible: true
+			});
+
+			//the folloowing two components are overriden later depending on state changes
+			this.subsystemsGrid = new SubSystemsGridContainer({
+				title: "Subsystems",
+				type: "subsystems",
+				apiServer: this.apiServer,
+				defaultFilter: this.defaultFilter,
+				store: subsystemsStore,
+				getFilterPanel: function(opts){
+
+				},
+				facetFields: ["superclass", "class", "subclass", "active"],
+				columns: {
+					"Selection Checkboxes": selector({unhidable: true}),
+					superclass: 		{label: "Superclass", field: "superclass"},
+					"class": 			{label: "Class", field: "class"},
+					subclass: 			{label: 'Subclass', field: 'subclass'},
+					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+					genome_count: 		{label: 'Genome Count', field: 'genome_count'},
+					gene_count: 		{label: 'Gene Count', field: 'gene_count'},
+					role_count: 		{label: 'Role Count', field: 'role_count'},
+					subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
+				},
+				queryOptions: {
+					sort: [{attribute: "subsystem_name"}]
+				},
+				enableFilterPanel: true,
+				visible: true
+			});
+
+			this.genesGrid = new SubSystemsGridContainer({
+				title: "Genes",
+				type: "genes",
+				apiServer: this.apiServer,
+				store: geneSubsystemsStore,
+				getFilterPanel: function(opts){
+
+				},
+				facetFields: ["superclass", "class", "subclass", "active", "subsystem_name"],
+				columns: {
+					"Selection Checkboxes": selector({unhidable: true}),
+					superclass: 		{label: "Superclass", field: "superclass"},
+					"class": 			{label: "Class", field: "class"},
+					subclass: 			{label: 'Subclass', field: 'subclass'},
+					subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+					role_id: 			{label: "Role ID", field: "role_id", hidden: true},
+					role_name: 			{label: "Role Name", field: "role_name"},
+					patric_id: 			{label: "PATRIC ID", field: "patric_id"},
+					gene: 				{label: "Gene", field: "gene"},
+					product: 			{label: "Product", field: "product"},
+					refseq_locus_tag: 	{label: 'RefSeq Locus Tag', field: 'refseq_locus_tag'},
+					alt_locus_tag: 		{label: 'Alt Locus Tag', field: 'alt_locus_tag', hidden: true},
+					product: 			{label: 'Product', field: 'product'},
+					genome_id: 			{label: "Genome ID", field: "genome_id", hidden: true},
+					genome_name: 		{label: "Genome Name", field: "genome_name"},
+					taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true},
+					subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
+				},
+				queryOptions: {
+					sort: [{attribute: "subsystem_name"}]
+				},
+				enableFilterPanel: true,
+				visible: true
+			});
+			
 			this.addChild(tabController);
 			this.addChild(this.tabContainer);
 
 			this.tabContainer.addChild(this.subsystemsOverviewGrid);
-			this.tabContainer.addChild(this.subsystemsGrid);
-			//this.tabContainer.addChild(this.subsystemMapHeatmapContainer);
-			this.tabContainer.addChild(this.genesGrid);
+			// this.tabContainer.addChild(this.subsystemsGrid);
+			// this.tabContainer.addChild(this.genesGrid);
 
 			Topic.subscribe(this.id + "_TabContainer-selectChild", lang.hitch(this, function(page){
 				this.state.autoFilterMessage = "";
