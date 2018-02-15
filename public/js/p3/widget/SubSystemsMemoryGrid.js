@@ -21,17 +21,76 @@ define([
 		fullSelectAll: true,
 		columns: {
 			"Selection Checkboxes": selector({unhidable: true}),
+			// superclass: 		{label: "Superclass", field: "superclass"},
+			// "class": 			{label: "Class", field: "class"},
+			// subclass: 			{label: 'Subclass', field: 'subclass'},
+			// subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
+			// role_id: 			{label: "Role ID", field: "role_id", hidden: true},
+			// role_name: 			{label: "Role Name", field: "role_name"},
+			// active: 			{label: "Active", field: "active"},
+			// patric_id: 			{label: "PATRIC ID", field: "patric_id"},
+			// gene: 				{label: "Gene", field: "gene"},
+			// product: 			{label: "Product", field: "product"}
+
 			superclass: 		{label: "Superclass", field: "superclass"},
 			"class": 			{label: "Class", field: "class"},
 			subclass: 			{label: 'Subclass', field: 'subclass'},
 			subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
 			role_id: 			{label: "Role ID", field: "role_id", hidden: true},
 			role_name: 			{label: "Role Name", field: "role_name"},
-			active: 			{label: "Active", field: "active"},
+			genome_count: 		{label: 'Genome Count', field: 'genome_count'},
+			gene_count: 		{label: 'Gene Count', field: 'gene_count'},
+			role_count: 		{label: 'Role Count', field: 'role_count'},
+			active: 			{label: "Active", field: "active", hidden: true},
 			patric_id: 			{label: "PATRIC ID", field: "patric_id"},
 			gene: 				{label: "Gene", field: "gene"},
-			product: 			{label: "Product", field: "product"}
+			product: 			{label: "Product", field: "product"},
+			refseq_locus_tag: 	{label: 'RefSeq Locus Tag', field: 'refseq_locus_tag', hidden: true},
+			alt_locus_tag: 		{label: 'Alt Locus Tag', field: 'alt_locus_tag', hidden: true},
+			product: 			{label: 'Product', field: 'product'},
+			genome_id: 			{label: "Genome ID", field: "genome_id", hidden: true},
+			genome_name: 		{label: "Genome Name", field: "genome_name", hidden: true},
+			taxon_id: 			{label: "Taxon ID", field: "taxon_id", hidden: true},
+			subsystem_id: 		{label: "Subsystem ID", field: "subsystem_id", hidden: true}
 
+		},
+		updateColumnHiddenState: function(){
+			var _self = this;
+			var multipleGenomes;
+			if (this.state.hasOwnProperty('taxon_id') || ( this.state.hasOwnProperty('genome_ids') && this.state.genome_ids.length > 1) ) {
+				multipleGenomes = true;
+			} else {
+				multipleGenomes = false;
+			}
+			if (multipleGenomes) {
+				
+				if (_self.columns.hasOwnProperty('active')) {
+					_self.toggleColumnHiddenState('active', true);
+				}
+				if (_self.columns.hasOwnProperty('refseq_locus_tag')) {
+					_self.toggleColumnHiddenState('refseq_locus_tag', false);
+				}
+				if (_self.columns.hasOwnProperty('genome_id')) {
+					_self.toggleColumnHiddenState('genome_id', false);
+				}
+				if (_self.columns.hasOwnProperty('genome_name')) {
+					_self.toggleColumnHiddenState('genome_name', false);
+				}	
+			} else {
+				
+				if (_self.columns.hasOwnProperty('active')) {
+					_self.toggleColumnHiddenState('active', false);
+				}
+				if (_self.columns.hasOwnProperty('refseq_locus_tag')) {
+					_self.toggleColumnHiddenState('refseq_locus_tag', true);
+				}
+				if (_self.columns.hasOwnProperty('genome_id')) {
+					_self.toggleColumnHiddenState('genome_id', true);
+				}
+				if (_self.columns.hasOwnProperty('genome_name')) {
+					_self.toggleColumnHiddenState('genome_name', true);
+				}	
+			}
 		},
 
 		startup: function(){
@@ -117,6 +176,8 @@ define([
 			}else{
 				this.refresh()
 			}
+
+			this.updateColumnHiddenState();
 		},
 
 		refresh: function(){
