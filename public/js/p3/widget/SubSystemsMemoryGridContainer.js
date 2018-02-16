@@ -3,7 +3,7 @@ define([
 	"./SubSystemsMemoryGrid", "dijit/popup", "dojo/topic", "dojo/request", "dojo/when",
 	"dijit/TooltipDialog", "./FilterContainerActionBar", "FileSaver", "../util/PathJoin",
 	"dojo/_base/lang", "dojo/dom-construct", "./PerspectiveToolTip",
-	"./SelectionToGroup", "dijit/Dialog", "./DownloadTooltipDialog", "dojo/_base/Deferred", 
+	"./SelectionToGroup", "dijit/Dialog", "./DownloadTooltipDialog", "dojo/_base/Deferred" 
 
 ], function(declare, GridContainer, on,
 			SubSystemsGrid, popup, Topic, request, when,
