@@ -45,6 +45,21 @@ define([
 		apiServer: window.App.dataServiceURL,
 		containerActions: [
 			[
+				"Sort Alphabetically",
+				"fa icon-newspaper fa-2x",
+				{label: "Sort Alphabetically", multiple: false, validTypes: ["*"]},
+				function(){
+					if(this.state.display_alphabetically){
+						this.state.display_alphabetically = false;
+					}else{
+						this.state.display_alphabetically = true;
+					}
+
+					Topic.publish("SubSystemMap", "refreshHeatmap");
+				},
+				true
+			],
+			[
 				"Legend",
 				"fa icon-bars fa-2x",
 				{label: "Legend", multiple: false, validTypes: ["*"]},

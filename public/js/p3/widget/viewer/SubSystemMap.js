@@ -43,12 +43,25 @@ define([
 
 				state.reference_genome_ids_only = reference_genome_ids;
 
+				response.sort(function(a, b) {
+				    var textA = a.genome_name.toUpperCase();
+				    var textB = b.genome_name.toUpperCase();
+				    return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+				});
+
+				var alphabetical_reference_genome_ids = response.map(function(genome){
+					return genome.genome_id;
+				})
+
 				for ( var i = that.state.genome_ids.length - 1; i >= 0; i-- ) {
 					reference_genome_ids.unshift(that.state.genome_ids[i]);
+					alphabetical_reference_genome_ids.unshift(that.state.genome_ids[i]);
 				}
 
 				state.genome_ids_with_reference = reference_genome_ids;
 				state.genome_ids = reference_genome_ids;
+
+				state.alphabetical_genome_ids_with_reference = alphabetical_reference_genome_ids;
 				
 				when(that.getGenomeIdsBySubsystemId(that.state.genome_ids, that.state.subsystem_id), function(genomeIds){
 					that.viewer.set('visible', true);
@@ -61,20 +74,6 @@ define([
 		},
 
 		getSubsystemDescription: function(subsystemId) {
-
-			// var def = new Deferred();
-			// var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
-
-			// return when(request.get(PathJoin(window.App.dataAPI, "subsystem_ref", ref_query), {
-			// 	headers: {
-			// 		'Accept': "application/json",
-			// 		'Content-Type': "application/rqlquery+x-www-form-urlencoded"
-			// 	},
-			// 	handleAs: "json"
-			// }), function(response){
-			// 	def.resolve(res[0]);
-			// 	return def.promise;
-			// })
 
 			var def = new Deferred();
 			var ref_query = "q=subsystem_id:\"" +  subsystemId + "\"" + "&fl=description,pmid&rows=1";
@@ -155,12 +154,14 @@ define([
 
 			state.genome_ids = genome_ids.split(',');
 			state.genome_ids_without_reference = genome_ids.split(',');
+
 			state.subsystem_id = subsystem_id;
 			state.genome_count = genome_count;
 			state.role_count = role_count;
 			state.gene_count = gene_count;
 			state.genome_name = genome_name;
 			state.display_reference_genomes = display_reference_genomes;
+			state.display_alphabetically = false;
 
 			return display_reference_genomes;
 		},
