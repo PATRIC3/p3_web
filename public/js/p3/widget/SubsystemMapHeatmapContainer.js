@@ -39,26 +39,13 @@ define([
 		visible: false,
 		pmState: null,	
 		region: "center",
+		clusterHeaderDictionary: {},
 		query: (this.query || ""),
 		store: null,
 		apiToken: window.App.authorizationToken,
 		apiServer: window.App.dataServiceURL,
 		containerActions: [
-			[
-				"Sort Alphabetically",
-				"fa icon-newspaper fa-2x",
-				{label: "Sort Alphabetically", multiple: false, validTypes: ["*"]},
-				function(){
-					if(this.state.display_alphabetically){
-						this.state.display_alphabetically = false;
-					}else{
-						this.state.display_alphabetically = true;
-					}
-
-					Topic.publish("SubSystemMap", "refreshHeatmap");
-				},
-				true
-			],
+			
 			[
 				"Legend",
 				"fa icon-bars fa-2x",
@@ -117,6 +104,62 @@ define([
 				},
 				true
 			],
+			// [
+			// 	"Sort Alphabetically",
+			// 	"fa icon-newspaper fa-2x",
+			// 	{label: "Sort Alphabetically", multiple: false, validTypes: ["*"]},
+			// 	function(){
+			// 		if(this.state.display_alphabetically){
+			// 			this.state.display_alphabetically = false;
+			// 		}else{
+			// 			this.state.display_alphabetically = true;
+			// 		}
+
+			// 		Topic.publish("SubSystemMap", "refreshHeatmap");
+			// 	},
+			// 	true
+			// ],
+			[
+				"Sorting",
+				"fa icon-newspaper fa-2x",
+				{
+					label: "Sorting",
+					multiple: false,
+					validType: ["*"],
+					tooltip: "Sort alphabetically or taxonomically"
+				},
+				function(){
+
+					// dialog for anchoring
+					// if(this.containerActionBar._actions.Sorting.options.tooltipDialog == null){
+					this.tooltip_sorting = new TooltipDialog({
+						content: this._buildPanelSorting()
+					});
+					this.containerActionBar._actions.Sorting.options.tooltipDialog = this.tooltip_sorting;
+					// }
+
+					if(this.isPopupOpen){
+						this.isPopupOpen = false;
+						popup.close();
+					}else{
+						popup.open({
+							parent: this,
+							popup: this.containerActionBar._actions.Sorting.options.tooltipDialog,
+							around: this.containerActionBar._actions.Sorting.button,
+							orient: ["below"]
+						});
+						this.isPopupOpen = true;
+					}
+				},
+				true
+			],
+			[
+				"Cluster",
+				"fa icon-cluster fa-2x",
+				{label: "Cluster", multiple: false, validTypes: ["*"]},
+				"cluster",
+				true
+			],
 			[
 				"Toggle Description",
 				"fa icon-enlarge fa-2x",
@@ -160,6 +203,34 @@ define([
 						break;
 				}
 			}));
+		},
+
+		_buildPanelSorting: function(){
+
+			var self = this;
+			var options = [ {value: '', label: 'Select Sorting'}, {value: 'taxonomical', label: 'Taxonomical'}, {value: 'alphabetical', label: 'Alphabetical'}];
+			
+			var anchor = new Select({
+				name: "anchor",
+				options: options
+			});
+			anchor.on('change', lang.hitch(this, function(sorting){
+
+				if (sorting === 'alphabetical') {
+					this.state.display_alphabetically = true;
+					Topic.publish("SubSystemMap", "refreshHeatmap");
+					popup.close(self.tooltip_sorting);
+				} 
+
+				else if (sorting === 'taxonomical') {
+					this.state.display_alphabetically = false;
+					Topic.publish("SubSystemMap", "refreshHeatmap");
+					popup.close(self.tooltip_sorting);
+				}
+				
+			}));
+
+			return anchor;
 		},
 
 		_setVisibleAttr: function(visible){
@@ -542,6 +613,109 @@ define([
 			//store.watch('refresh', lang.hitch(this, "refresh"));
 
 			return store;
+		},
+
+		//override exportcurrent data to handle dashes in malformed role data by using a dictionary
+		exportCurrentData: function(isTransposed){
+			// compose heatmap raw data in tab delimited format
+			// this de-transpose (if it is transposed) so that cluster algorithm can be applied to a specific data type
+
+			var that = this;
+
+			var cols, rows, id_field_name, data_field_name, tablePass = [], header = [''];
+
+			if(isTransposed){
+				cols = this.currentData.rows;
+				rows = this.currentData.columns;
+				id_field_name = 'rowID';
+				data_field_name = 'colID';
+			}else{
+				cols = this.currentData.columns;
+				rows = this.currentData.rows;
+				id_field_name = 'colID';
+				data_field_name = 'rowID';
+			}
+
+			for (var i = 0; i < cols.length; i++) {
+				var columnKey = "column" + i;
+				that.clusterHeaderDictionary[columnKey] = cols[i][id_field_name];
+			}
+
+			for (var fakeColumnName in that.clusterHeaderDictionary) {
+				header.push(fakeColumnName)
+			}
+
+			// cols.forEach(function(col){
+			// 	header.push(col[id_field_name]);
+			// });
+
+			tablePass.push(header.join('\t'));
+
+			for(var i = 0, iLen = rows.length; i < iLen; i++){
+				var r = [];
+				r.push(rows[i][data_field_name]);
+
+				for(var j = 0, jLen = cols.length; j < jLen; j++){
+					if(isTransposed){
+						r.push(parseInt(rows[i].distribution[j * 2] + rows[i].distribution[j * 2 + 1], 16));
+					}else{
+						r.push(parseInt(cols[j].distribution[i * 2] + cols[j].distribution[i * 2 + 1], 16));
+					}
+				}
+
+				tablePass.push(r.join('\t'));
+			}
+
+			return tablePass.join('\n');
+		},
+		cluster: function(param){
+
+			// console.log("cluster is called", param);
+			//this.set('loading', true);
+			var that = this;
+			var p = param || {g: 2, e: 2, m: 'a'};
+
+			var isTransposed = this.pmState.heatmapAxis === 'Transposed';
+			var data = this.exportCurrentData(isTransposed);
+
+			console.log("clustering data set size: ", data.length);
+			if(data.length > 1500000){
+				new Dialog({
+					title: "Notice",
+					content: "The data set is too large to cluster. Please use filter panel to reduce the size",
+					style: "width: 300px"
+				}).show();
+				return;
+			}
+
+			Topic.publish(this.topicId, "showLoadingMask");
+
+			return when(window.App.api.data("cluster", [data, p]), lang.hitch(this, function(res){
+
+				var columnNames = []
+				res.columns.forEach(function(column) {
+					columnNames.push(that.clusterHeaderDictionary[column]);
+				})
+
+				// DO NOT TRANSPOSE. clustering process is based on the corrected axises
+				this.pmState.clusterRowOrder = res.rows;
+				this.pmState.clusterColumnOrder = columnNames;
+
+				Topic.publish("SubSystemMap", "updatePmState", this.pmState);
+				// Topic.publish(this.topicId, "updateFilterGridOrder", res.rows);
+				// Topic.publish(this.topicId, "updateMainGridOrder", res.columns);
+
+				// re-draw heatmap
+				Topic.publish("SubSystemMap", "refreshHeatmap");
+			}), function(err){
+
+				Topic.publish("SubSystemMap", "hideLoadingMask");
+
+				new Dialog({
+					title: err.status || 'Error',
+					content: err.text || err
+				}).show();
+			});
 		}
 	});
 });
