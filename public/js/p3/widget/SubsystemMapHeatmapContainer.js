@@ -42,6 +42,7 @@ define([
 		clusterHeaderDictionary: {},
 		query: (this.query || ""),
 		store: null,
+		hasBeenClustered: false,
 		apiToken: window.App.authorizationToken,
 		apiServer: window.App.dataServiceURL,
 		containerActions: [
@@ -192,6 +193,13 @@ define([
 					case "refreshHeatmap":
 						Topic.publish("SubSystemMap", "requestHeatmapData", self.pmState);
 						break;
+					case "heatmapOrdering":
+						if (self.hasOwnProperty('originalPmState') ) {
+							Topic.publish("SubSystemMap", "requestHeatmapData", self.originalPmState);
+						} else {
+							Topic.publish("SubSystemMap", "requestHeatmapData", self.pmState);
+						}
+						break;
 					case "updateHeatmapData":
 						self.currentData = value;
 						if(typeof(self.flashDom.refreshData) == "function"){
@@ -218,13 +226,13 @@ define([
 
 				if (sorting === 'alphabetical') {
 					this.state.display_alphabetically = true;
-					Topic.publish("SubSystemMap", "refreshHeatmap");
+					Topic.publish("SubSystemMap", "heatmapOrdering");
 					popup.close(self.tooltip_sorting);
 				} 
 
 				else if (sorting === 'taxonomical') {
 					this.state.display_alphabetically = false;
-					Topic.publish("SubSystemMap", "refreshHeatmap");
+					Topic.publish("SubSystemMap", "heatmapOrdering");
 					popup.close(self.tooltip_sorting);
 				}
 				
@@ -645,10 +653,6 @@ define([
 				header.push(fakeColumnName)
 			}
 
-			// cols.forEach(function(col){
-			// 	header.push(col[id_field_name]);
-			// });
-
 			tablePass.push(header.join('\t'));
 
 			for(var i = 0, iLen = rows.length; i < iLen; i++){
@@ -676,6 +680,11 @@ define([
 			var p = param || {g: 2, e: 2, m: 'a'};
 
 			var isTransposed = this.pmState.heatmapAxis === 'Transposed';
+
+			if (!that.hasBeenClustered) {
+				this.originalPmState = $.extend(true, {}, this.pmState);;
+			}
+			
 			var data = this.exportCurrentData(isTransposed);
 
 			console.log("clustering data set size: ", data.length);
@@ -691,6 +700,8 @@ define([
 			Topic.publish(this.topicId, "showLoadingMask");
 
 			return when(window.App.api.data("cluster", [data, p]), lang.hitch(this, function(res){
+
+				that.hasBeenClustered = true;
 
 				var columnNames = []
 				res.columns.forEach(function(column) {
