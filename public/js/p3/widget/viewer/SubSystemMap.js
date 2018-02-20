@@ -320,9 +320,7 @@ define([
 			}, headerContent);
 
 			this.addChild(this.viewerHeader);
-			this.addChild(this.viewer);
-			//setTimeout(this.addChild(this.viewer), 3000);
-			
+			this.addChild(this.viewer);			
 		}
 	});
 });

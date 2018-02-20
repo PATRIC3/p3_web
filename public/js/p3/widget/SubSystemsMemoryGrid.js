@@ -21,17 +21,6 @@ define([
 		fullSelectAll: true,
 		columns: {
 			"Selection Checkboxes": selector({unhidable: true}),
-			// superclass: 		{label: "Superclass", field: "superclass"},
-			// "class": 			{label: "Class", field: "class"},
-			// subclass: 			{label: 'Subclass', field: 'subclass'},
-			// subsystem_name: 	{label: 'Subsystem Name', field: 'subsystem_name'},
-			// role_id: 			{label: "Role ID", field: "role_id", hidden: true},
-			// role_name: 			{label: "Role Name", field: "role_name"},
-			// active: 			{label: "Active", field: "active"},
-			// patric_id: 			{label: "PATRIC ID", field: "patric_id"},
-			// gene: 				{label: "Gene", field: "gene"},
-			// product: 			{label: "Product", field: "product"}
-
 			superclass: 		{label: "Superclass", field: "superclass"},
 			"class": 			{label: "Class", field: "class"},
 			subclass: 			{label: 'Subclass', field: 'subclass'},

@@ -42,7 +42,6 @@ define([
       "STRESS RESPONSE, DEFENSE, VIRULENCE":  Theme.colors[15]
     },
 
-
     // x + "Other" as aggregation of what is left over
     subsystemMaxNumToDisplay: 16,
 
@@ -100,6 +99,14 @@ define([
 
       var width = $( window ).width() * .85;
       var height = $( window ).height() * .6;
+
+      if (height < 450) {
+        height = 450;
+      }
+
+      if (width < 800) {
+        width = 800;
+      }
 
       var radius = Math.min(width, height) / 2 - 50;
 
