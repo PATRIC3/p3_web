@@ -26,17 +26,19 @@ define([
 			}
 
 			var display_reference_genomes = this.getStateParams(state);
-
 			var that = this;
-			var query = "?ne(genome_id," + state.genome_ids_without_reference + ")&eq(taxon_lineage_ids,2)&eq('reference_genome','Reference'),&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum,+class,+order,+family,+genus)";
-			return when(request.get(PathJoin(window.App.dataAPI, "genome", query), {
+			var query = "and(in(genome_id,(" + state.genome_ids_without_reference + "))),eq(taxon_lineage_ids,2),eq(reference_genome,Reference)&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum,+class,+order,+family,+genus)";
+
+			request.post(PathJoin(window.App.dataServiceURL, "genome"), {
+				handleAs: 'json',
 				headers: {
 					'Accept': "application/json",
-					'Content-Type': "application/rqlquery+x-www-form-urlencoded"
+					'Content-Type': "application/rqlquery+x-www-form-urlencoded",
+					'X-Requested-With': null,
+					'Authorization': (window.App.authorizationToken || '')
 				},
-				handleAs: "json"
-			}), function(response){
-
+				data: query
+			}).then(lang.hitch(this, function(response){
 				var reference_genome_ids = response.map(function(genome){
 					return genome.genome_id;
 				})
@@ -69,8 +71,7 @@ define([
 				});
 					
 				window.document.title = 'Subsystem Map';
-
-			});
+			}));
 		},
 
 		getSubsystemDescription: function(subsystemId) {
