@@ -27,7 +27,7 @@ define([
 
 			var display_reference_genomes = this.getStateParams(state);
 			var that = this;
-			var query = "in(genome_id,(" + state.genome_ids_without_reference + ")),eq(taxon_lineage_ids,2),eq(reference_genome,Reference)&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum,+class,+order,+family,+genus)";
+			var query = "ne(genome_id," + state.genome_ids_without_reference + "),eq(taxon_lineage_ids,2),eq(reference_genome,Reference)&select(genome_id,genome_name,reference_genome)&limit(25000)&sort(+kingdom,+phylum,+class,+order,+family,+genus)";
 
 			request.post(PathJoin(window.App.dataServiceURL, "genome"), {
 				handleAs: 'json',
