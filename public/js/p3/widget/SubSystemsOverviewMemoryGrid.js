@@ -100,20 +100,24 @@ define([
       var width = $( window ).width() * .85;
       var height = $( window ).height() * .6;
 
-      if (height < 450) {
-        height = 450;
-      }
-
       if (width < 800) {
         width = 800;
+      }
+
+      if (height < 450) {
+        height = 450;
       }
 
       var radius = Math.min(width, height) / 2 - 50;
 
       var color = d3.scale.category20();
 
+      var viewBoxWidth = width * 2;
+      var viewBoxHeight = height * 2;
+
       var svg = d3.select('#subsystemspiechart')
         .append('svg')
+        .attr("viewBox", "0 0 " + viewBoxWidth + ' ' + viewBoxHeight)
         .attr("id", "piechart")
         .attr("class", "summarychart")
         .attr('width', width * 2)
