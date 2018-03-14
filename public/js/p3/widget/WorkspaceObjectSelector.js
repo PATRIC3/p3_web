@@ -520,7 +520,20 @@ define([
           });
 
           this.store = new Memory({data: items, idProperty: 'path'});
-
+          // sort alphabetically
+          let dataArr = this.store.data;
+          function compare(a, b) {
+            if (a.name < b.name) {
+              return -1;
+            }
+            if (a.name > b.name) {
+              return 1;
+            }
+            return 0;
+          }
+          dataArr.sort(compare);
+          //console.log(dataArr);
+          this.store.data = dataArr;
           this.searchBox.set('store', this.store);
           if (this.value) {
             this.searchBox.set('value', this.value);
