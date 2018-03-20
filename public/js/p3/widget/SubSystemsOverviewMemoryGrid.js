@@ -599,6 +599,9 @@ define([
       var percentCovered = proportionCovered * 100;
       var percentNotCovered = proportionNotCovered * 100;
 
+      var percentCovered = Math.round(percentCovered);
+      var percentNotCovered = Math.round(percentNotCovered);
+
       var totalHeight = divHeightCovered + divHeightNotCovered;
 
       var svg = d3.select("#subsystemspiechart svg"),
