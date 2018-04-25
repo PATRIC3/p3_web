@@ -1,11 +1,11 @@
 define([
 	"dojo/_base/lang", "dojo/date/locale", "dojo/dom-construct", "dojo/dom-class",
 	"dijit/form/Button", "../JobManager", "dijit/TitlePane", "./formatter", "dojo/on",
-	"dojo/query", "dojo/NodeList-traverse"
+	"dojo/query", "../util/PathJoin", "dojo/request", "dojo/when", "dojo/NodeList-traverse"
 ], function(
 	lang, locale, domConstruct, domClass,
 	Button, JobManager, TitlePane, formatter, on,
-	query){
+	query, PathJoin, request, when){
 
 	var formatters = {
 		"default": function(item, options){
@@ -57,6 +57,9 @@ define([
 			options = options || {};
 
 			var columns = [{
+				name: 'Service',
+				text: 'app'
+			}, {
 				name: 'App',
 				text: 'app'
 			}, {
@@ -101,6 +104,9 @@ define([
 			options = options || {};
 
 			var columns = [{
+				name: 'Service',
+				text: 'app'
+			}, {
 				name: 'App',
 				text: 'app'
 			}, {
@@ -222,7 +228,12 @@ define([
 				name: 'NA Sequence',
 				text: 'na_sequence',
 				link: function(obj){
-					return obj.na_sequence.substr(0, 30) + '... ' + '<button onclick="window.open(\'/view/FASTA/dna/?in(feature_id,(' + obj.feature_id + '))\')">view</button>';
+                                        if (obj.na_sequence !== ' '){
+					     return obj.na_sequence.substr(0, 30) + '... ' + '<button onclick="window.open(\'/view/FASTA/dna/?in(feature_id,(' + obj.feature_id + '))\')">view</button>'
+                                                + '<button onclick="clipboard.copy(\'' + obj.na_sequence + '\')">copy</button>';
+                                        } else {
+					        return obj.na_sequence.substr(0, 30) + '... ' + '<button onclick="window.open(\'/view/FASTA/dna/?in(feature_id,(' + obj.feature_id + '))\')">view</button>';
+                                        }
 				}
 			}, {
 				name: 'AA Length',
@@ -231,7 +242,12 @@ define([
 				name: 'AA Sequence',
 				text: 'aa_sequence',
 				link: function(obj){
-					return obj.aa_sequence.substr(0, 22) + '... ' + '<button onclick="window.open(\'/view/FASTA/protein/?in(feature_id,(' + obj.feature_id + '))\')">view</button>';
+                                        if (obj.aa_sequence !== ' '){
+					   return obj.aa_sequence.substr(0, 22) + '... ' + '<button onclick="window.open(\'/view/FASTA/protein/?in(feature_id,(' + obj.feature_id + '))\')">view</button>'
+                                           + '<button onclick="clipboard.copy(\'' + obj.aa_sequence + '\')">copy</button>';
+                                       } else {
+					   return obj.aa_sequence.substr(0, 22) + '... ' + '<button onclick="window.open(\'/view/FASTA/protein/?in(feature_id,(' + obj.feature_id + '))\')">view</button>';
+                                       }
 				}
 			}];
 
@@ -565,6 +581,9 @@ define([
 			if (item.document_type === "subsystems_gene") {
 				columns = [
 					{
+						name: 'Superclass',
+						text: 'superclass'
+					}, {
 						name: 'Class',
 						text: 'class'
 					}, {
@@ -579,9 +598,8 @@ define([
 					}, {
 						name: 'Active',
 						text: 'active'
-					}
-					, {
-						name: 'Patric ID',
+					}, {
+						name: 'PATRIC ID',
 						text: 'patric_id'
 					}, {
 						name: 'Gene',
@@ -594,6 +612,9 @@ define([
 			} else if (item.document_type === "subsystems_subsystem") {
 				columns = [
 					{
+						name: 'Superclass',
+						text: 'superclass'
+					}, {
 						name: 'Class',
 						text: 'class'
 					}, {
@@ -603,18 +624,18 @@ define([
 						name: 'Subsystem Name',
 						text: 'subsystem_name'
 					}, {
-						name: 'Role Name',
-						text: 'role_name'
-					}, {
 						name: 'Active',
 						text: 'active'
+					}, {
+						name: 'Role Names',
+						text: 'role_name'
 					}
 				]
 			}
 
 			var div = domConstruct.create("div");
 			displayHeader(div, item.subsystem_name, "fa icon-git-pull-request fa-2x", "/view/Subsystems/" + item.subsystem_id, options);
-			displayDetail(item, columns, div, options);
+			displayDetailSubsystems(item, columns, div, options);
 
 			return div;
 		},
@@ -1625,12 +1646,92 @@ define([
 		})
 	}
 
+	function displayDetailSubsystems(item, columns, parent, options){
+		var table = domConstruct.create("table", {}, parent);
+		var tbody = domConstruct.create("tbody", {}, table);
+
+		columns.forEach(function(column){
+
+			if (column.text === "role_name") {
+				// TODO: 1. why are we counting role_name distribution?
+				// 2. this is a wrong taxon id to use (e.g. 1763 -> 1765)
+				// 3. need to de-duplicate fecet query
+
+				if (item.genome_count > 1) {
+					
+					var query = "q=genome_id:(" + options.genome_ids.join(" OR ") + ") AND subsystem_id:(\"" + item.subsystem_id + "\")&facet=true&facet.field=role_name&facet.mincount=1&facet.limit-1&rows=25000";
+					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+						handleAs: 'json',
+						headers: {
+							'Accept': "application/solr+json",
+							'Content-Type': "application/solrquery+x-www-form-urlencoded",
+							'X-Requested-With': null,
+							'Authorization': (window.App.authorizationToken || "")
+						},
+						data: query
+					}), function(response){
+
+						var role_list = "";
+						var role_items = response.facet_counts.facet_fields.role_name
+
+						for (var i = 0; i < role_items.length; i +=2) {
+							var role = "&#8226 " + role_items[i] + " <span style=\"font-weight: bold;\">(" + role_items[i+1] + ")</span><br>";
+							role_list += role
+						}
+
+						item.role_name = role_list;
+
+						var row = renderProperty(column, item, options);
+						if(row){
+							domConstruct.place(row, tbody);
+						}
+					});
+				} else {
+					var query = "q=genome_id:(" + item.genome_id + ") AND subsystem_id:(\"" + item.subsystem_id + "\")&facet=true&facet.field=role_name&facet.mincount=1&facet.limit-1&rows=25000";
+
+					when(request.post(PathJoin(window.App.dataAPI, '/subsystem/'), {
+						handleAs: 'json',
+						headers: {
+							'Accept': "application/solr+json",
+							'Content-Type': "application/solrquery+x-www-form-urlencoded",
+							'X-Requested-With': null,
+							'Authorization': (window.App.authorizationToken || "")
+						},
+						data: query
+					}), function(response){
+
+						var role_list = "";
+						var role_items = response.facet_counts.facet_fields.role_name
+
+						for (var i = 0; i < role_items.length; i +=2) {
+							var role = "&#8226 " + role_items[i] + " <span style=\"font-weight: bold;\">(" + role_items[i+1] + ")</span><br>";
+							role_list += role
+						}
+
+						//var role_list = role_names.join("<br>");
+						item.role_name = role_list;
+
+						var row = renderProperty(column, item, options);
+						if(row){
+							domConstruct.place(row, tbody);
+						}
+					});
+				}
+			} else {
+				var row = renderProperty(column, item, options);
+				if(row){
+					domConstruct.place(row, tbody);
+				}
+			}
+		})
+	}
+
 	function renderProperty(column, item, options){
 		var key = column.text;
 		var label = column.name;
 		var multiValued = column.multiValued || false;
 		var mini = options && options.mini || false;
-
+		// console.log("column=", column, "item=", item, "key=", key, "label=", label);
 		if(key && item[key] && !column.data_hide){
 			if(column.isList){
 				var tr = domConstruct.create("tr", {});
@@ -1651,6 +1752,11 @@ define([
 				return renderRow(label, dateStr)
 			}else if(!mini || column.mini){
 				var l = evaluateLink(column.link, item[key], item);
+				// console.log("item[key]=", item[key]);
+				// a special case for service app
+				if (label == 'Service'){
+					l = formatter.serviceLabel(item[key]);
+				}
 				return renderRow(label, l);
 			}
 		}

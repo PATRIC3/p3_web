@@ -5,7 +5,7 @@ define([
 	"../GenomeOverview", "../AMRPanelGridContainer", "../Phylogeny",
 	"../GenomeBrowser", "../CircularViewerContainer", "../SequenceGridContainer",
 	"../FeatureGridContainer", "../SpecialtyGeneGridContainer", "../ProteinFamiliesContainer",
-	"../PathwaysContainer", "../TranscriptomicsContainer", "../InteractionContainer",
+	"../PathwaysContainer", "../SubSystemsContainer", "../TranscriptomicsContainer", "../InteractionContainer",
 	"../../util/PathJoin"
 ], function(declare, lang,
 			domConstruct, xhr,
@@ -13,7 +13,7 @@ define([
 			GenomeOverview, AMRPanelGridContainer, Phylogeny,
 			GenomeBrowser, CircularViewerContainer, SequenceGridContainer,
 			FeatureGridContainer, SpecialtyGeneGridContainer, ProteinFamiliesContainer,
-			PathwaysContainer, TranscriptomicsContainer, InteractionsContainer,
+			PathwaysContainer, SubSystemsContainer, TranscriptomicsContainer, InteractionsContainer,
 			PathJoin){
 	return declare([TabViewerBase], {
 		"baseClass": "GenomeGroup",
@@ -130,6 +130,9 @@ define([
 		},
 
 		buildHeaderContent: function(genome){
+			if(!genome){
+				return;
+			}
 
 			xhr.get(PathJoin(this.apiServiceUrl, "taxonomy", genome.taxon_id), {
 				headers: {
@@ -259,7 +262,7 @@ define([
 			this.sequences = new SequenceGridContainer({
 				title: "Sequences",
 				id: this.viewer.id + "_" + "sequences",
-				state: lang.mixin({}, this.state, {search: "?eq(genome_id," + this.genome_id + ")"})
+				state: lang.mixin({}, this.state, {search: (this.genome_id ? "?eq(genome_id," + this.genome_id + ")" : "?ne(genome_id,*)" )})
 			});
 
 			this.amr = new AMRPanelGridContainer({
@@ -288,7 +291,7 @@ define([
 			this.specialtyGenes = new SpecialtyGeneGridContainer({
 				title: "Specialty Genes",
 				id: this.viewer.id + "_" + "specialtyGenes",
-				state: lang.mixin({}, this.state, {search: "?eq(genome_id," + this.genome_id + ")"})
+				state: lang.mixin({}, this.state, {search: (this.genome_id ? "?eq(genome_id," + this.genome_id + ")" : "?ne(genome_id,*)" )})
 			});
 
 			this.pathways = new PathwaysContainer({
@@ -297,10 +300,10 @@ define([
 				id: this.viewer.id + "_" + "pathways"
 			});
 
-			// this.subsystems = new SubSystemsContainer({
-			// 	title: "Subsystems",
-			// 	id: this.viewer.id + "_" + "subsystems"
-			// })
+			this.subsystems = new SubSystemsContainer({
+				title: "Subsystems",
+				id: this.viewer.id + "_" + "subsystems"
+			})
 
 			this.proteinFamilies = new ProteinFamiliesContainer({
 				title: "Protein Families",
@@ -330,7 +333,7 @@ define([
 			this.viewer.addChild(this.specialtyGenes);
 			this.viewer.addChild(this.proteinFamilies);
 			this.viewer.addChild(this.pathways);
-			// this.viewer.addChild(this.subsystems);
+			this.viewer.addChild(this.subsystems);
 			this.viewer.addChild(this.transcriptomics);
 			this.viewer.addChild(this.interactions);
 		}
