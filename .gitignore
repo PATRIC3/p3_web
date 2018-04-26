@@ -10,7 +10,6 @@ public/js/circulus
 .idea/
 .vscode/
 public/video/
-.htmlhintrc
 .jscsrc
 src/
 test/

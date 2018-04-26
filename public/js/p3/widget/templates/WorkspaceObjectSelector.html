@@ -1,6 +1,9 @@
-<div style="padding:0px;" data-dojo-attach-point="focusNode">
-	<i class="icon-sort-alpha-asc" title="Sort Alphabetically" data-dojo-attach-event="click:sortAlpha"></i>
-	<input type="hidden" />
-	<input type="text" data-dojo-attach-point="searchBox" data-dojo-type="dijit/form/FilteringSelect" data-dojo-attach-event="onChange:onSearchChange" data-dojo-props="labelType: 'html', promptMessage: '${promptMessage}', missingMessage: '${missingMessage}', searchAttr: 'name'"
-	  value="${value}" style="width:82%" />&nbsp;<i data-dojo-attach-event="click:openChooser" class="fa icon-folder-open fa-1x" />
+<div style="padding:0px;width:85%" data-dojo-attach-point="focusNode">
+  <i class="icon-sort-alpha-asc" title="Sort alphabetically" data-dojo-attach-event="click:sortAlpha" style="position: fixed; font-size: 1.2em; margin: 2px; background-color:white; border:1px"></i>
+  <i class="icon-sort-numeric-asc2" title="Sort by when created" data-dojo-attach-event="click:sortAlpha" style="position: fixed; font-size: 1.2em; margin: 2px; display:none"></i>
+  <input type="hidden" />
+  <input type="text" data-dojo-attach-point="searchBox" data-dojo-type="dijit/form/FilteringSelect" data-dojo-attach-event="onChange:onSearchChange"
+  data-dojo-props="labelType: 'html', promptMessage: '${promptMessage}', missingMessage: '${missingMessage}', searchAttr: 'name'"
+  value="${value}" style="width:85%; margin-left:0; margin-right:0" />
+  <i data-dojo-attach-event="click:openChooser" class="fa icon-folder-open fa-1x" />
 </div>

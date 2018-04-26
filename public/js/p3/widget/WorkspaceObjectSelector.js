@@ -59,15 +59,31 @@ define([
           this.grid.set('types', this.type);
         }
       },
-      sortAlpha: function() {
-        //console.log('sort me');
+    sortAlpha: function () {
+      var alphaIcon = document.getElementsByClassName('icon-sort-alpha-asc');
+      var numberIcon = document.getElementsByClassName('icon-sort-numeric-asc2');
+      // console.log('sort me');
+      for (var i = 0; i < alphaIcon.length; i += 1) {
+        if (!this.isSortAlpha) {
+          alphaIcon[i].style.display = 'none';
+        } else {
+          alphaIcon[i].style.display = 'block';
+        }
+      }
+      for (var j = 0; j < numberIcon.length; j += 1) {
+        if (!this.isSortAlpha) {
+          numberIcon[j].style.display = 'block';
+        } else {
+          numberIcon[j].style.display = 'none';
+        }
+      }
+      if (this.isSortAlpha === false) {
         this.isSortAlpha = true;
-        // var wos = document.getElementsByClassName('WorkspaceObjectSelector')[0];
-        // console.log(wos);
-        // console.log(window.App);
-        // console.log(window);
-        this.refreshWorkspaceItems();
-      },
+      } else {
+        this.isSortAlpha = false;
+      }
+      this.refreshWorkspaceItems();
+    },
       _setShowHiddenAttr: function(val) {
         this.showHidden = val;
 

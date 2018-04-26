@@ -8,7 +8,7 @@ define([
 			Store, domConstr, TooltipDialog,
 			on, popup, lang, domConstr, Checkbox,
 			string, when, AutoCompleterMixin,
-			PathJoin){
+			PathJoin) {
 
 	return declare([FilteringSelect, AutoCompleterMixin], {
 		apiServiceUrl: window.App.dataAPI,
@@ -146,13 +146,15 @@ define([
 				// console.log("Query Filter set to: " + this.queryFilter);
 		},
 
-		postCreate: function(){
+		postCreate: function() {
 			this.inherited(arguments);
-			this.filterButton = domConstr.create("i", {
-				"class": "fa icon-filter fa-1x",
-				style: {"float": "left", "font-size": "1.2em", "margin": "2px"}
-			});
-			domConstr.place(this.filterButton, this.domNode, "first");
+      this.filterButton = domConstr.create('i', {
+        class: 'fa icon-filter fa-1x',
+        style: {
+          position: 'fixed', 'font-size': '1.2em', margin: '1px', 'margin-right':'0', 'margin-left':'3px'
+        }
+      });
+      domConstr.place(this.filterButton, this.domNode, 'first');
 
 			//var dfc = '<div>Filter Genomes</div><div class="wsActionTooltip" rel="Public">Public</div><div class="wsActionTooltip" rel="private">My Genomes</div>'
 			var dfc = domConstr.create("div");

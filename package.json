@@ -49,8 +49,10 @@
     "webcola": "^3.3.6"
   },
   "devDependencies": {
+    "minimatch": "^3.0.2",
     "eslint": "^4.9.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-config-airbnb-base": "^12.1.0"
+    "eslint-config-airbnb-base": "^12.1.0",
+    "htmlhint": "^0.9.13"
   }
 }

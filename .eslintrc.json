@@ -28,6 +28,7 @@
     "semi-spacing": 0,
     "brace-style": 0,
     "no-alert": 0,
-    "allowKeywords": 0
+    "allowKeywords": 0,
+    "no-dupe-args": 0
   }
 }
