@@ -1,0 +1,8 @@
+node_modules
+coverage
+dist
+src
+test
+gulpified
+gulpfile.js
+public/js/release
