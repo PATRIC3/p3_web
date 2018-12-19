@@ -17,7 +17,9 @@ define([
     applicationHelp: 'user_guides/services/genome_alignment_service.html',
     tutorialLink: 'tutorial/genome_alignment/genome_alignment.html',
     pageTitle: 'Genome Alignment',
-    defaultPath: '',
+    requireAuth: true,
+    applicationLabel: 'Genome Alignment (Mauve)',
+    applicationDescription: 'The Whole Genome Alignment Service aligns genomes using progressiveMauve.',
     startingRows: 1,
 
     constructor: function () {
@@ -28,6 +30,10 @@ define([
       if (this._started) {
         return;
       }
+      if (this.requireAuth && (window.App.authorizationToken === null || window.App.authorizationToken === undefined)) {
+        return;
+      }
+
       this.inherited(arguments);
 
       _self.defaultPath = WorkspaceManager.getDefaultFolder() || _self.activeWorkspacePath;
@@ -62,6 +68,15 @@ define([
       }));
 
       this._started = true;
+    },
+
+
+    // listen for "manually set seed weight" toggle
+    onSeedWeightSwitch: function () {
+      var checked = !this.seedWeightSwitch.checked;
+      this.seedWeightSwitch.checked = checked;
+      domStyle.set( this.seedContainer, 'display', checked ? 'block' : 'none');
+      this.seedWeight.set('disabled', !this.seedWeightSwitch.checked);
     },
 
     validate: function () {
@@ -122,14 +137,11 @@ define([
 
         when(self.getGenomeInfo(genomeIDs), function (genomeInfos) {
           genomeInfos.forEach(function (info) {
-
             self.addGenome(info);
           });
-
           domStyle.set( query('.loading-status')[0], 'display', 'none');
         });
       }));
-
     },
 
     // takes genome ids, returns prom with {id: xxxx.x, name: 'org_name}
