@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700|Roboto:400,700&display=swap">
   <link rel="icon" sizes="16x16 32x32" href="/patric/favicon.ico">
   <% if (request && request.production) { %>
-   <link rel='stylesheet' href='/js/<%- request.package.version %>/p3/resources/p3.css' />
+  <link rel='stylesheet' href='/js/<%- request.package.version %>/p3/resources/p3.css' />
   <% } else { %>
   <link rel='stylesheet' href='/js/p3/resources/p3.css' />
   <% } %>
@@ -138,11 +138,25 @@
                         <li data-target="#news" data-slide-to="2" class=""></li>
                         <li data-target="#news" data-slide-to="3" class=""></li>
                         <li data-target="#news" data-slide-to="4" class=""></li>
+                        <li data-target="#news" data-slide-to="5" class=""></li>
                       </ol>
                       <div class=" carousel-inner pb-4">
                         <div class="carousel-item active">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html">PATRIC March 2019 Data and Website Release</a></h5>
+                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html">July 2019 Data and Website Release</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/fastq-utilities-service.png"
+                                height="80px" class="float-left pr-2 pb-2">The new Fastq Utilities Service provides the capability for aligning, measuring base call quality, and trimming fastq read files to
+                                …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html">March 2019 Data and Website Release</a></h5>
                             <p class="card-text pt-2"><img src="/public/assets/news/march-release-2019.png"
                                 height="80px" class="float-left pr-2 pb-2">This PATRIC release includes a new Metagenome Taxonomic Classification Service; a new Metagenomic Read Mapping Service; a new Codon Tree
                               …</p>
