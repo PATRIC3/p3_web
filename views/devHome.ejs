@@ -20,7 +20,7 @@
   <link rel='stylesheet' href='/public/assets/styles-export.min.css' />
 </head>
 
-<body onunload="" class="patric-bootstrap claro <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
+<body onunload="" class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>" style="background:#f5f5f5;min-width:unset;">
 
   <!-- New Navbar, CSS scoped to .patric-bootstrap -->
   <div class="patric-bootstrap">
@@ -33,6 +33,7 @@
     <!-- start application container -->
 
     <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding: 0px;">
+      <a name="top"></a>
       <!-- start contentpane container -->
       <div class="patric-bootstrap">
         <!-- start bootstrap styles -->
@@ -279,7 +280,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/services/genome_assembly.jpg">
+                        <a href="https://patricbrc.org/app/Assembly"><img class="card-img-top" src="/public/assets/services/genome_assembly.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Assembly">Genome Assembly</a></h5>
                           <p class="card-text">The Genome Assembly Service allows single or multiple assemblers to be
@@ -296,7 +297,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/genome_annotation.jpg">
+                        <a href="https://patricbrc.org/app/Annotation"><img class="card-img-top" src="/public/assets/services/genome_annotation.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Annotation">Genome Annotation</a>
                           </h5>
@@ -315,7 +316,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/comp_genome_analysis.jpg">
+                        <a href="https://patricbrc.org/app/ComprehensiveGenomeAnalysis"><img class="card-img-top" src="/public/assets/services/comp_genome_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a
                               href="https://patricbrc.org/app/ComprehensiveGenomeAnalysis">Comprehensive Genome
@@ -338,7 +339,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/BLAST"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/BLAST">BLAST</a></h5>
                           <p class="card-text">The PATRIC BLAST service integrates the BLAST (Basic Local Aligment
@@ -356,7 +357,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/GenomeDistance"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/GenomeDistance">Similar Genome
                               Finder</a></h5>
@@ -375,9 +376,9 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/Variation"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="https://patricbrc.org/app/Variation">Variation Analysis</a>
+                          <h5 class="text-center">Variation Analysis</a>
                           </h5>
                           <p class="card-text">The Variation Analysis Service can be used to identify and annotate
                             sequence variations.</p>
@@ -394,7 +395,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/tn-seq_analysis.jpg">
+                        <a href="https://patricbrc.org/app/Tnseq"><img class="card-img-top" src="/public/assets/services/tn-seq_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Tnseq">Tn-Seq Analysis</a></h5>
                           <p class="card-text">The Tn-Seq Analysis Service facilitates determination of essential and
@@ -412,7 +413,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/phylogenetic_tree.jpg">
+                        <a href="https://patricbrc.org/app/PhylogeneticTree"><img class="card-img-top" src="/public/assets/services/phylogenetic_tree.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/PhylogeneticTree">Phylogenetic Tree
                               Building</a></h5>
@@ -431,7 +432,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/genome_alignment_viewer.jpg">
+                        <a href="https://patricbrc.org/app/GenomeAlignment"><img class="card-img-top" src="/public/assets/services/genome_alignment_viewer.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/GenomeAlignment">Genome Alignment
                               (Mauve)</a></h5>
@@ -472,7 +473,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/MetagenomicReadMapping"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicReadMapping">Metagenomic
                               Read Mapping</a></h5>
@@ -491,7 +492,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/taxonomic_classification.jpg">
+                        <a href="https://patricbrc.org/app/TaxonomicClassification"><img class="card-img-top" src="/public/assets/services/taxonomic_classification.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/TaxonomicClassification">Taxonomic
                               Classification</a></h5>
@@ -510,7 +511,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/MetagenomicBinning"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicBinning">Metagenomic
                               Binning</a></h5>
@@ -555,7 +556,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/services/expression_upload.jpg">
+                        <a href="https://patricbrc.org/app/Expression"><img class="card-img-top" src="/public/assets/services/expression_upload.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Expression">Differential Expression
                               Import</a></h5>
@@ -575,7 +576,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/rna-seq_analysis.jpg">
+                        <a href="https://patricbrc.org/app/Rnaseq"><img class="card-img-top" src="/public/assets/services/rna-seq_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Rnaseq">RNA-Seq Analysis</a></h5>
                           <p class="card-text">The RNA-Seq Analysis Service provides services for aligning, assembling,
@@ -618,7 +619,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/services/protein_family_sorter.jpg">
+                        <a href="https://patricbrc.org/app/ProteinFamily"><img class="card-img-top" src="/public/assets/services/protein_family_sorter.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/ProteinFamily">Protein Family
                               Sorter</a></h5>
@@ -637,7 +638,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/services/proteome_comparison.jpg">
+                        <a href="https://patricbrc.org/app/SeqComparison"><img class="card-img-top" src="/public/assets/services/proteome_comparison.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/SeqComparison">Proteome
                               Comparison</a></h5>
@@ -682,7 +683,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/services/comparative_pathway.jpg">
+                        <a href="https://patricbrc.org/app/ComparativePathway"><img class="card-img-top" src="/public/assets/services/comparative_pathway.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/ComparativePathway">Comparative
                               Pathway Tool</a></h5>
@@ -702,7 +703,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg">
+                        <a href="https://patricbrc.org/app/Reconstruct"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Reconstruct">Reconstruct Metabolic
                               Model</a></h5>
@@ -749,7 +750,7 @@
                   </ol -->
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <img class="card-img-top" src="/public/assets/services/id_mapper.jpg">
+                        <a href="https://patricbrc.org/app/IDMapper"><img class="card-img-top" src="/public/assets/services/id_mapper.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/IDMapper">ID Mapper</a></h5>
                           <p class="card-text">The ID Mapper tool maps PATRIC identifiers to those from other prominent
@@ -875,7 +876,7 @@
             </div>
             <p class="text-center pb-3">Copyright © 2019 <a href="https://patricbrc.org/">PATRIC</a>, All Rights
               Reserved. <a href="mailto:help@patricbrc.org">Contact PATRIC</a> | <a
-                href="https://docs.patricbrc.org/cite_patric.html">How to Cite PATRIC</a> | <a href="#topnav">Back to
+                href="https://docs.patricbrc.org/cite_patric.html">How to Cite PATRIC</a> | <a href="#top">Back to
                 top</a></p>
           </div>
         </footer>
