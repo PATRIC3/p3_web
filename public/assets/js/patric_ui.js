@@ -1,69 +1,69 @@
 $(document).ready(function () {
 
-
-    $('.dropdown-menu').hover(
-        function() {
-            $(this).addClass('show');
-        }
-    );
-
-    // $('.dropdown-menu')
-    //     .mouseenter(function() {
-    //         $(this).addClass('show');
-    //         $(this).prev().addClass('show');
-    //     })
-    //     .mouseout(function() {
-    //         $(this).removeClass('show');
-    //     });
+  // Note: more work is needed here since menus never close!
+  $('.dropdown-menu').hover(function () {
+    $(this).addClass('show');
+  });
 
 
-    // $('.nav-item.dropdown').hover(
-    //     function() {
-    //         $(this).addClass('show');
-    //     }
-    // );
+  /**
+   * "Email PATRIC" form
+  */
+  var config = window.App;
+  var user = config.user.username;
 
-    // Use this to slide the menu Down and Up
-    // $(".dropdown").hover(
-    //     function() {
-    //         $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true,true).slideDown("400");
-    //         $(this).toggleClass('show');
-    //     },
-    //     function() {
-    //         $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true,true).slideUp("400");
-    //         $(this).toggleClass('show');
-    //     }
-    // );
+  // remove the email field if logged in
+  if (user) $('.contact-patric-email').remove();
 
-    // $('#navbarDropdown_search').on('click', function (event) {
-    //     $(this).parent().toggleClass('show');
-    //     $(this).parent().find(".dropdown-menu").toggleClass("show");
-    // });
+  // contact patric form submission event
+  $('#contact-patric').submit(function () {
+    var self = this;
 
-    // // when you hover a toggle show its dropdown menu
-    // $("#navbarDropdown_search").hover(function () {
-    //     if (!$(this).parent().find(".show")) {
-    //         $(this).parent().toggleClass("show");
-    //         $(this).parent().find(".dropdown-menu").toggleClass("show");
-    //     }
+    var name = $(this).find('#contactName').val();
+    var email = $(this).find('#contactEmail').val();
+    var subject = $(this).find('#contactSubject').val();
+    var msg = $(this).find('#contactMessage').val();
+    var fileInput = $(this).find('#contactAttachment');
+    var file = fileInput.val() ? fileInput.prop('files')[0] : null;
 
-    // });
+    var form = new FormData();
+    form.append('name', name);
+    form.append('email', email || '');
+    form.append('subject', subject);
+    form.append('content', msg);
+    form.append('appVersion', config.appVersion);
+    form.append('url', window.location.href);
+    form.append('userId', user);
+    form.append('attachment', file || '');
 
-    // when you submit the search, hide the dropdown
-    // $(".gs-advanced-search").click(function () {
-    //         $(".dropdown").removeClass("show");
-    //         $(".dropdown-menu").removeClass("show");
-    // });
+    $.ajax({
+      url: '/reportProblem',
+      data: form,
+      processData: false,
+      contentType: false,
+      type: 'POST',
+      success: function (data) {
+        $(self).parent().append(
+          '<br><div class="alert alert-success" role="alert">' +
+            'Thanks for your feedback!<br>' +
+            'We will respond within two business days to your inquiry.' +
+          '</div>'
+        );
 
-
-    $('body').on('click', function (e) {
-        if (!$('.dropdown-menu').is(e.target)
-            && $('.dropdown-menu').has(e.target).length === 0
-            && $('.show').has(e.target).length === 0
-        ) {
-            $('.dropdown').removeClass('show');
-            $('.dropdown-menu').removeClass('show');
-        }
+        // clear form
+        $(self).find('input, textarea').val('');
+      },
+      error: function (err) {
+        $(self).parent().append(
+          '<br><div class="alert alert-danger" role="alert">' +
+            'Sorry, there was an issue submitting your feedback.<br>' +
+            'Please email us at <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>.' +
+          '</div>'
+        );
+        console.log('PATRIC contact form submission failed:', err);
+      }
     });
 
+    return false; // no redirect
+  });
 });

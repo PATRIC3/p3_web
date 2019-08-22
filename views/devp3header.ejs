@@ -329,78 +329,38 @@
           <div class="container my-3">
             <div class="row">
               <div class="col-md-6 mb-3">
-                  <h6><strong>Email PATRIC</strong></h6>
-                  <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                  <form dojoAttachPoint="containerNode" class="PanelForm" encType="multipart/form-data" name="problemForm"
-                  dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onkeyup:validate">
-                  <div>
-                  <div class="HideWithAuth">
-                  <label for="email"><b>Email<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/TextBox" name="email" style="display:block;margin-bottom:8px;" data-dojo-props="intermediateChanges:true,missingMessage:'Email Address is required',trim:true,placeHolder:'Email Address'"></div>
-                  </div>
-
-                  <label for="subject"><b>Subject<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/TextBox" name="subject" style="display:block;margin-bottom:8px;" required="true" data-dojo-props="intermediateChanges:true,missingMessage:'Subject must be provided',trim:true"></div>
-
-                  <div class="jobFeedback dijitHidden">
-                  <label for="description">
-                  <b>Please provide a question or relevant feedback about this <span name="reportedStatus"></span> job (required)<sup>*</sup></b>
-                  </label>
-                  <br>
-                  <div tabindex="1" data-dojo-type="dijit/form/SimpleTextarea" name="description"  style="" data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided for this job',trim:true,rows:20"></div>
-                  <br>
-                  </div>
-
-                  <br>
-                  <label for="content"><b>Message<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/Textarea" name="content" style="height:60px" required="true" data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided',trim:true,rows:10"></div>
-                  <div class="py-1">
-                    Select file to attach (optional):	<input data-dojo-attach-point="attachmentNode" type="file" name="attachment" />
-                  </div>
-                  </div>
-                  <div class="workingMessage messageContainer">
-                  Sending Feedback...
-                  </div>
-
-                  <div class="errorMessage messageContainer">
-                  <div style="font-weight:900;font-size:1.1em;">There was an error submitting your report:</div>
-                  <p data-dojo-attach-point="errorMessage">Error</p>
-                  </div>
-
-                  <div style="margin:4px;margin-top:8px;text-align:right;">
-                  <div data-dojo-attach-point="cancelButton" data-dojo-attach-event="onClick:onCancel" data-dojo-type="dijit/form/Button">Cancel</div>
-                  <div data-dojo-attach-point="saveButton" type="submit" data-dojo-type="dijit/form/Button">Submit</div>
-                  </div>
-                  </form>
-
-                  <!-- <h6><strong>Email PATRIC</strong></h6>
+                <h6><strong>Email PATRIC</strong></h6>
                 <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <form>
+                <form id="contact-patric">
                   <div class="form-row">
                     <div class="form-group col-md-6">
-                      <label for="contactName" class="sr-only">Name</label>
-                      <input type="text" class="form-control" id="contactName" placeholder="Name">
+                      <label for="contactName" class="sr-only">Your Name</label>
+                      <input type="text" class="form-control" id="contactName" placeholder="Name" required>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-6 contact-patric-email">
                       <label for="contactEmail" class="sr-only">Email</label>
-                      <input type="email" class="form-control" id="contactEmail" placeholder="Email">
+                      <input type="email" class="form-control" id="contactEmail" placeholder="Email" required>
                     </div>
                   </div>
                   <div class="form-group">
                     <label for="contactSubject" class="sr-only">Subject</label>
-                    <input type="text" class="form-control" id="contactSubject" placeholder="Subject">
+                    <input type="text" class="form-control" id="contactSubject" placeholder="Subject" required>
                   </div>
                   <div class="form-group">
                     <label for="contactMessage" class="sr-only">Message</label>
-                    <textarea class="form-control" id="contactMessage" rows="3" placeholder="Your message"></textarea>
+                    <textarea class="form-control" id="contactMessage" rows="3" placeholder="Your message" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="contactAttachment">Attach a file (optional):</label>
+                    <input type="file" id="contactAttachment">
                   </div>
                   <button type="submit" class="btn btn-block btn-secondary">Send</button>
-                </form> -->
+                </form>
               </div>
               <div class="col-md-6 mb-3">
                 <h6><strong>Contact</strong></h6>
                 <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <p>If you have questions about or would like assistance using the PATRIC website, please send a message using this form or direct email to <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We appreciate your interest and will respond within two business days to your inquiry. </p>
+                <p>If you have questions about or would like assistance using the PATRIC website, please send a message using this form or email us at <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We appreciate your interest and will respond within two business days to your inquiry. </p>
               </div>
             </div>
           </div>
