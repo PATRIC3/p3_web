@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <meta name="Keywords" content="PATRIC, Pathosystems Resource Integration Center" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,16 +15,15 @@
   <% } else { %>
   <link rel='stylesheet' href='/js/p3/resources/p3.css' />
   <% } %>
-  <link rel='stylesheet' href='/public/assets/styles-export.min.css' />
+  <link rel='stylesheet' href='/public/assets/css/patric_bootstrap.css' />
 </head>
 
-<body onunload="" class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>" style="background:#f5f5f5;min-width:unset;">
+<body onunload="" class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
 
-  <!-- New Navbar, CSS scoped to .patric-bootstrap -->
-  <div class="patric-bootstrap">
+  <!-- New Navbar, CSS scoped to .patric_bootstrap -->
+  <div class="patric_bootstrap">
     <% include devp3header %>
   </div>
-
 
   <div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer"
     data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false" style="height:calc(100% - 38px)">
@@ -35,7 +32,7 @@
     <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding: 0px;">
       <a name="top"></a>
       <!-- start contentpane container -->
-      <div class="patric-bootstrap">
+      <div class="patric_bootstrap">
         <!-- start bootstrap styles -->
 
         <div class="container pt-4">
@@ -67,14 +64,14 @@
                         <a href="/view/Taxonomy/2"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Bacteria">
-                          <img class="d-block rounded-circle" src="/public/assets/Image 2@2x.png" height="30px"
+                          <img class="d-block rounded-circle" src="/public/assets/img/bacteria.png" height="30px"
                             width="30px">
                           <p class="p-0 m-0 ml-1">Bacteria</p>
                         </a>
                         <a href="/view/Taxonomy/2157"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Archaea">
-                          <img class="d-block rounded-circle" src="/public/assets/a0406b347d7a2ef0e22cbce848d25691.png"
+                          <img class="d-block rounded-circle" src="/public/assets/img/archaea.png"
                             height="30px" width="30px">
                           <p class="p-0 m-0 ml-1">Archaea</p>
                         </a>
@@ -82,21 +79,19 @@
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Eukaryotic Hosts">
                           <img class="d-block rounded-circle"
-                            src="/public/assets/52b8b776f9ef57ba07045457ba31ad2f@2x.png" height="30px" width="30px">
+                            src="/public/assets/img/eukaryotic.png" height="30px" width="30px">
                           <p class="p-0 m-0 ml-1">Eukaryotic Hosts</p>
                         </a>
                         <a href="/view/Taxonomy/10239"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Phages">
-                          <img class="d-block rounded-circle" src="/public/assets/1_zMYIsLct4QF3X_BBI3RA-Q@2x.png"
+                          <img class="d-block rounded-circle" src="/public/assets/img/phages.png"
                             height="30px" width="30px">
                           <p class="p-0 m-0 ml-1">Phages</p>
                         </a>
                       </div>
                     </div>
                   </div>
-
-                  <h6><strong>Search</strong></h6>
 
                   <div class="row rounded row--search py-3">
                     <div class="col-md-12">
@@ -339,7 +334,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/BLAST"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/BLAST"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/BLAST">BLAST</a></h5>
                           <p class="card-text">The PATRIC BLAST service integrates the BLAST (Basic Local Aligment
@@ -357,7 +352,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/GenomeDistance"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/GenomeDistance"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/GenomeDistance">Similar Genome
                               Finder</a></h5>
@@ -376,7 +371,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Variation"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/Variation"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center">Variation Analysis</a>
                           </h5>
@@ -473,7 +468,7 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/MetagenomicReadMapping"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/MetagenomicReadMapping"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicReadMapping">Metagenomic
                               Read Mapping</a></h5>
@@ -511,7 +506,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/MetagenomicBinning"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/MetagenomicBinning"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicBinning">Metagenomic
                               Binning</a></h5>
@@ -703,7 +698,7 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Reconstruct"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/Reconstruct"><img class="card-img-top" src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Reconstruct">Reconstruct Metabolic
                               Model</a></h5>
@@ -745,9 +740,6 @@
                   <h6 class=" m-0 p-0 pb-2"><b>Data</b></h6>
                   <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
                   <div class="carousel slide" data-ride="carousel" id="servicesData" data-interval="false">
-                    <!-- ol class="carousel-indicators">
-                    <li data-target="#servicesData" data-slide-to="0" class="active"></li>
-                  </ol -->
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
                         <a href="https://patricbrc.org/app/IDMapper"><img class="card-img-top" src="/public/assets/services/id_mapper.jpg"></a>
@@ -767,14 +759,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- a class="carousel-control-prev" href="#servicesData" role="button" data-slide="prev">
-                    <i class="fa fa-chevron-left fa-lg"></i>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#servicesData" role="button" data-slide="next">
-                    <i class="fa fa-chevron-right fa-lg"></i>
-                    <span class="sr-only">Next</span>
-                  </a -->
                   </div>
                 </div>
               </div>
@@ -827,7 +811,7 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <img class="img-fluid d-block mx-auto" src="/public/assets/patric_logo_footer.png" width="200px">
+                <img class="img-fluid d-block mx-auto" src="/public/assets/img/patric_logo_footer.png" width="200px">
                 <p class="text-center mt-2">
                   <small>Current version: 3.5.38</small>
                 </p>
