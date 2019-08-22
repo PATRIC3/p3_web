@@ -2,8 +2,8 @@
 <html>
 
 <head>
-
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>PATRIC</title>
   <meta name="Keywords" content="PATRIC, Pathosystems Resource Integration Center" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="manifest" href="/public/manifest.json">
@@ -17,16 +17,15 @@
   <% } else { %>
   <link rel='stylesheet' href='/js/p3/resources/p3.css' />
   <% } %>
-  <link rel='stylesheet' href='/public/assets/styles-export.min.css' />
+  <link rel='stylesheet' href='/public/assets/css/patric_bootstrap.css' />
 </head>
 
-<body onunload="" class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>" style="background:#f5f5f5;min-width:unset;">
+<body onunload="" class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
 
-  <!-- New Navbar, CSS scoped to .patric-bootstrap -->
-  <div class="patric-bootstrap">
+  <!-- New Navbar, CSS scoped to .patric_bootstrap -->
+  <div class="patric_bootstrap">
     <% include devp3header %>
   </div>
-
 
   <div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer"
     data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false" style="height:calc(100% - 38px)">
@@ -35,7 +34,7 @@
     <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding: 0px;">
       <a name="top"></a>
       <!-- start contentpane container -->
-      <div class="patric-bootstrap">
+      <div class="patric_bootstrap">
         <!-- start bootstrap styles -->
 
         <div class="container pt-4">
@@ -67,36 +66,34 @@
                         <a href="/view/Taxonomy/2"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Bacteria">
-                          <img class="d-block rounded-circle" src="/public/assets/Image 2@2x.png" height="30px"
+                          <img class="d-block rounded-circle" src="/public/assets/img/bacteria.png" height="30px"
                             width="30px">
                           <p class="p-0 m-0 ml-1">Bacteria</p>
                         </a>
                         <a href="/view/Taxonomy/2157"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Archaea">
-                          <img class="d-block rounded-circle" src="/public/assets/a0406b347d7a2ef0e22cbce848d25691.png"
-                            height="30px" width="30px">
+                          <img class="d-block rounded-circle" src="/public/assets/img/archaea.png" height="30px"
+                            width="30px">
                           <p class="p-0 m-0 ml-1">Archaea</p>
                         </a>
                         <a href="/view/Host/?eq(taxon_lineage_ids,2759)#view_tab=genomes"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Eukaryotic Hosts">
-                          <img class="d-block rounded-circle"
-                            src="/public/assets/52b8b776f9ef57ba07045457ba31ad2f@2x.png" height="30px" width="30px">
+                          <img class="d-block rounded-circle" src="/public/assets/img/eukaryotic.png" height="30px"
+                            width="30px">
                           <p class="p-0 m-0 ml-1">Eukaryotic Hosts</p>
                         </a>
                         <a href="/view/Taxonomy/10239"
                           class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
                           title="Browse Phages">
-                          <img class="d-block rounded-circle" src="/public/assets/1_zMYIsLct4QF3X_BBI3RA-Q@2x.png"
-                            height="30px" width="30px">
+                          <img class="d-block rounded-circle" src="/public/assets/img/phages.png" height="30px"
+                            width="30px">
                           <p class="p-0 m-0 ml-1">Phages</p>
                         </a>
                       </div>
                     </div>
                   </div>
-
-                  <h6><strong>Search</strong></h6>
 
                   <div class="row rounded row--search py-3">
                     <div class="col-md-12">
@@ -144,81 +141,105 @@
                       <div class=" carousel-inner pb-4">
                         <div class="carousel-item active">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html">July 2019 Data and Website Release</a></h5>
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html">July
+                                2019 Data and Website Release</a></h5>
                             <p class="card-text pt-2"><img src="/public/assets/news/fastq-utilities-service.png"
-                                height="80px" class="float-left pr-2 pb-2">The new Fastq Utilities Service provides the capability for aligning, measuring base call quality, and trimming fastq read files to
-                                …</p>
+                                height="80px" class="float-left pr-2 pb-2">The new Fastq Utilities Service provides the
+                              capability for aligning, measuring base call quality, and trimming fastq read files to
+                              …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="carousel-item">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html">March 2019 Data and Website Release</a></h5>
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html">March
+                                2019 Data and Website Release</a></h5>
                             <p class="card-text pt-2"><img src="/public/assets/news/march-release-2019.png"
-                                height="80px" class="float-left pr-2 pb-2">This PATRIC release includes a new Metagenome Taxonomic Classification Service; a new Metagenomic Read Mapping Service; a new Codon Tree
+                                height="80px" class="float-left pr-2 pb-2">This PATRIC release includes a new Metagenome
+                              Taxonomic Classification Service; a new Metagenomic Read Mapping Service; a new Codon Tree
                               …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="carousel-item">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html">Workshop at Argonne National Laboratory</a></h5>
-                            <p class="card-text pt-2"><img src="/public/assets/news/workshop-1.png"
-                                height="80px" class="float-left pr-2 pb-2">
-                                The PATRIC/RAST teams will be offering a tutorial workshop April 16-18, 2019, at Argonne National Laboratory in the suburbs of
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html">Workshop
+                                at Argonne National Laboratory</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/workshop-1.png" height="80px"
+                                class="float-left pr-2 pb-2">
+                              The PATRIC/RAST teams will be offering a tutorial workshop April 16-18, 2019, at Argonne
+                              National Laboratory in the suburbs of
                               …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="carousel-item">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html">January 2019 Update</a></h5>
-                            <p class="card-text pt-2"><img src="/public/assets/news/jan-release-2019.png"
-                                height="80px" class="float-left pr-2 pb-2">This PATRIC release includes over 9,200 new genomes bringing the total to over 215,000, as well as other minor enhancements
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html">January
+                                2019 Update</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/jan-release-2019.png" height="80px"
+                                class="float-left pr-2 pb-2">This PATRIC release includes over 9,200 new genomes
+                              bringing the total to over 215,000, as well as other minor enhancements
                               …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="carousel-item">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html">November 2018 Update</a></h5>
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html">November
+                                2018 Update</a></h5>
                             <p class="card-text pt-2"><img src="/public/assets/news/november-release-2018.png"
                                 height="80px" class="float-left pr-2 pb-2">
-                                This PATRIC release includes a new Genome Alignment Service; enhancements to the Metagenomic Binning, Tn-Seq, and RNA-Seq Services; 5 new
+                              This PATRIC release includes a new Genome Alignment Service; enhancements to the
+                              Metagenomic Binning, Tn-Seq, and RNA-Seq Services; 5 new
                               …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
                         </div>
                         <div class="carousel-item">
                           <div class="card-body px-0 pt-0 pb-3">
-                            <h5 class="text-center px-3"><a href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html">Instructional Videos</a></h5>
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html">Instructional
+                                Videos</a></h5>
                             <p class="card-text pt-2"><img src="/public/assets/news/instructional-videos.png"
                                 height="80px" class="float-left pr-2 pb-2">
-                                In addition to the current Tutorials, User Guides, and Webinars, PATRIC now features short instructional YouTube videos that demonstrate how
+                              In addition to the current Tutorials, User Guides, and Webinars, PATRIC now features short
+                              instructional YouTube videos that demonstrate how
                               …</p>
                             <div class="d-flex justify-content-center">
                               <div class="btn-group">
-                                <a href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html" role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                                <a href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
                               </div>
                             </div>
                           </div>
@@ -280,7 +301,8 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/Assembly"><img class="card-img-top" src="/public/assets/services/genome_assembly.jpg"></a>
+                        <a href="https://patricbrc.org/app/Assembly"><img class="card-img-top"
+                            src="/public/assets/services/genome_assembly.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Assembly">Genome Assembly</a></h5>
                           <p class="card-text">The Genome Assembly Service allows single or multiple assemblers to be
@@ -297,7 +319,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Annotation"><img class="card-img-top" src="/public/assets/services/genome_annotation.jpg"></a>
+                        <a href="https://patricbrc.org/app/Annotation"><img class="card-img-top"
+                            src="/public/assets/services/genome_annotation.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Annotation">Genome Annotation</a>
                           </h5>
@@ -316,7 +339,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/ComprehensiveGenomeAnalysis"><img class="card-img-top" src="/public/assets/services/comp_genome_analysis.jpg"></a>
+                        <a href="https://patricbrc.org/app/ComprehensiveGenomeAnalysis"><img class="card-img-top"
+                            src="/public/assets/services/comp_genome_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a
                               href="https://patricbrc.org/app/ComprehensiveGenomeAnalysis">Comprehensive Genome
@@ -339,7 +363,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/BLAST"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/BLAST"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/BLAST">BLAST</a></h5>
                           <p class="card-text">The PATRIC BLAST service integrates the BLAST (Basic Local Aligment
@@ -357,7 +382,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/GenomeDistance"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/GenomeDistance"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/GenomeDistance">Similar Genome
                               Finder</a></h5>
@@ -376,7 +402,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Variation"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/Variation"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center">Variation Analysis</a>
                           </h5>
@@ -395,7 +422,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Tnseq"><img class="card-img-top" src="/public/assets/services/tn-seq_analysis.jpg"></a>
+                        <a href="https://patricbrc.org/app/Tnseq"><img class="card-img-top"
+                            src="/public/assets/services/tn-seq_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Tnseq">Tn-Seq Analysis</a></h5>
                           <p class="card-text">The Tn-Seq Analysis Service facilitates determination of essential and
@@ -413,7 +441,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/PhylogeneticTree"><img class="card-img-top" src="/public/assets/services/phylogenetic_tree.jpg"></a>
+                        <a href="https://patricbrc.org/app/PhylogeneticTree"><img class="card-img-top"
+                            src="/public/assets/services/phylogenetic_tree.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/PhylogeneticTree">Phylogenetic Tree
                               Building</a></h5>
@@ -432,7 +461,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/GenomeAlignment"><img class="card-img-top" src="/public/assets/services/genome_alignment_viewer.jpg"></a>
+                        <a href="https://patricbrc.org/app/GenomeAlignment"><img class="card-img-top"
+                            src="/public/assets/services/genome_alignment_viewer.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/GenomeAlignment">Genome Alignment
                               (Mauve)</a></h5>
@@ -473,7 +503,8 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/MetagenomicReadMapping"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/MetagenomicReadMapping"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicReadMapping">Metagenomic
                               Read Mapping</a></h5>
@@ -492,7 +523,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/TaxonomicClassification"><img class="card-img-top" src="/public/assets/services/taxonomic_classification.jpg"></a>
+                        <a href="https://patricbrc.org/app/TaxonomicClassification"><img class="card-img-top"
+                            src="/public/assets/services/taxonomic_classification.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/TaxonomicClassification">Taxonomic
                               Classification</a></h5>
@@ -511,7 +543,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/MetagenomicBinning"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/MetagenomicBinning"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/MetagenomicBinning">Metagenomic
                               Binning</a></h5>
@@ -556,7 +589,8 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/Expression"><img class="card-img-top" src="/public/assets/services/expression_upload.jpg"></a>
+                        <a href="https://patricbrc.org/app/Expression"><img class="card-img-top"
+                            src="/public/assets/services/expression_upload.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Expression">Differential Expression
                               Import</a></h5>
@@ -576,7 +610,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Rnaseq"><img class="card-img-top" src="/public/assets/services/rna-seq_analysis.jpg"></a>
+                        <a href="https://patricbrc.org/app/Rnaseq"><img class="card-img-top"
+                            src="/public/assets/services/rna-seq_analysis.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Rnaseq">RNA-Seq Analysis</a></h5>
                           <p class="card-text">The RNA-Seq Analysis Service provides services for aligning, assembling,
@@ -619,7 +654,8 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/ProteinFamily"><img class="card-img-top" src="/public/assets/services/protein_family_sorter.jpg"></a>
+                        <a href="https://patricbrc.org/app/ProteinFamily"><img class="card-img-top"
+                            src="/public/assets/services/protein_family_sorter.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/ProteinFamily">Protein Family
                               Sorter</a></h5>
@@ -638,7 +674,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/SeqComparison"><img class="card-img-top" src="/public/assets/services/proteome_comparison.jpg"></a>
+                        <a href="https://patricbrc.org/app/SeqComparison"><img class="card-img-top"
+                            src="/public/assets/services/proteome_comparison.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/SeqComparison">Proteome
                               Comparison</a></h5>
@@ -683,7 +720,8 @@
                     </ol>
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/ComparativePathway"><img class="card-img-top" src="/public/assets/services/comparative_pathway.jpg"></a>
+                        <a href="https://patricbrc.org/app/ComparativePathway"><img class="card-img-top"
+                            src="/public/assets/services/comparative_pathway.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/ComparativePathway">Comparative
                               Pathway Tool</a></h5>
@@ -703,7 +741,8 @@
                         </div>
                       </div>
                       <div class="carousel-item">
-                        <a href="https://patricbrc.org/app/Reconstruct"><img class="card-img-top" src="/public/assets/patric-web-app@2x.jpg"></a>
+                        <a href="https://patricbrc.org/app/Reconstruct"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/Reconstruct">Reconstruct Metabolic
                               Model</a></h5>
@@ -745,12 +784,10 @@
                   <h6 class=" m-0 p-0 pb-2"><b>Data</b></h6>
                   <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
                   <div class="carousel slide" data-ride="carousel" id="servicesData" data-interval="false">
-                    <!-- ol class="carousel-indicators">
-                    <li data-target="#servicesData" data-slide-to="0" class="active"></li>
-                  </ol -->
                     <div class=" carousel-inner pb-4">
                       <div class="carousel-item active">
-                        <a href="https://patricbrc.org/app/IDMapper"><img class="card-img-top" src="/public/assets/services/id_mapper.jpg"></a>
+                        <a href="https://patricbrc.org/app/IDMapper"><img class="card-img-top"
+                            src="/public/assets/services/id_mapper.jpg"></a>
                         <div class="card-body">
                           <h5 class="text-center"><a href="https://patricbrc.org/app/IDMapper">ID Mapper</a></h5>
                           <p class="card-text">The ID Mapper tool maps PATRIC identifiers to those from other prominent
@@ -766,15 +803,33 @@
                           </div>
                         </div>
                       </div>
+                      <div class="carousel-item">
+                        <a href="https://patricbrc.org/app/FastqUtil"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="https://patricbrc.org/app/FastqUtil">Fastq Utilities</a></h5>
+                          <p class="card-text">The Fastq Utilites Service provides capability for aligning, measuring
+                            base call quality, and trimmiing fastq read files. For further explanation, please see Fastq
+                            Utilities Service User Guide and Tutorial.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/fastq_utilities_service.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i> User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/fastq-utilities/fastq-utilities.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <!-- a class="carousel-control-prev" href="#servicesData" role="button" data-slide="prev">
-                    <i class="fa fa-chevron-left fa-lg"></i>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                  <a class="carousel-control-next" href="#servicesData" role="button" data-slide="next">
-                    <i class="fa fa-chevron-right fa-lg"></i>
-                    <span class="sr-only">Next</span>
-                  </a -->
+                    <a class="carousel-control-prev" href="#servicesData" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesData" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -827,7 +882,7 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <img class="img-fluid d-block mx-auto" src="/public/assets/patric_logo_footer.png" width="200px">
+                <img class="img-fluid d-block mx-auto" src="/public/assets/img/patric_logo_footer.png" width="200px">
                 <p class="text-center mt-2">
                   <small>Current version: 3.5.38</small>
                 </p>
