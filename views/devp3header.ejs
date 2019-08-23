@@ -8,7 +8,8 @@
       <a class="navbar-brand" href="/">PATRIC</a>
     </li>
     <li class="nav-item mr-3">
-      <span class="text-secondary small"><%- request.package.version %><%- request.applicationOptions.appLabel || "" %></span>
+      <span
+        class="text-secondary small"><%- request.package.version %><%- request.applicationOptions.appLabel || "" %></span>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_search" role="button" aria-haspopup="true"
@@ -183,7 +184,8 @@
                   class="list-group-item list-group-item-action navigationLink">Annotation</a>
                 <a href="/app/ComprehensiveGenomeAnalysis" title="Service: Comprehensive Genome Analysis"
                   class="list-group-item list-group-item-action navigationLink">Comprehensive Genome Analysis</a>
-                <a href="/app/BLAST" title="Service: BLAST" class="list-group-item list-group-item-action navigationLink">BLAST</a>
+                <a href="/app/BLAST" title="Service: BLAST"
+                  class="list-group-item list-group-item-action navigationLink">BLAST</a>
                 <a href="/app/GenomeDistance" title="Service: Similar Genome Finder"
                   class="list-group-item list-group-item-action navigationLink">Similar Genome Finder</a>
                 <a href="/app/Variation" title="Service: Variation Analysis"
@@ -238,10 +240,11 @@
               <h6><strong>Data</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
-                <a href="/app/IDMapper" title="Service: ID Mapper" class="list-group-item list-group-item-action navigationLinkhttps://patricbrc.org">ID
+                <a href="/app/IDMapper" title="Service: ID Mapper"
+                  class="list-group-item list-group-item-action navigationLinkhttps://patricbrc.org">ID
                   Mapper</a>
-                <a href="/app/FastqUtil" title="Service: Fastq Utilities"
-                  class="list-group-item list-group-item-action" navigationLink>Fastq Utilities</a>
+                <a href="/app/FastqUtil" title="Service: Fastq Utilities" class="list-group-item list-group-item-action"
+                  navigationLink>Fastq Utilities</a>
               </div>
               <h6><strong>Raw Data Download</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0">
@@ -436,7 +439,6 @@
             </div>
           </div>
         </div>
-      </div>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__contact" role="button" data-toggle="dropdown"
@@ -450,132 +452,65 @@
             <div class="col-md-6 mb-3">
               <h6><strong>Email PATRIC</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0">
-              <form dojoAttachPoint="containerNode" class="PanelForm" encType="multipart/form-data" name="problemForm"
-                dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onkeyup:validate">
-                <div>
-                  <div class="HideWithAuth">
-                    <label for="email"><b>Email<sup>*</sup></b></label>
-                    <div data-dojo-type="dijit/form/TextBox" name="email" style="display:block;margin-bottom:8px;"
-                      data-dojo-props="intermediateChanges:true,missingMessage:'Email Address is required',trim:true,placeHolder:'Email Address'">
-                    </div>
+              <form id="contact-patric">
+                <div class="form-row">
+                  <div class="form-group col-md-6">
+                    <label for="contactName" class="sr-only">Your Name</label>
+                    <input type="text" class="form-control" id="contactName" placeholder="Name" required>
                   </div>
-
-                  <label for="subject"><b>Subject<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/TextBox" name="subject" style="display:block;margin-bottom:8px;"
-                    required="true"
-                    data-dojo-props="intermediateChanges:true,missingMessage:'Subject must be provided',trim:true">
-                  </div>
-
-                  <div class="jobFeedback dijitHidden">
-                    <label for="description">
-                      <b>Please provide a question or relevant feedback about this <span name="reportedStatus"></span>
-                        job (required)<sup>*</sup></b>
-                    </label>
-                    <br>
-                    <div tabindex="1" data-dojo-type="dijit/form/SimpleTextarea" name="description" style=""
-                      data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided for this job',trim:true,rows:20">
-                    </div>
-                    <br>
-                  </div>
-
-                  <br>
-                  <label for="content"><b>Message<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/Textarea" name="content" style="height:60px" required="true"
-                    data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided',trim:true,rows:10">
-                  </div>
-                  <div class="py-1">
-                    Select file to attach (optional): <input data-dojo-attach-point="attachmentNode" type="file"
-                      name="attachment" />
+                  <div class="form-group col-md-6 contact-patric-email">
+                    <label for="contactEmail" class="sr-only">Email</label>
+                    <input type="email" class="form-control" id="contactEmail" placeholder="Email" required>
                   </div>
                 </div>
-                <div class="workingMessage messageContainer">
-                  Sending Feedback...
+                <div class="form-group">
+                  <label for="contactSubject" class="sr-only">Subject</label>
+                  <input type="text" class="form-control" id="contactSubject" placeholder="Subject" required>
                 </div>
-
-                <div class="errorMessage messageContainer">
-                  <div style="font-weight:900;font-size:1.1em;">There was an error submitting your report:</div>
-                  <p data-dojo-attach-point="errorMessage">Error</p>
+                <div class="form-group">
+                  <label for="contactMessage" class="sr-only">Message</label>
+                  <textarea class="form-control" id="contactMessage" rows="3" placeholder="Your message"
+                    required></textarea>
                 </div>
-
-                <div style="margin:4px;margin-top:8px;text-align:right;">
-                  <div data-dojo-attach-point="cancelButton" data-dojo-attach-event="onClick:onCancel"
-                    data-dojo-type="dijit/form/Button">Cancel</div>
-                  <div data-dojo-attach-point="saveButton" type="submit" data-dojo-type="dijit/form/Button">Submit</div>
+                <div class="form-group">
+                  <label for="contactAttachment">Attach a file (optional):</label>
+                  <input type="file" id="contactAttachment">
                 </div>
+                <button type="submit" class="btn btn-block btn-secondary">Send</button>
               </form>
-
-              <!-- <h6><strong>Email PATRIC</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <form>
-                  <div class="form-row">
-                    <div class="form-group col-md-6">
-                      <label for="contactName" class="sr-only">Name</label>
-                      <input type="text" class="form-control" id="contactName" placeholder="Name">
-                    </div>
-                    <div class="form-group col-md-6">
-                      <label for="contactEmail" class="sr-only">Email</label>
-                      <input type="email" class="form-control" id="contactEmail" placeholder="Email">
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <label for="contactSubject" class="sr-only">Subject</label>
-                    <input type="text" class="form-control" id="contactSubject" placeholder="Subject">
-                  </div>
-                  <div class="form-group">
-                    <label for="contactMessage" class="sr-only">Message</label>
-                    <textarea class="form-control" id="contactMessage" rows="3" placeholder="Your message"></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-block btn-secondary">Send</button>
-                </form> -->
             </div>
             <div class="col-md-6 mb-3">
               <h6><strong>Contact</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0">
               <p>If you have questions about or would like assistance using the PATRIC website, please send a message
-                using this form or direct email to <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We
-                appreciate your interest and will respond within two business days to your inquiry. </p>
+                using this form or email us at <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We appreciate
+                your interest and will respond within two business days to your inquiry. </p>
             </div>
           </div>
         </div>
       </div>
     </li>
     <li class="flex-grow-1">
-
-      <div class="showOnLoad ShowWithAuth dijitHidden" style="display:none">
-        <div class="showOnLoad ShowWithAuth dijitHidden topMenuButtonIcon" data-dojo-type="dijit/form/DropDownButton"
-          data-dojo-props="iconClass:'icon-user fa-2x login-btn'">
-          <span></span>
-          <div data-dojo-type="p3/widget/TooltipDialog">
-            <div>Signed in as </div>
-            <hr>
-            <div><a class="userProfile">Account Settings</a></div>
-            <div><a class="sulogin">SU Login</a></div>
-            <div><a class="suSwitchBack" onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
-            </div>
-            <div><a class="logoutLink" onclick="window.App.logout()">Logout</a></div>
-          </div>
-        </div>
-      </div>
-
     </li>
     <li class="nav-item dropdown">
-
-
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__workspace" role="button" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-user-cog icon-user"></i>
-        <span class="d-none d-lg-inline">Account</span>
+        <span class="d-none d-lg-inline">
+          <span class="showOnLoad ShowWithAuth dijitHidden"><span id="signedInAs"></span></span>
+          <span class="HideWithAuth authLinks showOnLoad dijitHidden">Account</span>
+        </span>
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown__workspace">
         <div class="container my-3">
           <div class="row">
             <div class="col-md-3">
               <h6><strong>My Account</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
 
-              <div class="HideWithAuth authLinks showOnLoad dijitHidden" style="padding: 3px 2px 0 0;">
-                <p class="">
-                  <em>Welcome, Guest. You are not currently logged in.</em>
+              <div class="HideWithAuth authLinks showOnLoad dijitHidden">
+                <p class="mt-3">
+                  Welcome, Guest. You are not currently logged in.
                 </p>
                 <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
                 <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
@@ -584,51 +519,43 @@
               <div class="showOnLoad ShowWithAuth dijitHidden">
                 <span></span>
                 <div class="mb-3 list-group list-group-flush">
-                  <div>Signed in as <span id="signedInAs" style="font-weight:bold;"></span></div>
-                  <div><a class="userProfile list-group-item list-group-item-action">Account Settings</a></div>
-                  <div><a class="sulogin list-group-item list-group-item-action">SU Login</a></div>
-                  <div><a class="suSwitchBack list-group-item list-group-item-action"
-                      onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a></div>
-                  <div><a class="logoutLink list-group-item list-group-item-action"
-                      onclick="window.App.logout()">Logout</a></div>
+                  <!-- <div class="mb-2 text-dark pl-3">Signed in as </div> -->
+                  <a href="" class="userProfile list-group-item list-group-item-action">Account Settings</a>
+                  <a href="" class="sulogin list-group-item list-group-item-action">SU Login</a>
+                  <a href="" class="suSwitchBack list-group-item list-group-item-action"
+                      onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
+                  <a href="" class="logoutLink list-group-item list-group-item-action"
+                      onclick="window.App.logout()">Logout</a>
                 </div>
               </div>
-
-              <!-- <div class="d-flex align-items-center flex-wrap justify-content-start mb-3">
-                  <a class="btn btn-outline-primary btn-sm" href="#"><i class="fa fa-user-plus fa-fw"></i>&nbsp;Sign-up </a>
-                  <p class="mb-0">&nbsp;or&nbsp;</p>
-                  <a class="btn btn-outline-primary btn-sm" href="#"><i class="fa fa-sign-in-alt fa-fw"></i>&nbsp;Login </a>
-                </div>
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="#" class="list-group-item list-group-item-action">Account Settings </a>
-                </div> -->
             </div>
             <div class="col-md-3">
               <h6><strong>Workspaces</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
                 <div class="mb-3 list-group list-group-flush">
-                  <div id="YourWorkspaces" class="mb-2">
-                  </div>
                   <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My
                     Workspaces</a>
                   <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
                     Workspaces</a>
-                </div>
+                    <div id="YourWorkspaces" class="mt-2">
+                    </div>
+                  </div>
               </div>
               <!-- show message for !logged in users -->
               <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 list-group list-group-flush">
+                <div class="mb-3 mt-3 list-group list-group-flush">
                   <p>Login and upload your own data.</p>
                 </div>
               </div>
 
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3" id="menu-list-mydata">
               <h6><strong>My Data</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <!-- show my data links for logged in users -->
               <div class="ShowWithAuth">
+                  <div style="display:none"><a class="navigationLink" id="YourWorkspaceLink2">My Workspaces</a></div><!-- this is needed to for p3app.js:639 to work. Needs rework -->
                 <div class="mb-3 list-group list-group-flush">
                   <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome
                     Groups</a>
@@ -642,7 +569,7 @@
               </div>
               <!-- show message for !logged in users -->
               <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 list-group list-group-flush">
+                <div class="mb-3 mt-3 list-group list-group-flush">
                   <p>Login and upload your own data.</p>
                 </div>
               </div>
@@ -650,7 +577,7 @@
 
             <div class="col-md-3">
               <h6><strong>My Jobs</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
                 <div class="mb-3 list-group list-group-flush">
                   <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00
@@ -659,7 +586,7 @@
               </div>
               <!-- show message for !logged in users -->
               <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 list-group list-group-flush">
+                <div class="mb-3 mt-3 list-group list-group-flush">
                   <p>Login and upload your own data.</p>
                 </div>
               </div>

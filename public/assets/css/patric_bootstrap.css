@@ -6367,3 +6367,7 @@ body.patric_body {
     border-top-right-radius: 0.25rem !important; }
   .patric_bootstrap .timeline-Header {
     display: none; }
+  .patric_bootstrap #menu-list-mydata a.navigationLink {
+    color: #2E76A3 !important; }
+  .patric_bootstrap #menu-list-mydata a.navigationLink:hover {
+    color: #495057 !important; }

@@ -280,3 +280,8 @@ ul.bullets-orange li::before {
 .timeline-Header {
   display: none;
 }
+
+#menu-list-mydata {
+  a.navigationLink { color: $link-color !important; }
+  a.navigationLink:hover { color: #495057 !important; }
+}
