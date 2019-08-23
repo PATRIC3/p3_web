@@ -1,379 +1,510 @@
-  <!--/nav START-->
-  <nav class="navbar navbar-expand navbar-patric patric-bootstrap__nav shadow navbar-light" role="navigation" id="topnav">
-    <ul class="nav navbar-nav container-fluid justify-content-start">
-      <li class="nav-item">
-        <a href="#" class="nav-link nav-mobile-home">
-          <i class="fas fa-home icon-home"></i>
-        </a>
-        <a class="navbar-brand" href="/">PATRIC</a>
-      </li>
-      <li class="nav-item mr-3">
-        <span class="text-secondary small">3.5.41</span>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_search" role="button" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-search icon-search"></i>
-          <span class="d-none d-lg-inline" style="">Search</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown_search" id="navbarDropdown_search_menu">
-          <div class="container my-3">
-            <div class="row rounded row--search row--search__top py-3">
-                <div class="col-md-12">
-                    <!-- Include Global Search Template-->
-                    <div data-dojo-type="dijit/layout/ContentPane" class="search">
-                      <div class="global-search">
-                        <div style="flex-grow: 1">
-                          <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden" data-dojo-type="p3/widget/GlobalSearch" />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-            </div>
-            <div class="row mt-3">
-              <div class="col-12">
-                <h6><strong><i class="fa fa-question-circle icon-question-circle"></i> Search Tips</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <ul>
-                  <li>All terms: This is the least restricted search which allows users to enter any words or numbers into the search text box. All terms search will automatically enter “AND” as a logical operator between anything entered in the global search, but users can specify a more specific search by using “AND” or “OR”.</li>
-                  <li>Any term: This search enters the logical operator "OR" between any terms (words or numbers) that have been entered into the search text box.</li>
-                  <li>All exact terms: This search takes each keyword or number and does an exact match by both automatically entering quotation marks around the terms, and including the logical operator "AND".</li>
-                  <li>Any exact term: This search performs exact matches of each of the query terms with quotes and logical operator "OR".</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-database icon-database"></i>
-          <span class="d-none d-lg-inline" style="">Browse</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-12 mb-0" style="">
-                <h6><strong>Browse All</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="row">
-                  <div class="col-md-12 d-flex flex-wrap justify-content-start align-items-center">
-                    <a href="/view/Taxonomy/2" title="Browse Bacteria" class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
-                      <img class="d-block rounded-circle" src="/public/assets/img/bacteria.png" height="30px" width="30px">
-                      <p class="p-0 m-0 ml-1">Bacteria</p>
-                    </a>
-                    <a href="/view/Taxonomy/2157" title="Browse Archaea" class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
-                      <img class="d-block rounded-circle" src="/public/assets/img/archaea.png" height="30px" width="30px">
-                      <p class="p-0 m-0 ml-1">Archaea</p>
-                    </a>
-                    <a href="/view/Host/?eq(taxon_lineage_ids,2759)#view_tab=genomes" title="Browse Eukaryotic Hosts" class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
-                      <img class="d-block rounded-circle" src="/public/assets/img/eukaryotic.png" height="30px" width="30px">
-                      <p class="p-0 m-0 ml-1">Eukaryotic Hosts</p>
-                    </a>
-                    <a href="/view/Taxonomy/10239" title="Browse Phages" class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
-                      <img class="d-block rounded-circle" src="/public/assets/img/phages.png" height="30px" width="30px">
-                      <p class="p-0 m-0 ml-1">Phages</p>
-                    </a>
+<!--/nav START-->
+<nav class="navbar navbar-expand navbar-patric patric-bootstrap__nav shadow navbar-light" role="navigation" id="topnav">
+  <ul class="nav navbar-nav container-fluid justify-content-start">
+    <li class="nav-item">
+      <a href="#" class="nav-link nav-mobile-home">
+        <i class="fas fa-home icon-home"></i>
+      </a>
+      <a class="navbar-brand" href="/">PATRIC</a>
+    </li>
+    <li class="nav-item mr-3">
+      <span class="text-secondary small"><%- request.package.version %><%- request.applicationOptions.appLabel || "" %></span>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_search" role="button" aria-haspopup="true"
+        aria-expanded="false">
+        <i class="fas fa-search icon-search"></i>
+        <span class="d-none d-lg-inline" style="">Search</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown_search" id="navbarDropdown_search_menu">
+        <div class="container my-3">
+          <div class="row rounded row--search row--search__top py-3">
+            <div class="col-md-12">
+              <!-- Include Global Search Template-->
+              <div data-dojo-type="dijit/layout/ContentPane" class="search">
+                <div class="global-search">
+                  <div style="flex-grow: 1">
+                    <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden"
+                      data-dojo-type="p3/widget/GlobalSearch" />
                   </div>
                 </div>
-                <h6><strong>Bacterial Pathogens</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/view/Taxonomy/469#view_tab=overview" title="Browse Acinetobacter" class="list-group-item list-group-item-action">Acinetobacter</a>
-                  <a href="/view/Taxonomy/1386#view_tab=overview" title="Browse Bacillus" class="list-group-item list-group-item-action">Bacillus</a>
-                  <a href="/view/Taxonomy/773#view_tab=overview" title="Browse Bartonella" class="list-group-item list-group-item-action">Bartonella</a>
-                  <a href="/view/Taxonomy/64895#view_tab=overview" title="Browse Borreliella" class="list-group-item list-group-item-action">Borreliella</a>
-                  <a href="/view/Taxonomy/234#view_tab=overview" title="Browse Brucella" class="list-group-item list-group-item-action">Brucella</a>
-                  <a href="/view/Taxonomy/32008#view_tab=overview" title="Browse Burkholderia" class="list-group-item list-group-item-action">Burkholderia</a>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6><strong><i class="fa fa-question-circle icon-question-circle"></i> Search Tips</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <ul class="bullets-orange">
+                <li>All terms: This is the least restricted search which allows users to enter any words or numbers into
+                  the search text box. All terms search will automatically enter “AND” as a logical operator between
+                  anything entered in the global search, but users can specify a more specific search by using “AND” or
+                  “OR”.</li>
+                <li>Any term: This search enters the logical operator "OR" between any terms (words or numbers) that
+                  have been entered into the search text box.</li>
+                <li>All exact terms: This search takes each keyword or number and does an exact match by both
+                  automatically entering quotation marks around the terms, and including the logical operator "AND".
+                </li>
+                <li>Any exact term: This search performs exact matches of each of the query terms with quotes and
+                  logical operator "OR".</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-database icon-database"></i>
+        <span class="d-none d-lg-inline" style="">Browse</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-12 mb-0" style="">
+              <h6><strong>Browse All</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <div class="row">
+                <div class="col-md-12 d-flex flex-wrap justify-content-start align-items-center">
+                  <a href="/view/Taxonomy/2" title="Browse Bacteria"
+                    class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
+                    <img class="d-block rounded-circle" src="/public/assets/img/bacteria.png" height="30px"
+                      width="30px">
+                    <p class="p-0 m-0 ml-1">Bacteria</p>
+                  </a>
+                  <a href="/view/Taxonomy/2157" title="Browse Archaea"
+                    class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
+                    <img class="d-block rounded-circle" src="/public/assets/img/archaea.png" height="30px" width="30px">
+                    <p class="p-0 m-0 ml-1">Archaea</p>
+                  </a>
+                  <a href="/view/Host/?eq(taxon_lineage_ids,2759)#view_tab=genomes" title="Browse Eukaryotic Hosts"
+                    class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
+                    <img class="d-block rounded-circle" src="/public/assets/img/eukaryotic.png" height="30px"
+                      width="30px">
+                    <p class="p-0 m-0 ml-1">Eukaryotic Hosts</p>
+                  </a>
+                  <a href="/view/Taxonomy/10239" title="Browse Phages"
+                    class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3">
+                    <img class="d-block rounded-circle" src="/public/assets/img/phages.png" height="30px" width="30px">
+                    <p class="p-0 m-0 ml-1">Phages</p>
+                  </a>
                 </div>
               </div>
-              <div class="col-md-3">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/view/Taxonomy/194#view_tab=overview" title="Browse Campylobacter" class="list-group-item list-group-item-action">Campylobacter</a>
-                  <a href="/view/Taxonomy/810#view_tab=overview" title="Browse Chlamydia" class="list-group-item list-group-item-action">Chlamydia</a>
-                  <a href="/view/Taxonomy/1485#view_tab=overview" title="Browse Clostridium" class="list-group-item list-group-item-action">Clostridium</a>
-                  <a href="/view/Taxonomy/776#view_tab=overview" title="Browse Coxiella" class="list-group-item list-group-item-action">Coxiella</a>
-                  <a href="/view/Taxonomy/943#view_tab=overview" title="Browse Ehrlichia" class="list-group-item list-group-item-action">Ehrlichia</a>
-                  <a href="/view/Taxonomy/561#view_tab=overview" title="Browse Escherichia" class="list-group-item list-group-item-action">Escherichia</a>
-                </div>
+              <h6><strong>Bacterial Pathogens</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-3">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/view/Taxonomy/469#view_tab=overview" title="Browse Acinetobacter"
+                  class="list-group-item list-group-item-action navigationLink">Acinetobacter</a>
+                <a href="/view/Taxonomy/1386#view_tab=overview" title="Browse Bacillus"
+                  class="list-group-item list-group-item-action navigationLink">Bacillus</a>
+                <a href="/view/Taxonomy/773#view_tab=overview" title="Browse Bartonella"
+                  class="list-group-item list-group-item-action navigationLink">Bartonella</a>
+                <a href="/view/Taxonomy/64895#view_tab=overview" title="Browse Borreliella"
+                  class="list-group-item list-group-item-action navigationLink">Borreliella</a>
+                <a href="/view/Taxonomy/234#view_tab=overview" title="Browse Brucella"
+                  class="list-group-item list-group-item-action navigationLink">Brucella</a>
+                <a href="/view/Taxonomy/32008#view_tab=overview" title="Browse Burkholderia"
+                  class="list-group-item list-group-item-action navigationLink">Burkholderia</a>
               </div>
-              <div class="col-md-3">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/view/Taxonomy/262#view_tab=overview" title="Browse Francisella" class="list-group-item list-group-item-action">Francisella</a>
-                  <a href="/view/Taxonomy/209#view_tab=overview" title="Browse Helicobacter" class="list-group-item list-group-item-action">Helicobacter</a>
-                  <a href="/view/Taxonomy/1637#view_tab=overview" title="Browse Listeria" class="list-group-item list-group-item-action">Listeria</a>
-                  <a href="/view/Taxonomy/1763#view_tab=overview" title="Browse Mycobacterium" class="list-group-item list-group-item-action">Mycobacterium</a>
-                  <a href="/view/Taxonomy/286#view_tab=overview" title="Browse Pseudomonas" class="list-group-item list-group-item-action">Pseudomonas</a>
-                  <a href="/view/Taxonomy/780#view_tab=overview" title="Browse Rickettsia" class="list-group-item list-group-item-action">Rickettsia</a>
-                </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/view/Taxonomy/194#view_tab=overview" title="Browse Campylobacter"
+                  class="list-group-item list-group-item-action navigationLink">Campylobacter</a>
+                <a href="/view/Taxonomy/810#view_tab=overview" title="Browse Chlamydia"
+                  class="list-group-item list-group-item-action navigationLink">Chlamydia</a>
+                <a href="/view/Taxonomy/1485#view_tab=overview" title="Browse Clostridium"
+                  class="list-group-item list-group-item-action navigationLink">Clostridium</a>
+                <a href="/view/Taxonomy/776#view_tab=overview" title="Browse Coxiella"
+                  class="list-group-item list-group-item-action navigationLink">Coxiella</a>
+                <a href="/view/Taxonomy/943#view_tab=overview" title="Browse Ehrlichia"
+                  class="list-group-item list-group-item-action navigationLink">Ehrlichia</a>
+                <a href="/view/Taxonomy/561#view_tab=overview" title="Browse Escherichia"
+                  class="list-group-item list-group-item-action navigationLink">Escherichia</a>
               </div>
-              <div class="col-md-3">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/view/Taxonomy/590#view_tab=overview" title="Browse Salmonella" class="list-group-item list-group-item-action">Salmonella</a>
-                  <a href="/view/Taxonomy/620#view_tab=overview" title="Browse Shigella" class="list-group-item list-group-item-action">Shigella</a>
-                  <a href="/view/Taxonomy/1279#view_tab=overview" title="Browse Staphylococcus" class="list-group-item list-group-item-action">Staphylococcus</a>
-                  <a href="/view/Taxonomy/1301#view_tab=overview" title="Browse Streptococcus" class="list-group-item list-group-item-action">Streptococcus</a>
-                  <a href="/view/Taxonomy/662#view_tab=overview" title="Browse Vibrio" class="list-group-item list-group-item-action">Vibrio</a>
-                  <a href="/view/Taxonomy/629#view_tab=overview" title="Browse Yersinia" class="list-group-item list-group-item-action">Yersinia</a>
-                </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/view/Taxonomy/262#view_tab=overview" title="Browse Francisella"
+                  class="list-group-item list-group-item-action navigationLink">Francisella</a>
+                <a href="/view/Taxonomy/209#view_tab=overview" title="Browse Helicobacter"
+                  class="list-group-item list-group-item-action navigationLink">Helicobacter</a>
+                <a href="/view/Taxonomy/1637#view_tab=overview" title="Browse Listeria"
+                  class="list-group-item list-group-item-action navigationLink">Listeria</a>
+                <a href="/view/Taxonomy/1763#view_tab=overview" title="Browse Mycobacterium"
+                  class="list-group-item list-group-item-action navigationLink">Mycobacterium</a>
+                <a href="/view/Taxonomy/286#view_tab=overview" title="Browse Pseudomonas"
+                  class="list-group-item list-group-item-action navigationLink">Pseudomonas</a>
+                <a href="/view/Taxonomy/780#view_tab=overview" title="Browse Rickettsia"
+                  class="list-group-item list-group-item-action navigationLink">Rickettsia</a>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/view/Taxonomy/590#view_tab=overview" title="Browse Salmonella"
+                  class="list-group-item list-group-item-action navigationLink">Salmonella</a>
+                <a href="/view/Taxonomy/620#view_tab=overview" title="Browse Shigella"
+                  class="list-group-item list-group-item-action navigationLink">Shigella</a>
+                <a href="/view/Taxonomy/1279#view_tab=overview" title="Browse Staphylococcus"
+                  class="list-group-item list-group-item-action navigationLink">Staphylococcus</a>
+                <a href="/view/Taxonomy/1301#view_tab=overview" title="Browse Streptococcus"
+                  class="list-group-item list-group-item-action navigationLink">Streptococcus</a>
+                <a href="/view/Taxonomy/662#view_tab=overview" title="Browse Vibrio"
+                  class="list-group-item list-group-item-action navigationLink">Vibrio</a>
+                <a href="/view/Taxonomy/629#view_tab=overview" title="Browse Yersinia"
+                  class="list-group-item list-group-item-action navigationLink">Yersinia</a>
               </div>
             </div>
           </div>
         </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__services" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-cogs icon-cogs"></i>
-          <span class="d-none d-lg-inline">Services</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown__services">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-3">
-                <h6><strong>Genomics</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/Assembly" title="Service: Assembly" class="list-group-item list-group-item-action">Assembly</a>
-                  <a href="/app/Annotation" title="Service: Annotation" class="list-group-item list-group-item-action">Annotation</a>
-                  <a href="/app/ComprehensiveGenomeAnalysis" title="Service: Comprehensive Genome Analysis" class="list-group-item list-group-item-action">Comprehensive Genome Analysis</a>
-                  <a href="/app/BLAST" title="Service: BLAST" class="list-group-item list-group-item-action">BLAST</a>
-                  <a href="/app/GenomeDistance" title="Service: Similar Genome Finder" class="list-group-item list-group-item-action">Similar Genome Finder</a>
-                  <a href="/app/Variation" title="Service: Variation Analysis" class="list-group-item list-group-item-action">Variation Analysis</a>
-                  <a href="/app/Tnseq" title="Service: Tn-Seq Analysis" class="list-group-item list-group-item-action">Tn-Seq Analysis</a>
-                  <a href="/app/PhylogeneticTree" title="Service: Phylogenetic Tree" class="list-group-item list-group-item-action">Phylogenetic Tree</a>
-                  <a href="/app/GenomeAlignment" title="Service: Genome Alignment" class="list-group-item list-group-item-action">Genome Alignment</a>
-                </div>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__services" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-cogs icon-cogs"></i>
+        <span class="d-none d-lg-inline">Services</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown__services">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-3">
+              <h6><strong>Genomics</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/Assembly" title="Service: Assembly"
+                  class="list-group-item list-group-item-action navigationLink">Assembly</a>
+                <a href="/app/Annotation" title="Service: Annotation"
+                  class="list-group-item list-group-item-action navigationLink">Annotation</a>
+                <a href="/app/ComprehensiveGenomeAnalysis" title="Service: Comprehensive Genome Analysis"
+                  class="list-group-item list-group-item-action navigationLink">Comprehensive Genome Analysis</a>
+                <a href="/app/BLAST" title="Service: BLAST" class="list-group-item list-group-item-action navigationLink">BLAST</a>
+                <a href="/app/GenomeDistance" title="Service: Similar Genome Finder"
+                  class="list-group-item list-group-item-action navigationLink">Similar Genome Finder</a>
+                <a href="/app/Variation" title="Service: Variation Analysis"
+                  class="list-group-item list-group-item-action navigationLink">Variation Analysis</a>
+                <a href="/app/Tnseq" title="Service: Tn-Seq Analysis"
+                  class="list-group-item list-group-item-action navigationLink">Tn-Seq Analysis</a>
+                <a href="/app/PhylogeneticTree" title="Service: Phylogenetic Tree"
+                  class="list-group-item list-group-item-action navigationLink">Phylogenetic Tree</a>
+                <a href="/app/GenomeAlignment" title="Service: Genome Alignment"
+                  class="list-group-item list-group-item-action">Genome Alignment</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Metagenomics</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/MetagenomicReadMapping" title="Service: Metagenomic Read Mapping" class="list-group-item list-group-item-action">Metagenomic Read Mapping</a>
-                  <a href="/app/TaxonomicClassification" title="Service: Taxonomic Classification" class="list-group-item list-group-item-action">Taxonomic Classification</a>
-                  <a href="/app/MetagenomicBinning" title="Service: Metagenomic Binning" class="list-group-item list-group-item-action">Metagenomic Binning</a>
-                </div>
-                <h6><strong>Transcriptomics</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/Expression" title="Service: Expression Import" class="list-group-item list-group-item-action">Expression Import</a>
-                  <a href="/app/Rnaseq" title="Service: RNA-Seq Analysis" class="list-group-item list-group-item-action">RNA-Seq Analysis</a>
-                </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Metagenomics</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/MetagenomicReadMapping" title="Service: Metagenomic Read Mapping"
+                  class="list-group-item list-group-item-action navigationLink">Metagenomic Read Mapping</a>
+                <a href="/app/TaxonomicClassification" title="Service: Taxonomic Classification"
+                  class="list-group-item list-group-item-action navigationLink">Taxonomic Classification</a>
+                <a href="/app/MetagenomicBinning" title="Service: Metagenomic Binning"
+                  class="list-group-item list-group-item-action navigationLink">Metagenomic Binning</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Protein Tools</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/ProteinFamily" title="Service: Protein Family Sorter" class="list-group-item list-group-item-action">Protein Family Sorter</a>
-                  <a href="/app/SeqComparison" title="Service: Proteome Comparison" class="list-group-item list-group-item-action">Proteome Comparison</a>
-                </div>
-                <h6><strong>Metabolomics</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/ComparativePathway" title="Service: Comparative Pathway" class="list-group-item list-group-item-action">Comparative Pathway</a>
-                  <a href="/app/Reconstruct" title="Service: Model Reconstruction" class="list-group-item list-group-item-action">Model Reconstruction</a>
-                </div>
+              <h6><strong>Transcriptomics</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/Expression" title="Service: Expression Import"
+                  class="list-group-item list-group-item-action navigationLink">Expression Import</a>
+                <a href="/app/Rnaseq" title="Service: RNA-Seq Analysis"
+                  class="list-group-item list-group-item-action navigationLink">RNA-Seq Analysis</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Data</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="/app/IDMapper" title="Service: ID Mapper" class="list-group-item list-group-item-action">ID Mapper</a>
-                  <a href="/app/FastqUtil" title="Service: Fastq Utilities" class="list-group-item list-group-item-action">Fastq Utilities</a>
-                </div>
-                <h6><strong>Raw Data Download</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <a class="btn btn-secondary" href="ftp://ftp.patricbrc.org/" title="Access PATRIC FTP Server" target="_blank"><i class="fa fa-download fa-fw"></i>&nbsp;FTP Server</a>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Protein Tools</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/ProteinFamily" title="Service: Protein Family Sorter"
+                  class="list-group-item list-group-item-action navigationLink">Protein Family Sorter</a>
+                <a href="/app/SeqComparison" title="Service: Proteome Comparison"
+                  class="list-group-item list-group-item-action navigationLink">Proteome Comparison</a>
+              </div>
+              <h6><strong>Metabolomics</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/ComparativePathway" title="Service: Comparative Pathway"
+                  class="list-group-item list-group-item-action navigationLink">Comparative Pathway</a>
+                <a href="/app/Reconstruct" title="Service: Model Reconstruction"
+                  class="list-group-item list-group-item-action navigationLink">Model Reconstruction</a>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Data</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="/app/IDMapper" title="Service: ID Mapper" class="list-group-item list-group-item-action navigationLinkhttps://patricbrc.org">ID
+                  Mapper</a>
+                <a href="/app/FastqUtil" title="Service: Fastq Utilities"
+                  class="list-group-item list-group-item-action" navigationLink>Fastq Utilities</a>
+              </div>
+              <h6><strong>Raw Data Download</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <a class="btn btn-secondary" href="ftp://ftp.patricbrc.org/" title="Access PATRIC FTP Server"
+                target="_blank"><i class="fa fa-download fa-fw"></i>&nbsp;FTP Server</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__docs" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-book icon-book"></i>
+        <span class="d-none d-lg-inline">Docs</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown__docs">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-3">
+              <h6><strong>User Guides</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/user_guides/organisms_tab.html" title="Docs: Organisms"
+                  class="list-group-item list-group-item-action">Organisms</a>
+                <a href="https://docs.patricbrc.org/user_guides/data/index.html"
+                  class="list-group-item list-group-item-action">Data</a>
+                <a href="https://docs.patricbrc.org/user_guides/workspace_groups_upload.html"
+                  class="list-group-item list-group-item-action">Workspace, Private Data, Groups, Jobs</a>
+                <a href="https://docs.patricbrc.org/user_guides/services_tab.html"
+                  class="list-group-item list-group-item-action">Services and Tools</a>
+                <a href="https://docs.patricbrc.org/user_guides/global_search.html"
+                  class="list-group-item list-group-item-action">Global Search</a>
+                <a href="https://docs.patricbrc.org/user_guides/registration.html"
+                  class="list-group-item list-group-item-action">Registration</a>
+                <a href="https://docs.patricbrc.org/user_guides/views_tables_action-bar.html"
+                  class="list-group-item list-group-item-action">Website Views, Tables, Filters, Action Bar</a>
+                <a href="https://docs.patricbrc.org/user_guides/system_requirements.html"
+                  class="list-group-item list-group-item-action">System Requirements</a>
+                <a href="https://docs.patricbrc.org/user_guides/data_submission_to_patric.html"
+                  class="list-group-item list-group-item-action">Data Submission to PATRIC</a>
+                <a href="https://docs.patricbrc.org/user_guides/ftp.html"
+                  class="list-group-item list-group-item-action">FTP Site</a>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Tutorials</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/tutorial/index.html#genomics"
+                  class="list-group-item list-group-item-action">Genomics</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#metagenomics"
+                  class="list-group-item list-group-item-action">Metagenomics</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#transcriptomics"
+                  class="list-group-item list-group-item-action">Transcriptomics</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#protein-tools"
+                  class="list-group-item list-group-item-action">Protein Tools</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#metabolomics"
+                  class="list-group-item list-group-item-action">Metabolomics</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#data"
+                  class="list-group-item list-group-item-action">Data</a>
+                <a href="https://docs.patricbrc.org/tutorial/index.html#others"
+                  class="list-group-item list-group-item-action">Others</a>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Videos</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/quickstart_video.html"
+                  class="list-group-item list-group-item-action">Introduction Video</a>
+                <a href="https://docs.patricbrc.org/videos/cicular_genome_viewer.html"
+                  class="list-group-item list-group-item-action">Add track to Circular Genome Viewer (6:31)</a>
+                <a href="https://docs.patricbrc.org/videos/create_genome_group.html"
+                  class="list-group-item list-group-item-action">Create a Genome Group (9:08)</a>
+                <a href="https://docs.patricbrc.org/videos/id_mapper.html"
+                  class="list-group-item list-group-item-action">ID Mapping - finding genes (11:01)</a>
+                <a href="https://docs.patricbrc.org/videos/multiple_sequence_alignment.html"
+                  class="list-group-item list-group-item-action">Generate a Mulitple Sequence Alignment (3:51)</a>
+                <a href="https://docs.patricbrc.org/videos/using_genome_group.html"
+                  class="list-group-item list-group-item-action">Finding genes in a Genome Group (11:32)</a>
+              </div>
+              <a class="mb-3 btn btn-outline-primary" href="styleguide.html"> YouTube <i
+                  class="fa fa-external-link-alt icon-external-link fa-fw"></i></a>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Common Tasks in PATRIC</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/common_tasks/gui_tasks.html"
+                  class="list-group-item list-group-item-action">Common Tasks Using the Web Interface</a>
+                <a href="https://docs.patricbrc.org/cli_tutorial/cli_common_tasks.html"
+                  class="list-group-item list-group-item-action">Common Tasks With P3 Scripts</a>
+              </div>
+              <h6><strong>Command Line Interface</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/cli_tutorial/index.html#installing-the-cli-release"
+                  class="list-group-item list-group-item-action">Installing the CLI Release</a>
+                <a href="https://docs.patricbrc.org/cli_tutorial/index.html#tutorials-and-reference-documentation"
+                  class="list-group-item list-group-item-action">Tutorials and Reference Documentation</a>
+                <a href="https://docs.patricbrc.org/cli_tutorial/index.html#rast-tutorials"
+                  class="list-group-item list-group-item-action">RAST Tutorials</a>
               </div>
             </div>
           </div>
         </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__docs" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-book icon-book"></i>
-          <span class="d-none d-lg-inline">Docs</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown__docs">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-3">
-                <h6><strong>User Guides</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/user_guides/organisms_tab.html" title="Docs: Organisms" class="list-group-item list-group-item-action">Organisms</a>
-                  <a href="https://docs.patricbrc.org/user_guides/data/index.html" class="list-group-item list-group-item-action">Data</a>
-                  <a href="https://docs.patricbrc.org/user_guides/workspace_groups_upload.html" class="list-group-item list-group-item-action">Workspace, Private Data, Groups, Jobs</a>
-                  <a href="https://docs.patricbrc.org/user_guides/services_tab.html" class="list-group-item list-group-item-action">Services and Tools</a>
-                  <a href="https://docs.patricbrc.org/user_guides/global_search.html" class="list-group-item list-group-item-action">Global Search</a>
-                  <a href="https://docs.patricbrc.org/user_guides/registration.html" class="list-group-item list-group-item-action">Registration</a>
-                  <a href="https://docs.patricbrc.org/user_guides/views_tables_action-bar.html" class="list-group-item list-group-item-action">Website Views, Tables, Filters, Action Bar</a>
-                  <a href="https://docs.patricbrc.org/user_guides/system_requirements.html" class="list-group-item list-group-item-action">System Requirements</a>
-                  <a href="https://docs.patricbrc.org/user_guides/data_submission_to_patric.html" class="list-group-item list-group-item-action">Data Submission to PATRIC</a>
-                  <a href="https://docs.patricbrc.org/user_guides/ftp.html" class="list-group-item list-group-item-action">FTP Site</a>
-                </div>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__about" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-bookmark icon-bookmark"></i>
+        <span class="d-none d-lg-inline">About</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown__about">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-3 mb-3">
+              <h6><strong>About</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/about.html" class="list-group-item list-group-item-action">About
+                  Us</a>
+                <a href="https://docs.patricbrc.org/about.html#what-patric-offers"
+                  class="list-group-item list-group-item-action">What PATRIC Offers</a>
+                <a href="https://docs.patricbrc.org/about.html#patric-brochure"
+                  class="list-group-item list-group-item-action">PATRIC Brochure</a>
+                <a href="https://docs.patricbrc.org/about.html#about-the-university-of-chicago-department-of-computer-science"
+                  class="list-group-item list-group-item-action">About the University of Chicago Department of Computer
+                  Science</a>
+                <a href="https://docs.patricbrc.org/about.html#about-the-biocomplexity-institute-and-initiative-of-the-university-of-virginia"
+                  class="list-group-item list-group-item-action">About the Biocomplexity Institute and Initiative of the
+                  University of Virginia</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Tutorials</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#genomics" class="list-group-item list-group-item-action">Genomics</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#metagenomics" class="list-group-item list-group-item-action">Metagenomics</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#transcriptomics" class="list-group-item list-group-item-action">Transcriptomics</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#protein-tools" class="list-group-item list-group-item-action">Protein Tools</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#metabolomics" class="list-group-item list-group-item-action">Metabolomics</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#data" class="list-group-item list-group-item-action">Data</a>
-                  <a href="https://docs.patricbrc.org/tutorial/index.html#others" class="list-group-item list-group-item-action">Others</a>
-                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <h6><strong>BRC Program</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://www.niaid.nih.gov/research/bioinformatics-resource-centers" target="_blank"
+                  class="list-group-item list-group-item-action">NIAID</a>
+                <a href="https://www.patricbrc.org/" target="_blank"
+                  class="list-group-item list-group-item-action">PATRIC</a>
+                <a href="https://www.viprbrc.org/brc/home.spg?decorator=vipr" target="_blank"
+                  class="list-group-item list-group-item-action">ViPR</a>
+                <a href="https://www.fludb.org/brc/home.spg?decorator=influenza" target="_blank"
+                  class="list-group-item list-group-item-action">IRD</a>
+                <a href="https://eupathdb.org/eupathdb/" target="_blank"
+                  class="list-group-item list-group-item-action">EuPathDB</a>
+                <a href="https://www.vectorbase.org/" target="_blank"
+                  class="list-group-item list-group-item-action">VectorBase</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Videos</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/quickstart_video.html" class="list-group-item list-group-item-action">Introduction Video</a>
-                  <a href="https://docs.patricbrc.org/videos/cicular_genome_viewer.html" class="list-group-item list-group-item-action">Add track to Circular Genome Viewer (6:31)</a>
-                  <a href="https://docs.patricbrc.org/videos/create_genome_group.html" class="list-group-item list-group-item-action">Create a Genome Group (9:08)</a>
-                  <a href="https://docs.patricbrc.org/videos/id_mapper.html" class="list-group-item list-group-item-action">ID Mapping - finding genes (11:01)</a>
-                  <a href="https://docs.patricbrc.org/videos/multiple_sequence_alignment.html" class="list-group-item list-group-item-action">Generate a Mulitple Sequence Alignment (3:51)</a>
-                  <a href="https://docs.patricbrc.org/videos/using_genome_group.html" class="list-group-item list-group-item-action">Finding genes in a Genome Group (11:32)</a>
-                </div>
-                <a class="mb-3 btn btn-outline-primary" href="styleguide.html"> YouTube <i class="fa fa-external-link-alt icon-external-link fa-fw"></i></a>
+            </div>
+            <div class="col-md-3 mb-3">
+              <h6><strong>Further Reading</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/news/index.html" class="list-group-item list-group-item-action">News
+                  &amp; Announcements Archives</a>
+                <a href="https://docs.patricbrc.org/brochure.html"
+                  class="list-group-item list-group-item-action">Download Brochure</a>
+                <a href="https://docs.patricbrc.org/presentations.html"
+                  class="list-group-item list-group-item-action">Presentations</a>
+                <a href="https://docs.patricbrc.org/publications.html"
+                  class="list-group-item list-group-item-action">Publications</a>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Common Tasks in PATRIC</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/common_tasks/gui_tasks.html" class="list-group-item list-group-item-action">Common Tasks Using the Web Interface</a>
-                  <a href="https://docs.patricbrc.org/cli_tutorial/cli_common_tasks.html" class="list-group-item list-group-item-action">Common Tasks With P3 Scripts</a>
-                </div>
-                <h6><strong>Command Line Interface</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/cli_tutorial/index.html#installing-the-cli-release" class="list-group-item list-group-item-action">Installing the CLI Release</a>
-                  <a href="https://docs.patricbrc.org/cli_tutorial/index.html#tutorials-and-reference-documentation" class="list-group-item list-group-item-action">Tutorials and Reference Documentation</a>
-                  <a href="https://docs.patricbrc.org/cli_tutorial/index.html#rast-tutorials" class="list-group-item list-group-item-action">RAST Tutorials</a>
-                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+              <h6><strong>Useful Links</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="mb-3 list-group list-group-flush">
+                <a href="https://docs.patricbrc.org/usage_metrics.html"
+                  class="list-group-item list-group-item-action">Usage Metrics</a>
+                <a href="https://docs.patricbrc.org/cite_patric.html"
+                  class="list-group-item list-group-item-action">Citing PATRIC</a>
+                <a href="https://docs.patricbrc.org/scientific_working_group.html"
+                  class="list-group-item list-group-item-action">Scientific Working Group</a>
+                <a href="https://docs.patricbrc.org/personnel.html"
+                  class="list-group-item list-group-item-action">Personnel</a>
+                <a href="https://docs.patricbrc.org/collaborations.html"
+                  class="list-group-item list-group-item-action">Scientific Collaborations</a>
+                <a href="https://docs.patricbrc.org/system_documentation.html"
+                  class="list-group-item list-group-item-action">Systems Architecture</a>
+                <a href="https://docs.patricbrc.org/related_sites.html"
+                  class="list-group-item list-group-item-action">Related Sites</a>
+                <a href="https://docs.patricbrc.org/privacy_policy.html"
+                  class="list-group-item list-group-item-action">Privacy Policy</a>
+                <a href="https://docs.patricbrc.org/github.html"
+                  class="list-group-item list-group-item-action">GitHub</a>
               </div>
             </div>
           </div>
         </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__about" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-bookmark icon-bookmark"></i>
-          <span class="d-none d-lg-inline">About</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown__about">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-3 mb-3">
-                <h6><strong>About</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/about.html" class="list-group-item list-group-item-action">About Us</a>
-                  <a href="https://docs.patricbrc.org/about.html#what-patric-offers" class="list-group-item list-group-item-action">What PATRIC Offers</a>
-                  <a href="https://docs.patricbrc.org/about.html#patric-brochure" class="list-group-item list-group-item-action">PATRIC Brochure</a>
-                  <a href="https://docs.patricbrc.org/about.html#about-the-university-of-chicago-department-of-computer-science" class="list-group-item list-group-item-action">About the University of Chicago Department of Computer Science</a>
-                  <a href="https://docs.patricbrc.org/about.html#about-the-biocomplexity-institute-and-initiative-of-the-university-of-virginia" class="list-group-item list-group-item-action">About the Biocomplexity Institute and Initiative of the University of Virginia</a>
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <h6><strong>BRC Program</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://www.niaid.nih.gov/research/bioinformatics-resource-centers" target="_blank" class="list-group-item list-group-item-action">NIAID</a>
-                  <a href="https://www.patricbrc.org/" target="_blank" class="list-group-item list-group-item-action">PATRIC</a>
-                  <a href="https://www.viprbrc.org/brc/home.spg?decorator=vipr" target="_blank" class="list-group-item list-group-item-action">ViPR</a>
-                  <a href="https://www.fludb.org/brc/home.spg?decorator=influenza" target="_blank" class="list-group-item list-group-item-action">IRD</a>
-                  <a href="https://eupathdb.org/eupathdb/" target="_blank" class="list-group-item list-group-item-action">EuPathDB</a>
-                  <a href="https://www.vectorbase.org/" target="_blank" class="list-group-item list-group-item-action">VectorBase</a>
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <h6><strong>Further Reading</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/news/index.html" class="list-group-item list-group-item-action">News &amp; Announcements Archives</a>
-                  <a href="https://docs.patricbrc.org/brochure.html" class="list-group-item list-group-item-action">Download Brochure</a>
-                  <a href="https://docs.patricbrc.org/presentations.html" class="list-group-item list-group-item-action">Presentations</a>
-                  <a href="https://docs.patricbrc.org/publications.html" class="list-group-item list-group-item-action">Publications</a>
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <h6><strong>Useful Links</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="mb-3 list-group list-group-flush">
-                  <a href="https://docs.patricbrc.org/usage_metrics.html" class="list-group-item list-group-item-action">Usage Metrics</a>
-                  <a href="https://docs.patricbrc.org/cite_patric.html" class="list-group-item list-group-item-action">Citing PATRIC</a>
-                  <a href="https://docs.patricbrc.org/scientific_working_group.html" class="list-group-item list-group-item-action">Scientific Working Group</a>
-                  <a href="https://docs.patricbrc.org/personnel.html" class="list-group-item list-group-item-action">Personnel</a>
-                  <a href="https://docs.patricbrc.org/collaborations.html" class="list-group-item list-group-item-action">Scientific Collaborations</a>
-                  <a href="https://docs.patricbrc.org/system_documentation.html" class="list-group-item list-group-item-action">Systems Architecture</a>
-                  <a href="https://docs.patricbrc.org/related_sites.html" class="list-group-item list-group-item-action">Related Sites</a>
-                  <a href="https://docs.patricbrc.org/privacy_policy.html" class="list-group-item list-group-item-action">Privacy Policy</a>
-                  <a href="https://docs.patricbrc.org/github.html" class="list-group-item list-group-item-action">GitHub</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__contact" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-envelope icon-envelope"></i>
-          <span class="d-none d-lg-inline">Contact</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown__contact">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                  <h6><strong>Email PATRIC</strong></h6>
-                  <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                  <form dojoAttachPoint="containerNode" class="PanelForm" encType="multipart/form-data" name="problemForm"
-                  dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onkeyup:validate">
-                  <div>
+      </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__contact" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-envelope icon-envelope"></i>
+        <span class="d-none d-lg-inline">Contact</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown__contact">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h6><strong>Email PATRIC</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <form dojoAttachPoint="containerNode" class="PanelForm" encType="multipart/form-data" name="problemForm"
+                dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onkeyup:validate">
+                <div>
                   <div class="HideWithAuth">
-                  <label for="email"><b>Email<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/TextBox" name="email" style="display:block;margin-bottom:8px;" data-dojo-props="intermediateChanges:true,missingMessage:'Email Address is required',trim:true,placeHolder:'Email Address'"></div>
+                    <label for="email"><b>Email<sup>*</sup></b></label>
+                    <div data-dojo-type="dijit/form/TextBox" name="email" style="display:block;margin-bottom:8px;"
+                      data-dojo-props="intermediateChanges:true,missingMessage:'Email Address is required',trim:true,placeHolder:'Email Address'">
+                    </div>
                   </div>
 
                   <label for="subject"><b>Subject<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/TextBox" name="subject" style="display:block;margin-bottom:8px;" required="true" data-dojo-props="intermediateChanges:true,missingMessage:'Subject must be provided',trim:true"></div>
+                  <div data-dojo-type="dijit/form/TextBox" name="subject" style="display:block;margin-bottom:8px;"
+                    required="true"
+                    data-dojo-props="intermediateChanges:true,missingMessage:'Subject must be provided',trim:true">
+                  </div>
 
                   <div class="jobFeedback dijitHidden">
-                  <label for="description">
-                  <b>Please provide a question or relevant feedback about this <span name="reportedStatus"></span> job (required)<sup>*</sup></b>
-                  </label>
-                  <br>
-                  <div tabindex="1" data-dojo-type="dijit/form/SimpleTextarea" name="description"  style="" data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided for this job',trim:true,rows:20"></div>
-                  <br>
+                    <label for="description">
+                      <b>Please provide a question or relevant feedback about this <span name="reportedStatus"></span>
+                        job (required)<sup>*</sup></b>
+                    </label>
+                    <br>
+                    <div tabindex="1" data-dojo-type="dijit/form/SimpleTextarea" name="description" style=""
+                      data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided for this job',trim:true,rows:20">
+                    </div>
+                    <br>
                   </div>
 
                   <br>
                   <label for="content"><b>Message<sup>*</sup></b></label>
-                  <div data-dojo-type="dijit/form/Textarea" name="content" style="height:60px" required="true" data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided',trim:true,rows:10"></div>
+                  <div data-dojo-type="dijit/form/Textarea" name="content" style="height:60px" required="true"
+                    data-dojo-props="intermediateChanges:true,missingMessage:'Description must be provided',trim:true,rows:10">
+                  </div>
                   <div class="py-1">
-                    Select file to attach (optional):	<input data-dojo-attach-point="attachmentNode" type="file" name="attachment" />
+                    Select file to attach (optional): <input data-dojo-attach-point="attachmentNode" type="file"
+                      name="attachment" />
                   </div>
-                  </div>
-                  <div class="workingMessage messageContainer">
+                </div>
+                <div class="workingMessage messageContainer">
                   Sending Feedback...
-                  </div>
+                </div>
 
-                  <div class="errorMessage messageContainer">
+                <div class="errorMessage messageContainer">
                   <div style="font-weight:900;font-size:1.1em;">There was an error submitting your report:</div>
                   <p data-dojo-attach-point="errorMessage">Error</p>
-                  </div>
+                </div>
 
-                  <div style="margin:4px;margin-top:8px;text-align:right;">
-                  <div data-dojo-attach-point="cancelButton" data-dojo-attach-event="onClick:onCancel" data-dojo-type="dijit/form/Button">Cancel</div>
+                <div style="margin:4px;margin-top:8px;text-align:right;">
+                  <div data-dojo-attach-point="cancelButton" data-dojo-attach-event="onClick:onCancel"
+                    data-dojo-type="dijit/form/Button">Cancel</div>
                   <div data-dojo-attach-point="saveButton" type="submit" data-dojo-type="dijit/form/Button">Submit</div>
-                  </div>
-                  </form>
+                </div>
+              </form>
 
-                  <!-- <h6><strong>Email PATRIC</strong></h6>
+              <!-- <h6><strong>Email PATRIC</strong></h6>
                 <hr class="hr--brand-sm col-2 ml-0 mt-0">
                 <form>
                   <div class="form-row">
@@ -396,68 +527,74 @@
                   </div>
                   <button type="submit" class="btn btn-block btn-secondary">Send</button>
                 </form> -->
-              </div>
-              <div class="col-md-6 mb-3">
-                <h6><strong>Contact</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <p>If you have questions about or would like assistance using the PATRIC website, please send a message using this form or direct email to <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We appreciate your interest and will respond within two business days to your inquiry. </p>
-              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <h6><strong>Contact</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <p>If you have questions about or would like assistance using the PATRIC website, please send a message
+                using this form or direct email to <a href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We
+                appreciate your interest and will respond within two business days to your inquiry. </p>
             </div>
           </div>
         </div>
-      </li>
-      <li class="flex-grow-1">
+      </div>
+    </li>
+    <li class="flex-grow-1">
 
-        <div class="showOnLoad ShowWithAuth dijitHidden" style="display:none">
-              <div class="showOnLoad ShowWithAuth dijitHidden topMenuButtonIcon"
-                   data-dojo-type="dijit/form/DropDownButton" data-dojo-props="iconClass:'icon-user fa-2x login-btn'">
-                  <span></span>
-                  <div data-dojo-type="p3/widget/TooltipDialog">
-                      <div>Signed in as </div>
-                      <hr>
-                      <div><a class="userProfile">Account Settings</a></div>
-                      <div><a class="sulogin">SU Login</a></div>
-                      <div><a class="suSwitchBack" onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a></div>
-                      <div><a class="logoutLink" onclick="window.App.logout()">Logout</a></div>
-                  </div>
-              </div>
+      <div class="showOnLoad ShowWithAuth dijitHidden" style="display:none">
+        <div class="showOnLoad ShowWithAuth dijitHidden topMenuButtonIcon" data-dojo-type="dijit/form/DropDownButton"
+          data-dojo-props="iconClass:'icon-user fa-2x login-btn'">
+          <span></span>
+          <div data-dojo-type="p3/widget/TooltipDialog">
+            <div>Signed in as </div>
+            <hr>
+            <div><a class="userProfile">Account Settings</a></div>
+            <div><a class="sulogin">SU Login</a></div>
+            <div><a class="suSwitchBack" onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
+            </div>
+            <div><a class="logoutLink" onclick="window.App.logout()">Logout</a></div>
           </div>
+        </div>
+      </div>
 
-        </li>
-      <li class="nav-item dropdown">
+    </li>
+    <li class="nav-item dropdown">
 
 
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__workspace" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-user-cog icon-user"></i>
-          <span class="d-none d-lg-inline">Account</span>
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown__workspace">
-          <div class="container my-3">
-            <div class="row">
-              <div class="col-md-3">
-                <h6><strong>My Account</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__workspace" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user-cog icon-user"></i>
+        <span class="d-none d-lg-inline">Account</span>
+      </a>
+      <div class="dropdown-menu" aria-labelledby="navbarDropdown__workspace">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-3">
+              <h6><strong>My Account</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
 
-                <div class="HideWithAuth authLinks showOnLoad dijitHidden" style="padding: 3px 2px 0 0;">
-                    <p class="">
-                        <em>Welcome, Guest. You are not currently logged in.</em>
-                    </p>
-                    <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
-                    <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
+              <div class="HideWithAuth authLinks showOnLoad dijitHidden" style="padding: 3px 2px 0 0;">
+                <p class="">
+                  <em>Welcome, Guest. You are not currently logged in.</em>
+                </p>
+                <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
+                <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
+              </div>
+
+              <div class="showOnLoad ShowWithAuth dijitHidden">
+                <span></span>
+                <div class="mb-3 list-group list-group-flush">
+                  <div>Signed in as <span id="signedInAs" style="font-weight:bold;"></span></div>
+                  <div><a class="userProfile list-group-item list-group-item-action">Account Settings</a></div>
+                  <div><a class="sulogin list-group-item list-group-item-action">SU Login</a></div>
+                  <div><a class="suSwitchBack list-group-item list-group-item-action"
+                      onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a></div>
+                  <div><a class="logoutLink list-group-item list-group-item-action"
+                      onclick="window.App.logout()">Logout</a></div>
                 </div>
+              </div>
 
-                <div class="showOnLoad ShowWithAuth dijitHidden">
-                  <span></span>
-                  <div class="mb-3 list-group list-group-flush">
-                      <div>Signed in as <span id="signedInAs" style="font-weight:bold;"></span></div>
-                      <div><a class="userProfile list-group-item list-group-item-action">Account Settings</a></div>
-                      <div><a class="sulogin list-group-item list-group-item-action">SU Login</a></div>
-                      <div><a class="suSwitchBack list-group-item list-group-item-action" onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a></div>
-                      <div><a class="logoutLink list-group-item list-group-item-action" onclick="window.App.logout()">Logout</a></div>
-                  </div>
-                </div>
-
-                <!-- <div class="d-flex align-items-center flex-wrap justify-content-start mb-3">
+              <!-- <div class="d-flex align-items-center flex-wrap justify-content-start mb-3">
                   <a class="btn btn-outline-primary btn-sm" href="#"><i class="fa fa-user-plus fa-fw"></i>&nbsp;Sign-up </a>
                   <p class="mb-0">&nbsp;or&nbsp;</p>
                   <a class="btn btn-outline-primary btn-sm" href="#"><i class="fa fa-sign-in-alt fa-fw"></i>&nbsp;Login </a>
@@ -465,65 +602,72 @@
                 <div class="mb-3 list-group list-group-flush">
                   <a href="#" class="list-group-item list-group-item-action">Account Settings </a>
                 </div> -->
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Workspaces</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <div class="ShowWithAuth">
+                <div class="mb-3 list-group list-group-flush">
+                  <div id="YourWorkspaces" class="mb-2">
+                  </div>
+                  <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My
+                    Workspaces</a>
+                  <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
+                    Workspaces</a>
+                </div>
               </div>
-              <div class="col-md-3">
-                <h6><strong>Workspaces</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="ShowWithAuth">
-                  <div class="mb-3 list-group list-group-flush">
-                    <div id="YourWorkspaces" class="mb-2">
-                    </div>
-                    <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My Workspaces</a>
-                    <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public Workspaces</a>
-                  </div>
-                </div>
-                <!-- show message for !logged in users -->
-                <div class="HideWithAuth showOnLoad">
-                  <div class="mb-3 list-group list-group-flush">
-                    <p>Login and upload your own data.</p>
-                  </div>
-                </div>
-
-              </div>
-              <div class="col-md-3">
-                <h6><strong>My Data</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <!-- show my data links for logged in users -->
-                <div class="ShowWithAuth">
-                  <div class="mb-3 list-group list-group-flush">
-                    <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome Groups</a>
-                    <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">00 Feature Groups</a>
-                    <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">00 Experiment Groups</a>
-                    <a class="navigationLink list-group-item list-group-item-action" href="/view/GenomeList/?eq(public,false)" id="MyDataGenomes">00 Private Genomes</a>
-                  </div>
-                </div>
-                <!-- show message for !logged in users -->
-                <div class="HideWithAuth showOnLoad">
-                  <div class="mb-3 list-group list-group-flush">
-                    <p>Login and upload your own data.</p>
-                  </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
                 </div>
               </div>
 
-              <div class="col-md-3">
-                <h6><strong>My Jobs</strong></h6>
-                <hr class="hr--brand-sm col-2 ml-0 mt-0">
-                <div class="ShowWithAuth">
-                  <div class="mb-3 list-group list-group-flush">
-                    <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00 Completed Jobs</a>
-                  </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>My Data</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <!-- show my data links for logged in users -->
+              <div class="ShowWithAuth">
+                <div class="mb-3 list-group list-group-flush">
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome
+                    Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">00 Feature
+                    Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">00
+                    Experiment Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action"
+                    href="/view/GenomeList/?eq(public,false)" id="MyDataGenomes">00 Private Genomes</a>
                 </div>
-                <!-- show message for !logged in users -->
-                <div class="HideWithAuth showOnLoad">
-                  <div class="mb-3 list-group list-group-flush">
-                    <p>Login and upload your own data.</p>
-                  </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <h6><strong>My Jobs</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <div class="ShowWithAuth">
+                <div class="mb-3 list-group list-group-flush">
+                  <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00
+                    Completed Jobs</a>
+                </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </li>
-    </ul>
-  </nav>
-  <!--/nav END-->
+      </div>
+    </li>
+  </ul>
+</nav>
+<!--/nav END-->

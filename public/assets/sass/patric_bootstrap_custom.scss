@@ -137,6 +137,16 @@ h6 {
 .hr--brand-sm {
   border-top: 1px solid #e57200;
 }
+
+ul.bullets-orange li::before {
+  content: "\2022";
+  color: #e57200;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
 .navbar-patric {
   min-width: 290px;
   background: #2e76a3 !important;
