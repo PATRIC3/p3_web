@@ -1,8 +1,26 @@
 $(document).ready(function () {
 
-  // Note: more work is needed here since menus never close!
+  /**
+   * Menu functionality and behavior
+   * Open: menu opens on :hover of menu link
+   * Stay Open: onClick of menu link, and if using menu
+   * Closes: click anywhere off menu, click link in menu
+  */
+
+  // this is specifically so that the menu will remain open even if user loses :focus while using dropdown menu in search or filling out contact form.
   $('.dropdown-menu').hover(function () {
     $(this).addClass('show');
+  });
+
+  // Click anywhere on the page not the menu to close it
+  $('body').on('click', function (e) {
+    if (!$('.dropdown-menu').is(e.target)
+        && $('.dropdown-menu').has(e.target).length === 0
+        && $('.show').has(e.target).length === 0
+    ) {
+      $('.dropdown').removeClass('show');
+      $('.dropdown-menu').removeClass('show');
+    }
   });
 
 
