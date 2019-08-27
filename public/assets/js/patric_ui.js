@@ -1,28 +1,23 @@
 $(document).ready(function () {
 
-  /**
-   * Menu functionality and behavior
-   * Open: menu opens on :hover of menu link
-   * Stay Open: onClick of menu link, and if using menu
-   * Closes: click anywhere off menu, click link in menu
-  */
-
-  // this is specifically so that the menu will remain open even if user loses :focus while using dropdown menu in search or filling out contact form.
-  $('.dropdown-menu').hover(function () {
-    $(this).addClass('show');
+  // prevent dropdown-menu from closing unexpectedly
+  $('.dropdown-menu').not('.dropdown-menu__account').click( function (e) {
+    e.stopImmediatePropagation();
   });
 
-  // Click anywhere on the page not the menu to close it
-  $('body').on('click', function (e) {
-    if (!$('.dropdown-menu').is(e.target)
-        && $('.dropdown-menu').has(e.target).length === 0
-        && $('.show').has(e.target).length === 0
-    ) {
-      $('.dropdown').removeClass('show');
-      $('.dropdown-menu').removeClass('show');
-    }
+  // force the search menu closed when submiting search
+  $('.dropdown-menu__search .icon-search').click( function () {
+    // console.log('icon-search has been clicked');
+    $('.dropdown-menu.show').removeClass('show');
+    $('.dropdown.show').removeClass('show');
   });
 
+  // force the account menu closed when the login or register button are clicked
+  $('.dropdown-menu__account .dijitButtonNode').click( function () {
+    // cconsole.log('login / register button clicked');
+    $('.dropdown-menu.show').removeClass('show');
+    $('.dropdown.show').removeClass('show');
+  });
 
   /**
    * "Email PATRIC" form

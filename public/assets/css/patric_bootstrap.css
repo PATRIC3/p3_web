@@ -19,7 +19,8 @@ body.patric_body {
   margin: 0;
   padding: 0;
   /* Unset the icon color from p3.css */
-  /* Search Field */ }
+  /* Search Field */
+  /* Navbar and menu */ }
   .patric_bootstrap :root {
     --blue: #007bff;
     --indigo: #6610f2;
@@ -6173,10 +6174,6 @@ body.patric_body {
     font-size: 28px !important; }
   .patric_bootstrap h6 {
     font-size: 14px !important; }
-  .patric_bootstrap .dropdown-menu {
-    font-size: 14px !important;
-    max-height: 91vh !important;
-    overflow: overlay !important; }
   .patric_bootstrap .search .global-search .gs-options-dropdown .dijitInputField,
   .patric_bootstrap .search .global-search .gs-data-types-dropdown .dijitInputField {
     padding: 12px 4px; }
@@ -6221,9 +6218,7 @@ body.patric_body {
       -webkit-box-orient: vertical;
       -webkit-box-direction: normal;
       -ms-flex-direction: column;
-      flex-direction: column; }
-    .patric_bootstrap .nav-link.dropdown-toggle::after {
-      margin-top: 0.255rem; } }
+      flex-direction: column; } }
   @media screen and (min-width: 480px) {
     .patric_bootstrap .navbar-brand {
       display: block;
@@ -6255,51 +6250,46 @@ body.patric_body {
     border-top: 3px solid #154e72;
     padding-top: 0;
     padding-bottom: 0; }
-  .patric_bootstrap .navbar-patric > .nav > .dropdown {
-    position: static; }
-  .patric_bootstrap .navbar-patric > .nav > .dropdown > .dropdown-menu {
-    border: none !important;
-    border-radius: 0;
-    width: 100%;
-    left: 0;
-    right: 0;
-    top: 33px;
-    -webkit-transition: visibility 0s, opacity 0.25s linear;
-    -o-transition: visibility 0s, opacity 0.25s linear;
-    transition: visibility 0s, opacity 0.25s linear;
-    display: block;
-    visibility: hidden;
-    opacity: 0;
-    background-color: #fff; }
-  .patric_bootstrap .navbar-patric > .nav > .dropdown > .dropdown-menu.show {
-    visibility: visible !important;
-    opacity: 100; }
-  .patric_bootstrap .navbar-patric > .nav > .dropdown.show > .dropdown-menu,
-  .patric_bootstrap .navbar-patric > .nav > .dropdown:hover > .dropdown-menu,
-  .patric_bootstrap .navbar-patric > .nav > .dropdown > .dropdown-menu:hover {
-    display: block;
-    visibility: visible;
-    opacity: 1;
-    -webkit-transition: visibility 0s, opacity 0.25s linear;
-    -o-transition: visibility 0s, opacity 0.25s linear;
-    transition: visibility 0s, opacity 0.25s linear; }
-  .patric_bootstrap .navbar-patric > .nav > .dropdown.show,
-  .patric_bootstrap .navbar-patric > .nav > .dropdown:hover {
-    border-top: 3px solid #e57200;
-    margin-top: -3px !important; }
-  .patric_bootstrap .navbar-patric > .nav .nav-item {
-    padding: 0 5px 0 0;
-    margin: 0; }
-  .patric_bootstrap .navbar-patric > .nav .nav-link.dropdown-toggle {
-    font-family: Lato;
-    font-size: 13px;
-    color: #b2cbda !important; }
-  .patric_bootstrap .navbar-patric > .nav .nav-link.dropdown-toggle:active,
-  .patric_bootstrap .navbar-patric > .nav .nav-link.dropdown-toggle:focus,
-  .patric_bootstrap .navbar-patric > .nav .nav-link.dropdown-toggle:hover,
-  .patric_bootstrap .navbar-patric > .nav .nav-item.show .nav-link.dropdown-toggle,
-  .patric_bootstrap .navbar-patric > .nav .nav-link.show {
-    color: #fff !important; }
+    .patric_bootstrap .navbar-patric .dropdown {
+      position: static;
+      padding: 0 5px 0 0;
+      margin: 0; }
+      .patric_bootstrap .navbar-patric .dropdown .dropdown-toggle {
+        font-family: Lato;
+        font-size: 13px;
+        color: #b2cbda !important; }
+        .patric_bootstrap .navbar-patric .dropdown .dropdown-toggle::after {
+          position: relative;
+          display: inline-block;
+          right: 50%;
+          margin-right: -3px;
+          top: 16px;
+          opacity: 0;
+          width: 0;
+          height: 0;
+          margin-left: 0.255em;
+          vertical-align: 0.255em;
+          content: "";
+          border-bottom: 0.3em solid;
+          border-right: 0.3em solid transparent;
+          border-top: 0;
+          border-left: 0.3em solid transparent; }
+      .patric_bootstrap .navbar-patric .dropdown.show .dropdown-toggle {
+        color: #fff !important;
+        border-top: 3px solid #e57200;
+        margin-top: -3px !important; }
+        .patric_bootstrap .navbar-patric .dropdown.show .dropdown-toggle::after {
+          opacity: 1; }
+      .patric_bootstrap .navbar-patric .dropdown .dropdown-menu {
+        font-size: 14px !important;
+        width: 100% !important;
+        border-radius: 0;
+        border: none;
+        margin-top: 0;
+        max-height: calc(100vh - 38px);
+        overflow-y: auto; }
+      .patric_bootstrap .navbar-patric .dropdown .gs-help {
+        display: none; }
   .patric_bootstrap .navbar-expand-sm {
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
@@ -6308,6 +6298,8 @@ body.patric_body {
     -webkit-box-pack: start;
     -ms-flex-pack: start;
     justify-content: flex-start; }
+  .patric_bootstrap #navbarDropdown_search_menu label {
+    font-family: Lato, "Helvetica Neue", Arial, sans-serif; }
   .patric_bootstrap .pill-border {
     color: #495057;
     border: 1px solid #d5d5d5;
@@ -6353,8 +6345,6 @@ body.patric_body {
       -webkit-box-direction: normal;
       -ms-flex-direction: column;
       flex-direction: column; } }
-  .patric_bootstrap #navbarDropdown_search_menu label {
-    font-family: Lato, "Helvetica Neue", Arial, sans-serif; }
   .patric_bootstrap .row--search {
     margin-right: -22px;
     margin-left: -22px;
