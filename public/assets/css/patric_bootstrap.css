@@ -6145,7 +6145,7 @@ body.patric_body {
   .patric_bootstrap .invisible {
     visibility: hidden !important; }
   .patric_bootstrap div.container {
-    position: initial; }
+    position: static; }
   .patric_bootstrap .box-shadow {
     -webkit-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
     box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05); }
@@ -6234,9 +6234,11 @@ body.patric_body {
       background-size: contain;
       background-repeat: no-repeat; } }
   .patric_bootstrap .hr--brand {
-    border-top: 3px solid #ffa750; }
-  .patric_bootstrap .hr--brand-sm {
-    border-top: 1px solid #e57200; }
+    border-top: 3px solid #e57200;
+    margin-right: auto; }
+    .patric_bootstrap .hr--brand-sm {
+      border-top: 1px solid #e57200;
+      margin-right: auto; }
   .patric_bootstrap ul.bullets-orange li::before {
     content: "\2022";
     color: #e57200;
@@ -6316,10 +6318,12 @@ body.patric_body {
     color: #2e76a3; }
   .patric_bootstrap .carousel-control-next,
   .patric_bootstrap .carousel-control-prev {
-    color: #e57200;
-    -webkit-box-align: start;
-    -ms-flex-align: start;
-    align-items: start; }
+    -webkit-box-align: start !important;
+    -ms-flex-align: start !important;
+    align-items: start !important; }
+    .patric_bootstrap .carousel-control-next .fa,
+    .patric_bootstrap .carousel-control-prev .fa {
+      color: #e57200; }
   .patric_bootstrap .card-news .carousel-control-next,
   .patric_bootstrap .card-news .carousel-control-prev {
     padding-top: 5px; }
@@ -6330,10 +6334,10 @@ body.patric_body {
     left: -20px; }
   .patric_bootstrap .carousel-control-next {
     right: -20px; }
-  .patric_bootstrap .carousel-control-next:focus,
-  .patric_bootstrap .carousel-control-next:hover,
-  .patric_bootstrap .carousel-control-prev:focus,
-  .patric_bootstrap .carousel-control-prev:hover {
+  .patric_bootstrap .carousel-control-next:focus .fa,
+  .patric_bootstrap .carousel-control-next:hover .fa,
+  .patric_bootstrap .carousel-control-prev:focus .fa,
+  .patric_bootstrap .carousel-control-prev:hover .fa {
     color: #e57200; }
   .patric_bootstrap .carousel-indicators li {
     background-color: #555; }
