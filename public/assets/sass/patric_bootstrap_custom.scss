@@ -1,6 +1,6 @@
 // Fix for JBrowse main.css:130 Conflict
 div.container {
-  position: initial;
+  position: static;
 }
 
 .box-shadow {
@@ -126,10 +126,12 @@ h6 {
   }
 }
 .hr--brand {
-  border-top: 3px solid #ffa750;
-}
-.hr--brand-sm {
-  border-top: 1px solid #e57200;
+  border-top: 3px solid #e57200;
+  margin-right: auto;
+  &-sm {
+    border-top: 1px solid #e57200;
+    margin-right: auto;
+  }
 }
 
 ul.bullets-orange li::before {
@@ -222,9 +224,11 @@ ul.bullets-orange li::before {
   color: #2e76a3;
 }
 .carousel-control-next,
-.carousel-control-prev {
-  color: #e57200;
-  align-items: start;
+.carousel-control-prev{
+  align-items: start !important;
+  .fa {
+    color: #e57200;
+  }
 }
 .card-news .carousel-control-next,
 .card-news .carousel-control-prev {
@@ -240,10 +244,10 @@ ul.bullets-orange li::before {
 .carousel-control-next {
   right: -20px;
 }
-.carousel-control-next:focus,
-.carousel-control-next:hover,
-.carousel-control-prev:focus,
-.carousel-control-prev:hover {
+.carousel-control-next:focus .fa,
+.carousel-control-next:hover .fa,
+.carousel-control-prev:focus .fa,
+.carousel-control-prev:hover .fa{
   color: #e57200;
 }
 .carousel-indicators li {
