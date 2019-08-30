@@ -230,6 +230,16 @@ ul.bullets-orange li::before {
     color: #e57200;
   }
 }
+// reset button icon colors from p3.css
+.btn-outline-primary .fa { color: $primary-color !important; }
+.btn-outline-primary .fa:hover, .btn-outline-primary:hover .fa { color: #fff !important; }
+
+.btn-secondary .fa { color: #fff !important; }
+.btn-secondary .fa:hover, .btn-secondary:hover .fa { color: #fff !important; }
+
+.btn .text-white .fa { color: #fff !important; }
+.btn .text-white .fa:hover { color: #fff !important; }
+
 .card-news .carousel-control-next,
 .card-news .carousel-control-prev {
   padding-top: 5px;
