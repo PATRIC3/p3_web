@@ -20,7 +20,8 @@
   <link rel='stylesheet' href='/public/assets/css/patric_bootstrap.css' />
 </head>
 
-<body onunload="" class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
+<body onunload=""
+  class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
 
   <!-- New Navbar, CSS scoped to .patric_bootstrap -->
   <div class="patric_bootstrap">
@@ -40,7 +41,9 @@
         <div class="container pt-4">
           <div class="row">
             <div class="col-12">
-              <h2 class="pl-2">Welcome <span class="small"><a class="btn btn-sm btn-outline-primary" href="https://docs.google.com/document/d/17rO9aDEdOzV37OniVa8iguXqNHsGJLkiqWG7zDtZqtQ/edit?ts=5d541baa#" target="_blank">submit feedback</a></span></h2>
+              <h2 class="pl-2">Welcome <span class="small"><a class="btn btn-sm btn-outline-primary"
+                    href="https://docs.google.com/document/d/17rO9aDEdOzV37OniVa8iguXqNHsGJLkiqWG7zDtZqtQ/edit?ts=5d541baa#"
+                    target="_blank">submit feedback</a></span></h2>
             </div>
           </div>
         </div>
@@ -304,7 +307,8 @@
                         <a href="/app/Assembly"><img class="card-img-top"
                             src="/public/assets/services/genome_assembly.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/Assembly" class="navigationLink">Genome Assembly</a></h5>
+                          <h5 class="text-center"><a href="/app/Assembly" class="navigationLink">Genome Assembly</a>
+                          </h5>
                           <p class="card-text">The Genome Assembly Service allows single or multiple assemblers to be
                             invoked to compare results. The service attempts to select the best assembly.</p>
                           <div class="d-flex justify-content-center">
@@ -342,8 +346,8 @@
                         <a href="/app/ComprehensiveGenomeAnalysis"><img class="card-img-top"
                             src="/public/assets/services/comp_genome_analysis.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a
-                              href="/app/ComprehensiveGenomeAnalysis" class="navigationLink">Comprehensive Genome
+                          <h5 class="text-center"><a href="/app/ComprehensiveGenomeAnalysis"
+                              class="navigationLink">Comprehensive Genome
                               Analysis</a></h5>
                           <p class="card-text">The Comprehensive Genome Analysis Service provides a streamlined analysis
                             "meta-service" that accepts raw reads and performs a comprehensive analysis including
@@ -444,7 +448,8 @@
                         <a href="/app/PhylogeneticTree"><img class="card-img-top"
                             src="/public/assets/services/phylogenetic_tree.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/PhylogeneticTree" class="navigationLink">Phylogenetic Tree
+                          <h5 class="text-center"><a href="/app/PhylogeneticTree" class="navigationLink">Phylogenetic
+                              Tree
                               Building</a></h5>
                           <p class="card-text">The Phylogenetic Tree Building Service enables construction of custom
                             phylogenetic trees for user-selected genomes.</p>
@@ -506,7 +511,8 @@
                         <a href="/app/MetagenomicReadMapping"><img class="card-img-top"
                             src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/MetagenomicReadMapping" class="navigationLink">Metagenomic
+                          <h5 class="text-center"><a href="/app/MetagenomicReadMapping"
+                              class="navigationLink">Metagenomic
                               Read Mapping</a></h5>
                           <p class="card-text">The Metagenomic Read Mapping Service uses KMA to align reads against
                             antibiotic resistance genes from CARD and virulence factors from VFDB.</p>
@@ -526,7 +532,8 @@
                         <a href="/app/TaxonomicClassification"><img class="card-img-top"
                             src="/public/assets/services/taxonomic_classification.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/TaxonomicClassification" class="navigationLink">Taxonomic
+                          <h5 class="text-center"><a href="/app/TaxonomicClassification"
+                              class="navigationLink">Taxonomic
                               Classification</a></h5>
                           <p class="card-text">The Taxonomic Classification Service computes taxonomic classification
                             for read data.</p>
@@ -592,7 +599,8 @@
                         <a href="/app/Expression"><img class="card-img-top"
                             src="/public/assets/services/expression_upload.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/Expression" class="navigationLink">Differential Expression
+                          <h5 class="text-center"><a href="/app/Expression" class="navigationLink">Differential
+                              Expression
                               Import</a></h5>
                           <p class="card-text">The Differential Expression Import Service facilitates upload of
                             user-provided, pre-processed differential expression datasets generated by microarray,
@@ -744,7 +752,8 @@
                         <a href="/app/Reconstruct"><img class="card-img-top"
                             src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/Reconstruct" class="navigationLink">Reconstruct Metabolic
+                          <h5 class="text-center"><a href="/app/Reconstruct" class="navigationLink">Reconstruct
+                              Metabolic
                               Model</a></h5>
                           <p class="card-text">The Model Reconstruction Service integrates and augments technologies for
                             genome annotation, construction of gene-protein-reaction (GPR) associations, generation of
@@ -807,16 +816,19 @@
                         <a href="/app/FastqUtil"><img class="card-img-top"
                             src="/public/assets/services/patric-web-app@2x.jpg"></a>
                         <div class="card-body">
-                          <h5 class="text-center"><a href="/app/FastqUtil" class="navigationLink">Fastq Utilities</a></h5>
+                          <h5 class="text-center"><a href="/app/FastqUtil" class="navigationLink">Fastq Utilities</a>
+                          </h5>
                           <p class="card-text">The Fastq Utilites Service provides capability for aligning, measuring
                             base call quality, and trimmiing fastq read files. For further explanation, please see Fastq
                             Utilities Service User Guide and Tutorial.</p>
                           <div class="d-flex justify-content-center">
                             <div class="btn-group">
-                              <a href="https://docs.patricbrc.org/user_guides/services/fastq_utilities_service.html" role="button"
-                                class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i> User Guide</a>
-                              <a href="https://docs.patricbrc.org/tutorial/fastq-utilities/fastq-utilities.html" role="button"
-                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                              <a href="https://docs.patricbrc.org/user_guides/services/fastq_utilities_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/fastq-utilities/fastq-utilities.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
                             </div>
                           </div>
                         </div>
@@ -884,7 +896,8 @@
               <div class="col-12">
                 <img class="img-fluid d-block mx-auto" src="/public/assets/img/patric_logo_footer.png" width="200px">
                 <p class="text-center mt-2">
-                  <small>Current version: <%- request.package.version %><%- request.applicationOptions.appLabel || "" %></small>
+                  <small>Current version:
+                    <%- request.package.version %><%- request.applicationOptions.appLabel || "" %></small>
                 </p>
                 <hr class="mb-1">
                 <div
@@ -896,12 +909,7 @@
                     href="https://www.facebook.com/pages/Pathosystems-Resource-Integration-Center-PATRIC/117100971687823"><i
                       class="fab fa-facebook fa-fw fa-1x py-1"></i> Facebook</a><a class="btn btn-link"
                     href="https://www.youtube.com/user/PATRICBRC" style="color:#e52d27" target="_blank"><i
-                      class="fab fa-youtube-square fa-fw fa-1x py-1"></i> Youtube</a><a class="btn btn-link" style=""
-                    target="_blank" href="https://docs.patricbrc.org/news.rss"><i
-                      class="fa fa-fw fa-1x py-1 fa-rss"></i> RSS</a><a class="btn text-white"
-                    href="https://www.addthis.com/bookmark.php?v=250&amp;username=xa-4c40660c515875dc"
-                    style="background:#dd4b39" target="_blank"><i class="fa fa-share fa-fw fa-1x py-1"></i> Share This
-                    Site</a>
+                      class="fab fa-youtube-square fa-fw fa-1x py-1"></i> Youtube</a>
                 </div>
                 <hr class="mt-1">
               </div>
@@ -913,17 +921,21 @@
                   Allergy and Infectious Diseases, National Institutes of Health, Department of Health and Human
                   Services, under Contract No. HHSN272201400027C, awarded to RL Stevens </p>
               </div>
-              <div class="col-md-4" style="">
+              <div class="col-md-4">
                 <h6><strong>BRC Program</strong></h6>
                 <div class="row">
                   <div class="col-md-6">
                     <p>
-                      <a href="#">NIAID</a><br><a href="#">PATRIC</a><br><a href="#">ViPR</a>
+                      <a href="https://www.niaid.nih.gov/research/bioinformatics-resource-centers"
+                        target="_blank">NIAID</a><br><a href="https://patricbrc.org">PATRIC</a><br><a
+                        href="https://www.viprbrc.org/brc/home.spg?decorator=vipr" target="_blank">ViPR</a>
                     </p>
                   </div>
                   <div class="col-md-6">
                     <p>
-                      <a href="#">IRD</a><br><a href="#">EuPathDB</a><br><a href="#">VectorBase</a>
+                      <a href="https://www.fludb.org/brc/home.spg?decorator=influenza" target="_blank">IRD</a><br><a
+                        href="https://eupathdb.org/eupathdb/" target="_blank">EuPathDB</a><br><a
+                        href="https://www.vectorbase.org/" target="_blank">VectorBase</a>
                     </p>
                   </div>
                 </div>
@@ -936,7 +948,7 @@
           </div>
         </footer>
       </div><!-- end bootstrap styles -->
-    </div> <!-- end contentpane container -->
+    </div><!-- end contentpane container -->
 
     <% if (request.isAuthenticated && request.isAuthenticated()) { %>
     <div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region:'bottom'"></div>
