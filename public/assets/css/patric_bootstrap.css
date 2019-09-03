@@ -6324,6 +6324,18 @@ body.patric_body {
     .patric_bootstrap .carousel-control-next .fa,
     .patric_bootstrap .carousel-control-prev .fa {
       color: #e57200; }
+  .patric_bootstrap .btn-outline-primary .fa {
+    color: #2E76A3 !important; }
+  .patric_bootstrap .btn-outline-primary .fa:hover, .patric_bootstrap .btn-outline-primary:hover .fa {
+    color: #fff !important; }
+  .patric_bootstrap .btn-secondary .fa {
+    color: #fff !important; }
+  .patric_bootstrap .btn-secondary .fa:hover, .patric_bootstrap .btn-secondary:hover .fa {
+    color: #fff !important; }
+  .patric_bootstrap .btn .text-white .fa {
+    color: #fff !important; }
+  .patric_bootstrap .btn .text-white .fa:hover {
+    color: #fff !important; }
   .patric_bootstrap .card-news .carousel-control-next,
   .patric_bootstrap .card-news .carousel-control-prev {
     padding-top: 5px; }
