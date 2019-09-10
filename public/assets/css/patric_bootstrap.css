@@ -6252,6 +6252,10 @@ body.patric_body {
     border-top: 3px solid #154e72;
     padding-top: 0;
     padding-bottom: 0; }
+    .patric_bootstrap .navbar-patric #search_navbar {
+      padding: 0px 1em; }
+      .patric_bootstrap .navbar-patric #search_navbar * {
+        font-size: 12px; }
     .patric_bootstrap .navbar-patric .dropdown {
       position: static;
       padding: 0 5px 0 0;
@@ -6290,7 +6294,7 @@ body.patric_body {
         margin-top: 0;
         max-height: calc(100vh - 38px);
         overflow-y: auto; }
-      .patric_bootstrap .navbar-patric .dropdown .gs-help {
+      .patric_bootstrap .navbar-patric .dropdown .search .gs-help {
         display: none; }
   .patric_bootstrap .navbar-expand-sm {
     -webkit-box-orient: horizontal;

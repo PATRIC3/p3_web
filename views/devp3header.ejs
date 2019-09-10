@@ -1,69 +1,22 @@
 <!--/nav START-->
 <nav class="navbar navbar-expand navbar-patric patric-bootstrap__nav shadow navbar-light" role="navigation" id="topnav">
   <ul class="nav navbar-nav container-fluid justify-content-start">
-    <li class="nav-item">
-      <a href="#" class="nav-link nav-mobile-home">
+    <li class="nav-item" style="margin-right:1em;">
+      <a href="https://patricbrc.org" class="nav-link nav-mobile-home navigationLink" title="PAThosystems Resource Integration Center">
         <i class="fas fa-home icon-home"></i>
       </a>
-      <a class="navbar-brand" href="/">PATRIC</a>
-    </li>
-    <li class="nav-item mr-3">
-      <span
-        class="text-secondary small"><%- request.package.version %><%- request.applicationOptions.appLabel || "" %></span>
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_search" role="button" aria-haspopup="true"
-        aria-expanded="false" data-toggle="dropdown">
-        <i class="fas fa-search icon-search"></i>
-        <span class="d-none d-lg-inline" style="">Search</span>
-      </a>
-      <div class="dropdown-menu dropdown-menu__search" aria-labelledby="navbarDropdown_search">
-        <div class="container my-3">
-          <div class="row rounded row--search row--search__top py-3">
-            <div class="col-md-12">
-              <!-- Include Global Search Template-->
-              <div data-dojo-type="dijit/layout/ContentPane" class="search">
-                <div class="global-search">
-                  <div style="flex-grow: 1">
-                    <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden"
-                      data-dojo-type="p3/widget/GlobalSearch" />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row mt-3">
-            <div class="col-12">
-              <h6><strong><i class="fa fa-question-circle icon-question-circle"></i> Search Tips</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0">
-              <ul class="bullets-orange">
-                <li>All terms: This is the least restricted search which allows users to enter any words or numbers into
-                  the search text box. All terms search will automatically enter “AND” as a logical operator between
-                  anything entered in the global search, but users can specify a more specific search by using “AND” or
-                  “OR”.</li>
-                <li>Any term: This search enters the logical operator "OR" between any terms (words or numbers) that
-                  have been entered into the search text box.</li>
-                <li>All exact terms: This search takes each keyword or number and does an exact match by both
-                  automatically entering quotation marks around the terms, and including the logical operator "AND".
-                </li>
-                <li>Any exact term: This search performs exact matches of each of the query terms with quotes and
-                  logical operator "OR".</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <a class="navbar-brand navigationLink" href="https://patricbrc.org" title="PAThosystems Resource Integration Center">PATRIC</a>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-database icon-database"></i>
-        <span class="d-none d-lg-inline" style="">Browse</span>
+        <span class="d-none d-lg-inline">Browse</span>
       </a>
       <div class="dropdown-menu" aria-labelledby="navbarDropdown">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-12 mb-0" style="">
+            <div class="col-md-12 mb-0">
               <h6><strong>Browse All</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0">
               <div class="row">
@@ -288,6 +241,161 @@
           </div>
         </div>
       </div>
+    </li>
+    <li class="nav-item dropdown">
+      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__workspace" role="button" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-user-cog icon-user"></i>
+        <span class="d-none d-lg-inline">
+          <span class="showOnLoad ShowWithAuth dijitHidden"><span id="signedInAs"></span></span>
+          <span class="HideWithAuth authLinks showOnLoad dijitHidden">Workspace</span>
+        </span>
+      </a>
+      <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__workspace">
+        <div class="container my-3">
+          <div class="row">
+            <div class="col-md-3">
+              <h6><strong>My Account</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+
+              <div class="HideWithAuth authLinks showOnLoad dijitHidden">
+                <p class="mt-3">
+                  Welcome, Guest. You are not currently logged in.
+                </p>
+                <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
+                <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
+              </div>
+
+              <div class="showOnLoad ShowWithAuth dijitHidden">
+                <span></span>
+                <div class="mb-3 list-group list-group-flush">
+                  <!-- <div class="mb-2 text-dark pl-3">Signed in as </div> -->
+                  <a href="" class="userProfile list-group-item list-group-item-action">Account Settings</a>
+                  <a href="" class="sulogin list-group-item list-group-item-action">SU Login</a>
+                  <a href="" class="suSwitchBack list-group-item list-group-item-action"
+                    onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
+                  <a href="" class="logoutLink list-group-item list-group-item-action"
+                    onclick="window.App.logout()">Logout</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <h6><strong>Workspaces</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="ShowWithAuth">
+                <div class="mb-3 list-group list-group-flush">
+                  <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My
+                    Workspaces</a>
+                  <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
+                    Workspaces</a>
+                  <div id="YourWorkspaces" class="mt-2">
+                  </div>
+                </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 mt-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
+                </div>
+              </div>
+
+            </div>
+            <div class="col-md-3" id="menu-list-mydata">
+              <h6><strong>My Data</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <!-- show my data links for logged in users -->
+              <div class="ShowWithAuth">
+                <div style="display:none"><a class="navigationLink" id="YourWorkspaceLink2">My Workspaces</a></div>
+                <!-- this is needed to for p3app.js:639 to work. Needs rework -->
+                <div class="mb-3 list-group list-group-flush">
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome
+                    Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">00 Feature
+                    Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">00
+                    Experiment Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action"
+                    href="/view/GenomeList/?eq(public,false)" id="MyDataGenomes">00 Private Genomes</a>
+                </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 mt-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <h6><strong>My Jobs</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="ShowWithAuth">
+                <div class="mb-3 list-group list-group-flush">
+                  <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00
+                    Completed Jobs</a>
+                </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 mt-3 list-group list-group-flush">
+                  <p>Login and upload your own data.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+    <li class="nav-item flex-grow-1">
+        <div data-dojo-type="dijit/layout/ContentPane" id="search_navbar">
+          <div class="global-search">
+            <div style="flex-grow: 1">
+              <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden"
+                data-dojo-type="p3/widget/GlobalSearch" />
+            </div>
+          </div>
+        </div>
+
+      <!-- <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown_search" role="button" aria-haspopup="true"
+        aria-expanded="false" data-toggle="dropdown">
+        <i class="fas fa-search icon-search"></i>
+        <span class="d-none d-lg-inline">Search</span>
+      </a> -->
+      <!-- <div class="dropdown-menu dropdown-menu__search" aria-labelledby="navbarDropdown_search">
+        <div class="container my-3">
+          <div class="row rounded row--search row--search__top py-3">
+            <div class="col-md-12">
+              <div data-dojo-type="dijit/layout/ContentPane" class="search">
+                <div class="global-search">
+                  <div style="flex-grow: 1">
+                    <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden"
+                      data-dojo-type="p3/widget/GlobalSearch" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-3">
+            <div class="col-12">
+              <h6><strong><i class="fa fa-question-circle icon-question-circle"></i> Search Tips</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0">
+              <ul class="bullets-orange">
+                <li>All terms: This is the least restricted search which allows users to enter any words or numbers into
+                  the search text box. All terms search will automatically enter “AND” as a logical operator between
+                  anything entered in the global search, but users can specify a more specific search by using “AND” or
+                  “OR”.</li>
+                <li>Any term: This search enters the logical operator "OR" between any terms (words or numbers) that
+                  have been entered into the search text box.</li>
+                <li>All exact terms: This search takes each keyword or number and does an exact match by both
+                  automatically entering quotation marks around the terms, and including the logical operator "AND".
+                </li>
+                <li>Any exact term: This search performs exact matches of each of the query terms with quotes and
+                  logical operator "OR".</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div> -->
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__docs" role="button" data-toggle="dropdown"
@@ -524,112 +632,9 @@
         </div>
       </div>
     </li>
-    <li class="flex-grow-1">
-    </li>
-    <li class="nav-item dropdown">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__workspace" role="button" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        <i class="fas fa-user-cog icon-user"></i>
-        <span class="d-none d-lg-inline">
-          <span class="showOnLoad ShowWithAuth dijitHidden"><span id="signedInAs"></span></span>
-          <span class="HideWithAuth authLinks showOnLoad dijitHidden">Account</span>
-        </span>
-      </a>
-      <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__workspace">
-        <div class="container my-3">
-          <div class="row">
-            <div class="col-md-3">
-              <h6><strong>My Account</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-
-              <div class="HideWithAuth authLinks showOnLoad dijitHidden">
-                <p class="mt-3">
-                  Welcome, Guest. You are not currently logged in.
-                </p>
-                <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
-                <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
-              </div>
-
-              <div class="showOnLoad ShowWithAuth dijitHidden">
-                <span></span>
-                <div class="mb-3 list-group list-group-flush">
-                  <!-- <div class="mb-2 text-dark pl-3">Signed in as </div> -->
-                  <a href="" class="userProfile list-group-item list-group-item-action">Account Settings</a>
-                  <a href="" class="sulogin list-group-item list-group-item-action">SU Login</a>
-                  <a href="" class="suSwitchBack list-group-item list-group-item-action"
-                    onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
-                  <a href="" class="logoutLink list-group-item list-group-item-action"
-                    onclick="window.App.logout()">Logout</a>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-3">
-              <h6><strong>Workspaces</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-              <div class="ShowWithAuth">
-                <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My
-                    Workspaces</a>
-                  <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
-                    Workspaces</a>
-                  <div id="YourWorkspaces" class="mt-2">
-                  </div>
-                </div>
-              </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
-                </div>
-              </div>
-
-            </div>
-            <div class="col-md-3" id="menu-list-mydata">
-              <h6><strong>My Data</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-              <!-- show my data links for logged in users -->
-              <div class="ShowWithAuth">
-                <div style="display:none"><a class="navigationLink" id="YourWorkspaceLink2">My Workspaces</a></div>
-                <!-- this is needed to for p3app.js:639 to work. Needs rework -->
-                <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome
-                    Groups</a>
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">00 Feature
-                    Groups</a>
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">00
-                    Experiment Groups</a>
-                  <a class="navigationLink list-group-item list-group-item-action"
-                    href="/view/GenomeList/?eq(public,false)" id="MyDataGenomes">00 Private Genomes</a>
-                </div>
-              </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-md-3">
-              <h6><strong>My Jobs</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-              <div class="ShowWithAuth">
-                <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00
-                    Completed Jobs</a>
-                </div>
-              </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
+    <!-- // use this for a menu spacer
+      <li class="flex-grow-1"> </li>
+    -->
   </ul>
 </nav>
 <!--/nav END-->

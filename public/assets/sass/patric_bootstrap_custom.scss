@@ -149,6 +149,10 @@ ul.bullets-orange li::before {
   border-top: 3px solid #154e72;
   padding-top: 0;
   padding-bottom: 0;
+  #search_navbar {
+    padding:0px 1em;
+    * { font-size: 12px; }
+  }
   .dropdown {
     position: static;
     padding: 0 5px 0 0;
@@ -192,7 +196,9 @@ ul.bullets-orange li::before {
       max-height: calc(100vh - 38px);
       overflow-y: auto;
     }
-    .gs-help { display: none; }
+    .search {
+      .gs-help { display: none; }
+    }
   }
 }
 
