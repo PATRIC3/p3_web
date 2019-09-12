@@ -19,13 +19,13 @@ div.container {
   border-radius: 25px;
 }
 
-.carousel-indicators {
-  z-index: 9 !important;
+#news-tab {
+  .nav-link.active, .nav-link.show {
+    background-color: white;
+    border-bottom-color: white;
+  }
 }
 
-.carousel {
-  font-family: inherit !important;
-}
 /* Unset the icon color from p3.css */
 .fa {
   color: unset;
@@ -157,6 +157,13 @@ ul.bullets-orange li::before {
     position: static;
     padding: 0 5px 0 0;
     margin: 0;
+    &.dropdown__login {
+      .dropdown-menu__account {
+        max-width: 250px;
+        left: auto;
+        right: 15px;
+      }
+    }
     .dropdown-toggle {
       font-family: Lato;
       font-size: 13px;
@@ -229,6 +236,25 @@ ul.bullets-orange li::before {
 .list-group-item {
   color: #2e76a3;
 }
+
+.carousel-indicators {
+  z-index: 9 !important;
+  li {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: rgb(175, 175, 175);
+  }
+  .active {
+    background-color: #e57200;
+  }
+}
+
+.carousel {
+  font-family: inherit !important;
+}
 .carousel-control-next,
 .carousel-control-prev{
   align-items: start !important;
@@ -266,12 +292,7 @@ ul.bullets-orange li::before {
 .carousel-control-prev:hover .fa{
   color: #e57200;
 }
-.carousel-indicators li {
-  background-color: #555;
-}
-.carousel-indicators .active {
-  background-color: #e57200;
-}
+
 @media screen and (max-width: 768px) {
   .share_links {
     flex-direction: column;

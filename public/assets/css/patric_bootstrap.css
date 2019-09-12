@@ -6155,10 +6155,9 @@ body.patric_body {
     border: 0px; }
   .patric_bootstrap .btn, .patric_bootstrap .btn-primary, .patric_bootstrap .btn-secondary, .patric_bootstrap .btn-outline-secondary, .patric_bootstrap .nav-pills .nav-link.active, .patric_bootstrap .nav-pills .show > .nav-link, .patric_bootstrap #search-input {
     border-radius: 25px; }
-  .patric_bootstrap .carousel-indicators {
-    z-index: 9 !important; }
-  .patric_bootstrap .carousel {
-    font-family: inherit !important; }
+  .patric_bootstrap #news-tab .nav-link.active, .patric_bootstrap #news-tab .nav-link.show {
+    background-color: white;
+    border-bottom-color: white; }
   .patric_bootstrap .fa {
     color: unset; }
   .patric_bootstrap .UploadStatusUpload .fa {
@@ -6260,6 +6259,10 @@ body.patric_body {
       position: static;
       padding: 0 5px 0 0;
       margin: 0; }
+      .patric_bootstrap .navbar-patric .dropdown.dropdown__login .dropdown-menu__account {
+        max-width: 250px;
+        left: auto;
+        right: 15px; }
       .patric_bootstrap .navbar-patric .dropdown .dropdown-toggle {
         font-family: Lato;
         font-size: 13px;
@@ -6320,6 +6323,19 @@ body.patric_body {
     border-bottom: 0; }
   .patric_bootstrap .list-group-item {
     color: #2e76a3; }
+  .patric_bootstrap .carousel-indicators {
+    z-index: 9 !important; }
+    .patric_bootstrap .carousel-indicators li {
+      height: 8px;
+      width: 8px;
+      border-radius: 50%;
+      margin-left: 5px;
+      margin-right: 5px;
+      background-color: #afafaf; }
+    .patric_bootstrap .carousel-indicators .active {
+      background-color: #e57200; }
+  .patric_bootstrap .carousel {
+    font-family: inherit !important; }
   .patric_bootstrap .carousel-control-next,
   .patric_bootstrap .carousel-control-prev {
     -webkit-box-align: start !important;
@@ -6355,10 +6371,6 @@ body.patric_body {
   .patric_bootstrap .carousel-control-prev:focus .fa,
   .patric_bootstrap .carousel-control-prev:hover .fa {
     color: #e57200; }
-  .patric_bootstrap .carousel-indicators li {
-    background-color: #555; }
-  .patric_bootstrap .carousel-indicators .active {
-    background-color: #e57200; }
   @media screen and (max-width: 768px) {
     .patric_bootstrap .share_links {
       -webkit-box-orient: vertical;
