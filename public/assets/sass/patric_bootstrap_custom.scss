@@ -1,0 +1,320 @@
+// Fix for JBrowse main.css:130 Conflict
+div.container {
+  position: static;
+}
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+.cover {
+	min-height:100%;
+}
+
+#search-input {
+	border: 0px;
+}
+
+.btn, .btn-primary, .btn-secondary, .btn-outline-secondary, .nav-pills .nav-link.active, .nav-pills .show > .nav-link, #search-input {
+  border-radius: 25px;
+}
+
+#news-tab {
+  .nav-link.active, .nav-link.show {
+    background-color: white;
+    border-bottom-color: white;
+  }
+}
+
+/* Unset the icon color from p3.css */
+.fa {
+  color: unset;
+}
+
+.UploadStatusUpload .fa {
+  color: #ddd;
+}
+
+.WorkspaceController.dijitAlignBottom {
+  width: 100% !important;
+}
+
+ol li,
+ul li {
+  list-style: none !important;
+  line-height: inherit !important;
+  font-size: inherit !important;
+}
+h2 {
+  font-size: 28px !important;
+}
+h6 {
+  font-size: 14px !important;
+}
+
+/* Search Field */
+.search .global-search .gs-options-dropdown .dijitInputField,
+.search .global-search .gs-data-types-dropdown .dijitInputField {
+  padding: 12px 4px;
+}
+.row--search {
+  margin-right: -18px !important;
+  margin-left: -18px !important;
+}
+
+.search .global-search .gs-input .dijitInputField {
+  padding: 12px 8px;
+}
+
+/* Navbar and menu */
+
+.nav-mobile-home {
+  display: none;
+}
+@media screen and (max-width: 414px) {
+  .nav-mobile-home {
+    display: block;
+    color: #fff !important;
+  }
+}
+.nav-link {
+  padding: 8px;
+}
+.navbar-nav {
+  align-items: center;
+}
+.navbar-brand {
+  display: none;
+}
+@media screen and (min-width: 414px) and (max-width: 480px) {
+  .navbar-brand {
+    display: block;
+    text-indent: -9999px;
+    width: 79px;
+    margin-right: 0;
+    padding: 0;
+    color: #fff;
+    background-image: url(../img/patric-logo-88h.png);
+    background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+@media screen and (max-width: 480px) {
+  .navbar-patric {
+    padding: 0.75rem 0.25rem;
+  }
+  .nav-link.dropdown-toggle {
+    display: flex;
+    flex-direction: column;
+  }
+}
+@media screen and (min-width: 480px) {
+  .navbar-brand {
+    display: block;
+    text-indent: -9999px;
+    width: 132px;
+    height: 26px;
+    margin-right: 0;
+    margin-top: -1px;
+    padding: 0;
+    color: #fff;
+    background-image: url(../img/patric-logo-88h.png);
+    background-position: center top;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+.hr--brand {
+  border-top: 3px solid #e57200;
+  margin-right: auto;
+  &-sm {
+    border-top: 1px solid #e57200;
+    margin-right: auto;
+  }
+}
+
+ul.bullets-orange li::before {
+  content: "\2022";
+  color: #e57200;
+  font-weight: bold;
+  display: inline-block;
+  width: 1em;
+  margin-left: -1em;
+}
+
+.navbar-patric {
+  min-width: 290px;
+  background: #2e76a3 !important;
+  border-top: 3px solid #154e72;
+  padding-top: 0;
+  padding-bottom: 0;
+  #search_navbar {
+    padding:0px 1em;
+    * { font-size: 12px; }
+  }
+  .dropdown {
+    position: static;
+    padding: 0 5px 0 0;
+    margin: 0;
+    &.dropdown__login {
+      .dropdown-menu__account {
+        max-width: 250px;
+        left: auto;
+        right: 15px;
+      }
+    }
+    .dropdown-toggle {
+      font-family: Lato;
+      font-size: 13px;
+      color: #b2cbda !important;
+      &::after {
+        position: relative;
+        display: inline-block;
+        right: 50%;
+        margin-right: -3px;
+        top: 16px;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        margin-left: 0.255em;
+        vertical-align: 0.255em;
+        content: "";
+        border-bottom: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-top: 0;
+        border-left: 0.3em solid transparent;
+      }
+    }
+    &.show .dropdown-toggle {
+      color: #fff !important;
+      border-top: 3px solid #e57200;
+      margin-top: -3px !important;
+      &::after {
+        opacity: 1;
+      }
+    }
+    .dropdown-menu {
+      font-size: 14px !important;
+      width: 100% !important;
+      border-radius: 0;
+      border: none;
+      margin-top: 0;
+      max-height: calc(100vh - 38px);
+      overflow-y: auto;
+    }
+    .search {
+      .gs-help { display: none; }
+    }
+  }
+}
+
+.navbar-expand-sm {
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+}
+#navbarDropdown_search_menu label {
+  font-family: Lato, "Helvetica Neue", Arial, sans-serif;
+}
+
+.pill-border {
+  color: #495057;
+  border: 1px solid #d5d5d5;
+  border-radius: 30px;
+  padding: 3px 15px 3px 3px;
+}
+.pill-border:hover {
+  background-color: #f8f9fa;
+  text-decoration: none;
+}
+.list-group-flush .list-group-item:first-child {
+  border-top: 0;
+}
+.list-group-flush .list-group-item:last-child {
+  border-bottom: 0;
+}
+.list-group-item {
+  color: #2e76a3;
+}
+
+.carousel-indicators {
+  z-index: 9 !important;
+  li {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: rgb(175, 175, 175);
+  }
+  .active {
+    background-color: #e57200;
+  }
+}
+
+.carousel {
+  font-family: inherit !important;
+}
+.carousel-control-next,
+.carousel-control-prev{
+  align-items: start !important;
+  .fa {
+    color: #e57200;
+  }
+}
+// reset button icon colors from p3.css
+.btn-outline-primary .fa { color: $primary-color !important; }
+.btn-outline-primary .fa:hover, .btn-outline-primary:hover .fa { color: #fff !important; }
+
+.btn-secondary .fa { color: #fff !important; }
+.btn-secondary .fa:hover, .btn-secondary:hover .fa { color: #fff !important; }
+
+.btn .text-white .fa { color: #fff !important; }
+.btn .text-white .fa:hover { color: #fff !important; }
+
+.card-news .carousel-control-next,
+.card-news .carousel-control-prev {
+  padding-top: 5px;
+}
+.card-services .carousel-control-next,
+.card-services .carousel-control-prev {
+  padding-top: 210px;
+}
+.carousel-control-prev {
+  left: -20px;
+}
+.carousel-control-next {
+  right: -20px;
+}
+.carousel-control-next:focus .fa,
+.carousel-control-next:hover .fa,
+.carousel-control-prev:focus .fa,
+.carousel-control-prev:hover .fa{
+  color: #e57200;
+}
+
+@media screen and (max-width: 768px) {
+  .share_links {
+    flex-direction: column;
+  }
+}
+.row--search {
+  margin-right: -22px;
+  margin-left: -22px;
+  background: #2e76a3 url(../img/search_bg.png) center left no-repeat;
+  background-size: 900px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.row--search__top {
+  border-top-left-radius: 0.25rem !important;
+  border-top-right-radius: 0.25rem !important;
+}
+.timeline-Header {
+  display: none;
+}
+
+#menu-list-mydata {
+  a.navigationLink { color: $link-color !important; }
+  a.navigationLink:hover { color: #495057 !important; }
+}

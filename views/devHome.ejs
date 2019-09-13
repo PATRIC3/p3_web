@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>PATRIC</title>
+  <meta name="Keywords" content="PATRIC, Pathosystems Resource Integration Center" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="manifest" href="/public/manifest.json">
+  <link rel='stylesheet' href='/js/mauve_viewer/dist/mauve-viewer.css' />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,400i,700|Roboto:400,700&display=swap">
+  <link rel="icon" sizes="16x16 32x32" href="/patric/favicon.ico">
+  <% if (request && request.production) { %>
+  <link rel='stylesheet' href='/js/<%- request.package.version %>/p3/resources/p3.css' />
+  <% } else { %>
+  <link rel='stylesheet' href='/js/p3/resources/p3.css' />
+  <% } %>
+  <link rel='stylesheet' href='/public/assets/css/patric_bootstrap.css' />
+</head>
+
+<body onunload=""
+  class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
+
+  <!-- New Navbar, CSS scoped to .patric_bootstrap -->
+  <div class="patric_bootstrap">
+    <% include devp3header %>
+  </div>
+
+  <div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer"
+    data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false" style="height:calc(100% - 38px)">
+    <!-- start application container -->
+
+    <div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding: 0px;">
+      <a name="top"></a>
+      <!-- start contentpane container -->
+      <div class="patric_bootstrap">
+        <!-- start bootstrap styles -->
+
+        <div class="container pt-4">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="pl-2">Welcome <span class="small"><a class="btn btn-sm btn-outline-primary"
+                    href="https://docs.google.com/document/d/17rO9aDEdOzV37OniVa8iguXqNHsGJLkiqWG7zDtZqtQ/edit?ts=5d541baa#"
+                    target="_blank">submit feedback</a></span></h2>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 flex-grow-1 d-flex mb-3">
+              <div class="card box-shadow d-flex flex-grow-1">
+                <div class="card-body d-flex flex-column justify-content-between mb-0 pb-0">
+                  <div class="row mb-2 ">
+                    <div class="col-md-12">
+                      <h6 class=""><b>What is PATRIC?</b></h6>
+                      <hr class="hr--brand-sm col-2 ml-0 mt-0">
+                      <p><b>PATRIC</b>, the <b>PAThosystems Resource Integration Center</b>, is the NIH/NIAID-funded
+                        Bacterial Bioinformatics Resource Center, <i>a web-based resource providing integrated omics
+                          data and analysis tools</i> to support biomedical research on bacterial infectious diseases
+                        and antimicrobial resistance.</p>
+                      <p class="">At PATRIC, users can <i>upload</i> their private data into a workspace, <i>analyze</i>
+                        it using high-throughput services, <i>compare</i> it with other public data using visual
+                        analytics tools, and <i>share</i> results with other users.</p>
+                      <h6><strong>Browse Organisms</strong></h6>
+                      <hr class="hr--brand-sm col-2 ml-0 mt-0">
+                      <div class="d-flex align-items-center flex-wrap justify-content-start">
+                        <a href="/view/Taxonomy/2"
+                          class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
+                          title="Browse Bacteria">
+                          <img class="d-block rounded-circle" src="/public/assets/img/bacteria.png" height="30px"
+                            width="30px">
+                          <p class="p-0 m-0 ml-1">Bacteria</p>
+                        </a>
+                        <a href="/view/Taxonomy/2157"
+                          class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
+                          title="Browse Archaea">
+                          <img class="d-block rounded-circle" src="/public/assets/img/archaea.png" height="30px"
+                            width="30px">
+                          <p class="p-0 m-0 ml-1">Archaea</p>
+                        </a>
+                        <a href="/view/Host/?eq(taxon_lineage_ids,2759)#view_tab=genomes"
+                          class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
+                          title="Browse Eukaryotic Hosts">
+                          <img class="d-block rounded-circle" src="/public/assets/img/eukaryotic.png" height="30px"
+                            width="30px">
+                          <p class="p-0 m-0 ml-1">Eukaryotic Hosts</p>
+                        </a>
+                        <a href="/view/Taxonomy/10239"
+                          class="pill-border d-flex justify-content-center align-items-center flex-nowrap mr-1 mb-3"
+                          title="Browse Phages">
+                          <img class="d-block rounded-circle" src="/public/assets/img/phages.png" height="30px"
+                            width="30px">
+                          <p class="p-0 m-0 ml-1">Phages</p>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row rounded row--search py-3">
+                    <div class="col-md-12">
+                      <!-- Include Global Search Template-->
+                      <div data-dojo-type="dijit/layout/ContentPane" class="search claro">
+                        <div class="global-search">
+                          <div style="padding: 6px 0px 2px 2px; flex-grow: 1">
+                            <input style="width:100%;font-size:1em;" class="showOnLoad dijitHidden"
+                              data-dojo-type="p3/widget/GlobalSearch" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-4 d-flex flex-column flex-grow-1 mb-3">
+              <div class="card align-self-stretch flex-grow-1 box-shadow card-news">
+                <div class="card-header">
+                  <ul class="nav nav-tabs nav-fill card-header-tabs" id="news-tab" role="tablist">
+                    <li class="nav-item">
+                      <a class="nav-link active show" id="news-twitter-tab" data-toggle="pill" href="#news-twitter" role="tab"
+                        aria-controls="news-twitter" aria-selected="true">Twitter</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#news-articles" id="news-articles-tab" data-toggle="pill"
+                        role="tab" aria-controls="news-articles" aria-selected="false">Latest News</a>
+                    </li>
+                  </ul>
+                </div>
+                <div class="tab-content">
+                  <div class="card-body tab-pane fade" id="news-articles" role="tabpanel"
+                    aria-labelledby="news-articles-tab">
+                    <!-- news card carousel -->
+                    <div class="carousel slide" data-ride="carousel" id="news" data-interval="false">
+                      <ol class="carousel-indicators">
+                        <li data-target="#news" data-slide-to="0" class="active"></li>
+                        <li data-target="#news" data-slide-to="1" class=""></li>
+                        <li data-target="#news" data-slide-to="2" class=""></li>
+                        <li data-target="#news" data-slide-to="3" class=""></li>
+                        <li data-target="#news" data-slide-to="4" class=""></li>
+                        <li data-target="#news" data-slide-to="5" class=""></li>
+                      </ol>
+                      <div class=" carousel-inner pb-4">
+                        <div class="carousel-item active">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html">July
+                                2019 Data and Website Release</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/fastq-utilities-service.png"
+                                height="80px" class="float-left pr-2 pb-2">The new Fastq Utilities Service provides the
+                              capability for aligning, measuring base call quality, and trimming fastq read files to
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2019/20190731-patric-july-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html">March
+                                2019 Data and Website Release</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/march-release-2019.png"
+                                height="80px" class="float-left pr-2 pb-2">This PATRIC release includes a new Metagenome
+                              Taxonomic Classification Service; a new Metagenomic Read Mapping Service; a new Codon Tree
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2019/20190405-patric-march-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html">Workshop
+                                at Argonne National Laboratory</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/workshop-1.png" height="80px"
+                                class="float-left pr-2 pb-2">
+                              The PATRIC/RAST teams will be offering a tutorial workshop April 16-18, 2019, at Argonne
+                              National Laboratory in the suburbs of
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2019/20190206-patric-workshop-at-argonne-national-lab.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html">January
+                                2019 Update</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/jan-release-2019.png" height="80px"
+                                class="float-left pr-2 pb-2">This PATRIC release includes over 9,200 new genomes
+                              bringing the total to over 215,000, as well as other minor enhancements
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2019/20190201-patric-january-2019-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html">November
+                                2018 Update</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/november-release-2018.png"
+                                height="80px" class="float-left pr-2 pb-2">
+                              This PATRIC release includes a new Genome Alignment Service; enhancements to the
+                              Metagenomic Binning, Tn-Seq, and RNA-Seq Services; 5 new
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2018/20181207-patric-november-2018-release.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="carousel-item">
+                          <div class="card-body px-0 pt-0 pb-3">
+                            <h5 class="text-center px-3"><a
+                                href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html">Instructional
+                                Videos</a></h5>
+                            <p class="card-text pt-2"><img src="/public/assets/news/instructional-videos.png"
+                                height="80px" class="float-left pr-2 pb-2">
+                              In addition to the current Tutorials, User Guides, and Webinars, PATRIC now features short
+                              instructional YouTube videos that demonstrate how
+                              …</p>
+                            <div class="d-flex justify-content-center">
+                              <div class="btn-group">
+                                <a href="https://docs.patricbrc.org/news/2018/20181204-instructional-videos.html"
+                                  role="button" class="btn btn-sm btn-outline-primary">Read more</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                      <a class="carousel-control-prev" href="#news" role="button" data-slide="prev">
+                        <i class="fa fa-chevron-left fa-lg"></i>
+                        <span class="sr-only">Previous</span>
+                      </a>
+                      <a class="carousel-control-next" href="#news" role="button" data-slide="next">
+                        <i class="fa fa-chevron-right fa-lg"></i>
+                        <span class="sr-only">Next</span>
+                      </a>
+                    </div>
+                    <!-- /news card -->
+                    <p class="text-right">
+                      <a href="https://docs.patricbrc.org/news">Browse all articles →</a>
+                    </p>
+                  </div>
+                  <div class="card-body tab-pane fade active show" id="news-twitter" role="tabpanel"
+                    aria-labelledby="news-twitter-tab">
+                    <a class="twitter-timeline" data-height="372px" data-link-color="#2E76A3"
+                      href="https://twitter.com/PATRICBRC?ref_src=twsrc%5Etfw">Tweets by PATRICBRC</a>
+                    <script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container mt-4">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="pl-2">Services and Tools</h2>
+            </div>
+          </div>
+        </div>
+        <!-- Data Services -->
+        <div class="container">
+          <div class="row">
+              <!-- Genomics -->
+              <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Genomics</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesGenomics" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesGenomics" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesGenomics" data-slide-to="1" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="2" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="3" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="4" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="5" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="6" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="7" class=""></li>
+                      <li data-target="#servicesGenomics" data-slide-to="8" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/Assembly"><img class="card-img-top"
+                            src="/public/assets/services/genome_assembly.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Assembly" class="navigationLink">Genome Assembly</a>
+                          </h5>
+                          <p class="card-text">The Genome Assembly Service allows single or multiple assemblers to be
+                            invoked to compare results. The service attempts to select the best assembly.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/genome_assembly_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/genome_assembly/assembly.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/Annotation"><img class="card-img-top"
+                            src="/public/assets/services/genome_annotation.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Annotation" class="navigationLink">Genome Annotation</a>
+                          </h5>
+                          <p class="card-text">The Genome Annotation Service uses the RAST tool kit (RASTtk) to provide
+                            annotation of genomic features.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/genome_annotation_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/genome_annotation/annotation.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/ComprehensiveGenomeAnalysis"><img class="card-img-top"
+                            src="/public/assets/services/comp_genome_analysis.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/ComprehensiveGenomeAnalysis"
+                              class="navigationLink">Comprehensive Genome
+                              Analysis</a></h5>
+                          <p class="card-text">The Comprehensive Genome Analysis Service provides a streamlined analysis
+                            "meta-service" that accepts raw reads and performs a comprehensive analysis including
+                            assembly, annotation, identification of nearest neighbors, a basic comparative analysis that
+                            includes a subsystem summary, phylogenetic tree, and the features that distinguish the
+                            genome from its nearest neighbors.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/comprehensive_genome_analysis_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/comprehensive-genome-analysis/comprehensive-genome-analysis.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/BLAST"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/BLAST" class="navigationLink">BLAST</a></h5>
+                          <p class="card-text">The PATRIC BLAST service integrates the BLAST (Basic Local Aligment
+                            Search Tool) algorithms to perform searches against against public or private genomes in
+                            PATRIC or other reference databases using a DNA or protein sequence and find matching
+                            genomes, genes, RNAs, or proteins.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/blast.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i> User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/blast/blast.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/GenomeDistance"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/GenomeDistance" class="navigationLink">Similar Genome
+                              Finder</a></h5>
+                          <p class="card-text">The Similar Genome Finder Service will find similar public genomes in
+                            PATRIC or compute genome distance estimation using <a
+                              href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4915045/">Mash/MinHash</a>. It returns
+                            a set of genomes matching the specified similarity criteria.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/blast.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i> User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/blast/blast.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/Variation"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Variation" class="navigationLink">Variation Analysis</a>
+                          </h5>
+                          <p class="card-text">The Variation Analysis Service can be used to identify and annotate
+                            sequence variations.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/variation_analysis_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/variation_analysis_service/variation_analysis_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/Tnseq"><img class="card-img-top"
+                            src="/public/assets/services/tn-seq_analysis.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Tnseq" class="navigationLink">Tn-Seq Analysis</a></h5>
+                          <p class="card-text">The Tn-Seq Analysis Service facilitates determination of essential and
+                            conditionally essential regions in bacterial genomes from data generated from transposon
+                            insertion sequencing (Tn-Seq) experiments.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/tn_seq_analysis_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/tn-seq/tn-seq.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/PhylogeneticTree"><img class="card-img-top"
+                            src="/public/assets/services/phylogenetic_tree.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/PhylogeneticTree" class="navigationLink">Phylogenetic
+                              Tree
+                              Building</a></h5>
+                          <p class="card-text">The Phylogenetic Tree Building Service enables construction of custom
+                            phylogenetic trees for user-selected genomes.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/phylogenetic_tree_building_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/codon_tree_building/codon_tree_building.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/GenomeAlignment"><img class="card-img-top"
+                            src="/public/assets/services/genome_alignment_viewer.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/GenomeAlignment" class="navigationLink">Genome Alignment
+                              (Mauve)</a></h5>
+                          <p class="card-text">The Whole Genome Alignment Service aligns genomes using <a
+                              href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0011147"
+                              target="_blank">progressiveMauve</a>.</p>
+                          <div class="d-flex justify-content-center">
+                            <a href="https://docs.patricbrc.org/user_guides/services/genome_alignment_service.html"
+                              role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                              User Guide</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesGenomics" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesGenomics" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <!-- Metagenomics -->
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Metagenomics</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesMetagenomics" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesMetagenomics" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesMetagenomics" data-slide-to="1" class=""></li>
+                      <li data-target="#servicesMetagenomics" data-slide-to="2" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/MetagenomicReadMapping"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/MetagenomicReadMapping"
+                              class="navigationLink">Metagenomic
+                              Read Mapping</a></h5>
+                          <p class="card-text">The Metagenomic Read Mapping Service uses KMA to align reads against
+                            antibiotic resistance genes from CARD and virulence factors from VFDB.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/metagenomic_read_mapping_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/metagenomic_read_mapping/metagenomic_read_mapping.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/TaxonomicClassification"><img class="card-img-top"
+                            src="/public/assets/services/taxonomic_classification.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/TaxonomicClassification"
+                              class="navigationLink">Taxonomic
+                              Classification</a></h5>
+                          <p class="card-text">The Taxonomic Classification Service computes taxonomic classification
+                            for read data.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/taxonomic_classification_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/taxonomic_classification/taxonomic_classification.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/MetagenomicBinning"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/MetagenomicBinning" class="navigationLink">Metagenomic
+                              Binning</a></h5>
+                          <p class="card-text">The Metagenomic Binning Service accepts either reads or contigs, and
+                            attempts to "bin" the data into a set of genomes. This service can be used to reconstruct
+                            bacterial and archael genomes from environmental samples.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/metagenomic_binning_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/metagenomic_binning/metagenomic_binning.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesMetagenomics" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesMetagenomics" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <!-- Transcriptomics -->
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Transcriptomics</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesTranscriptomics" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesTranscriptomics" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesTranscriptomics" data-slide-to="1" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/Expression"><img class="card-img-top"
+                            src="/public/assets/services/expression_upload.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Expression" class="navigationLink">Differential
+                              Expression
+                              Import</a></h5>
+                          <p class="card-text">The Differential Expression Import Service facilitates upload of
+                            user-provided, pre-processed differential expression datasets generated by microarray,
+                            RNA-Seq, or proteomic technologies to the user's private workspace.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/expression_data_import_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/expression_import/expression_import.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/Rnaseq"><img class="card-img-top"
+                            src="/public/assets/services/rna-seq_analysis.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Rnaseq" class="navigationLink">RNA-Seq Analysis</a></h5>
+                          <p class="card-text">The RNA-Seq Analysis Service provides services for aligning, assembling,
+                            and testing differential expression on RNA-Seq data. </p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/rna_seq_analysis_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/rna_seq_submission/submitting_rna_seq_job.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesTranscriptomics" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesTranscriptomics" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <!-- Protein Tools -->
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Protein Tools</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesProteinTools" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesProteinTools" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesProteinTools" data-slide-to="1" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/ProteinFamily"><img class="card-img-top"
+                            src="/public/assets/services/protein_family_sorter.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/ProteinFamily" class="navigationLink">Protein Family
+                              Sorter</a></h5>
+                          <p class="card-text">The Protein Family Sorter tool enables researchers to examine the
+                            distribution of specific protein families across different genomes.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/protein_family_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/protein_family_sorter/protein_family_sorter.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/SeqComparison"><img class="card-img-top"
+                            src="/public/assets/services/proteome_comparison.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/SeqComparison" class="navigationLink">Proteome
+                              Comparison</a></h5>
+                          <p class="card-text">The Proteome Comparison Service performs protein sequence-based genome
+                            comparison using bidirectional BLASTP. This service allows users to select genomes and
+                            compare them to reference genome.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/proteome_comparison_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/proteome_comparison/proteome_comparison.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesProteinTools" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesProteinTools" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <!-- Metabolomics -->
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Metabolomics</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesMetabolomics" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesMetabolomics" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesMetabolomics" data-slide-to="1" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/ComparativePathway"><img class="card-img-top"
+                            src="/public/assets/services/comparative_pathway.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/ComparativePathway" class="navigationLink">Comparative
+                              Pathway Tool</a></h5>
+                          <p class="card-text">The Comparative Pathway Service allows users to identify a set of
+                            pathways based on taxonomy, EC number, pathway ID, pathway name and/or specific annotation
+                            type.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/comparative_pathway_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/comparative_pathways/comparative_pathways.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/Reconstruct"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/Reconstruct" class="navigationLink">Reconstruct
+                              Metabolic
+                              Model</a></h5>
+                          <p class="card-text">The Model Reconstruction Service integrates and augments technologies for
+                            genome annotation, construction of gene-protein-reaction (GPR) associations, generation of
+                            biomass reactions, reaction network assembly, thermodynamic analysis of reaction
+                            reversibility, and model optimization, to generate draft genome-scale metabolic models. The
+                            service is capable of generating functioning draft metabolic models of an organism starting
+                            from an assembled genome sequence.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/model_reconstruction_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/metabolic_model_reconstruction/metabolic_model_reconstruction.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesMetabolomics" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesMetabolomics" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-4 col-md-6 mb-3 d-flex flex-column">
+              <!-- Data -->
+              <div class="card box-shadow card-services flex-fill">
+                <div class="card-body">
+                  <h6 class=" m-0 p-0 pb-2"><b>Data</b></h6>
+                  <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-2">
+                  <div class="carousel slide" data-ride="carousel" id="servicesData" data-interval="false">
+                    <ol class="carousel-indicators">
+                      <li data-target="#servicesData" data-slide-to="0" class="active"></li>
+                      <li data-target="#servicesData" data-slide-to="1" class=""></li>
+                    </ol>
+                    <div class=" carousel-inner pb-4">
+                      <div class="carousel-item active">
+                        <a href="/app/IDMapper"><img class="card-img-top"
+                            src="/public/assets/services/id_mapper.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/IDMapper" class="navigationLink">ID Mapper</a></h5>
+                          <p class="card-text">The ID Mapper tool maps PATRIC identifiers to those from other prominent
+                            external databases such as GenBank, RefSeq, EMBL, UniProt, KEGG, etc. Alternatively, it can
+                            map a list of external database identifiers to the corresponding PATRIC features.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/id_mapper.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i> User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/id_mapper/id_mapper.html" role="button"
+                                class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i> Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="carousel-item">
+                        <a href="/app/FastqUtil"><img class="card-img-top"
+                            src="/public/assets/services/patric-web-app@2x.jpg"></a>
+                        <div class="card-body">
+                          <h5 class="text-center"><a href="/app/FastqUtil" class="navigationLink">Fastq Utilities</a>
+                          </h5>
+                          <p class="card-text">The Fastq Utilites Service provides capability for aligning, measuring
+                            base call quality, and trimmiing fastq read files. For further explanation, please see Fastq
+                            Utilities Service User Guide and Tutorial.</p>
+                          <div class="d-flex justify-content-center">
+                            <div class="btn-group">
+                              <a href="https://docs.patricbrc.org/user_guides/services/fastq_utilities_service.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-info-circle"></i>
+                                User Guide</a>
+                              <a href="https://docs.patricbrc.org/tutorial/fastq-utilities/fastq-utilities.html"
+                                role="button" class="btn btn-sm btn-outline-primary"><i class="fa fa-book-open"></i>
+                                Tutorial</a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <a class="carousel-control-prev" href="#servicesData" role="button" data-slide="prev">
+                      <i class="fa fa-chevron-left fa-lg"></i>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#servicesData" role="button" data-slide="next">
+                      <i class="fa fa-chevron-right fa-lg"></i>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container mt-4">
+          <div class="row">
+            <div class="col-12">
+              <h2 class="pl-2">More About PATRIC</h2>
+            </div>
+          </div>
+        </div>
+        <div class="pb-3">
+          <div class="container">
+            <div class="row">
+              <div class="col-md-6 p-3">
+                <h6 class="mb-2"> <b>Key Features</b></h6>
+                <hr class="hr--brand-sm col-2 ml-0 mt-0">
+                <ul class="bullets-orange">
+                  <li>Comprehensive collection of microbial genomes and related ‘omics data</li>
+                  <li>Uniform microbial genome annotations</li>
+                  <li>Curated genome metadata and AMR phenotypes</li>
+                  <li>Easy to use high-throughput computational analysis services</li>
+                  <li>Integrated analysis and visualization tools</li>
+                  <li>Private workspace for analysis of user data</li>
+                  <li>User data sharing and publishing</li>
+                  <li>Programmatic access via Command-line Interface</li>
+                  <li>Bulk data upload and download via FTP</li>
+                </ul>
+              </div>
+              <div class="col-md-6 p-3">
+                <h6 class="mb-2"> <b>Data Types</b></h6>
+                <hr class="hr--brand-sm col-2 ml-0 mt-0">
+                <ul class="bullets-orange">
+                  <li>185,000 public microbial genomes</li>
+                  <li>10,000 plasmids, 4,800 bacteriophages, 10 eukaryotic hosts</li>
+                  <li>Genome annotations: genes, RNAs, repeats, CRISPRs, and protein functions</li>
+                  <li>Protein families, subsystems, and pathways</li>
+                  <li>AMR genes, virulence factors, drug targets, essential genes, and transporters</li>
+                  <li>AMR phenotype data for 25,000 genomes and 130 antibiotics</li>
+                  <li>829 transcriptomic datasets</li>
+                  <li>65M protein-protein interactions</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <footer class="text-muted py-3" style="background: white;">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <img class="img-fluid d-block mx-auto" src="/public/assets/img/patric_logo_footer.png" width="200px">
+                <p class="text-center mt-2">
+                  <small>Current version:
+                    <%- request.package.version %><%- request.applicationOptions.appLabel || "" %></small>
+                </p>
+                <hr class="mb-1">
+                <div
+                  class="share_links d-flex align-items-between flex-grow-1 align-items-center justify-content-between">
+                  <h6 class="m-0 p-0"><strong>Follow Us</strong></h6>
+                  <a class="btn btn-link" href="https://twitter.com/PATRICBRC" style="color:#55acee" target="_blank"><i
+                      class="fab fa-fw fa-1x py-1 fa-twitter"></i> Twitter</a><a class="btn btn-link"
+                    style="color:#3b5998" target="_blank"
+                    href="https://www.facebook.com/pages/Pathosystems-Resource-Integration-Center-PATRIC/117100971687823"><i
+                      class="fab fa-facebook fa-fw fa-1x py-1"></i> Facebook</a><a class="btn btn-link"
+                    href="https://www.youtube.com/user/PATRICBRC" style="color:#e52d27" target="_blank"><i
+                      class="fab fa-youtube-square fa-fw fa-1x py-1"></i> Youtube</a>
+                </div>
+                <hr class="mt-1">
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-8">
+                <h6><strong>Funding Statement</strong></h6>
+                <p>This project has been funded in whole or in part with Federal funds from the National Institute of
+                  Allergy and Infectious Diseases, National Institutes of Health, Department of Health and Human
+                  Services, under Contract No. HHSN272201400027C, awarded to RL Stevens </p>
+              </div>
+              <div class="col-md-4">
+                <h6><strong>BRC Program</strong></h6>
+                <div class="row">
+                  <div class="col-md-6">
+                    <p>
+                      <a href="https://www.niaid.nih.gov/research/bioinformatics-resource-centers"
+                        target="_blank">NIAID</a><br><a href="https://patricbrc.org">PATRIC</a><br><a
+                        href="https://www.viprbrc.org/brc/home.spg?decorator=vipr" target="_blank">ViPR</a>
+                    </p>
+                  </div>
+                  <div class="col-md-6">
+                    <p>
+                      <a href="https://www.fludb.org/brc/home.spg?decorator=influenza" target="_blank">IRD</a><br><a
+                        href="https://eupathdb.org/eupathdb/" target="_blank">EuPathDB</a><br><a
+                        href="https://www.vectorbase.org/" target="_blank">VectorBase</a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="text-center pb-3">Copyright © 2019 <a href="https://patricbrc.org/">PATRIC</a>, All Rights
+              Reserved. <a href="mailto:help@patricbrc.org">Contact PATRIC</a> | <a
+                href="https://docs.patricbrc.org/cite_patric.html">How to Cite PATRIC</a> | <a href="#top">Back to
+                top</a></p>
+          </div>
+        </footer>
+      </div><!-- end bootstrap styles -->
+    </div><!-- end contentpane container -->
+
+    <% if (request.isAuthenticated && request.isAuthenticated()) { %>
+    <div data-dojo-type="p3/widget/WorkspaceController" data-dojo-props="region:'bottom'"></div>
+    <% } %>
+
+  </div><!-- end application container -->
+
+  <% include javascript %>
+</body>
+
+</html>

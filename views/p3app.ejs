@@ -4,8 +4,13 @@
 		<% include header %>
 	</head>
 	<body onunload="" class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
-		<div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer" data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false">
-			<% include p3header %>
+
+			<!-- New Navbar, CSS scoped to .patric-bootstrap -->
+			<div class="patric_bootstrap">
+				<% include devp3header %>
+			</div>
+
+			<div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer" data-dojo-props="id:'ApplicationContainer',gutters:false,liveSplitters:false" style="height:calc(100% - 38px)">
 
 			<div data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'" style="padding:0px;border:0px solid #ddd;background:inherit;">
 
