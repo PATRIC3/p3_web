@@ -1,22 +1,53 @@
 $(document).ready(function () {
 
-  // prevent dropdown-menu from closing unexpectedly
+  function hideDropdown() {
+    $('.dropdown-menu.show').removeClass('show');
+    $('.dropdown.show').removeClass('show');
+  }
+
+  function isDropdownOpen() {
+    return $('.dropdown.show').length > 0;
+  }
+
+  // after click, change on hover
+  $('.nav-item').on('click', function (event) {
+    $('.nav-item').hover(function () {
+      if (!isDropdownOpen()) return;
+      hideDropdown();
+      $(this).addClass('show');
+      $(this).find('.dropdown-menu').addClass('show');
+    });
+  });
+
+  // Focus on the search input when clicking open search dropdown
+  $('#navbarDropdown_search').click(function () {
+    var self = this;
+    setTimeout(function () {
+      var input = $('.dropdown-menu .dijitInputInner');
+      input.focus();
+    });
+  });
+
+  // force the search menu closed when submiting search with Return/enter
+  $(this).find('.dropdown-menu .dijitInputInner').keypress(function (e) {
+    if (e.which == 13) {
+      hideDropdown();
+    }
+  });
+
+  // prevent dropdown-menu from closing unexpectedly, except Account menu
   $('.dropdown-menu').not('.dropdown-menu__account').click( function (e) {
     e.stopImmediatePropagation();
   });
 
   // force the search menu closed when submiting search
   $('.dropdown-menu__search .icon-search').click( function () {
-    // console.log('icon-search has been clicked');
-    $('.dropdown-menu.show').removeClass('show');
-    $('.dropdown.show').removeClass('show');
+    hideDropdown();
   });
 
   // force the account menu closed when the login or register button are clicked
   $('.dropdown-menu__account .dijitButtonNode').click( function () {
-    // cconsole.log('login / register button clicked');
-    $('.dropdown-menu.show').removeClass('show');
-    $('.dropdown.show').removeClass('show');
+    hideDropdown();
   });
 
   /**
