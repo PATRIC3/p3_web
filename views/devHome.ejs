@@ -119,17 +119,17 @@
                 <div class="card-header">
                   <ul class="nav nav-tabs nav-fill card-header-tabs" id="news-tab" role="tablist">
                     <li class="nav-item">
-                      <a class="nav-link active show" href="#news-articles" id="news-articles-tab" data-toggle="pill"
-                        role="tab" aria-controls="news-articles" aria-selected="false">Latest News</a>
+                      <a class="nav-link active show" id="news-twitter-tab" data-toggle="pill" href="#news-twitter" role="tab"
+                        aria-controls="news-twitter" aria-selected="true">Twitter</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="news-twitter-tab" data-toggle="pill" href="#news-twitter" role="tab"
-                        aria-controls="news-twitter" aria-selected="true">Twitter</a>
+                      <a class="nav-link" href="#news-articles" id="news-articles-tab" data-toggle="pill"
+                        role="tab" aria-controls="news-articles" aria-selected="false">Latest News</a>
                     </li>
                   </ul>
                 </div>
                 <div class="tab-content">
-                  <div class="card-body tab-pane fade active show" id="news-articles" role="tabpanel"
+                  <div class="card-body tab-pane fade" id="news-articles" role="tabpanel"
                     aria-labelledby="news-articles-tab">
                     <!-- news card carousel -->
                     <div class="carousel slide" data-ride="carousel" id="news" data-interval="false">
@@ -263,7 +263,7 @@
                       <a href="https://docs.patricbrc.org/news">Browse all articles →</a>
                     </p>
                   </div>
-                  <div class="card-body tab-pane fade" id="news-twitter" role="tabpanel"
+                  <div class="card-body tab-pane fade active show" id="news-twitter" role="tabpanel"
                     aria-labelledby="news-twitter-tab">
                     <a class="twitter-timeline" data-height="372px" data-link-color="#2E76A3"
                       href="https://twitter.com/PATRICBRC?ref_src=twsrc%5Etfw">Tweets by PATRICBRC</a>
