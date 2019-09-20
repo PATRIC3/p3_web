@@ -35,11 +35,6 @@ $(document).ready(function () {
     }
   });
 
-  // prevent dropdown-menu from closing unexpectedly, except Account menu
-  $('.dropdown-menu').not('.dropdown-menu__account').click( function (e) {
-    e.stopImmediatePropagation();
-  });
-
   // force the search menu closed when submiting search
   $('.dropdown-menu__search .icon-search').click( function () {
     hideDropdown();
