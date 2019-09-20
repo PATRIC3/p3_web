@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+  /*
+   * This is commented out because it's not quite right
+   * and there's still usability issues (hover tunnel!)
+   *
+
   function hideDropdown() {
     $('.dropdown-menu.show').removeClass('show');
     $('.dropdown.show').removeClass('show');
@@ -18,6 +23,7 @@ $(document).ready(function () {
       $(this).find('.dropdown-menu').addClass('show');
     });
   });
+  */
 
   // Focus on the search input when clicking open search dropdown
   $('#navbarDropdown_search').click(function () {
