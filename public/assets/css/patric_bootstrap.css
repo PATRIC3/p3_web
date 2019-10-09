@@ -6189,6 +6189,11 @@ body.patric_body {
       color: #fff !important; } }
   .patric_bootstrap .nav-link {
     padding: 8px; }
+  @media screen and (max-width: 1200px) {
+    .patric_bootstrap .nav-link {
+      padding: 8px 10px !important; }
+    .patric_bootstrap .nav-link i {
+      margin-right: -8px !important; } }
   .patric_bootstrap .navbar-nav {
     -webkit-box-align: center;
     -ms-flex-align: center;
@@ -6245,6 +6250,9 @@ body.patric_body {
     display: inline-block;
     width: 1em;
     margin-left: -1em; }
+  @media screen and (max-width: 822px) {
+    .patric_bootstrap #search_navbar {
+      display: none; } }
   .patric_bootstrap .navbar-patric {
     min-width: 290px;
     background: #2e76a3 !important;
@@ -6291,7 +6299,8 @@ body.patric_body {
           opacity: 1; }
       .patric_bootstrap .navbar-patric .dropdown .dropdown-menu {
         font-size: 14px !important;
-        width: 100% !important;
+        width: auto;
+        left: auto;
         border-radius: 0;
         border: none;
         margin-top: 0;
@@ -6359,6 +6368,11 @@ body.patric_body {
   .patric_bootstrap .card-news .carousel-control-next,
   .patric_bootstrap .card-news .carousel-control-prev {
     padding-top: 5px; }
+  @media screen and (min-width: 992px) {
+    .patric_bootstrap .card-services {
+      min-height: 510px; }
+      .patric_bootstrap .card-services .carousel {
+        min-height: 433px; } }
   .patric_bootstrap .card-services .carousel-control-next,
   .patric_bootstrap .card-services .carousel-control-prev {
     padding-top: 210px; }

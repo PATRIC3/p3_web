@@ -80,6 +80,14 @@ h6 {
 .nav-link {
   padding: 8px;
 }
+@media screen and (max-width: 1200px) {
+  .nav-link {
+    padding: 8px 10px !important;
+  }
+  .nav-link i {
+    margin-right: -8px !important;
+  }
+}
 .navbar-nav {
   align-items: center;
 }
@@ -143,6 +151,18 @@ ul.bullets-orange li::before {
   margin-left: -1em;
 }
 
+@media screen and (min-width: 1218px) {
+  #search_navbar {
+    // max-width: 464px;
+  }
+}
+
+@media screen and (max-width: 822px) {
+  #search_navbar {
+    display: none;
+  }
+}
+
 .navbar-patric {
   min-width: 290px;
   background: #2e76a3 !important;
@@ -196,7 +216,8 @@ ul.bullets-orange li::before {
     }
     .dropdown-menu {
       font-size: 14px !important;
-      width: 100% !important;
+      width: auto;
+      left: auto;
       border-radius: 0;
       border: none;
       margin-top: 0;
@@ -276,6 +297,16 @@ ul.bullets-orange li::before {
 .card-news .carousel-control-prev {
   padding-top: 5px;
 }
+
+@media screen and (min-width: 992px) {
+  .card-services {
+    min-height: 510px;
+    .carousel {
+      min-height: 433px;
+    }
+  }
+}
+
 .card-services .carousel-control-next,
 .card-services .carousel-control-prev {
   padding-top: 210px;
