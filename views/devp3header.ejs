@@ -175,7 +175,7 @@
       <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__workspace">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <h6><strong>Workspace</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
@@ -196,7 +196,7 @@
               </div>
 
             </div>
-            <div class="col-md-4" id="menu-list-mydata">
+            <div class="col-md-3" id="menu-list-mydata">
               <h6><strong>My Data</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <!-- show my data links for logged in users -->
@@ -217,12 +217,12 @@
               <!-- show message for !logged in users -->
               <div class="HideWithAuth showOnLoad">
                 <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
+                  <p>Login to view your data.</p>
                 </div>
               </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-3">
               <h6><strong>My Jobs</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
@@ -234,14 +234,22 @@
               <!-- show message for !logged in users -->
               <div class="HideWithAuth showOnLoad">
                 <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
+                  <p>Login to view your jobs.</p>
                 </div>
               </div>
+            </div>
+            <div class="col-md-3">
               <h6><strong>My Genomes</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
                 <div class="mb-3 list-group list-group-flush">
                   <a class="navigationLink list-group-item list-group-item-action" href="/view/GenomeList/?eq(public,false)">My Genomes</a>
+                </div>
+              </div>
+              <!-- show message for !logged in users -->
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 mt-3 list-group list-group-flush">
+                  <p>Login to view your genomes.</p>
                 </div>
               </div>
             </div>
