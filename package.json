@@ -11,6 +11,7 @@
     "test:intern": "./node_modules/.bin/intern"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
     "body-parser": "~1.8.1",
     "bootstrap": "^4.1.3",
     "clipboard-js": "^0.3.5",
