@@ -113,7 +113,6 @@ body.patric_body {
   // @import "../../../node_modules/bootstrap/scss/pagination";
   // @import "../../../node_modules/bootstrap/scss/badge";
   // @import "../../../node_modules/bootstrap/scss/jumbotron";
-  @import "../../../node_modules/bootstrap/scss/alert";
   // @import "../../../node_modules/bootstrap/scss/progress";
   @import "../../../node_modules/bootstrap/scss/media";
   @import "../../../node_modules/bootstrap/scss/list-group";
@@ -129,6 +128,9 @@ body.patric_body {
   @import "patric_bootstrap_custom";
 
 }
+
+// global
+@import "../../../node_modules/bootstrap/scss/alert";
 
 // Font Awesome 5
 @import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
