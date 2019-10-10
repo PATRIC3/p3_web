@@ -131,8 +131,8 @@ body.patric_body {
 }
 
 // Font Awesome 5
-@import "fontawesome/fontawesome";
-// @import "fontawesome/regular";
-@import "fontawesome/solid";
-@import "fontawesome/brands";
-@import "fontawesome/v4-shims";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
