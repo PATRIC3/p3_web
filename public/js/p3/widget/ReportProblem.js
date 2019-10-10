@@ -34,6 +34,7 @@ define([
       // if require more feedback for jobs that aren't in failed state
       if (this.jobDescriptRequired) {
         domClass.remove(query('.jobFeedback')[0], 'dijitHidden');
+        domClass.add(query('.help-text')[0], 'dijitHidden');
         html.set(query('[name="reportedStatus"]')[0], this.jobStatus);
         this.saveButton.set('disabled', true);
       }

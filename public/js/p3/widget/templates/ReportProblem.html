@@ -1,8 +1,14 @@
 <form dojoAttachPoint="containerNode" class="PanelForm" encType="multipart/form-data" name="problemForm"
   dojoAttachEvent="onreset:_onReset,onsubmit:_onSubmit,onkeyup:validate">
 <div >
-  <div class="HideWithAuth">
 
+  <div class="help-text alert alert-info" role="alert" style="width: 600px;">
+    If you have questions about or would like assistance using the PATRIC website, please send a message
+    using the form below or email us at <a class="alert-link" href="mailto:help@patricbrc.org">help@patricbrc.org</a>. We appreciate
+    your interest and will respond within two business days to your inquiry.
+  </div>
+
+  <div class="HideWithAuth">
       <label for="email"><b>Email<sup>*</sup></b></label>
     <div data-dojo-type="dijit/form/TextBox" name="email" style="display:block;margin-bottom:8px;width:600px;" data-dojo-props="intermediateChanges:true,missingMessage:'Email Address is required',trim:true,placeHolder:'Email Address'"></div>
   </div>
