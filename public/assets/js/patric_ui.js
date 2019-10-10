@@ -1,5 +1,15 @@
 $(document).ready(function () {
 
+
+  $('.list-group-item-action.external-link').mouseenter(function () {
+    $(this).append('<i class="icon-external-link"></i>');
+  });
+
+  $('.list-group-item-action.external-link').mouseleave(function () {
+    $(this).find('.icon-external-link').remove();
+  });
+
+
   /*
    * This is commented out because it's not quite right
    * and there's still usability issues (hover tunnel!)

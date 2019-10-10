@@ -257,6 +257,16 @@ ul.bullets-orange li::before {
 .list-group-item {
   color: #2e76a3;
 }
+.list-group-item .icon-external-link {
+  position: absolute;
+  right: 4px;
+  padding-left: 3px;
+  background: #f8f9fa;
+  color: #666;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
 
 .carousel-indicators {
   z-index: 9 !important;
