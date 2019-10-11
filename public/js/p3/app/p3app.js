@@ -663,20 +663,6 @@ define([
           .then(function (items) {
             wsEGNode.innerHTML = items.length + ' Experiment Groups';
           });
-
-        // update counts for private genomes
-        xhr.get(window.App.dataServiceURL + '/genome/?eq(public,false)', {
-          headers: {
-            'Accept': 'application/solr+json',
-            'Content-Type': 'application/rqlquery+x-www-urlencoded',
-            'Authorization': window.App.authorizationToken
-          },
-          handleAs: 'json'
-        }).then(function (data) {
-          // console.warn(data.response)
-          var node = dom.byId('MyDataGenomes');
-          node.innerHTML = data.response.numFound + ' Private Genomes';
-        });
       });
     },
     updateUserWorkspaceList: function (data) {

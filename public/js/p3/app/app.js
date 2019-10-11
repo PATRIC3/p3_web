@@ -399,14 +399,13 @@ define([
       Topic.subscribe('/login', showAuthDlg);
 
       on(document, '.navigationLink:click', function (evt) {
-        // console.log("NavigationLink Click", evt);
         evt.preventDefault();
-        // evt.stopPropagation();
-        // console.log("APP Link Target: ", evt.target.pathname, evt.target.href, evt.target);
-        var parts = evt.target.href.split(evt.target.pathname);
-        // console.log("navigationLink:click - " + evt.target.pathname + (parts[1]||"") )
-        /* istanbul ignore next */
-        Router.go(evt.target.pathname + (parts[1] || ''));
+
+        // allow links to have children (use href from nearest parent <a>)
+        var pathName = evt.target.pathname || query(evt.target).closest('a')[0].pathname;
+        var href = evt.target.href || query(evt.target).closest('a')[0].href;
+        var parts = href.split(pathName);
+        Router.go(pathName + (parts[1] || ''));
       });
 
       on(document, '.navigationLinkOut:click', function (evt) {
