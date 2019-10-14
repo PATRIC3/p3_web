@@ -1,16 +1,17 @@
 define([
   'dojo/_base/declare', 'dojo/parser',
-  'dojo/topic', 'dojo/on', 'dojo/dom', 'dojo/dom-class', 'dojo/dom-attr', 'dojo/dom-style',
+  'dojo/topic', 'dojo/on', 'dojo/dom-class', 'dojo/dom-style',
   'dijit/registry', 'dojo/request', 'dijit/layout/ContentPane', 'dojo/_base/fx',
   'dojo/_base/Deferred', 'dojo/query', 'dojo/NodeList-dom',
-  'dojo/ready', 'dojo/parser', 'rql/query', 'dojo/_base/lang',
-  'p3/router', 'dijit/Dialog', 'dojo/dom-construct', 'dojo/window'
+  'dojo/ready', 'dojo/parser', 'dojo/_base/lang',
+  'p3/router', 'dijit/Dialog', 'dojo/dom-construct', 'dojo/window',
+  'dojo/NodeList-traverse'
 ], function (
   declare, parser,
-  Topic, on, dom, domClass, domAttr, domStyle,
+  Topic, on, domClass, domStyle,
   Registry, xhr, ContentPane, fx,
   Deferred, query, nodeListDom,
-  Ready, Parser, rql, lang,
+  Ready, Parser, lang,
   Router, Dialog, domConstruct, winUtils
 ) {
 

@@ -175,17 +175,17 @@
       <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__workspace">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>Workspace</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
                 <div class="mb-3 list-group list-group-flush">
                   <a class="navigationLink list-group-item list-group-item-action" id="YourWorkspaceLink">My
-                    Workspace</a>
-                  <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
                     Workspaces</a>
                   <div id="YourWorkspaces" class="mt-2">
                   </div>
+                  <a class="navigationLink list-group-item list-group-item-action" href="/workspace/public">Public
+                    Workspaces</a>
                 </div>
               </div>
               <!-- show message for !logged in users -->
@@ -194,22 +194,21 @@
                   <p>Login and upload your own data.</p>
                 </div>
               </div>
-
             </div>
-            <div class="col-md-3" id="menu-list-mydata">
-              <h6><strong>My Data</strong></h6>
+
+            <div class="col-md-4" id="menu-list-mydata">
+              <h6><strong>My Groups</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <!-- show my data links for logged in users -->
               <div class="ShowWithAuth">
                 <div style="display:none"><a class="navigationLink" id="YourWorkspaceLink2">My Workspaces</a></div>
                 <!-- this is needed to for p3app.js:639 to work. Needs rework -->
                 <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">00 Genome
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataGenomeGroup">Genome
                     Groups</a>
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">00 Feature
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataFeatureGroup">Feature
                     Groups</a>
-                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">00
-                    Experiment Groups</a>
+                  <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">                    Experiment Groups</a>
                 </div>
               </div>
               <!-- show message for !logged in users -->
@@ -220,13 +219,16 @@
               </div>
             </div>
 
-            <div class="col-md-3">
-              <h6><strong>My Jobs</strong></h6>
+            <div class="col-md-4">
+              <h6><strong>Shortcuts</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
                 <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" href="/job/" id="MyDataJobs">00
-                    Completed Jobs</a>
+                  <a class="navigationLink list-group-item list-group-item-action" href="/job/">
+                    My Jobs</a>
+                  <a class="navigationLink list-group-item list-group-item-action" href="/view/GenomeList/?eq(public,false)">
+                    My Genomes
+                  </a>
                 </div>
               </div>
               <!-- show message for !logged in users -->
@@ -236,21 +238,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-3">
-              <h6><strong>My Genomes</strong></h6>
-              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-              <div class="ShowWithAuth">
-                <div class="mb-3 list-group list-group-flush">
-                  <a class="navigationLink list-group-item list-group-item-action" href="/view/GenomeList/?eq(public,false)">My Genomes</a>
-                </div>
-              </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login to view your genomes.</p>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -350,7 +338,7 @@
       <div class="dropdown-menu" aria-labelledby="navbarDropdown__docs">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>User Guides</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -386,7 +374,7 @@
                   target="_blank">FTP Site</a>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>Tutorials</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -416,7 +404,7 @@
                   target="_blank">Others</a>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>Common Tasks in PATRIC</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -440,12 +428,10 @@
                   class="list-group-item list-group-item-action external-link"
                   target="_blank">RAST Tutorials</a>
               </div>
-            </div>
-            <div class="col-md-3">
               <h6><strong>Contact</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <a class="mb-3 mt-2 btn btn-secondary DialogButton" href="#" rel="reportProblem:"><i
-                class="fa fa-envelope icon-envelope fa-fw"></i> Contact Form</a>
+                class="fa fa-envelope icon-envelope fa-fw"></i> Provide Feedback</a>
             </div>
           </div>
         </div>
@@ -460,7 +446,7 @@
       <div class="dropdown-menu" aria-labelledby="navbarDropdown__about">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3">
               <h6><strong>About</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -482,7 +468,7 @@
                   University of Virginia</a>
               </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3">
               <h6><strong>Further Reading</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -496,7 +482,7 @@
                   class="list-group-item list-group-item-action external-link" target="_blank">Publications</a>
               </div>
             </div>
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3">
               <h6><strong>Useful Links</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">

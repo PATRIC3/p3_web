@@ -217,12 +217,16 @@ ul.bullets-orange li::before {
     .dropdown-menu {
       font-size: 14px !important;
       width: auto;
-      left: auto;
+      left: 75px;
       border-radius: .25rem;
       border: none;
       margin-top: 0;
       max-height: calc(100vh - 38px);
       overflow-y: auto;
+
+      .container {
+        margin-bottom: 0 !important;
+      }
     }
     .search {
       .gs-help { display: none; }
