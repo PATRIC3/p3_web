@@ -5,7 +5,7 @@
       <a href="https://patricbrc.org" class="nav-link nav-mobile-home navigationLink" title="PAThosystems Resource Integration Center">
         <i class="fas fa-home icon-home"></i>
       </a>
-      <a class="navbar-brand navigationLink" href="https://patricbrc.org" title="PAThosystems Resource Integration Center">PATRIC</a>
+      <a class="navbar-brand navigationLink" href="https://patricbrc.org" title='PAThosystems Resource Integration Center: v. <%- request.package.version %><%- request.applicationOptions.appLabel || "" %>'>PATRIC</a>
     </li>
     <li class="nav-item dropdown">
       <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -172,7 +172,7 @@
           <span class="d-none d-xl-inline">Workspace</span>
         </span>
       </a>
-      <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__workspace">
+      <div class="dropdown-menu" id="dropdown-menu__workspace" aria-labelledby="navbarDropdown__workspace">
         <div class="container my-3">
           <div class="row">
             <div class="col-md-4">
@@ -319,7 +319,7 @@
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
                 <a href="/app/IDMapper" title="Service: ID Mapper"
-                  class="list-group-item list-group-item-action navigationLinkhttps://patricbrc.org">ID
+                  class="list-group-item list-group-item-action navigationLink">ID
                   Mapper</a>
                 <a href="/app/FastqUtil" title="Service: Fastq Utilities" class="list-group-item list-group-item-action"
                   navigationLink>Fastq Utilities</a>
@@ -446,7 +446,7 @@
       <div class="dropdown-menu" aria-labelledby="navbarDropdown__about">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>About</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -468,7 +468,7 @@
                   University of Virginia</a>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>Further Reading</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -482,7 +482,7 @@
                   class="list-group-item list-group-item-action external-link" target="_blank">Publications</a>
               </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
               <h6><strong>Useful Links</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="mb-3 list-group list-group-flush">
@@ -504,6 +504,8 @@
                   class="list-group-item list-group-item-action external-link" target="_blank">Privacy Policy</a>
                 <a href="https://docs.patricbrc.org/github.html"
                   class="list-group-item list-group-item-action external-link" target="_blank">GitHub</a>
+                <a href="/status"
+                  class="list-group-item list-group-item-action navigationLink">System Status</a>
               </div>
             </div>
           </div>
