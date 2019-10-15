@@ -80,7 +80,7 @@ h6 {
 .nav-link {
   padding: 8px;
 }
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1199px) {
   .nav-link {
     padding: 8px 10px !important;
   }
@@ -216,14 +216,30 @@ ul.bullets-orange li::before {
     }
     .dropdown-menu {
       font-size: 14px !important;
-      width: auto;
-      left: 75px;
       border-radius: .25rem;
       border: none;
       margin-top: 0;
       max-height: calc(100vh - 38px);
       overflow-y: auto;
 
+      @media (min-width: 768px) {
+        &#dropdown-menu__workspace {
+          min-width: 600px;
+        }
+      }
+      @media (min-width: 768px) {
+        & {
+          width: auto;
+          margin-left: -150px;
+          left: auto;
+        }
+      }
+      @media (max-width: 767px) {
+        & {
+          width: 100%;
+          left: 0;
+        }
+      }
       .container {
         margin-bottom: 0 !important;
       }

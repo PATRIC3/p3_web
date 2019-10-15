@@ -123,14 +123,12 @@ body.patric_body {
   @import "../../../node_modules/bootstrap/scss/carousel";
   @import "../../../node_modules/bootstrap/scss/utilities";
   // @import "../../../node_modules/bootstrap/scss/print";
+  @import "../../../node_modules/bootstrap/scss/alert";
 
   // PATRIC Bootstrap Custom Styles
   @import "patric_bootstrap_custom";
 
 }
-
-// global
-@import "../../../node_modules/bootstrap/scss/alert";
 
 // Font Awesome 5
 @import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
