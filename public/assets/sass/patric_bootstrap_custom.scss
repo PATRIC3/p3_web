@@ -344,6 +344,13 @@ ul.bullets-orange li::before {
   }
 }
 
+.navbar {
+  .badge {
+    vertical-align: super;
+    padding: 0.15em 0.4em .25em;
+  }
+}
+
 .card-services .carousel-control-next,
 .card-services .carousel-control-prev {
   padding-top: 210px;
