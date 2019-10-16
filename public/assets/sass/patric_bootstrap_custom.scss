@@ -20,7 +20,7 @@ div.container {
 }
 
 #news-tab {
-  .nav-link.active, .nav-link.show {
+  .nav-link.active {
     background-color: white;
     border-bottom-color: white;
   }
@@ -230,7 +230,7 @@ ul.bullets-orange li::before {
       @media (min-width: 768px) {
         & {
           width: auto;
-          margin-left: -150px;
+          margin-left: -60px;
           left: auto;
         }
       }
@@ -323,17 +323,31 @@ ul.bullets-orange li::before {
 .btn .text-white .fa { color: #fff !important; }
 .btn .text-white .fa:hover { color: #fff !important; }
 
+
 .card-news .carousel-control-next,
 .card-news .carousel-control-prev {
-  padding-top: 5px;
+  padding-top: 210px;
 }
 
 @media screen and (min-width: 992px) {
+  .card-news {
+    min-height: 470px;
+    .carousel {
+      min-height: 355px;
+    }
+  }
   .card-services {
     min-height: 510px;
     .carousel {
       min-height: 433px;
     }
+  }
+}
+
+.navbar {
+  .badge {
+    vertical-align: super;
+    padding: 0.15em 0.4em .25em;
   }
 }
 
