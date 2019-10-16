@@ -3,13 +3,15 @@
 
 <head>
   <% include header %>
+
 </head>
 
-<body onunload="" class="claro patric <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
+<body onunload=""
+  class="claro patric patric_body <% if (request.isAuthenticated && request.isAuthenticated()) { %>Authenticated<% } %>">
 
   <!-- New Navbar, CSS scoped to .patric_bootstrap -->
   <div class="patric_bootstrap">
-    <% include navbar %>
+    <% include devp3header %>
   </div>
 
   <div id="ApplicationContainer" data-dojo-type="dijit/layout/BorderContainer" class="layoutContainer"
@@ -20,7 +22,7 @@
 
       <a name="top"></a>
       <!-- start contentpane container -->
-      <% include home %>
+      <% include newHome %>
 
     </div><!-- end contentpane container -->
 

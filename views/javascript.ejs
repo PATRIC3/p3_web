@@ -11,48 +11,44 @@ dojoConfig = {
 <script type="text/javascript" src="/js/mauve_viewer/dist/mauve-viewer.js"></script>
 <script type="text/javascript" src="/js/msa/dist/msa.min.js"></script>
 <script src="/js/bundle/bundle.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <!-- used for homepage, static pages and top navbar for main app -->
 <script src="/public/assets/js/patric_ui.js"></script>
-<!-- // use bundle.js
-<script type="text/javascript" src="/js/cytoscape/dist/cytoscape.min.js"></script>
-<script type="text/javascript" src="/js/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="/js/webcola/WebCola/cola.min.js"></script>
-<script type="text/javascript" src="/js/dagre/dist/dagre.min.js"></script>
-<script type="text/javascript" src="/js/cytoscape-cose-bilkent/cytoscape-cose-bilkent.js"></script>
--->
-<script type="text/javascript" src="/js/clipboard-js/clipboard.min.js"></script>
-<% if (request && request.production){ %>
-  <script src="/js/<%- request.package.version %>/dojo/dojo.js"></script>
-  <script>
-  require(<%- JSON.stringify(request.productionLayers) %>, function(){
-    <% } else { %>
-      <script src="/js/dojo/dojo.js"></script>
-      <script>
-      <% } %>
-      require(["<%= request.applicationModule %>"], function(App){
-        appOpts = <%- JSON.stringify(request.applicationOptions || {}) %>;
-        appOpts.workspaceAPI = "<%= request.applicationOptions.workspaceServiceURL %>";
-        appOpts.serviceAPI = "<%= request.applicationOptions.appServiceURL %>";
-        appOpts.dataAPI = "<%= request.applicationOptions.dataServiceURL %>";
-        appOpts.userServiceURL = "<%= request.applicationOptions.userServiceURL %>";
-        appOpts.localStorageCheckInterval = "<%= request.applicationOptions.localStorageCheckInterval %>";
-        window.App = new App(appOpts);
-      });
-      <% if (request && request.production){ %>
-      });
-      <% } %>
-      </script>
-      <% if (request && request.applicationOptions.gaID) { %>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id=<%- request.applicationOptions.gaID %>"></script>
-        <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
 
-        gtag('config', '<%- request.applicationOptions.gaID %>', {
-          'link_attribution': true
-        });
-        </script>
-        <% } %>
+<script type="text/javascript" src="/js/clipboard-js/clipboard.min.js"></script>
+
+<% if (request && request.production){ %>
+<script src="/js/<%- request.package.version %>/dojo/dojo.js"></script>
+<script>
+require(<%- JSON.stringify(request.productionLayers) %>, function(){
+<% } else { %>
+<script src="/js/dojo/dojo.js"></script>
+<script>
+<% } %>
+require(["<%= request.applicationModule %>"], function(App){
+appOpts = <%- JSON.stringify(request.applicationOptions || {}) %>;
+appOpts.workspaceAPI = "<%= request.applicationOptions.workspaceServiceURL %>";
+appOpts.serviceAPI = "<%= request.applicationOptions.appServiceURL %>";
+appOpts.dataAPI = "<%= request.applicationOptions.dataServiceURL %>";
+appOpts.userServiceURL = "<%= request.applicationOptions.userServiceURL %>";
+appOpts.localStorageCheckInterval = "<%= request.applicationOptions.localStorageCheckInterval %>";
+window.App = new App(appOpts);
+});
+<% if (request && request.production){ %>
+});
+<% } %>
+</script>
+
+<% if (request && request.applicationOptions.gaID) { %>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<%- request.applicationOptions.gaID %>"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', '<%- request.applicationOptions.gaID %>', {
+  'link_attribution': true
+});
+</script>
+<% } %>
