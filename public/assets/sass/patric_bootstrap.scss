@@ -67,8 +67,7 @@ html, body {
 }
 
 body.patric_body {
-  background-color: $body-bg;
-  min-width:unset;
+  min-width: unset;
 }
 
 // Bootstrap 4.3.1
@@ -88,6 +87,7 @@ body.patric_body {
   color: #333;
   margin: 0;
   padding: 0;
+  background-color: $body-bg;
 
   // Customize Bootstrap SASS patterns
   @import "../../../node_modules/bootstrap/scss/root";
