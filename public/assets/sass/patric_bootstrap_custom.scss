@@ -77,20 +77,22 @@ h6 {
     color: #fff !important;
   }
 }
-.nav-link {
-  padding: 8px;
-}
-@media screen and (max-width: 1199px) {
-  .nav-link {
-    padding: 8px 10px !important;
-  }
-  .nav-link i {
-    margin-right: -8px !important;
-  }
-}
 .navbar-nav {
   align-items: center;
+  .nav-link {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+  @media screen and (max-width: 991px) {
+    .nav-link {
+      padding: 8px 10px !important;
+    }
+    .nav-link i {
+      margin-right: -8px !important;
+    }
+  }
 }
+
 .navbar-brand {
   display: none;
 }
@@ -107,6 +109,9 @@ h6 {
     background-size: contain;
     background-repeat: no-repeat;
   }
+}
+.navbar-patric {
+  padding: 0.75rem 0.25rem;
 }
 @media screen and (max-width: 480px) {
   .navbar-patric {
@@ -151,12 +156,6 @@ ul.bullets-orange li::before {
   margin-left: -1em;
 }
 
-@media screen and (min-width: 1218px) {
-  #search_navbar {
-    // max-width: 464px;
-  }
-}
-
 @media screen and (max-width: 822px) {
   #search_navbar {
     display: none;
@@ -170,7 +169,7 @@ ul.bullets-orange li::before {
   padding-top: 0;
   padding-bottom: 0;
   #search_navbar {
-    padding:0px 1em;
+    padding: 0px 0px 0px 0px;
     * { font-size: 12px; }
   }
   .dropdown {
@@ -178,6 +177,16 @@ ul.bullets-orange li::before {
     padding: 0 5px 0 0;
     margin: 0;
     &.dropdown__login {
+      padding-right: 10px;
+      @media screen and (min-width: 481px) {
+        & {
+          padding-right: 0px;
+          padding-left: 5px !important;
+        }
+      }
+      .nav-link {
+        padding-right: 0px !important;
+      }
       .dropdown-menu__account {
         max-width: 250px;
         left: auto;

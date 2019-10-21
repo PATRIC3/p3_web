@@ -9,17 +9,6 @@ $(document).ready(function () {
     $(this).find('.icon-external-link').remove();
   });
 
-  // Trying to set the background color for the homepage template only.
-  // Currently, after a ajax call to a new page, this class remains and the background remains grey.
-  // Needed ONLY on the index template but because of ajax it remains.
-  $(function() {
-    switch (window.location.pathname) {
-      case '/':
-        $('body').addClass('patric_body');
-        break;
-      default:
-    }
-  });
 
   /*
    * This is commented out because it's not quite right
