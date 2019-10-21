@@ -8,7 +8,8 @@
     "move-src": "cp gulpified/app/app.js src/app/ && cp gulpified/app/p3app.js src/app/ && cp gulpified/widget/LoginForm.js src/widget",
     "eslint:fix": "./node_modules/eslint/bin/eslint.js --fix public/js/p3",
     "eslint:test": "./node_modules/eslint/bin/eslint.js public/js/p3",
-    "test:intern": "./node_modules/.bin/intern"
+    "test:intern": "./node_modules/.bin/intern",
+    "build:bootstrap": "./node_modules/sass/sass.js public/assets/sass/patric_bootstrap.scss:public/assets/css/patric_bootstrap.css"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
@@ -56,6 +57,7 @@
     "intern": "^4.0.0-rc.1",
     "minimatch": "^3.0.2",
     "request-promise": "^4.2.2",
+    "sass": "^1.23.0",
     "stylelint": "^8.2.0",
     "stylelint-config-standard": "^17.0.0"
   }
