@@ -168,9 +168,12 @@ ul.bullets-orange li::before {
   border-top: 3px solid #154e72;
   padding-top: 0;
   padding-bottom: 0;
+  .list-group-item {
+    padding: .5rem;
+  }
   #search_navbar {
     padding: 0px 0px 0px 0px;
-    * { font-size: 12px; }
+    * { font-size: 13px; }
   }
   .dropdown {
     position: static;
@@ -356,7 +359,7 @@ ul.bullets-orange li::before {
 .navbar {
   .badge {
     vertical-align: super;
-    padding: 0.15em 0.4em .25em;
+    padding: .13em .4em .23em;
   }
 }
 
