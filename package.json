@@ -9,7 +9,7 @@
     "eslint:fix": "./node_modules/eslint/bin/eslint.js --fix public/js/p3",
     "eslint:test": "./node_modules/eslint/bin/eslint.js public/js/p3",
     "test:intern": "./node_modules/.bin/intern",
-    "build:bootstrap": "./node_modules/sass/sass.js public/assets/sass/patric_bootstrap.scss:public/assets/css/patric_bootstrap.css"
+    "build:bootstrap": "./node_modules/sass/sass.js public/assets/sass/patric_bootstrap.scss:public/assets/css/patric_bootstrap.css --style compressed"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
