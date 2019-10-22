@@ -7838,6 +7838,7 @@ a > .patric_bootstrap code {
 }
 .patric_bootstrap .navbar-patric {
   padding: 0.75rem 0.25rem;
+  z-index: 1000;
 }
 @media screen and (max-width: 480px) {
   .patric_bootstrap .navbar-patric {
