@@ -179,7 +179,20 @@
       <div class="dropdown-menu" id="dropdown-menu__workspace" aria-labelledby="navbarDropdown__workspace">
         <div class="container my-3">
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-12 HideWithAuth">
+              <!-- show message for !logged in users -->
+              <h6><strong>Workspace</strong></h6>
+              <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
+              <div class="HideWithAuth showOnLoad">
+                <div class="mb-3 mt-3 list-group list-group-flush">
+                  <p>
+                      <a class="loginLink" href="">Sign in</a> to view your workspaces and more.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 ShowWithAuth">
               <h6><strong>Workspace</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <div class="ShowWithAuth">
@@ -192,19 +205,13 @@
                     Workspaces</a>
                 </div>
               </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login and upload your own data.</p>
-                </div>
-              </div>
             </div>
 
-            <div class="col-md-4" id="menu-list-mydata">
+            <div class="col-md-4 ShowWithAuth" id="menu-list-mydata">
               <h6><strong>My Groups</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
               <!-- show my data links for logged in users -->
-              <div class="ShowWithAuth">
+              <div class="">
                 <div style="display:none"><a class="navigationLink" id="YourWorkspaceLink2">My Workspaces</a></div>
                 <!-- this is needed to for p3app.js:639 to work. Needs rework -->
                 <div class="mb-3 list-group list-group-flush">
@@ -215,30 +222,18 @@
                   <a class="navigationLink list-group-item list-group-item-action" id="MyDataExperimentGroup">                    Experiment Groups</a>
                 </div>
               </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login to view your data.</p>
-                </div>
-              </div>
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 ShowWithAuth">
               <h6><strong>Shortcuts</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-              <div class="ShowWithAuth">
+              <div class="">
                 <div class="mb-3 list-group list-group-flush">
                   <a class="navigationLink list-group-item list-group-item-action" href="/job/">
                     My Jobs</a>
                   <a class="navigationLink list-group-item list-group-item-action" href="/view/GenomeList/?eq(public,false)">
                     My Genomes
                   </a>
-                </div>
-              </div>
-              <!-- show message for !logged in users -->
-              <div class="HideWithAuth showOnLoad">
-                <div class="mb-3 mt-3 list-group list-group-flush">
-                  <p>Login to view your jobs.</p>
                 </div>
               </div>
             </div>
@@ -504,29 +499,32 @@
           </div>
         </div>
     </li>
-    <li class="nav-item dropdown dropdown__login">
-      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown__login" role="button" data-toggle="dropdown"
+
+
+    <li class="nav-item dropdown dropdown__login HideWithAuth">
+      <a class="nav-link dropdown-toggle" href="" id="navbarDropdown__login" role="button">
+        <i class="fas fa-user-circle icon-user"></i>
+        <span class="d-none d-lg-inline">
+          <span class="loginLink">Sign in</span>
+        </span>
+      </a>
+    </li>
+
+    <li class="nav-item dropdown dropdown__login showOnLoad ShowWithAuth">
+      <a class="nav-link dropdown-toggle" href="" id="navbarDropdown__login" role="button" data-toggle="dropdown"
         aria-haspopup="true" aria-expanded="false">
         <i class="fas fa-user-circle icon-user"></i>
         <span class="d-none d-lg-inline">
-          <span class="showOnLoad ShowWithAuth dijitHidden"><span id="signedInAs"></span></span>
-          <span class="HideWithAuth authLinks showOnLoad dijitHidden">Login</span>
+          <span class="ShowWithAuth"><span id="signedInAs"></span></span>
         </span>
       </a>
-      <div class="dropdown-menu dropdown-menu__account" aria-labelledby="navbarDropdown__login">
+
+      <div class="dropdown-menu dropdown-menu__account ShowWithAuth" aria-labelledby="navbarDropdown__login">
         <div class="container my-3">
           <div class="row">
             <div class="col-md-12">
               <h6><strong>My Account</strong></h6>
               <hr class="hr--brand-sm col-2 ml-0 mt-0 mb-0">
-
-              <div class="HideWithAuth authLinks showOnLoad dijitHidden">
-                <p class="mt-3">
-                  Welcome, Guest. You are not currently logged in.
-                </p>
-                <div class="RegistrationButton registrationLink" data-dojo-type="dijit/form/Button">Register</div>
-                <div class="LoginButton loginLink" data-dojo-type="dijit/form/Button">Login</div>
-              </div>
 
               <div class="showOnLoad ShowWithAuth dijitHidden">
                 <span></span>
@@ -537,7 +535,7 @@
                   <a href="" class="suSwitchBack list-group-item list-group-item-action"
                     onclick="window.App.suSwitchBack()" style="display:none">SU Switch Back</a>
                   <a href="" class="logoutLink list-group-item list-group-item-action"
-                    onclick="window.App.logout()">Logout</a>
+                    onclick="window.App.logout()">Sign Out</a>
                 </div>
               </div>
             </div>
