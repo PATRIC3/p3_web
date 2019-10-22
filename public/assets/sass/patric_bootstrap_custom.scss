@@ -238,6 +238,9 @@ ul.bullets-orange li::before {
 
       @media (min-width: 768px) {
         &#dropdown-menu__workspace {
+          min-width: 300px;
+        }
+        .Authenticated &#dropdown-menu__workspace {
           min-width: 600px;
         }
       }
@@ -361,7 +364,7 @@ ul.bullets-orange li::before {
 .navbar {
   .badge {
     vertical-align: super;
-    padding: .13em .4em .23em;
+    padding: 0em .4em .23em;
   }
 }
 
