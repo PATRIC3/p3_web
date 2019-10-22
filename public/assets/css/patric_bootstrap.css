@@ -7965,7 +7965,7 @@ a > .patric_bootstrap code {
 }
 @media (min-width: 768px) {
   .patric_bootstrap .navbar-patric .dropdown .dropdown-menu#dropdown-menu__workspace {
-    min-width: 350px;
+    min-width: 600px;
   }
 }
 @media (min-width: 768px) {

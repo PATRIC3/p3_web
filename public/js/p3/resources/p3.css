@@ -167,7 +167,7 @@ iframe  {
 
 .Authenticated .ShowWithAuth,
 .patric .Authenticated .ShowWithAuth {
-    display: inherit;
+    display: initial;
 }
 
 .Authenticated TD.ShowWithAuth {
