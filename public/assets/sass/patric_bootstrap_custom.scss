@@ -206,6 +206,7 @@ ul.bullets-orange li::before {
       font-family: Lato;
       font-size: 14px;
       color: #f2f2f2 !important;
+      user-select: none;
       &::after {
         position: relative;
         display: inline-block;
