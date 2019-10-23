@@ -96,6 +96,11 @@ h6 {
 .navbar-brand {
   display: none;
 }
+.navbar-brand:hover {
+  -webkit-filter: constrast(80%);
+  filter: contrast(80%);
+}
+
 @media screen and (min-width: 414px) and (max-width: 480px) {
   .navbar-brand {
     display: block;
@@ -218,6 +223,9 @@ ul.bullets-orange li::before {
         border-top: 0;
         border-left: 0.3em solid transparent;
       }
+    }
+    .dropdown-toggle:hover {
+      color: #e3e3e3 !important;
     }
     &.show .dropdown-toggle {
       color: #fff !important;
