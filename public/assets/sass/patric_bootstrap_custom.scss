@@ -84,24 +84,58 @@ h6 {
   }
 }
 
-.navbar-brand {
-  display: none;
-}
+// .navbar-brand {
+//   display: none;
+// }
 .navbar-brand:hover {
   -webkit-filter: constrast(80%);
   filter: contrast(80%);
+}
+
+@media screen and (max-width: 413px) {
+  .navbar-brand {
+    display: block;
+    text-indent: -9999px;
+    width: 60px;
+    height: 17px;
+    margin-right: 0;
+    margin-top: -3px;
+    padding: 0;
+    color: #fff;
+    background-image: url(../img/patric-logo-88h.png);
+    background-position: right center;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+  }
 }
 
 @media screen and (min-width: 414px) and (max-width: 480px) {
   .navbar-brand {
     display: block;
     text-indent: -9999px;
-    width: 79px;
+    width: 88px;
     margin-right: 0;
+    margin-top: -3px;
     padding: 0;
     color: #fff;
     background-image: url(../img/patric-logo-88h.png);
     background-position: center center;
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .navbar-brand {
+    display: block;
+    text-indent: -9999px;
+    width: 111px;
+    margin-right: .75rem;
+    margin-top: -1px;
+    padding: 0;
+    color: #fff;
+    background-image: url(../img/patric-logo-88h.png);
+    background-position: center top;
     background-size: contain;
     background-repeat: no-repeat;
   }
@@ -119,22 +153,7 @@ h6 {
     flex-direction: column;
   }
 }
-@media screen and (min-width: 480px) {
-  .navbar-brand {
-    display: block;
-    text-indent: -9999px;
-    width: 132px;
-    height: 26px;
-    margin-right: 0;
-    margin-top: -1px;
-    padding: 0;
-    color: #fff;
-    background-image: url(../img/patric-logo-88h.png);
-    background-position: center top;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-}
+
 .hr--brand {
   border-top: 3px solid #e57200;
   margin-right: auto;
