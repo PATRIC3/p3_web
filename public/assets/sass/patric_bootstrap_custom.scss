@@ -87,6 +87,11 @@ h6 {
 .navbar-brand {
   display: none;
 }
+.navbar-brand:hover {
+  -webkit-filter: constrast(80%);
+  filter: contrast(80%);
+}
+
 @media screen and (min-width: 414px) and (max-width: 480px) {
   .navbar-brand {
     display: block;
@@ -192,6 +197,7 @@ ul.bullets-orange li::before {
       font-family: Lato;
       font-size: 14px;
       color: #f2f2f2 !important;
+      user-select: none;
       &::after {
         position: relative;
         display: inline-block;
@@ -209,6 +215,9 @@ ul.bullets-orange li::before {
         border-top: 0;
         border-left: 0.3em solid transparent;
       }
+    }
+    .dropdown-toggle:hover {
+      color: #e3e3e3 !important;
     }
     &.show .dropdown-toggle {
       color: #fff !important;

@@ -505,9 +505,10 @@ define([
       if (Aauth && Aauth.roles) {
         if (Aauth.roles.includes('admin')) {
           sbLink[0].style.display = 'block';
-          var loginBtn = document.querySelector('.login-btn');
-          loginBtn.classList.remove('icon-user');
-          loginBtn.classList.add('icon-superpowers', 'warning');
+          var loginIcon = document.querySelector('.login-btn .fa-user-circle');
+          loginIcon.classList.remove('fa-user-circle');
+          loginIcon.classList.add('icon-superpowers', 'warning');
+          document.querySelector('#signedInAs').style.color = '#ff6f6f';
         } else {
           sbLink[0].style.display = 'none';
         }
