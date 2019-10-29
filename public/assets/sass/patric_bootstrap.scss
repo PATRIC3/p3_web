@@ -123,11 +123,27 @@ body.patric_body {
   @import "../../../node_modules/bootstrap/scss/alert";
   // !PATRIC Bootstrap Custom Styles
   @import "patric_bootstrap_custom";
-}
 
-// Font Awesome 5
-@import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
-@import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
-@import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
-@import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
-@import "../../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
+ /*!
+ * Font Awesome Free 5.11.2 by @fontawesome - https://fontawesome.com
+ * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
+ */
+  // These new fonts are available inside .patric_bootstrap only.
+  // Todo: strip old icons from PATRIC and include these globally.
+  @import '_variables';
+  @import '../../../node_modules/@fortawesome/fontawesome-free/scss/mixins';
+  @import '../../../node_modules/@fortawesome/fontawesome-free/scss/core';
+  @import '../../../node_modules/@fortawesome/fontawesome-free/scss/larger';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/fixed-width';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/list';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/bordered-pulled';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/animated';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/rotated-flipped';
+  // @import '../../../node_modules/@fortawesome/fontawesome-free/scss/stacked';
+  @import '../../../node_modules/@fortawesome/fontawesome-free/scss/icons';
+  @import '../../../node_modules/@fortawesome/fontawesome-free/scss/screen-reader';
+  // @import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
+  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
+}
