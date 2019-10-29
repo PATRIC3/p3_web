@@ -124,15 +124,10 @@ body.patric_body {
   // !PATRIC Bootstrap Custom Styles
   @import "patric_bootstrap_custom";
 
- /*!
- * Font Awesome Free 5.11.2 by @fontawesome - https://fontawesome.com
- * License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License)
- */
-  // These new fonts are available inside .patric_bootstrap only.
-  // Todo: strip old icons from PATRIC and include these globally.
-
-  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
-  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
-  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
-  @import "../../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
 }
+
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/brands";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/regular";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/solid";
+@import "../../../node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
