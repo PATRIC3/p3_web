@@ -1,29 +1,25 @@
+//*****************************************
+//
+// File: Custom Theme Styles for Bootstrap
+// Contents:
+//
+// 1 - Compatibility Fixes for p3.css
+// 2 - Bootstrap Overrides
+// 3 - Content Cards
+// 4 - Full-Width Navbar
+//
+//*****************************************
+
+
+//*****************************************
+//
+// 1 - Compatibility Fixes for p3.css
+//
+//*****************************************
+
 // Fix for JBrowse main.css:130 Conflict
 div.container {
   position: static;
-}
-
-.box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-.cover {
-	min-height:100%;
-}
-
-#search-input {
-	border: 0px;
-}
-
-.btn, .btn-primary, .btn-secondary, .btn-outline-secondary, .nav-pills .nav-link.active, .nav-pills .show > .nav-link, #search-input {
-  border-radius: 25px;
-}
-
-#news-tab {
-  .nav-link.active {
-    background-color: white;
-    border-bottom-color: white;
-  }
 }
 
 .WorkspaceController.dijitAlignBottom {
@@ -36,12 +32,9 @@ ul li {
   line-height: inherit !important;
   font-size: inherit !important;
 }
-h2 {
-  font-size: 28px !important;
-}
-h6 {
-  font-size: 14px !important;
-}
+// Match to avoid jumping from EM to PX size
+h2 { font-size: 28px !important; }
+h6 { font-size: 14px !important; }
 
 /* Search Field */
 .search .global-search .gs-options-dropdown .dijitInputField,
@@ -57,101 +50,52 @@ h6 {
   padding: 12px 8px;
 }
 
-/* Navbar and menu */
+#menu-list-mydata {
+  a.navigationLink { color: $link-color !important; }
+  a.navigationLink:hover { color: #495057 !important; }
+}
 
-.nav-mobile-home {
+.timeline-Header {
   display: none;
 }
-@media screen and (max-width: 414px) {
-  .nav-mobile-home {
-    display: block;
-    color: #fff !important;
-  }
-}
-.navbar-nav {
-  align-items: center;
-  .nav-link {
-    padding-left: 3px !important;
-    padding-right: 3px !important;
-  }
-  @media screen and (max-width: 991px) {
-    .nav-link {
-      padding: 8px 10px !important;
-    }
-    .nav-link i {
-      margin-right: -8px !important;
-    }
-  }
+
+#navbarDropdown_search_menu label {
+  font-family: Lato, "Helvetica Neue", Arial, sans-serif;
 }
 
-// .navbar-brand {
-//   display: none;
-// }
-.navbar-brand:hover {
-  -webkit-filter: constrast(80%);
-  filter: contrast(80%);
+.row--search {
+  margin-right: -22px;
+  margin-left: -22px;
+  background: #2e76a3 url(../img/search_bg.png) center left no-repeat;
+  background-size: 900px;
+  border-top-left-radius: 0 !important;
+  border-top-right-radius: 0 !important;
+}
+.row--search__top {
+  border-top-left-radius: 0.25rem !important;
+  border-top-right-radius: 0.25rem !important;
 }
 
-@media screen and (max-width: 413px) {
-  .navbar-brand {
-    display: block;
-    text-indent: -9999px;
-    width: 60px;
-    height: 17px;
-    margin-right: 0;
-    margin-top: -3px;
-    padding: 0;
-    color: #fff;
-    background-image: url(../img/patric-logo-88h.png);
-    background-position: right center;
-    background-size: auto 100%;
-    background-repeat: no-repeat;
-  }
+//*****************************************
+//
+// 2 - Bootstrap Theme Styles
+//
+//*****************************************
+
+.box-shadow {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
-@media screen and (min-width: 414px) and (max-width: 480px) {
-  .navbar-brand {
-    display: block;
-    text-indent: -9999px;
-    width: 88px;
-    margin-right: 0;
-    margin-top: -3px;
-    padding: 0;
-    color: #fff;
-    background-image: url(../img/patric-logo-88h.png);
-    background-position: center center;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
+.cover {
+	min-height:100%;
 }
 
-@media screen and (min-width: 480px) {
-  .navbar-brand {
-    display: block;
-    text-indent: -9999px;
-    width: 111px;
-    margin-right: .75rem;
-    margin-top: -1px;
-    padding: 0;
-    color: #fff;
-    background-image: url(../img/patric-logo-88h.png);
-    background-position: center top;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
+#search-input {
+	border: 0px;
 }
-.navbar-patric {
-  padding: 0.75rem 0.25rem;
-  z-index: 1000;
-}
-@media screen and (max-width: 480px) {
-  .navbar-patric {
-    padding: 0.75rem 0.25rem;
-  }
-  .nav-link.dropdown-toggle {
-    display: flex;
-    flex-direction: column;
-  }
+
+.btn, .btn-primary, .btn-secondary, .btn-outline-secondary, .nav-pills .nav-link.active, .nav-pills .show > .nav-link, #search-input {
+  border-radius: 25px;
 }
 
 .hr--brand {
@@ -170,6 +114,189 @@ ul.bullets-orange li::before {
   display: inline-block;
   width: 1em;
   margin-left: -1em;
+}
+.pill-border {
+  color: #495057;
+  border: 1px solid #d5d5d5;
+  border-radius: 30px;
+  padding: 3px 15px 3px 3px;
+}
+.pill-border:hover {
+  background-color: #f8f9fa;
+  text-decoration: none;
+}
+.list-group-flush .list-group-item:first-child {
+  border-top: 0;
+}
+.list-group-flush .list-group-item:last-child {
+  border-bottom: 0;
+}
+.list-group-item {
+  color: #2e76a3;
+}
+.list-group-item .icon-external-link {
+  position: absolute;
+  right: 4px;
+  padding-left: 3px;
+  background: #f8f9fa;
+  color: #666;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.carousel-indicators {
+  z-index: 9 !important;
+  li {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    margin-left: 5px;
+    margin-right: 5px;
+    background-color: rgb(175, 175, 175);
+  }
+  .active {
+    background-color: #e57200;
+  }
+}
+
+.carousel {
+  font-family: inherit !important;
+}
+.carousel-control-next,
+.carousel-control-prev{
+  align-items: start !important;
+  .fas {
+    color: #e57200;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .share_links {
+    flex-direction: column;
+  }
+}
+
+//*****************************************
+//
+// 3 - Content Cards
+//
+//*****************************************
+
+#news-tab {
+  .nav-link.active {
+    background-color: white;
+    border-bottom-color: white;
+  }
+}
+
+
+.card-news, .card-services {
+  .carousel-control-next, .carousel-control-prev {
+    padding-top: 210px;
+  }
+  .carousel-control-prev {
+    left: -20px;
+  }
+  .carousel-control-next {
+    right: -20px;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .card-news {
+    min-height: 470px;
+    .carousel {
+      min-height: 355px;
+    }
+  }
+  .card-services {
+    min-height: 510px;
+    .carousel {
+      min-height: 433px;
+    }
+  }
+}
+
+//*****************************************
+//
+// 4 - Full-Width Navbar
+//   - Variable Column Dropdown Menus
+//   - Search Included for Tablet/Desktop
+//
+//*****************************************
+
+.navbar-patric {
+  padding: 0.75rem 0.25rem;
+  z-index: 1000;
+}
+@media screen and (max-width: 480px) {
+  .navbar-patric {
+    padding: 0.75rem 0.25rem;
+  }
+  .nav-link.dropdown-toggle {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.navbar-nav {
+  align-items: center;
+  .nav-link {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+  @media screen and (max-width: 991px) {
+    .nav-link {
+      padding: 8px 10px !important;
+    }
+    .nav-link i {
+      margin-right: -8px !important;
+    }
+  }
+}
+// Mobile Tiny
+.navbar-brand {
+  display: block;
+  text-indent: -9999px;
+  color: #fff;
+  background-image: url(../img/patric-logo-88h.png);
+  width: 60px;
+  height: 17px;
+  margin-right: 0;
+  margin-top: -3px;
+  padding: 0;
+  background-position: right center;
+  background-size: auto 100%;
+  background-repeat: no-repeat;
+  &:hover {
+    -webkit-filter: constrast(80%);
+    filter: contrast(80%);
+  }
+}
+
+// Mobile Regular
+@media screen and (min-width: 414px) and (max-width: 480px) {
+  .navbar-brand {
+    width: 88px;
+    margin-right: 0;
+    margin-top: -3px;
+    padding: 0;
+    background-size: contain;
+    background-position: center center;
+  }
+}
+
+// Tablet/Desktop
+@media screen and (min-width: 480px) {
+  .navbar-brand {
+    width: 111px;
+    margin-right: .75rem;
+    margin-top: -1px;
+    padding: 0;
+    background-size: contain;
+    background-position: center top;
+  }
 }
 
 @media screen and (max-width: 822px) {
@@ -289,126 +416,4 @@ ul.bullets-orange li::before {
 .navbar-expand-sm {
   flex-flow: row nowrap;
   justify-content: flex-start;
-}
-#navbarDropdown_search_menu label {
-  font-family: Lato, "Helvetica Neue", Arial, sans-serif;
-}
-
-.pill-border {
-  color: #495057;
-  border: 1px solid #d5d5d5;
-  border-radius: 30px;
-  padding: 3px 15px 3px 3px;
-}
-.pill-border:hover {
-  background-color: #f8f9fa;
-  text-decoration: none;
-}
-.list-group-flush .list-group-item:first-child {
-  border-top: 0;
-}
-.list-group-flush .list-group-item:last-child {
-  border-bottom: 0;
-}
-.list-group-item {
-  color: #2e76a3;
-}
-.list-group-item .icon-external-link {
-  position: absolute;
-  right: 4px;
-  padding-left: 3px;
-  background: #f8f9fa;
-  color: #666;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-}
-
-.carousel-indicators {
-  z-index: 9 !important;
-  li {
-    height: 8px;
-    width: 8px;
-    border-radius: 50%;
-    margin-left: 5px;
-    margin-right: 5px;
-    background-color: rgb(175, 175, 175);
-  }
-  .active {
-    background-color: #e57200;
-  }
-}
-
-.carousel {
-  font-family: inherit !important;
-}
-.carousel-control-next,
-.carousel-control-prev{
-  align-items: start !important;
-  .fas {
-    color: #e57200;
-  }
-}
-
-.card-news .carousel-control-next,
-.card-news .carousel-control-prev {
-  padding-top: 210px;
-}
-
-@media screen and (min-width: 992px) {
-  .card-news {
-    min-height: 470px;
-    .carousel {
-      min-height: 355px;
-    }
-  }
-  .card-services {
-    min-height: 510px;
-    .carousel {
-      min-height: 433px;
-    }
-  }
-}
-
-.card-services .carousel-control-next,
-.card-services .carousel-control-prev {
-  padding-top: 210px;
-}
-.carousel-control-prev {
-  left: -20px;
-}
-.carousel-control-next {
-  right: -20px;
-}
-.carousel-control-next:focus .fa,
-.carousel-control-next:hover .fa,
-.carousel-control-prev:focus .fa,
-.carousel-control-prev:hover .fa{
-  color: #e57200;
-}
-
-@media screen and (max-width: 768px) {
-  .share_links {
-    flex-direction: column;
-  }
-}
-.row--search {
-  margin-right: -22px;
-  margin-left: -22px;
-  background: #2e76a3 url(../img/search_bg.png) center left no-repeat;
-  background-size: 900px;
-  border-top-left-radius: 0 !important;
-  border-top-right-radius: 0 !important;
-}
-.row--search__top {
-  border-top-left-radius: 0.25rem !important;
-  border-top-right-radius: 0.25rem !important;
-}
-.timeline-Header {
-  display: none;
-}
-
-#menu-list-mydata {
-  a.navigationLink { color: $link-color !important; }
-  a.navigationLink:hover { color: #495057 !important; }
 }
