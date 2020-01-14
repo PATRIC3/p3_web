@@ -328,16 +328,27 @@ define([
       var tbody = tbodyQuery[0];
 
       var pwLink;
-      var ecLink;
       if (data) {
-        ecLink = data.map(function (row) {
-          return '<a href="http://enzyme.expasy.org/EC/' + row.ec_number + '" target=_blank>' + row.ec_number + '</a>&nbsp;' + row.ec_description;
-        }).join('<br>');
-
         pwLink = data.map(function (row) {
           return '<a href="/view/PathwayMap/?annotation=PATRIC&genome_id=' + row.genome_id + '&pathway_id=' + row.pathway_id + '&feature_id=' + row.feature_id + '" target="_blank">KEGG:' + row.pathway_id + '</a>&nbsp;' + row.pathway_name;
         }).join('<br>');
       }
+
+      var ecNum = data.map(function(el) {
+        return el.ec_number;
+      });
+      var ecNumber = Array.from(new Set(ecNum));
+
+      var ecDesc = data.map(function(el) {
+        return el.ec_description;
+      });
+      var ecDescription = Array.from(new Set(ecDesc));
+
+      var ecLink = "";
+      for (var i = 0; i < ecNumber.length; i++) {
+        ecLink = ecLink += '<a href="http://enzyme.expasy.org/EC/' + ecNumber[i] + '" target=_blank>' + ecNumber[i] + '</a>&nbsp;' + ecDescription[i] + '<br>';
+      }
+
       var htr = domConstruct.create('tr', {}, tbody);
       domConstruct.create('th', { innerHTML: 'EC Numbers', scope: 'row' }, htr);
       domConstruct.create('td', { innerHTML: ecLink || '-' }, htr);
