@@ -327,13 +327,6 @@ define([
       var tbodyQuery = domQuery('table.p3basic > tbody', this.functionalPropertiesNode);
       var tbody = tbodyQuery[0];
 
-      var pwLink;
-      if (data) {
-        pwLink = data.map(function (row) {
-          return '<a href="/view/PathwayMap/?annotation=PATRIC&genome_id=' + row.genome_id + '&pathway_id=' + row.pathway_id + '&feature_id=' + row.feature_id + '" target="_blank">KEGG:' + row.pathway_id + '</a>&nbsp;' + row.pathway_name;
-        }).join('<br>');
-      }
-
       var ecNum = data.map(function(el) {
         return el.ec_number;
       });
@@ -347,6 +340,31 @@ define([
       var ecLink = "";
       for (var i = 0; i < ecNumber.length; i++) {
         ecLink = ecLink += '<a href="http://enzyme.expasy.org/EC/' + ecNumber[i] + '" target=_blank>' + ecNumber[i] + '</a>&nbsp;' + ecDescription[i] + '<br>';
+      }
+
+      var genID = data.map(function(el) {
+        return el.genome_id;
+      })
+      var genomeID = Array.from(new Set(genID));
+
+      var pathID = data.map(function(el) {
+        return el.pathway_id;
+      })
+      var pathwayID = Array.from(new Set(pathID));
+
+      var featID = data.map(function(el) {
+        return el.feature_id;
+      })
+      var featureID = Array.from(new Set(featID));
+
+      var pathName = data.map(function(el) {
+        return el.pathway_name;
+      })
+      var pathwayName = Array.from(new Set(pathName));
+
+      var pwLink = "";
+      for (var i = 0; i < pathwayID.length; i++) {
+        pwLink = pwLink += '<a href="/view/PathwayMap/?annotation=PATRIC&genome_id=' + genomeID[i] + '&pathway_id=' + pathwayID[i] + '&feature_id=' + featureID[i] + '" target="_blank">KEGG:' + pathwayID[i] + '</a>&nbsp;' + pathwayName[i] + '<br>';
       }
 
       var htr = domConstruct.create('tr', {}, tbody);
