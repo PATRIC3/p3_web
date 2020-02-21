@@ -110,7 +110,7 @@ define([
     },
 
     queryTypes: {
-      pathway: '&group((field,pathway_id),(format,simple),(ngroups,true),(limit,1),(facet,true))' +
+      pathway: '&group((field,pathway_id),(field,genome_id),(format,simple),(ngroups,true),(facet,false))', /*+
         '&json(facet,' + encodeURIComponent(JSON.stringify({
         stat: {
           field: {
@@ -118,15 +118,15 @@ define([
             limit: -1,
             facet: {
               genome_count: 'unique(genome_id)',
-              gene_count: 'unique(feature_id)',
-              ec_count: 'unique(ec_number)',
+              //gene_count: 'unique(feature_id)',
+              //ec_count: 'unique(ec_number)',
               genome_ec: 'unique(genome_ec)'
             }
           }
         }
-      })) + ')',
+      })) + ')' */
 
-      ecnumber: '&group((field,ec_number),(format,simple),(ngroups,true),(limit,1),(facet,true))' +
+      ecnumber: '&group((field,ec_number),(format,simple),(ngroups,true),(limit,1),(facet,true))', /*
         '&json(facet,' + encodeURIComponent(JSON.stringify({
         stat: {
           field: {
@@ -140,8 +140,9 @@ define([
             }
           }
         }
-      })) + ')',
-      genes: '&group((field,feature_id),(format,simple),(ngroups,true),(limit,1),(facet,true))' +
+      })) + ')', */
+
+      genes: '&group((field,feature_id),(format,simple),(ngroups,true),(limit,1),(facet,true))', /*
         '&json(facet,' + encodeURIComponent(JSON.stringify({
         stat: {
           field: {
@@ -155,7 +156,7 @@ define([
             }
           }
         }
-      })) + ')'
+      })) + ')' */
     },
     buildQuery: function () {
       var q = [];
@@ -230,8 +231,13 @@ define([
           ecnumber: 'ec_number',
           genes: 'feature_id'
         };
+
+
         if (response && response.grouped && response.grouped[props[this.type]]) {
           var ds = response.grouped[props[this.type]].doclist.docs;
+          console.log('docs', ds)
+
+          /*
           if (response.facets.stat && response.facets.stat.buckets) {
             var buckets = response.facets.stat.buckets;
             var map = {};
@@ -275,7 +281,12 @@ define([
           }
           else {
             this.state.filter = false;
+            docs = ds;
           }
+          */
+
+          // this.state.filter = false;
+          docs = ds;
 
           _self.setData(docs);
           _self._loaded = true;

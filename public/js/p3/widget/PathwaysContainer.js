@@ -97,6 +97,7 @@ define([
       var ecNumberStore = this.ecNumberStore = new PathwayMemoryStore({ type: 'ecnumber' });
       var geneStore = this.geneStore = new PathwayMemoryStore({ type: 'genes' });
 
+      console.log('loading pathways grid')
       this.pathwaysGrid = new PathwaysGridContainer({
         title: 'Pathways',
         type: 'pathway',
@@ -104,7 +105,7 @@ define([
         apiServer: this.apiServer,
         defaultFilter: this.defaultFilter,
         store: pathwayStore,
-        facetFields: ['annotation', 'pathway_class'],
+        facetFields: ['annotation', 'pathway_class',  'genome_name'],
         queryOptions: {
           sort: [{ attribute: 'pathway_id' }]
         },
@@ -122,7 +123,7 @@ define([
         // state: this.state,
         apiServer: this.apiServer,
         defaultFilter: this.defaultFilter,
-        facetFields: ['annotation', 'pathway_class'],
+        facetFields: ['annotation', 'pathway_class', 'genome_name'],
         columns: {
           'Selection Checkboxes': selector({ unhidable: true }),
           idx: { label: 'Index', field: 'idx', hidden: true },
@@ -148,7 +149,7 @@ define([
         // state: this.state,
         apiServer: this.apiServer,
         defaultFilter: this.defaultFilter,
-        facetFields: ['annotation', 'pathway_class'],
+        facetFields: ['annotation', 'pathway_class', 'genome_name'],
         columns: {
           'Selection Checkboxes': selector({ unhidable: true }),
           idx: { label: 'Index', field: 'idx', hidden: true },

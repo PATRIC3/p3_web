@@ -23,15 +23,16 @@ define([
     fullSelectAll: true,
     columns: {
       'Selection Checkboxes': selector({ unhidable: true }),
+      genome_name: { label: 'Genome Name', field: 'genome_name' },
       pathway_id: { label: 'Pathway ID', field: 'pathway_id' },
-      pathway_name: { label: 'Pathway Name', field: 'pathway_name' },
+      pathway_name: { label: 'Pathway Name', field: 'pathway_name'},
       pathway_class: { label: 'Pathway Class', field: 'pathway_class' },
       annotation: { label: 'Annotation', field: 'annotation' },
-      genome_count: { label: 'Unique Genome Count', field: 'genome_count' },
-      gene_count: { label: 'Unique Gene Count', field: 'gene_count' },
-      ec_count: { label: 'Unique EC Count', field: 'ec_count' },
-      ec_cons: { label: 'EC Conservation', field: 'ec_cons' },
-      gene_cons: { label: 'Gene Conservation', field: 'gene_cons' }
+      // genome_count: { label: 'Unique Genome Count', field: 'genome_count' },
+      // gene_count: { label: 'Unique Gene Count', field: 'gene_count' },
+      // ec_count: { label: 'Unique EC Count', field: 'ec_count' },
+      // ec_cons: { label: 'EC Conservation', field: 'ec_cons' },
+      // gene_cons: { label: 'Gene Conservation', field: 'gene_cons' }
     },
 
     startup: function () {

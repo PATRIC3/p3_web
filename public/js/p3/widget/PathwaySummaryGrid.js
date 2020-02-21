@@ -36,6 +36,7 @@ define([
 
     startup: function () {
       var _self = this;
+      console.log('startup')
 
       this.on('.dgrid-content .dgrid-row:dblclick', function (evt) {
         var row = _self.row(evt);
