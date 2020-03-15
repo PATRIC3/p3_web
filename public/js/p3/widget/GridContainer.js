@@ -1,14 +1,14 @@
 define([
   'dojo/_base/declare', 'dijit/layout/BorderContainer', 'dojo/on', 'dojo/dom-construct',
   'dojo/request', 'dojo/when', 'dojo/dom-class',
-  './ActionBar', './FilterContainerActionBar', 'dojo/_base/lang', './ItemDetailPanel', './SelectionToGroup',
+  './ActionBar', './FilterContainerActionBar', 'dojo/_base/lang', './ItemDetailPanel', './FilteringSidebar', './SelectionToGroup',
   'dojo/topic', 'dojo/query', 'dijit/layout/ContentPane', 'dojo/text!./templates/IDMapping.html',
   'dijit/Dialog', 'dijit/popup', 'dijit/TooltipDialog', './DownloadTooltipDialog', './PerspectiveToolTip',
   './CopyTooltipDialog', './PermissionEditor', '../WorkspaceManager', '../DataAPI', 'dojo/_base/Deferred', '../util/PathJoin'
 ], function (
   declare, BorderContainer, on, domConstruct,
   request, when, domClass,
-  ActionBar, ContainerActionBar, lang, ItemDetailPanel, SelectionToGroup,
+  ActionBar, ContainerActionBar, lang, ItemDetailPanel, FilteringSidebar, SelectionToGroup,
   Topic, query, ContentPane, IDMappingTemplate,
   Dialog, popup, TooltipDialog, DownloadTooltipDialog, PerspectiveToolTipDialog,
   CopyTooltipDialog, PermissionEditor, WorkspaceManager, DataAPI, Deferred, PathJoin
@@ -222,6 +222,7 @@ define([
       if (this.enableFilterPanel && this.filterPanel) {
         // console.log("GridContainer call filterPanel set state: ", state.hashParams.filter, state)
         this.filterPanel.set('state', lang.mixin({}, state, { hashParams: lang.mixin({}, state.hashParams) }));
+        this.filteringSidebar.set('state', lang.mixin({}, state, { hashParams: lang.mixin({}, state.hashParams) }));
       }
 
       if (this.showAutoFilterMessage && state.autoFilterMessage) {
@@ -1366,6 +1367,34 @@ define([
           });
         }
       }));
+
+      this.filteringSidebar = new FilteringSidebar({
+        region: 'left',
+        style: 'width: 250px',
+        splitter: true,
+        layoutPriority: 4,
+        dataModel: this.dataModel,
+        facetFields: this.facetFields,
+        state: lang.mixin({}, this.state),
+        enableAnchorButton: false,
+        currentContainerWidget: this
+      });
+      this.filteringSidebar.startup();
+      this.addChild(this.filteringSidebar);
+
+      this.filteringSidebar.watch('filter', lang.hitch(this, function (attr, oldVal, newVal) {
+        if ((oldVal != newVal) && (newVal != this.state.hashParams.filter)) {
+          on.emit(this.domNode, 'UpdateHash', {
+            bubbles: true,
+            cancelable: true,
+            hashProperty: 'filter',
+            value: newVal,
+            oldValue: oldVal
+          });
+        }
+      }));
+
+
     },
 
     onFirstView: function () {
@@ -1427,13 +1456,23 @@ define([
       });
 
       if (this.containerActionBar) {
-        // The PieChart container does not have a sidebar
+        // The subsystems tab container does not have an containerActionBar
         if (this.containerType != 'subsystems_overview_data') {
           this.addChild(this.containerActionBar);
         }
 
         this.containerActionBar.set('currentContainer', this);
       }
+
+      if (this.filteringSidebar) {
+        // The subsystems tab container does not have an filtering sidebar
+        if (this.containerType != 'subsystems_overview_data') {
+          this.addChild(this.filteringSidebar);
+        }
+
+        this.filteringSidebar.set('currentContainer', this);
+      }
+
 
       // The PieChart container does not have a sidebar
       if (this.containerType != 'subsystems_overview_data') {
@@ -1507,6 +1546,7 @@ define([
       }));
 
       on(this.domNode, 'ToggleFilters', lang.hitch(this, function (evt) {
+        console.log('HERE');
         if (!this.filterPanel && this.getFilterPanel) {
           this.filterPanel = this.getFilterPanel();
           this.filterPanel.region = 'top';

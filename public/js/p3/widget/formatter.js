@@ -230,11 +230,14 @@ define(
     var formatters = {
       getExternalLinks: getExternalLinks,
       genomeName: function (obj) {
+        var html;
         if (obj.user_read || obj.user_write) {
-          return '<i class="fa icon-users" title="shared"></i> ' + obj.genome_name;
+          html = '<i class="fa icon-users" title="shared"></i> ' + obj.genome_name;
+        } else {
+          html = obj.genome_name;
         }
 
-        return obj.genome_name;
+        return '<a href="/view/Genome/520463.3#view_tab=overview">' + html + '</a>';
       },
       genomeMembers: function (obj) {
         var members = (obj.user_read || []).concat(obj.user_write || []);

@@ -142,7 +142,6 @@ define([
       this._refreshFilter();
     },
     _refreshFilter: function () {
-      // console.log("FacetFilter _refreshFilter()  started: ", this._started);
       var selected = [];
 
       Query('.selected', this.containerNode).forEach(function (node) {

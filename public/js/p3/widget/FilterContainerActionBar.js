@@ -3,13 +3,13 @@ define([
   'dojo/dom-construct', 'dojo/dom-geometry', 'dojo/dom-style', 'dojo/dom-class',
   'dijit/form/TextBox', './FacetFilter', 'dojo/request', 'dojo/on',
   'rql/parser', './FilteredValueButton', 'dojo/query', 'dojo/_base/Deferred',
-  'dijit/focus', '../util/PathJoin'
+  'dijit/focus', '../util/PathJoin', './FilteringSidebar', 'dojo/_base/window'
 ], function (
   declare, ContainerActionBar, lang,
   domConstruct, domGeometry, domStyle, domClass,
   Textbox, FacetFilter, xhr, on,
   RQLParser, FilteredValueButton, Query, Deferred,
-  focusUtil, PathJoin
+  focusUtil, PathJoin, FilteringSidebar, win
 ) {
 
   function parseFacetCounts(facets) {
@@ -315,7 +315,6 @@ define([
       };
 
       function toggleFilters() {
-        // console.log("Toggle the Filters Panel", _self.domNode);
         on.emit(_self.currentContainerWidget.domNode, 'ToggleFilters', {});
       }
 
@@ -788,6 +787,7 @@ define([
       }
       this.inherited(arguments);
       this._started = true;
+      console.log('facetFields', this.facetFields);
       this.set('facetFields', this.facetFields);
 
       // this.set("facets", this.facets);

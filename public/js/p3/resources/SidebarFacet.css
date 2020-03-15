@@ -1,0 +1,139 @@
+.FacetFilterPanel {
+
+	padding:4px;
+	cursor: default;
+}
+
+.SidebarFacet {
+	border-radius: 4px;
+	color: #333;
+	margin-top: 4px;
+	margin-left: 4px;
+	overflow: hidden;
+	padding: 0;
+	white-space: nowrap;
+	vertical-align: top;
+	max-width: 240px;
+}
+
+
+.SidebarFacet .dataList {
+	/*min-height: 32px;*/
+	padding: 4px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.SidebarFacet .dataList .FacetValue {
+	white-space: nowrap;
+	text-align: left;
+	margin-right: 8px;
+}
+
+.SidebarFacet .facetCategory {
+	color: #333;
+	font-weight: 900;
+	text-align: left;
+	border-bottom: 1px solid #666;
+	padding: 4px;
+	text-transform: capitalize;
+}
+
+.SidebarFacet .facetCategory {
+	text-transform: capitalize;
+}
+
+.SidebarFacet .facetCategory.selected::after {
+	content: ' *';
+	/* color: rgb(8, 66, 255); */
+	/*border-bottom: 1px solid orange;*/
+}
+
+.SidebarFacet .FacetValue.selected {
+	color: #000;
+	font-weight: 700;
+}
+.SidebarFacet .FacetValue.selected:hover{
+	cursor: pointer;
+	opacity: .7;
+	font-weight: 900;
+}
+
+.SidebarFacet .FacetValue:hover {
+	cursor: pointer;
+	color: #000;
+}
+
+.FilteredValueButton {
+/*	border: 1px solid #bbb;*/
+	overflow: hidden;
+	display: inline-block;
+	padding: 0;
+	font-size: 1em;
+	margin-bottom: 1px;
+	margin-left: 4px;
+	margin-top: 4px;
+	max-width: 200px;
+	vertical-align: top;
+}
+
+.ValueWrapper {
+	display: inline-block;
+	white-space: nowrap;
+	font-size: .85em;
+	font-weight: 100;
+	padding: 2px;
+	border-radius: 3px;
+}
+
+.BrowserHeader .minFilterView .ActionButtonContainer {
+	vertical-align: top;
+	display: inline-block;
+	float: none;
+	width: 100%;
+}
+
+
+.ValueWrapper > SPAN {
+	font-weight: 600;
+}
+
+.ValueWrapper > SPAN:hover {
+	color: red;
+	cursor: pointer;
+}
+
+.selectedList {
+	padding: 0;
+	white-space: nowrap;
+	background: #ffcb00;
+	color: #333;
+	text-align: center;
+	min-height: 21px;
+	margin: 0 0 2px;
+}
+
+.fieldHeader {
+	font-size: 0.75em;
+	color: rgb(52,105,142);
+}
+.fieldTitle {
+	padding: 2px;
+	text-align: left;
+	text-transform: uppercase;
+	cursor: default;
+}
+.rightButtonContainer {
+	text-align: right;
+	padding-right:2px;
+	padding-left: 8px;
+}
+
+.rightButtonContainer > *:hover {
+	cursor: pointer;
+	color: #333;
+}
+
+.minFilterView {
+	min-height: 43px;
+}

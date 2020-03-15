@@ -80,6 +80,8 @@ define([
     },
 
     postCreate: function () {
+
+      console.log('post CREATE ');
       this._filter = {};
 
       this.inherited(arguments);
