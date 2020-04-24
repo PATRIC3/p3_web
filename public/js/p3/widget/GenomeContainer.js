@@ -142,6 +142,7 @@ define([
     },
 
     listen: function () {
+      /*
       on(this.domNode, 'ToggleFilters', lang.hitch(this, function (evt) {
         // console.log("toggleFilters");
         if (!this.filterPanel && this.getFilterPanel) {
@@ -168,6 +169,34 @@ define([
           this.resize();
         }
       }));
+      */
+
+      on(this.domNode, 'ToggleSidebarFilters', lang.hitch(this, function (evt) {
+        console.log('toggle sidebar Filters2');
+        if (!this.filterPanel && this.getFilterPanel) {
+          this.filterPanel = this.getFilterPanel();
+          this.filterPanel.region = 'top';
+          this.filterPanel.splitter = true;
+          this.layoutPriority = 2;
+          this.addChild(this.filterPanel);
+        }
+        else if (this.filterPanel) {
+          // console.log("this.filterPanel.minimized: ", this.filterPanel.minimized);
+          if (this.filterPanel.minimized) {
+            this.filterPanel.minimized = false;
+            this.filterPanel.resize({
+              w: this.filterPanel.minSize + 150
+            });
+          }
+          else {
+            this.filterPanel.minimized = false;
+            this.filterPanel.resize({
+              w: this.filterPanel.minSize + 200
+            });
+          }
+          this.resize();
+        }
+      }));
 
       this.filterPanel.watch('filter', lang.hitch(this, function (attr, oldVal, newVal) {
         // console.log("FILTER PANEL SET FILTER", arguments)
@@ -184,7 +213,6 @@ define([
           });
         }
       }));
-
     },
 
     setupActions: function () {

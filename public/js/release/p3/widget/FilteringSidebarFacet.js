@@ -1,15 +1,13 @@
-define([
+define("p3/widget/FilteringSidebarFacet", [
   'dojo/_base/declare', 'dojo/on', 'dojo/_base/Deferred', 'dijit/_Templated',
   'dojo/dom-class', 'dojo/dom-construct', 'dijit/_WidgetBase',
   'dojo/_base/xhr', 'dojo/_base/lang', 'dojo/dom-attr', 'dojo/query',
-  'dojo/dom-geometry', 'dojo/dom-style', 'dojo/when', 'dijit/form/TextBox', 'dijit/focus',
-  'dojo/dom'
+  'dojo/dom-geometry', 'dojo/dom-style', 'dojo/when'
 ], function (
   declare, on, Deferred, Templated,
   domClass, domConstruct, WidgetBase,
   xhr, lang, domAttr, Query,
-  domGeometry, domStyle, when, TextBox, focusUtil,
-  dom
+  domGeometry, domStyle, when
 ) {
 
   return declare([WidgetBase, Templated], {
@@ -19,11 +17,6 @@ define([
     data: null,
     selected: null,
     minimized: null,
-    type: null, // 'text', 'number', 'date'
-
-    onSearch: function () {
-      console.log('there was a search');
-    },
 
     constructor: function () {
       this._selected = {};
@@ -39,7 +32,6 @@ define([
     },
 
     _setDataAttr: function (data, selected) {
-
       // console.log("_setDataAttr", data, selected);
       if (selected) {
         this.selected = selected;
@@ -62,6 +54,8 @@ define([
       }
 
       if (!('forEach' in data) || this.minimized) return;
+
+      console.log('data', data);
 
       var showTopCount = 5;
 
@@ -210,83 +204,14 @@ define([
       this.inherited(arguments);
       on(this.domNode, '.FacetValue:click', lang.hitch(this, 'toggleItem'));
       if (this.categoryNode && this.category) {
-        // /this.categoryNode.innerHTML =
-        //  `<i class="${this.minimized ? 'icon-angle-right' : 'icon-angle-down'}" style="font-size: 1.2em;"></i> `+
-        //    this.category.replace(/_/g, ' ') +
-        //  '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>';
-
-        var name = this.category.replace(/_/g, ' ');
-
-        var title = domConstruct.place(
-          '<span class="filter-category"></span>',
-          this.categoryNode
-        );
-
-        var expandBtn = domConstruct.create('a', {
-          innerHTML:
-          `<i class="${this.minimized ? 'icon-angle-right' : 'icon-angle-down'}" style="font-size: 1.2em;"></i> ` +
-            name
-        }, title);
-
-        var self = this;
-        on(expandBtn, 'click', function () {
-          console.log('click expand');
-          self.onExpand(self.minimized);
-        });
-
-        var searchBtn = domConstruct.create('a', {
-          class: 'pull-right',
-          innerHTML: '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>'
-        }, title);
-
-        var searchBox = new TextBox({
-          placeHolder: 'search ' + name,
-          style: 'display: block;'
-        });
-        domClass.toggle(searchBox.domNode, 'dijitHidden');
-
-        domConstruct.place(searchBox.domNode, this.categoryNode);
-
-        on(searchBtn, 'click', function () {
-          domClass.toggle(searchBox.domNode, 'dijitHidden');
-          // if (!domClass.contains(searchBox.domNode, 'dijitHidden')) {
-          //   focusUtil.focus(searchBox.domNode);
-          // }
-        });
-
-        if (this.type == 'number') {
-
-          domConstruct.place('<br>', this.categoryNode);
-
-          var numFilterContainer = domConstruct.create('div', {
-            style: 'margin-top: 5px;'
-          }, this.categoryNode);
-
-          var lowerBound = new TextBox({
-            placeHolder: 'min',
-            style: 'display: inline-block; width: 50px;'
-          });
-          domConstruct.place(lowerBound.domNode, numFilterContainer);
-
-          domConstruct.place('<span style="text-transform: none;"> to </span>', numFilterContainer);
-
-          var upperBound = new TextBox({
-            placeHolder: 'max',
-            style: 'display: inline-block; width: 50px;'
-          });
-
-          domConstruct.place(upperBound.domNode, numFilterContainer);
-        }
-
-
+        this.categoryNode.innerHTML =
+          `<i class="${this.minimized ? 'icon-angle-right' : 'icon-angle-down'}" style="font-size: 1.2em;"></i> ` + this.category.replace(/_/g, ' ')
+           + '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>';
       }
       if (!this.data) {
         this.data = new Deferred();
       }
 
-    },
-
-    _setMinimizedAttr: function () {
     },
 
     resize: function (changeSize, resultSize) {
@@ -333,6 +258,5 @@ define([
       domGeometry.setMarginBox(this.containerNode, { h: this._contentBox.h - hmb.h });
 
     }
-
   });
 });

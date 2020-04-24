@@ -157,6 +157,7 @@ define([
       }
 
       var rowCount = 0;
+      console.log('meta_data', meta_data, section);
       meta_data[section].forEach(function (column) {
         var row = renderProperty(column, item, options);
         if (row) {
@@ -1507,32 +1508,42 @@ define([
       return div;
     },
     genome_meta_table_names: function () {
-      return ['Organism Info', 'Genome Quality', 'Sharing', 'Isolate Info', 'Host Info', 'Sequence Info', 'Phenotype Info', 'Project Info', 'Other'];
+      return ['Organism', 'Genome Quality', 'Sharing', 'Isolate', 'Host', 'Sequence', 'Phenotype', 'Project', 'Other'];
     },
 
     genome_meta_spec: function () {
       var spec = {
-        'Organism Info': [{
+        'Organism': [{
           name: 'Genome ID',
           text: 'genome_id',
           mini: true
         }, {
-          name: 'Genome Name',
-          text: 'genome_name',
-          mini: true
-        }, {
-          name: 'NCBI Taxon ID',
-          text: 'taxon_id',
-          link: 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id='
+          name: 'Reference Genome',
+          text: 'reference_genome',
+          showFilter: true,
+          noSearch: true
         }, {
           name: 'Genome Status',
           text: 'genome_status',
           mini: true,
-          editable: true
+          editable: true,
+          showFilter: true,
+          noSearch: true
+        }, {
+          name: 'Genome Name',
+          text: 'genome_name',
+          mini: true,
+          showFilter: true
+        }, {
+          name: 'NCBI Taxon ID',
+          text: 'taxon_id',
+          link: 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=',
+          showFilter: true
         }, {
           name: 'Strain',
           text: 'strain',
-          editable: true
+          editable: true,
+          showFilter: true
         }, {
           name: 'Serovar',
           text: 'serovar',
@@ -1544,7 +1555,8 @@ define([
         }, {
           name: 'Pathovar',
           text: 'pathovar',
-          editable: true
+          editable: true,
+          showFilter: true
         }, {
           name: 'MLST',
           text: 'mlst',
@@ -1593,16 +1605,15 @@ define([
             return lang.replace('<a href="/view/Genome/{obj.genome_id}#view_tab=amr">AMR Phenotypes</a>', { obj: obj });
           },
           editable: true,
-          isList: false // not displayed as list although returned as list
-        }, {
-          name: 'Reference Genome',
-          text: 'reference_genome'
+          isList: false, // not displayed as list although returned as list
+          showFilter: true
         }],
 
         'Genome Quality': [{
           name: 'Genome Quality',
           text: 'genome_quality',
-          editable: false
+          editable: false,
+          showFilter: true
         }, {
           name: 'Genome Quality Flags',
           text: 'genome_quality_flags',
@@ -1638,7 +1649,7 @@ define([
         }
         ],
 
-        'Project Info': [{
+        'Project': [{
           name: 'Sequencing Center',
           text: 'sequencing_centers'
         }, {
@@ -1690,7 +1701,7 @@ define([
           editable: true
         }],
 
-        'Sequence Info': [{
+        'Sequence': [{
           name: 'Sequencing Status',
           text: 'sequencing_status',
           editable: true
@@ -1708,16 +1719,20 @@ define([
           editable: true
         }, {
           name: 'Chromosomes',
-          text: 'chromosomes'
+          text: 'chromosomes',
+          type: 'number'
         }, {
           name: 'Plasmids',
-          text: 'plasmids'
+          text: 'plasmids',
+          type: 'number'
         }, {
           name: 'Contigs',
           text: 'contigs',
           link: function (obj) {
             return lang.replace('<a href="/view/Genome/{obj.genome_id}#view_tab=sequences">{obj.contigs}</a>', { obj: obj });
-          }
+          },
+          type: 'number',
+          showFilter: true
         }, {
           name: 'Genome Length',
           text: 'genome_length'
@@ -1735,7 +1750,7 @@ define([
           text: 'refseq_cds'
         }],
 
-        'Isolate Info': [{
+        'Isolate': [{
           name: 'Isolation Site',
           text: 'isolation_site',
           editable: true
@@ -1752,7 +1767,9 @@ define([
           name: 'Collection Year',
           text: 'collection_year',
           editable: true,
-          type: 'number'
+          type: 'number',
+          showFilter: true,
+          showFilter: true
         }, {
           name: 'Collection Date',
           text: 'collection_date',
@@ -1761,7 +1778,8 @@ define([
         }, {
           name: 'Isolation Country',
           text: 'isolation_country',
-          editable: true
+          editable: true,
+          showFilter: true
         }, {
           name: 'Geographic Location',
           text: 'geographic_location',
@@ -1789,10 +1807,11 @@ define([
           isList: true
         }],
 
-        'Host Info': [{
+        'Host': [{
           name: 'Host Name',
           text: 'host_name',
-          editable: true
+          editable: true,
+          showFilter: true
         }, {
           name: 'Host Gender',
           text: 'host_gender',
@@ -1820,7 +1839,7 @@ define([
           isList: true
         }],
 
-        'Phenotype Info': [{
+        'Phenotype': [{
           name: 'Gram Stain',
           text: 'gram_stain',
           editable: true

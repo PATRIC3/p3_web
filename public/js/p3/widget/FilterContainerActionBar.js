@@ -315,7 +315,8 @@ define([
       };
 
       function toggleFilters() {
-        on.emit(_self.currentContainerWidget.domNode, 'ToggleFilters', {});
+        // on.emit(_self.currentContainerWidget.domNode, 'ToggleFilters', {});
+        on.emit(_self.currentContainerWidget.domNode, 'ToggleSidebarFilters', {});
       }
 
       this.addAction('ToggleFilters', 'fa icon-filter fa-2x', {
@@ -323,7 +324,7 @@ define([
         label: 'FILTERS',
         validType: ['*'],
         tooltip: 'Toggle the filter display'
-      }, toggleFilters, true, this.rightButtons);
+      }, toggleFilters, true, this.leftButtons);
 
       this.watch('minimized', lang.hitch(this, function (attr, oldVal, minimized) {
         // console.log("FilterContainerActionBar minimized: ", minimized)
@@ -402,7 +403,7 @@ define([
         this.keywordSearch.set('value', '');
       }));
 
-      this.keywordSearch = Textbox({ style: 'width: 300px;' });
+      this.keywordSearch = Textbox({ style: 'width: 200px;' });
 
       this.keywordSearch.on('change', lang.hitch(this, function (val) {
 
@@ -787,7 +788,7 @@ define([
       }
       this.inherited(arguments);
       this._started = true;
-      console.log('facetFields', this.facetFields);
+
       this.set('facetFields', this.facetFields);
 
       // this.set("facets", this.facets);

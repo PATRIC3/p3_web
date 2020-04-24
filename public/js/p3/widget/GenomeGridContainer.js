@@ -2,13 +2,13 @@ define([
   'dojo/_base/declare', './GridContainer', 'dojo/on',
   './GenomeGrid', 'dijit/popup', 'dojo/_base/lang',
   'dijit/TooltipDialog', './FacetFilterPanel', 'dojo/topic',
-  'dojo/dom-construct'
+  'dojo/dom-construct',   './DataItemFormatter'
 
 ], function (
   declare, GridContainer, on,
   GenomeGrid, popup, lang,
   TooltipDialog, FacetFilterPanel, Topic,
-  domConstruct
+  domConstruct, DataItemFormatter
 ) {
 
   var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div><div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
@@ -26,6 +26,7 @@ define([
     tutorialLink: 'user_guides/organisms_taxon/genome_table.html',
     // facetFields: ["public", "genome_status", "reference_genome", "antimicrobial_resistance", "antimicrobial_resistance_evidence", "isolation_country", "host_name", "disease", "collection_year"],
     facetFields: ['public', 'genome_status', 'reference_genome', 'antimicrobial_resistance', 'isolation_country', 'host_name', 'collection_year', 'genome_quality'],
+    facetFieldsNew: DataItemFormatter({}, 'genome_meta_spec', {}),
     getFilterPanel: function (opts) {
 
     },
@@ -100,7 +101,7 @@ define([
           });
         },
         true,
-        'left'
+        'right'
       ]
     ])
   });

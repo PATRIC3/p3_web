@@ -2,12 +2,14 @@ define([
   'dojo/_base/declare', 'dojo/_base/lang',
   'dojo/dom-construct', 'dojo/on', 'dojo/topic',
   'dijit/TooltipDialog', 'dijit/popup', 'dijit/Dialog',
-  './GridContainer', './AMRPanelGrid', './PerspectiveToolTip', './SelectionToGroup'
+  './GridContainer', './AMRPanelGrid', './PerspectiveToolTip', './SelectionToGroup',
+  './DataItemFormatter'
 ], function (
   declare, lang,
   domConstruct, on, Topic,
   TooltipDialog, popup, Dialog,
-  GridContainer, Grid, PerspectiveToolTipDialog, SelectionToGroup
+  GridContainer, Grid, PerspectiveToolTipDialog, SelectionToGroup,
+  DataItemFormatter
 ) {
 
   var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div><div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
@@ -22,6 +24,7 @@ define([
     containerType: 'genome_amr_data',
     tutorialLink: 'user_guides/organisms_taxon/amr_phenotypes.html',
     facetFields: ['public', 'antibiotic', 'resistant_phenotype', 'evidence', 'laboratory_typing_method', 'computational_method'],
+    facetFieldsNew: DataItemFormatter({}, 'genome_amr_data', {}),
     dataModel: 'genome_amr',
     primaryKey: 'id',
     maxDownloadSize: 25000,

@@ -237,7 +237,7 @@ define(
           html = obj.genome_name;
         }
 
-        return '<a href="/view/Genome/520463.3#view_tab=overview">' + html + '</a>';
+        return '<a href="/view/Genome/520463.3#view_tab=overview" class="navigationLink">' + html + '</a>';
       },
       genomeMembers: function (obj) {
         var members = (obj.user_read || []).concat(obj.user_write || []);

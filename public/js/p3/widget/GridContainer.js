@@ -1338,7 +1338,6 @@ define([
 
     createFilterPanel: function () {
       // console.log("Create Container ActionBar with currentContainerWidget: ", this)
-
       this.containerActionBar = this.filterPanel = new ContainerActionBar({
         region: 'top',
         layoutPriority: 7,
@@ -1346,16 +1345,15 @@ define([
         className: 'BrowserHeader',
         dataModel: this.dataModel,
         facetFields: this.facetFields,
+        facetFieldsNew: this.facetFieldsNew,
         state: lang.mixin({}, this.state),
         enableAnchorButton: this.enableAnchorButton,
         currentContainerWidget: this
       });
 
+
       // console.log("gridcontainer startup()", this.state)
       this.filterPanel.watch('filter', lang.hitch(this, function (attr, oldVal, newVal) {
-        // console.log("FILTER PANEL SET FILTER", arguments)
-        // console.log("oldVal: ", oldVal, "newVal: ", newVal, "state.hashParams.filter: ", this.state.hashParams.filter)
-        // console.log("setFilter Watch() callback", newVal);
         if ((oldVal != newVal) && (newVal != this.state.hashParams.filter)) {
           // console.log("Emit UpdateHash: ", newVal);
           on.emit(this.domNode, 'UpdateHash', {
@@ -1368,13 +1366,16 @@ define([
         }
       }));
 
+
       this.filteringSidebar = new FilteringSidebar({
+        className: 'filtering-sidebar',
         region: 'left',
         style: 'width: 250px',
         splitter: true,
         layoutPriority: 4,
         dataModel: this.dataModel,
         facetFields: this.facetFields,
+        facetFieldsNew: this.facetFieldsNew,
         state: lang.mixin({}, this.state),
         enableAnchorButton: false,
         currentContainerWidget: this
@@ -1447,7 +1448,7 @@ define([
 
       this.itemDetailPanel = new ItemDetailPanel({
         region: 'right',
-        style: 'width:250px',
+        style: 'width:0px',
         minSize: 150,
         splitter: true,
         layoutPriority: 3,
@@ -1546,7 +1547,6 @@ define([
       }));
 
       on(this.domNode, 'ToggleFilters', lang.hitch(this, function (evt) {
-        console.log('HERE');
         if (!this.filterPanel && this.getFilterPanel) {
           this.filterPanel = this.getFilterPanel();
           this.filterPanel.region = 'top';
@@ -1565,6 +1565,33 @@ define([
             this.filterPanel.set('minimized', true);
             this.filterPanel.resize({
               h: this.filterPanel.minSize
+            });
+          }
+          this.resize();
+        }
+      }));
+
+      // toggle filters for new sidebar
+      on(this.domNode, 'ToggleSidebarFilters', lang.hitch(this, function (evt) {
+        console.log('toggle sidebar filters');
+        if (!this.filteringSidebar && this.getFilterPanel) {
+          this.filteringSidebar = this.getFilterPanel();
+          this.filteringSidebar.region = 'left';
+          this.filteringSidebar.splitter = true;
+          this.layoutPriority = 2;
+          this.addChild(this.filteringSidebar);
+        }
+        else if (this.filteringSidebar) {
+          if (this.filteringSidebar.minimized) {
+            this.filteringSidebar.set('minimized', false);
+            this.filteringSidebar.resize({
+              w: this.filteringSidebar.minSize + 150
+            });
+          }
+          else {
+            this.filteringSidebar.set('minimized', true);
+            this.filteringSidebar.resize({
+              w: this.filteringSidebar.minSize
             });
           }
           this.resize();

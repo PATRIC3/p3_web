@@ -1,9 +1,7 @@
 .FacetFilterPanel {
-
 	padding:4px;
 	cursor: default;
 }
-
 .SidebarFacet {
 	border-radius: 4px;
 	color: #333;
@@ -15,48 +13,33 @@
 	vertical-align: top;
 	max-width: 240px;
 }
-
-.filtering-sidebar .filter-group-title {
-	background-color: #f2f2f2;
-	border-top: 1px solid #ddd;
-	border-bottom: 1px solid #ddd;
-	color: #333;
-	padding: 5px;
-}
-
-
 .SidebarFacet .dataList {
-	/*min-height: 32px;*/
+	
 	padding: 4px;
 	overflow-y: auto;
 	overflow-x: hidden;
 }
-
 .SidebarFacet .dataList .FacetValue {
 	white-space: nowrap;
 	text-align: left;
 	margin-right: 8px;
 }
-
 .SidebarFacet .facetCategory {
 	color: #333;
 	font-weight: 900;
 	text-align: left;
-	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #666;
 	padding: 4px;
 	text-transform: capitalize;
 }
-
 .SidebarFacet .facetCategory {
 	text-transform: capitalize;
 }
-
 .SidebarFacet .facetCategory.selected::after {
 	content: ' *';
-	color: rgb(8, 66, 255);
-	border-bottom: none;
+	
+	
 }
-
 .SidebarFacet .FacetValue.selected {
 	color: #000;
 	font-weight: 700;
@@ -66,14 +49,11 @@
 	opacity: .7;
 	font-weight: 900;
 }
-
 .SidebarFacet .FacetValue:hover {
 	cursor: pointer;
 	color: #000;
 }
-
 .FilteredValueButton {
-/*	border: 1px solid #bbb;*/
 	overflow: hidden;
 	display: inline-block;
 	padding: 0;
@@ -84,7 +64,6 @@
 	max-width: 200px;
 	vertical-align: top;
 }
-
 .ValueWrapper {
 	display: inline-block;
 	white-space: nowrap;
@@ -93,24 +72,19 @@
 	padding: 2px;
 	border-radius: 3px;
 }
-
 .BrowserHeader .minFilterView .ActionButtonContainer {
 	vertical-align: top;
 	display: inline-block;
 	float: none;
 	width: 100%;
 }
-
-
 .ValueWrapper > SPAN {
 	font-weight: 600;
 }
-
 .ValueWrapper > SPAN:hover {
 	color: red;
 	cursor: pointer;
 }
-
 .selectedList {
 	padding: 0;
 	white-space: nowrap;
@@ -120,7 +94,6 @@
 	min-height: 21px;
 	margin: 0 0 2px;
 }
-
 .fieldHeader {
 	font-size: 0.75em;
 	color: rgb(52,105,142);
@@ -136,12 +109,10 @@
 	padding-right:2px;
 	padding-left: 8px;
 }
-
 .rightButtonContainer > *:hover {
 	cursor: pointer;
 	color: #333;
 }
-
 .minFilterView {
 	min-height: 43px;
 }
