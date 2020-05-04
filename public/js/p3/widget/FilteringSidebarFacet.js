@@ -3,27 +3,33 @@ define([
   'dojo/dom-class', 'dojo/dom-construct', 'dijit/_WidgetBase',
   'dojo/_base/xhr', 'dojo/_base/lang', 'dojo/dom-attr', 'dojo/query',
   'dojo/dom-geometry', 'dojo/dom-style', 'dojo/when', 'dijit/form/TextBox', 'dijit/focus',
-  'dojo/dom'
+  'dojo/dom', '../util/PathJoin'
 ], function (
   declare, on, Deferred, Templated,
   domClass, domConstruct, WidgetBase,
   xhr, lang, domAttr, Query,
   domGeometry, domStyle, when, TextBox, focusUtil,
-  dom
+  dom, PathJoin
 ) {
 
   return declare([WidgetBase, Templated], {
-    templateString: '<div class="${baseClass}"><div data-dojo-attach-point="categoryNode" class="facetCategory"></div><div style="" class="dataList" data-dojo-attach-point="containerNode"></div></div>',
+    templateString: '<div class="${baseClass}">' +
+      '<div data-dojo-attach-point="categoryNode" class="facetCategory"></div>' +
+      '<div style="" class="dataList" data-dojo-attach-point="containerNode"></div>' +
+    '</div>',
+    apiServer: window.App.dataAPI,
     baseClass: 'SidebarFacet',
     category: 'NAME',
     data: null,
     selected: null,
-    minimized: null,
+    expanded: true,
+    isUnique: false,
+    disableSearch: false,
     type: null, // 'text', 'number', 'date'
+    onExpand: function () {},
+    onSearchChange: function () {},
 
-    onSearch: function () {
-      console.log('there was a search');
-    },
+    onSearch: function () {},
 
     constructor: function () {
       this._selected = {};
@@ -39,8 +45,6 @@ define([
     },
 
     _setDataAttr: function (data, selected) {
-
-      // console.log("_setDataAttr", data, selected);
       if (selected) {
         this.selected = selected;
       }
@@ -53,15 +57,19 @@ define([
       }
 
       this.data = data;
+      console.log(this.origData);
+
       domConstruct.empty(this.containerNode);
 
+      /*
       if (data.length < 1) {
         domClass.add(this.domNode, 'dijitHidden');
       } else {
         domClass.remove(this.domNode, 'dijitHidden');
       }
+      */
 
-      if (!('forEach' in data) || this.minimized) return;
+      if (!('forEach' in data) || !this.expanded) return;
 
       var showTopCount = 5;
 
@@ -79,10 +87,11 @@ define([
           sel = '';
         }
 
+        // todo(nc): add checkbox
         var n = this['_value_' + name] = domConstruct.create('div', {
           rel: name,
           'class': 'FacetValue ' + sel,
-          innerHTML: '<input type="checkbox" /> ' + l
+          innerHTML: l // '<input type="checkbox" /> ' + l
         });
 
         domConstruct.place(n, this.containerNode, sel ? 'first' : 'last');
@@ -100,21 +109,23 @@ define([
 
 
       if (promise) {
+        if (!this.origData) {
+          this.origData = lang.clone(this.data);  // keep copy for filtering
+        }
         promise.resolve(true);
       }
     },
 
     toggle: function (name, value) {
       name = name.replace(/"/g, '');
-      // console.log("Toggle: ", name, value, " Data:", this.data);
+
       when(this.data, lang.hitch(this, function () {
         var node = this['_value_' + name];
-        // console.log("Toggle Node: ", node, " Set to: ", value?"TRUE":"Opposite", domClass.contains(node, "Selected"));
+
         if (node) {
-          // console.log("    Found Node")
           if (typeof value == 'undefined') {
             var isSelected = domClass.contains(node, 'selected');
-            // console.log("isSelected: ", isSelected);
+
             domClass.toggle(node, 'selected');
             this._set('selected', this.selected.filter(function (i) {
               return (i != name) || ((i == name) && !isSelected);
@@ -134,13 +145,13 @@ define([
             }
           }
         }
-        // console.log(name, " this.selected: ", this.selected)
+
         if (this.selected && this.selected.length > 0) {
           domClass.add(this.categoryNode, 'selected');
         } else {
           domClass.remove(this.categoryNode, 'selected');
         }
-        this.resize();
+        // this.resize();
       }));
       // this._refreshFilter();
     },
@@ -154,26 +165,29 @@ define([
 
       this._refreshFilter();
     },
-    _refreshFilter: function () {
-      console.log('FacetFilter _refreshFilter()  started: ', this._started);
-      var selected = [];
+    _refreshFilter: function (selected) {
+      // console.log('FacetFilter _refreshFilter()  started: ', this._started);
+      var selected = selected || [];
 
       Query('.selected', this.containerNode).forEach(function (node) {
-        // console.log(".selected Node: ", node)
         selected.push(domAttr.get(node, 'rel'));
       });
-      // console.log("_refreshFilter selected() : ", selected);
-      // var curFilter = this.filter;
-      // this.filter =  "in(" + this.category + ",(" + selected.join(",") + "))";
+
       if (selected.length < 1) {
         this.filter = '';
       } else if (selected.length == 1) {
-        this.filter = 'eq(' + this.category + ',' + encodeURIComponent('"' + selected[0] + '"') + ')';
+        var isFreeText = selected[0].includes('*');
+        var val = isFreeText ? selected[0] : '"' + selected[0] + '"';
+        this.filter = 'eq(' + this.category + ',' + encodeURIComponent(val) + ')';
       } else {
         this.filter = 'or(' + selected.map(function (s) {
-          return 'eq(' + this.category + ',' + encodeURIComponent('"' + s + '"') + ')';
+          var isFreeText = s.includes('*');
+          var val = isFreeText ? s : '"' + s + '"';
+          return 'eq(' + this.category + ',' + encodeURIComponent(val) + ')';
         }, this).join(',') + ')';
       }
+
+      console.log('*******', this.filter);
 
 
       if (selected.length > 0) {
@@ -201,19 +215,16 @@ define([
     },
 
     clearSelection: function () {
-      // console.log("CLEAR SELECTION")
       this.set('data', this.data, []);
       domClass.remove(this.categoryNode, 'selected');
     },
 
     postCreate: function () {
       this.inherited(arguments);
+      var self = this;
+
       on(this.domNode, '.FacetValue:click', lang.hitch(this, 'toggleItem'));
       if (this.categoryNode && this.category) {
-        // /this.categoryNode.innerHTML =
-        //  `<i class="${this.minimized ? 'icon-angle-right' : 'icon-angle-down'}" style="font-size: 1.2em;"></i> `+
-        //    this.category.replace(/_/g, ' ') +
-        //  '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>';
 
         var name = this.category.replace(/_/g, ' ');
 
@@ -222,40 +233,70 @@ define([
           this.categoryNode
         );
 
-        var expandBtn = domConstruct.create('a', {
-          innerHTML:
-          `<i class="${this.minimized ? 'icon-angle-right' : 'icon-angle-down'}" style="font-size: 1.2em;"></i> ` +
+        var expandBtn = this.expandBtn = domConstruct.create('a', {
+          innerHTML: self.isUnique ? name :
+            `<i class="${this.expanded ? 'icon-angle-down' : 'icon-angle-right'}" style="font-size: 1.2em;"></i> ` +
             name
         }, title);
 
-        var self = this;
         on(expandBtn, 'click', function () {
-          console.log('click expand');
-          self.onExpand(self.minimized);
+          self.expanded = !self.expanded;
+
+          var icon = Query('i', expandBtn);
+          icon.toggleClass('icon-angle-down');
+          icon.toggleClass('icon-angle-right');
+
+          self.onExpand(self.expanded);
         });
 
-        var searchBtn = domConstruct.create('a', {
-          class: 'pull-right',
-          innerHTML: '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>'
-        }, title);
+        if (!this.disableSearch) {
+          var searchBtn = domConstruct.create('a', {
+            class: 'pull-right',
+            innerHTML: '<i class="icon-search pull-right" style="font-size: 1.2em;"></i>'
+          }, title);
 
-        var searchBox = new TextBox({
-          placeHolder: 'search ' + name,
-          style: 'display: block;'
-        });
-        domClass.toggle(searchBox.domNode, 'dijitHidden');
+          var boxId = this.dataModel + '-filter-' + name;
+          var searchBox = new TextBox({
+            placeHolder: 'search ' + name,
+            style: 'display: block;',
+            id: boxId
+          });
+          on(searchBox, 'keyup', function () {
+            var val = searchBox.get('value');
+            console.log('on keyup:', val, event);
 
-        domConstruct.place(searchBox.domNode, this.categoryNode);
+            if (event.key == 'Enter' && val == '') {
+              self._refreshFilter();
+            }
 
-        on(searchBtn, 'click', function () {
+            if (event.key == 'Enter' && val != '') {
+              self.selected.push(self.type == 'number' ? val : '*' + val + '*');
+              console.log('selected', self.selected);
+              self._refreshFilter(self.selected);
+              // self.onSearch(val);
+            } else {
+              // self.onSearchChange(val);
+              console.log('data', self.origData);
+              var matches = self.origData.filter(o => o.value.toLowerCase().includes(val.toLowerCase()));
+              console.log('matches', matches);
+              self.set('data', matches, self.selected);
+            }
+          });
+
           domClass.toggle(searchBox.domNode, 'dijitHidden');
-          // if (!domClass.contains(searchBox.domNode, 'dijitHidden')) {
-          //   focusUtil.focus(searchBox.domNode);
-          // }
-        });
 
+          domConstruct.place(searchBox.domNode, this.categoryNode);
+
+          on(searchBtn, 'click', function () {
+            domClass.toggle(searchBox.domNode, 'dijitHidden');
+            if (!domClass.contains(searchBox.domNode, 'dijitHidden')) {
+              focusUtil.focus(dom.byId(boxId));
+            }
+          });
+        }
+
+        // add numeric searches if number field
         if (this.type == 'number') {
-
           domConstruct.place('<br>', this.categoryNode);
 
           var numFilterContainer = domConstruct.create('div', {
@@ -275,6 +316,31 @@ define([
             style: 'display: inline-block; width: 50px;'
           });
 
+          on(lowerBound, 'keyup', function () {
+            var val = lowerBound.get('value');
+            if (event.key == 'Enter' && val == '') self._refreshFilter();
+
+            if (event.key == 'Enter' && val != '') {
+              self.selected.push(val);
+              self._refreshFilter(self.selected);
+            } else {
+              // todo(nc): implement
+            }
+          });
+
+          on(upperBound, 'keyup', function () {
+            var val = upperBound.get('value');
+            console.log('val"' + val + '"');
+            if (event.key == 'Enter' && val == '') self._refreshFilter();
+
+            if (event.key == 'Enter' && val != '') {
+              self.selected.push(val);
+              self._refreshFilter(self.selected);
+            } else {
+              // todo(nc): implement
+            }
+          });
+
           domConstruct.place(upperBound.domNode, numFilterContainer);
         }
 
@@ -286,8 +352,52 @@ define([
 
     },
 
-    _setMinimizedAttr: function () {
+    // Todo(nc): remove
+    /*
+    getPossibleFacets: function (field) {
+      var f = '&facet(field,' + field + '),(mincount,1))';
+      var q =  '?keyword(*)';
+
+      // var url = this.apiServer + '/' + this.dataModel + '/' + q + '&limit(1)' + f;
+      var q = ((q && q.charAt && (q.charAt(0) == '?')) ? q.substr(1) : q) + '&limit(1)' + f;
+
+
+      var fr = xhr(PathJoin(this.apiServer, this.dataModel) + '/', {
+        method: 'POST',
+        handleAs: 'json',
+        data: f,
+        headers: {
+          accept: 'application/solr+json',
+          'content-type': 'application/rqlquery+x-www-form-urlencoded',
+          'X-Requested-With': null,
+          Authorization: (window.App.authorizationToken || '')
+        }
+      });
+
+      return fr.then(function (response, res) {
+        // console.log("RESPONSE: ",response,  res, res.facet_counts)
+        if (res && res.facet_counts && res.facet_counts.facet_fields) {
+          return parseFacetCounts(res.facet_counts.facet_fields);
+        }
+      }, function (err) {
+
+        return err;
+      });
     },
+
+    updateExpanded: function (val) {
+      this.expanded = val;
+      var icon = Query('i', this.expandBtn);
+
+      if (this.expanded) {
+        icon.addClass('icon-angle-down');
+        icon.removeClass('icon-angle-right');
+      } else {
+        icon.removeClass('icon-angle-down');
+        icon.addClass('icon-angle-right');
+      }
+    },
+    */
 
     resize: function (changeSize, resultSize) {
       var node = this.domNode;

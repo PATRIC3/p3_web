@@ -1384,6 +1384,7 @@ define([
       this.addChild(this.filteringSidebar);
 
       this.filteringSidebar.watch('filter', lang.hitch(this, function (attr, oldVal, newVal) {
+        console.log('newVal', newVal);
         if ((oldVal != newVal) && (newVal != this.state.hashParams.filter)) {
           on.emit(this.domNode, 'UpdateHash', {
             bubbles: true,

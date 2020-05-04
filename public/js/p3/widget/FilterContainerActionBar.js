@@ -423,7 +423,6 @@ define([
       this.watch('state', lang.hitch(this, 'onSetState'));
 
       on(this.domNode, 'UpdateFilterCategory', lang.hitch(this, function (evt) {
-        // console.log("UpdateFilterCategory: ", evt);
         if (evt.category == 'keywords') {
           if (evt.value && (evt.value.charAt(0) == '"')) {
             this._filterKeywords = [evt.value];

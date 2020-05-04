@@ -3,12 +3,14 @@ define([
   './SequenceGrid', 'dijit/popup',
   'dijit/TooltipDialog', './FacetFilterPanel',
   'dojo/_base/lang', 'dojo/on', 'dojo/dom-construct',
-  'dojo/topic'
+  'dojo/topic',
+  './DataItemFormatter'
 ], function (
   declare, GridContainer,
   Grid, popup,
   TooltipDialog, FacetFilterPanel,
-  lang, on, domConstruct, Topic
+  lang, on, domConstruct, Topic,
+  DataItemFormatter
 ) {
 
   var dfc = '<div>Download Table As...</div><div class="wsActionTooltip" rel="text/tsv">Text</div><div class="wsActionTooltip" rel="text/csv">CSV</div><div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
@@ -23,6 +25,7 @@ define([
     containerType: 'sequence_data',
     tutorialLink: 'user_guides/organisms_taxon/sequences.html',
     facetFields: ['sequence_type', 'topology'],
+    facetFieldsNew: DataItemFormatter({}, 'sequence_meta_spec', {}),
     maxGenomeCount: 10000,
     dataModel: 'genome_sequence',
     primaryKey: 'sequence_id',

@@ -47,11 +47,16 @@
 	text-transform: capitalize;
 }
 
-.SidebarFacet .facetCategory {
+.SidebarFacet .filter-category {
 	text-transform: capitalize;
 }
 
-.SidebarFacet .facetCategory.selected::after {
+.SidebarFacet .facetCategory.selected {
+	color: #ddd;
+	border-bottom: none;
+}
+
+.SidebarFacet .selected .filter-category::after {
 	content: ' *';
 	color: rgb(8, 66, 255);
 	border-bottom: none;

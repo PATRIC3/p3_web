@@ -157,7 +157,6 @@ define([
       }
 
       var rowCount = 0;
-      console.log('meta_data', meta_data, section);
       meta_data[section].forEach(function (column) {
         var row = renderProperty(column, item, options);
         if (row) {
@@ -1011,69 +1010,81 @@ define([
     sequence_data: function (item, options) {
       options = options || {};
 
-      var columns = [{
-        name: 'Genome Name',
-        text: 'genome_name',
-        mini: true
-      }, {
-        name: 'Genome ID',
-        text: 'genome_id',
-        link: '/view/Genome/'
-      }, {
-        name: 'Accession',
-        text: 'accession',
-        link: 'http://www.ncbi.nlm.nih.gov/nuccore/',
-        mini: true
-      }, {
-        name: 'Sequence ID',
-        text: 'sequence_id',
-        link: function (obj) {
-          return lang.replace('<a href="/view/FeatureList/?and(eq(annotation,PATRIC),eq(sequence_id,{obj.sequence_id}),eq(feature_type,CDS))" target="_blank">{obj.sequence_id}</a>', { obj: obj });
-        },
-        mini: true
-      }, {
-        name: 'Length',
-        text: 'length',
-        mini: true
-      }, {
-        name: 'GC Content',
-        text: 'gc_content',
-        mini: true
-      }, {
-        name: 'Sequence Type',
-        text: 'sequence_type'
-      }, {
-        name: 'Topology',
-        text: 'topology'
-      }, {
-        name: 'Description',
-        text: 'description'
-      }, {
-        name: 'Chromosome',
-        text: 'chromosome'
-      }, {
-        name: 'Plasmid',
-        text: 'plasmid'
-      }, {
-        name: 'GI',
-        text: 'gi'
-      }, {
-        name: 'Taxon ID',
-        text: 'taxon_id',
-        link: 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id='
-      }, {
-        name: 'Version',
-        text: 'version'
-      }, {
-        name: 'Release Date',
-        text: 'release_date'
-      }];
+
+      var columns = this.sequence_meta_spec();
 
       var div = domConstruct.create('div');
       displayHeader(div, item.sequence_id, 'fa icon-contigs fa-2x', '/view/Genome/' + item.genome_id, options);
       displayDetail(item, columns, div, options);
 
       return div;
+    },
+
+    sequence_meta_spec: function () {
+      return {
+        sequence: [{
+          name: 'Genome Name',
+          text: 'genome_name',
+          mini: true
+        }, {
+          name: 'Genome ID',
+          text: 'genome_id',
+          link: '/view/Genome/'
+        }, {
+          name: 'Accession',
+          text: 'accession',
+          link: 'http://www.ncbi.nlm.nih.gov/nuccore/',
+          mini: true
+        }, {
+          name: 'Sequence ID',
+          text: 'sequence_id',
+          link: function (obj) {
+            return lang.replace('<a href="/view/FeatureList/?and(eq(annotation,PATRIC),eq(sequence_id,{obj.sequence_id}),eq(feature_type,CDS))" target="_blank">{obj.sequence_id}</a>', { obj: obj });
+          },
+          mini: true,
+          isUnique: true
+        }, {
+          name: 'Length',
+          text: 'length',
+          mini: true,
+          type: 'number'
+        }, {
+          name: 'GC Content',
+          text: 'gc_content',
+          mini: true
+        }, {
+          name: 'Sequence Type',
+          text: 'sequence_type',
+          showFilter: true
+        }, {
+          name: 'Topology',
+          text: 'topology',
+          showFilter: true
+        }, {
+          name: 'Description',
+          text: 'description'
+        }, {
+          name: 'Chromosome',
+          text: 'chromosome'
+        }, {
+          name: 'Plasmid',
+          text: 'plasmid'
+        }, {
+          name: 'GI',
+          text: 'gi'
+        }, {
+          name: 'Taxon ID',
+          text: 'taxon_id',
+          link: 'http://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id='
+        }, {
+          name: 'Version',
+          text: 'version'
+        }, {
+          name: 'Release Date',
+          text: 'release_date'
+        }]
+      };
+
     },
 
     transcriptomics_experiment_data: function (item, options) {
@@ -1516,19 +1527,20 @@ define([
         'Organism': [{
           name: 'Genome ID',
           text: 'genome_id',
-          mini: true
+          mini: true,
+          isUnique: true
         }, {
           name: 'Reference Genome',
           text: 'reference_genome',
           showFilter: true,
-          noSearch: true
+          disableSearch: true
         }, {
           name: 'Genome Status',
           text: 'genome_status',
           mini: true,
           editable: true,
           showFilter: true,
-          noSearch: true
+          disableSearch: true
         }, {
           name: 'Genome Name',
           text: 'genome_name',
