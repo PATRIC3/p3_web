@@ -525,10 +525,8 @@ define([
       var _self = this;
       var ext = 'json';
       var rel = 'text/plain';
-      var matrix = _self.chart.getState().matrix;
-      var rows = _self.currentData.rows;
-      var cols = _self.currentData.columns;
-      var obj = { 'rows': rows, 'columns': cols, 'matrix': matrix };
+      var state = _self.chart.getState()
+      var obj = { 'rows': state.rows, 'cols': state.cols, 'matrix': state.matrix };
       saveAs(new Blob([JSON.stringify(obj)], { type: rel }), 'PATRIC_protein_families_heatmap_all.' + ext);
     },
 
