@@ -525,7 +525,7 @@ define([
       var _self = this;
       var ext = 'json';
       var rel = 'text/plain';
-      var state = _self.chart.getState()
+      var state = _self.chart.getState();
       var obj = { 'rows': state.rows, 'cols': state.cols, 'matrix': state.matrix };
       saveAs(new Blob([JSON.stringify(obj)], { type: rel }), 'PATRIC_protein_families_heatmap_all.' + ext);
     },
@@ -536,19 +536,19 @@ define([
       var ext = 'tsv';
       var rel = 'text/tsv';
 
-      var header = _self.currentData.rowLabel + '/' + _self.currentData.colLabel;
-      _self.currentData.columns.forEach(function (col, idx) {
-        header += DELIMITER + col.colLabel + ' (' + col.colID + ')';
+      var state = _self.chart.getState();
+      var header = 'Genomes/Protein Families';
+      state.cols.forEach(function (col, idx) {
+        header += DELIMITER + col.name + ' (' + col.id + ')';
       });
 
       var data = [];
-      _self.currentData.rows.forEach(function (row, idx) {
+      state.rows.forEach(function (row, idx) {
         var r = [];
-        r.push(row.rowLabel + ' (' + row.rowID + ')');
-        _self.currentData.columns.forEach(function (col, colIdx) {
-          var val = parseInt(col.distribution.substr(idx * 2, 2), 16);
-          r.push(val);
-        });
+        r.push(row.name + ' (' + row.id + ')');
+        for (let step = 0; step < state.cols.length; step++) {
+          r.push(state.matrix[idx][step]);
+        }
         data[idx] = r.join(DELIMITER);
       });
 
