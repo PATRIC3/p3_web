@@ -130,9 +130,9 @@ define([
               if (obj.type == 'json') {
                 dataFiles.push(obj.path);
               } else if (obj.type == 'nwk' && obj.path.endsWith('treeWithGenomeIds.nwk')) {
-        	nwkIds = obj.path;
+                nwkIds = obj.path;
               } else if (obj.type == 'nwk' && obj.path.endsWith('treeWithGenomeNames.nwk')) {
-        	nwkNames = obj.path;
+                nwkNames = obj.path;
               }
             });
             if (dataFiles.length >= 1) {
@@ -146,20 +146,20 @@ define([
                   _self.prepareTree(treeDat, idType, labelType, labelSearch);
                 });
             } else if (nwkIds || nwkNames) {
-        	var objPath = nwkIds ? nwkIds : nwkNames;
-                WorkspaceManager.getObjects([objPath]).then(lang.hitch(this, function (objs) {
-                    var obj = objs[0];
-                    var treeDat = {};
-                    if (typeof obj.data == 'string') {
-                      treeDat.tree = obj.data.replace(/[^(,)]+_@_/g, ''); // get rid of ridiculously annoying, super dirty embedded labels
-                      _self.prepareTree(treeDat, idType, labelType, labelSearch);
-                    }
-                  }));
+              var objPath = nwkIds || nwkNames;
+              WorkspaceManager.getObjects([objPath]).then(lang.hitch(this, function (objs) {
+                var obj = objs[0];
+                var treeDat = {};
+                if (typeof obj.data == 'string') {
+                  treeDat.tree = obj.data.replace(/[^(,)]+_@_/g, ''); // get rid of ridiculously annoying, super dirty embedded labels
+                  _self.prepareTree(treeDat, idType, labelType, labelSearch);
+                }
+              }));
             }
           });
       }
       else if (fileCheck && !isNaN(fileCheck.index)) {
-	  var objPath = fileCheck[0].split('=')[1];
+        var objPath = fileCheck[0].split('=')[1];
         WorkspaceManager.getObjects([objPath]).then(lang.hitch(this, function (objs) {
           var obj = objs[0];
           var treeDat = {};
