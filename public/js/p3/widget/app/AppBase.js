@@ -118,7 +118,7 @@ define([
 
       var videos = query('.videoButton');
       var videoLink = PathJoin(this.docsServiceURL, (this.videoLink || 'videos/'));
-      videos.forEach(function(item) {
+      videos.forEach(function (item) {
         if (domClass.contains(item, 'videoInfo')) {
           on(item, 'click', function () {
             // console.log(tutorialLink)
