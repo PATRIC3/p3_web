@@ -389,6 +389,10 @@ table tr.even td {
     color: #e75200;
 }
 
+.videoButton > a:hover {
+    text-decoration: none;
+}
+
 .fileUploadButton {
     position: relative;
     overflow: hidden;
