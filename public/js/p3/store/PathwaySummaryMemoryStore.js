@@ -96,7 +96,7 @@ define([
         'json.facet': '{stat:{field:{field:pathway_id,limit:-1,facet:{gene_count:"unique(feature_id)"}}}}'
       };
 
-      this._loadingDeferred = when(request.post(_self.apiServer + '/pathway/', {
+      this._loadingDeferred = when(request.post(_self.apiServer + 'pathway/', {
         handleAs: 'json',
         headers: {
           Accept: 'application/solr+json',
@@ -173,7 +173,7 @@ define([
           return p + '=' + query[p];
         }).join('&');
 
-        return when(request.post(_self.apiServer + '/pathway/', {
+        return when(request.post(_self.apiServer + 'pathway/', {
           handleAs: 'json',
           headers: {
             Accept: 'application/solr+json',
@@ -221,7 +221,17 @@ define([
           return true;
         }, function (err) {
           console.error('Error in PathwaySummaryMemoryStore: ', err);
+          Topic.publish('PathwaySummary', 'hideLoadingMask');
+          Topic.publish('PathwaySummary', 'timeOut');
+          setTimeout(function () {  alert('The query took too long or could not be loaded.', err); }, 1000);
         });
+      }, function (err) {
+        console.error('Error in PathwaySummaryMemoryStore: ', err);
+        if (err.message != 'Request canceled') {
+          Topic.publish('PathwaySummary', 'hideLoadingMask');
+          Topic.publish('PathwaySummary', 'timeOut');
+          setTimeout(function () {  alert('The query took too long or could not be loaded.', err); }, 1000);
+        }
       });
       return this._loadingDeferred;
     }
