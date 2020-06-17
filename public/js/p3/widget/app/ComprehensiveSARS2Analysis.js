@@ -331,7 +331,6 @@ define([
                     catch (e) {
                       console.error('could not get title from SRA record');
                     }
-                    this.srr_accession.set('disabled', false);
                     var lrec = { _type: 'srr_accession', title: title };
                     var chkPassed = this.ingestAttachPoints(['srr_accession'], lrec);
                     if (chkPassed) {
@@ -341,9 +340,15 @@ define([
                       this.addLibraryRow(lrec, infoLabels, 'srrdata');
                     }
                     this.srr_accession_validation_message.innerHTML = '';
+                    this.srr_accession.set('disabled', false);
                   }));
               }
+              else {
+                this.srr_accession.set('disabled', false);
+                throw new Error('No ids returned from esearch');
+              }
             } catch (e) {
+              console.error(e);
               this.srr_accession_validation_message.innerHTML = ' Your input ' + accession + ' is not valid';
               this.srr_accession.set('value', '');
             }
