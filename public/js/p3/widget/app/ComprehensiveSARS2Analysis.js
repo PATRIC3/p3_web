@@ -347,11 +347,11 @@ define([
                   }));
               }
               else {
-                this.srr_accession.set('disabled', false);
                 throw new Error('No ids returned from esearch');
               }
             } catch (e) {
               console.error(e);
+              this.srr_accession.set('disabled', false);
               this.srr_accession_validation_message.innerHTML = ' Your input ' + accession + ' is not valid';
               this.srr_accession.set('value', '');
             }
