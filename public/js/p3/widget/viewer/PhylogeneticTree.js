@@ -110,7 +110,12 @@ define([
       else { labelType = 'genome_name'; }
       var labelSearch = this.state.search.match(/labelSearch=.*/);
       if (labelSearch && !isNaN(labelSearch.index)) {
-        labelSearch = labelSearch[0].split('=')[1];
+        labelSearch = labelSearch[0].split('=')[1].split('&')[0];
+        if (labelSearch == 'true') {
+          labelSearch = true;
+        } else {
+          labelSearch = false;
+        }
       }
       else { labelSearch = false; }
       if (folderCheck && !isNaN(folderCheck.index)) {
@@ -176,7 +181,7 @@ define([
         this.findLabels(treeDat, idType, labelType);
       }
       else {
-        this.viewer.processTreeData(treeDat);
+        this.viewer.processTreeData(treeDat, idType);
       }
     },
 
@@ -218,10 +223,13 @@ define([
         else {
           console.warn('Invalid Response for: ', url);
         }
-        _self.viewer.processTreeData(treeDat);
+        _self.viewer.processTreeData(treeDat, idType);
+        return true;
       }, function (err) {
         console.error('Error Retreiving Genomes: ', err);
+        return false;
       });
+      return true;
     }
   });
 });
