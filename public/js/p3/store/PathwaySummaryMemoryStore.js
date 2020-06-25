@@ -96,7 +96,7 @@ define([
         'json.facet': '{stat:{field:{field:pathway_id,limit:-1,facet:{gene_count:"unique(feature_id)"}}}}'
       };
 
-      this._loadingDeferred = when(request.post(_self.apiServer + 'pathway/', {
+      this._loadingDeferred = when(request.post(_self.apiServer + '/pathway/', {
         handleAs: 'json',
         headers: {
           Accept: 'application/solr+json',
@@ -173,7 +173,7 @@ define([
           return p + '=' + query[p];
         }).join('&');
 
-        return when(request.post(_self.apiServer + 'pathway/', {
+        return when(request.post(_self.apiServer + '/pathway/', {
           handleAs: 'json',
           headers: {
             Accept: 'application/solr+json',
