@@ -2,13 +2,13 @@ define([
   'dojo/_base/declare', 'dijit/_WidgetBase', 'dojo/on',
   'dojo/dom-class', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
   'dojo/text!./templates/AppLogin.html', 'dijit/form/Form', 'p3/widget/WorkspaceObjectSelector', 'dojo/topic', 'dojo/_base/lang',
-  '../../util/PathJoin',
+  '../../util/PathJoin', 'dojox/xml/parser',
   'dijit/Dialog', 'dojo/request', 'dojo/dom-construct', 'dojo/query', 'dijit/TooltipDialog', 'dijit/popup', 'dijit/registry', 'dojo/dom'
 ], function (
   declare, WidgetBase, on,
   domClass, Templated, WidgetsInTemplate,
   Template, FormMixin, WorkspaceObjectSelector, Topic, lang,
-  PathJoin,
+  PathJoin, xmlParser,
   Dialog, xhr, domConstruct, query, TooltipDialog, popup, registry, dom
 ) {
   return declare([WidgetBase, FormMixin, Templated, WidgetsInTemplate], {
@@ -25,6 +25,8 @@ define([
     activeWorkspacePath: '',
     help_doc: null,
     activeUploads: [],
+    srrValidationUrl: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?retmax=1&db=sra&field=accn&term={0}&retmode=json',
+    srrValidationUrl2: 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?retmax=10&db=sra&id={0}', // the data we need is in xml string no matter what.
 
     postMixInProperties: function () {
       // use AppLogin.html when requireAuth & user is not logged in
@@ -294,9 +296,55 @@ define([
 
     onAddSRR: function () {
       var accession = this.srr_accession.get('value');
-      var lrec = { _type: 'srr_accession', title: accession };
-      this.ingestAttachPoints(['srr_accession'], lrec);
-      this.addLibraryRow(lrec, {}, 'srrdata');
+      if ( !accession.match(/^[a-z0-9]+$/i)) {
+        this.srr_accession_validation_message.innerHTML = ' Your input is not valid.<br>Hint: only one SRR at a time.';
+      }
+      else {
+        // SRR5121082
+        this.srr_accession.set('disabled', true);
+        this.srr_accession_validation_message.innerHTML = ' Validating ' + accession + ' ...';
+        xhr.get(lang.replace(this.srrValidationUrl, [accession]), { headers: { 'X-Requested-With': null } })
+          .then(lang.hitch(this, function (json_resp) {
+            var resp = JSON.parse(json_resp);
+            try {
+              var chkPassed = resp['esearchresult']['count'] > 0;
+              var uid = resp['esearchresult']['idlist']['0'];
+              var title = '';
+              if (chkPassed) {
+                xhr.get(lang.replace(this.srrValidationUrl2, [uid]), { headers: { 'X-Requested-With': null } })
+                  .then(lang.hitch(this, function (xml_resp) {
+                    try {
+                      var xresp = xmlParser.parse(xml_resp).documentElement;
+                      title = xresp.children[0].childNodes[3].children[1].childNodes[0].innerHTML;
+                    }
+                    catch (e) {
+                      console.log(xresp);
+                      console.error('could not get title from SRA record');
+                    }
+                    var lrec = { _type: 'srr_accession', title: title };
+                    var chkPassed = this.ingestAttachPoints(['srr_accession'], lrec);
+                    if (chkPassed) {
+                      var infoLabels = {
+                        title: { label: 'Title', value: 1 }
+                      };
+                      this.addLibraryRow(lrec, infoLabels, 'srrdata');
+                    }
+                    this.srr_accession_validation_message.innerHTML = '';
+                    this.srr_accession.set('disabled', false);
+                  }));
+              }
+              else {
+                throw new Error('No ids returned from esearch');
+              }
+            } catch (e) {
+              console.error(e);
+              this.srr_accession.set('disabled', false);
+              this.srr_accession_validation_message.innerHTML = ' Your input ' + accession + ' is not valid';
+              this.srr_accession.set('value', '');
+            }
+          }));
+      }
     }
+
   });
 });
