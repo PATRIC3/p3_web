@@ -30,7 +30,6 @@ define([
     startingRows: 12,
     initConditions: 5,
     maxConditions: 5,
-    conditionStore: null,
     hostGenomes: {
       9606.33: '', 6239.6: '', 7955.5: '', 7227.4: '', 9031.4: '', 9544.2: '', 10090.24: '', 9669.1: '', 10116.5: '', 9823.5: ''
     },
@@ -43,7 +42,7 @@ define([
     },
 
     constructor: function () {
-
+      this.onAddSRRHelper = this.onAddSRRHelperConditions;
       this.addedLibs = { counter: 0 };
       this.addedCond = { counter: 0 };
       // these objects map dojo attach points to desired alias for ingestAttachPoint function
@@ -111,7 +110,6 @@ define([
       this.updateConditionStore(align, false);
       this.action_select.labelFunc = this.showConditionLabels;
       // this.block_condition.show();
-
       // this.read1.set('value',"/" +  window.App.user.id +"/home/");
       // this.read2.set('value',"/" +  window.App.user.id +"/home/");
       // this.single_end_libs.set('value',"/" +  window.App.user.id +"/home/");
@@ -119,6 +117,68 @@ define([
       this._started = true;
     },
 
+    /*
+    onAddSRRHelper: function (title) {
+      console.log('Create New Row', domConstruct);
+      var lrec = { type: 'srr_accession', title: title };
+      this.srr_accession.set('state', '');
+      try {
+        var toIngest = this.exp_design.checked ? this.srrConditionToAttachPt : this.srrToAttachPt;
+      } catch (e) {
+        var toIngest = this.srrToAttachPt;
+      }
+      var chkPassed = this.ingestAttachPoints(toIngest, lrec);
+      if (chkPassed) {
+        var infoLabels = {
+          title: { label: 'Title', value: 1 }
+        };
+        var tr = this.libsTable.insertRow(0);
+        lrec.row = tr;
+        // this code needs to be refactored to use addLibraryRow like the Assembly app
+        var td = domConstruct.create('td', { 'class': 'textcol srrdata', innerHTML: '' }, tr);
+        td.libRecord = lrec;
+        td.innerHTML = "<div class='libraryrow'>" + this.makeLibraryName('srr_accession') + '</div>';
+        this.addLibraryInfo(lrec, infoLabels, tr);
+        var advPairInfo = [];
+        if (lrec.condition) {
+          advPairInfo.push('Condition:' + lrec.condition);
+        }
+        if (advPairInfo.length) {
+          lrec.design = true;
+          var condition_icon = this.getConditionIcon(lrec.condition);
+          var tdinfo = domConstruct.create('td', { 'class': 'iconcol', innerHTML: condition_icon }, tr);
+          new Tooltip({
+            connectId: [tdinfo],
+            label: advPairInfo.join('</br>')
+          });
+        }
+        else {
+          lrec.design = false;
+          var tdinfo = domConstruct.create('td', { innerHTML: '' }, tr);
+        }
+        var td2 = domConstruct.create('td', {
+          'class': 'iconcol',
+          innerHTML: "<i class='fa icon-x fa-1x' />"
+        }, tr);
+        if (this.addedLibs.counter < this.startingRows) {
+          this.libsTable.deleteRow(-1);
+        }
+        var handle = on(td2, 'click', lang.hitch(this, function (evt) {
+          this.destroyLib(lrec, lrec.id, 'id');
+        }));
+        lrec.handle = handle;
+        this.createLib(lrec);
+        this.increaseRows(this.libsTable, this.addedLibs, this.numlibs);
+        this.srr_accession_validation_message.innerHTML = '';
+        this.srr_accession.set('disabled', false);
+      }
+      else {
+        throw new Error('No ids returned from esearch');
+      }
+    },
+    */
+
+    /*
     onAddSRR: function () {
       var accession = this.srr_accession.get('value');
       if ( !accession.match(/^[a-z0-9]+$/i)) {
@@ -213,6 +273,7 @@ define([
           }));
       }
     },
+    */
 
     addLibraryInfo: function (lrec, infoLabels, tr) {
       var advInfo = [];
@@ -249,10 +310,9 @@ define([
         var tdinfo = domConstruct.create('td', { innerHTML: '' }, tr);
       }
     },
-
+    
     updateSRR: function () {
     },
-
 
     emptyTable: function (target, rowLimit, colNum) {
       for (var i = 0; i < rowLimit; i++) {
@@ -476,7 +536,6 @@ define([
       return conditionName;
     },
 
-
     // counter is a widget for requirements checking
     increaseRows: function (targetTable, counter, counterWidget) {
       counter.counter += 1;
@@ -484,12 +543,14 @@ define([
         counterWidget.set('value', Number(counter.counter));
       }
     },
+    
     decreaseRows: function (targetTable, counter, counterWidget) {
       counter.counter -= 1;
       if (typeof counterWidget != 'undefined') {
         counterWidget.set('value', Number(counter.counter));
       }
     },
+    
     toggleGenome: function () {
       if (this.numAlign > 0) {
         this.genome_nameWidget.set('disabled', false);
@@ -500,6 +561,7 @@ define([
         this.genome_nameWidget.set('required', false);
       }
     },
+    
     getConditionIcon: function (query_id) {
       var result = '';
       if (!query_id) {

@@ -32,7 +32,6 @@ define([
     initContrasts: 8,
     maxConditions: 10,
     maxContrasts: 100,
-    conditionStore: null,
     hostGenomes: {
       9606.33: '', 6239.6: '', 7955.5: '', 7227.4: '', 9031.4: '', 9544.2: '', 10090.24: '', 9669.1: '', 10116.5: '', 9823.5: ''
     },
@@ -45,7 +44,7 @@ define([
     },
 
     constructor: function () {
-
+      this.onAddSRRHelper = this.onAddSRRHelperConditions;
       this.addedLibs = { counter: 0 };
       this.addedCond = { counter: 0 };
       this.addedContrast = { counter: 0 };
@@ -157,14 +156,70 @@ define([
       }
     },
 
+    /*
+    onAddSRRHelper: function (title) {
+      console.log('Create New Row', domConstruct);
+      var lrec = { type: 'srr_accession', title: title };
+      this.srr_accession.set('state', '');
+      var toIngest = this.exp_design.checked ? this.srrConditionToAttachPt : this.srrToAttachPt;
+      var chkPassed = this.ingestAttachPoints(toIngest, lrec);
+      if (chkPassed) {
+        var infoLabels = {
+          title: { label: 'Title', value: 1 }
+        };
+        var tr = this.libsTable.insertRow(0);
+        lrec.row = tr;
+        // this code needs to be refactored to use addLibraryRow like the Assembly app
+        var td = domConstruct.create('td', { 'class': 'textcol srrdata', innerHTML: '' }, tr);
+        td.libRecord = lrec;
+        td.innerHTML = "<div class='libraryrow'>" + this.makeLibraryName('srr_accession') + '</div>';
+        this.addLibraryInfo(lrec, infoLabels, tr);
+        var advPairInfo = [];
+        if (lrec.condition) {
+          advPairInfo.push('Condition:' + lrec.condition);
+        }
+        if (advPairInfo.length) {
+          lrec.design = true;
+          var condition_icon = this.getConditionIcon(lrec.condition);
+          var tdinfo = domConstruct.create('td', { 'class': 'iconcol', innerHTML: condition_icon }, tr);
+          new Tooltip({
+            connectId: [tdinfo],
+            label: advPairInfo.join('</br>')
+          });
+        }
+        else {
+          lrec.design = false;
+          var tdinfo = domConstruct.create('td', { innerHTML: '' }, tr);
+        }
+        var td2 = domConstruct.create('td', {
+          'class': 'iconcol',
+          innerHTML: "<i class='fa icon-x fa-1x' />"
+        }, tr);
+        if (this.addedLibs.counter < this.startingRows) {
+          this.libsTable.deleteRow(-1);
+        }
+        var handle = on(td2, 'click', lang.hitch(this, function (evt) {
+          this.destroyLib(lrec, lrec.id, 'id');
+        }));
+        lrec.handle = handle;
+        this.createLib(lrec);
+        this.increaseRows(this.libsTable, this.addedLibs, this.numlibs);
+        this.srr_accession_validation_message.innerHTML = '';
+        this.srr_accession.set('disabled', false);
+      }
+      else {
+        throw new Error('No ids returned from esearch');
+      }
+    },
+    */
+    
+    /*
     onAddSRR: function () {
       var accession = this.srr_accession.get('value');
       if ( !accession.match(/^[a-z0-9]+$/i)) {
         this.srr_accession_validation_message.innerHTML = ' Your input is not valid.<br>Hint: only one SRR at a time.';
       }
       else {
-        console.log('Create New Row', domConstruct);
-        var toIngest = this.exp_design.checked ? this.srrConditionToAttachPt : this.srrToAttachPt;
         this.srr_accession.set('disabled', true);
         this.srr_accession_validation_message.innerHTML = ' Validating ' + accession + ' ...';
         xhr.get(lang.replace(this.srrValidationUrl, [accession]), { headers: { 'X-Requested-With': null } })
@@ -185,58 +240,10 @@ define([
                     catch (e) {
                       console.error('could not get title from SRA record');
                     }
-                    this.srr_accession.set('state', '');
-                    var lrec = { type: 'srr_accession', title: title };
+                    
+                    this.onAddSRRHelper(title);
+                    
 
-                    var chkPassed = this.ingestAttachPoints(toIngest, lrec);
-                    if (chkPassed) {
-                      var infoLabels = {
-                        title: { label: 'Title', value: 1 }
-                      };
-                      var tr = this.libsTable.insertRow(0);
-                      lrec.row = tr;
-                      // this code needs to be refactored to use addLibraryRow like the Assembly app
-                      var td = domConstruct.create('td', { 'class': 'textcol srrdata', innerHTML: '' }, tr);
-                      td.libRecord = lrec;
-                      td.innerHTML = "<div class='libraryrow'>" + this.makeLibraryName('srr_accession') + '</div>';
-                      this.addLibraryInfo(lrec, infoLabels, tr);
-                      var advPairInfo = [];
-                      if (lrec.condition) {
-                        advPairInfo.push('Condition:' + lrec.condition);
-                      }
-                      if (advPairInfo.length) {
-                        lrec.design = true;
-                        var condition_icon = this.getConditionIcon(lrec.condition);
-                        var tdinfo = domConstruct.create('td', { 'class': 'iconcol', innerHTML: condition_icon }, tr);
-                        new Tooltip({
-                          connectId: [tdinfo],
-                          label: advPairInfo.join('</br>')
-                        });
-                      }
-                      else {
-                        lrec.design = false;
-                        var tdinfo = domConstruct.create('td', { innerHTML: '' }, tr);
-                      }
-                      var td2 = domConstruct.create('td', {
-                        'class': 'iconcol',
-                        innerHTML: "<i class='fa icon-x fa-1x' />"
-                      }, tr);
-                      if (this.addedLibs.counter < this.startingRows) {
-                        this.libsTable.deleteRow(-1);
-                      }
-                      var handle = on(td2, 'click', lang.hitch(this, function (evt) {
-                        this.destroyLib(lrec, lrec.id, 'id');
-                      }));
-                      lrec.handle = handle;
-                      this.createLib(lrec);
-                      this.increaseRows(this.libsTable, this.addedLibs, this.numlibs);
-                      this.srr_accession_validation_message.innerHTML = '';
-                      this.srr_accession.set('disabled', false);
-                    }
-
-                    else {
-                      throw new Error('No ids returned from esearch');
-                    }
                   }));
               } else {
                 throw new Error('No ids returned from esearch');
@@ -252,6 +259,7 @@ define([
           }));
       }
     },
+    */
 
     addLibraryInfo: function (lrec, infoLabels, tr) {
       var advInfo = [];
