@@ -50,11 +50,11 @@ define([
       },
       bai: {
         label: 'Indexed Sequence Alignment Data',
-        formats: ['.bai'],
+        formats: ['.bai']
       },
       bam: {
         label: 'Sequence Alginment Data',
-        formats: ['.bam'],
+        formats: ['.bam']
       },
       contigs: {
         label: 'Contigs',
@@ -76,11 +76,11 @@ define([
       },
       doc: {
         label: 'DOC',
-        formats: ['.doc'],
+        formats: ['.doc']
       },
       docx: {
         label: 'DOCX',
-        formats: ['.docx'],
+        formats: ['.docx']
       },
       embl: {
         label: 'EMBL',
@@ -94,7 +94,7 @@ define([
       },
       feature_protein_fasta: {
         label: 'Feature Protein FASTA',
-        formats: ['.fa', 'fna','.fasta', '.faa'],
+        formats: ['.fa', 'fna', '.fasta', '.faa'],
         description: 'Protein sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
       },
       genbank_file: {
@@ -139,11 +139,11 @@ define([
       },
       ppt: {
         label: 'PPT',
-        formats: ['.ppt'],
+        formats: ['.ppt']
       },
       pptx: {
         label: 'PPTX',
-        formats: ['.pptx'],
+        formats: ['.pptx']
       },
       reads: {
         label: 'Reads',
@@ -157,7 +157,7 @@ define([
       },
       tbi: {
         label: 'TBI',
-        formats: ['.tbi'],
+        formats: ['.tbi']
       },
       tsv: {
         label: 'TSV',
@@ -188,7 +188,7 @@ define([
         label: 'XLSX',
         formats: ['.xlsx'],
         description: 'An Excel file.'
-      },      
+      },
       xml: {
         label: 'XML',
         formats: ['.xml'],
@@ -197,43 +197,43 @@ define([
     },
 
     changeableTypes: {
-      aligned_dna_fasta: { label: 'aligned_dna_fasta', value: 'aligned_dna_fasta'},
-      aligned_protein_fasta: { label: 'aligned_protein_fasta', value: 'aligned_protein_fasta'},
-      bam: { label: 'bam', value: 'bam'},
-      bai: { label: 'bai', value: 'bai'},
+      aligned_dna_fasta: { label: 'aligned_dna_fasta', value: 'aligned_dna_fasta' },
+      aligned_protein_fasta: { label: 'aligned_protein_fasta', value: 'aligned_protein_fasta' },
+      bam: { label: 'bam', value: 'bam' },
+      bai: { label: 'bai', value: 'bai' },
       contigs: { label: 'contigs', value: 'contigs' },
-      csv: { label: 'csv', value: 'csv'},
+      csv: { label: 'csv', value: 'csv' },
       diffexp_input_data: { label: 'diffexp_input_data', value: 'diffexp_input_data' },
       diffexp_input_metadata: { label: 'diffexp_input_metadata', value: 'diffexp_input_metadata' },
-      doc: { label: 'doc', value: 'doc'},
-      docx: { label: 'docx', value: 'docx'},
-      embl: { label: 'embl', value: 'embl'},
-      feature_dna_fasta: { label: 'feature_dna_fasta', value: 'feature_dna_fasta'},
-      feature_protein_fasta: { label: 'feature_protein_fasta', value: 'feature_protein_fasta'},
-      genbank_file: { label: 'genbank_file', value: 'genbank_file'},
-      gff: { label: 'gff', value: 'gff'},
-      gif: { label: 'gif', value: 'gif'},
-      jpg: { label: 'jpg', value: 'jpg'},
-      json: { label: 'json', value: 'json'},
+      doc: { label: 'doc', value: 'doc' },
+      docx: { label: 'docx', value: 'docx' },
+      embl: { label: 'embl', value: 'embl' },
+      feature_dna_fasta: { label: 'feature_dna_fasta', value: 'feature_dna_fasta' },
+      feature_protein_fasta: { label: 'feature_protein_fasta', value: 'feature_protein_fasta' },
+      genbank_file: { label: 'genbank_file', value: 'genbank_file' },
+      gff: { label: 'gff', value: 'gff' },
+      gif: { label: 'gif', value: 'gif' },
+      jpg: { label: 'jpg', value: 'jpg' },
+      json: { label: 'json', value: 'json' },
       nwk: { label: 'nwk', value: 'nwk' },
-      pdf: { label: 'pdf', value: 'pdf'},
-      png: { label: 'png', value: 'png'},
-      ppt: { label: 'ppt', value: 'ppt'},
-      pptx: { label: 'pptx', value: 'pptx'},
+      pdf: { label: 'pdf', value: 'pdf' },
+      png: { label: 'png', value: 'png' },
+      ppt: { label: 'ppt', value: 'ppt' },
+      pptx: { label: 'pptx', value: 'pptx' },
       reads: { label: 'reads', value: 'reads' },
-      string: { label: 'string', value: 'string'},
-      svg: { label: 'svg', value: 'svg'},
-      tar_gz: { label: 'tar_gz', value: 'tar_gz'},
-      tbi: { label: 'tbi', value: 'tbi'},
+      string: { label: 'string', value: 'string' },
+      svg: { label: 'svg', value: 'svg' },
+      tar_gz: { label: 'tar_gz', value: 'tar_gz' },
+      tbi: { label: 'tbi', value: 'tbi' },
       tsv: { label: 'tsv', value: 'tsv' },
-      txt: { label: 'txt', value: 'txt'},
+      txt: { label: 'txt', value: 'txt' },
       unspecified: { label: 'unspecified', value: 'unspecified' },
-      vcf: { label: 'vcf', value: 'vcf'},
-      vcf_gz: { label: 'vcf_gz', value: 'vcf_gz'},
-      wig: { label: 'wig', value: 'wig'},
-      xls: { label: 'xls', value: 'xls'},
-      xlsx: { label: 'xlsx', value: 'xlsx'},
-      xml: { label: 'xml', value: 'xml'} 
+      vcf: { label: 'vcf', value: 'vcf' },
+      vcf_gz: { label: 'vcf_gz', value: 'vcf_gz' },
+      wig: { label: 'wig', value: 'wig' },
+      xls: { label: 'xls', value: 'xls' },
+      xlsx: { label: 'xlsx', value: 'xlsx' },
+      xml: { label: 'xml', value: 'xml' }
     },
 
     getDefaultFolder: function (type) {
