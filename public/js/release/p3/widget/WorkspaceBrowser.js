@@ -1196,7 +1196,7 @@ define("p3/widget/WorkspaceBrowser", [
       /**
        * Handle unaccepted requests
        */
-      var types = this.itemDetailPanel.changeableTypes;
+      var types = WorkspaceManager.changeableTypes;
       var options = Object.keys(types).map(function (key) { return types[key]; });
       var validTypes = options.map(function (item) { return item.value; });
 
