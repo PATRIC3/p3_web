@@ -54,7 +54,7 @@ define("p3/widget/viewer/JobResult", [
       });
 
       // get the contents directly from the hidden folder, since metadata may be stale after a move
-      WorkspaceManager.getFolderContents(this._hiddenPath, true, true)
+      WorkspaceManager.getFolderContents(this._hiddenPath, true, false)
         .then(function (objs) {
           _self._resultObjects = objs;
           _self.setupResultType();
@@ -71,12 +71,12 @@ define("p3/widget/viewer/JobResult", [
         this._resultType = this.data.autoMeta.app.id;
         // console.log("[JobResult] _resultType:",this._resultType);
       }
-      if (this._resultType == 'GenomeAssembly') {
-        this._appLabel = 'Genome Assembly';
-      }
-      else {
-        this._appLabel = this._resultType;
-      }
+      //      if (this._resultType == 'GenomeAssembly') {
+      //        this._appLabel = 'Genome Assembly';
+      //      }
+      //      else {
+      this._appLabel = this._resultType;
+      //      }
     },
     getExtraMetaDataForHeader: function (job_output) {
       return job_output;

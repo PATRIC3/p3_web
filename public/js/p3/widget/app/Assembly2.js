@@ -2,40 +2,38 @@ define([
   'dojo/_base/declare', 'dijit/_WidgetBase', 'dojo/_base/lang', 'dojo/_base/Deferred',
   'dojo/on', 'dojo/request', 'dojo/dom-class', 'dojo/dom-construct',
   'dojo/text!./templates/Assembly2.html', 'dojo/NodeList-traverse', 'dojo/store/Memory',
-  'dojox/xml/parser',
   'dijit/popup', 'dijit/TooltipDialog', 'dijit/Dialog',
   './AppBase', '../../WorkspaceManager'
 ], function (
   declare, WidgetBase, lang, Deferred,
   on, xhr, domClass, domConstruct,
   Template, children, Memory,
-  xmlParser,
   popup, TooltipDialog, Dialog,
   AppBase, WorkspaceManager
 ) {
 
   return declare([AppBase], {
-    baseClass: 'App Assembly',
+    baseClass: 'App Assembly2',
     pageTitle: 'Genome Assembly Service (new)',
     templateString: Template,
     applicationName: 'GenomeAssembly2',
     requireAuth: true,
     applicationLabel: 'Genome Assembly (new)',
     applicationDescription: 'The Genome Assembly Service allows single or multiple assemblers to be invoked to compare results. The service attempts to select the best assembly.',
-    applicationHelp: 'user_guides/services/genome_assembly_service.html',
-    tutorialLink: 'tutorial/genome_assembly/assembly.html',
+    applicationHelp: 'user_guides/services/genome_assembly_service2.html',
+    tutorialLink: 'tutorial/genome_assembly/assembly2.html',
+    videoLink: 'videos/genome_assembly_service.html',
     libraryData: null,
     defaultPath: '',
     startingRows: 13,
     libCreated: 0,
-    srrValidationUrl: 'https://www.ebi.ac.uk/ena/data/view/{0}&display=xml',
 
     constructor: function () {
       this.addedLibs = { counter: 0 };
       this.addedPairs = 0;
       this.pairToAttachPt1 = ['read1', 'read2'];
       this.pairToAttachPt2 = ['read1'];
-      this.advPairToAttachPt = ['interleaved', 'insert_size_mean', 'insert_size_stdev', 'read_orientation_outward', 'paired_platform'];
+      this.advPairToAttachPt = ['interleaved', 'read_orientation_outward', 'paired_platform'];
       this.paramToAttachPt = ['recipe', 'output_path', 'output_file', 'genome_size'];
       this.singleToAttachPt = ['single_end_libs'];
       this.advSingleToAttachPt = ['single_platform'];
@@ -127,19 +125,13 @@ define([
     getValues: function () {
       var assembly_values = {};
       var values = this.inherited(arguments);
-      if (Object.prototype.hasOwnProperty.call(values, 'pipeline') && values.pipeline) {
-        assembly_values.pipeline = values.pipeline;
-      }
-      if (Object.prototype.hasOwnProperty.call(values, 'min_contig_len') && values.min_contig_len) {
-        assembly_values.min_contig_len = values.min_contig_len;
-      }
+
       var pairedList = this.libraryStore.query({ _type: 'paired' });
       var singleList = this.libraryStore.query({ _type: 'single' });
       var srrAccessionList = this.libraryStore.query({ _type: 'srr_accession' });
       var pairedLibs = [];
       var singleLibs = [];
       var srrAccessions = [];
-      this.ingestAttachPoints(this.paramToAttachPt, assembly_values, true);
 
       pairedLibs = pairedList.map(function (lrec) {
         var rrec = {};
@@ -148,6 +140,8 @@ define([
             rrec[attr] = lrec[attr];
           }
         }));
+        rrec['read_orientation_outward'] = (rrec['read_orientation_outward'] === 'true');
+        rrec['interleaved'] = (rrec['interleaved'] === 'true');
         return rrec;
       });
       if (pairedLibs.length) {
@@ -171,10 +165,24 @@ define([
       if (srrAccessions.length) {
         assembly_values.srr_ids = srrAccessions;
       }
-      // below are not shown on UI
-      assembly_values.reference_assembly = '';
-      assembly_values.special_flags = '';
-      assembly_values.min_contig_cov = '';
+
+      this.ingestAttachPoints(this.paramToAttachPt, assembly_values, true);
+
+      if (Object.prototype.hasOwnProperty.call(values, 'racon_iter') && values.racon_iter) {
+        assembly_values.racon_iter = values.racon_iter;
+      }
+      if (Object.prototype.hasOwnProperty.call(values, 'pilon_iter') && values.pilon_iter) {
+        assembly_values.pilon_iter = values.pilon_iter;
+      }
+      if (Object.prototype.hasOwnProperty.call(values, 'trim') && values.trim) {
+        assembly_values.trim = (values.trim === 'true');
+      }
+      if (Object.prototype.hasOwnProperty.call(values, 'min_contig_len') && values.min_contig_len) {
+        assembly_values.min_contig_len = values.min_contig_len;
+      }
+      if (Object.prototype.hasOwnProperty.call(values, 'min_contig_cov') && values.min_contig_cov) {
+        assembly_values.min_contig_cov = values.min_contig_cov;
+      }
 
       return assembly_values;
     },
@@ -298,6 +306,7 @@ define([
         this.destroyLibRow(id, '_id');
       }));
     },
+
     // counter is a widget for requirements checking
     increaseRows: function (targetTable, counter, counterWidget) {
       counter.counter += 1;
@@ -325,34 +334,6 @@ define([
         };
         this.addLibraryRow(lrec, infoLabels, 'singledata');
       }
-    },
-
-    onAddSRR: function () {
-      var accession = this.srr_accession.get('value');
-
-      // SRR5121082
-      this.srr_accession.set('disabled', true);
-      this.srr_accession_validation_message.innerHTML = ' Validating ' + accession + ' ...';
-      xhr.get(lang.replace(this.srrValidationUrl, [accession]), {})
-        .then(lang.hitch(this, function (xml_resp) {
-          var resp = xmlParser.parse(xml_resp).documentElement;
-          this.srr_accession.set('disabled', false);
-          try {
-            var title = resp.children[0].childNodes[3].innerHTML;
-            this.srr_accession_validation_message.innerHTML = '';
-            var lrec = { _type: 'srr_accession', title: title };
-            var chkPassed = this.ingestAttachPoints(['srr_accession'], lrec);
-            if (chkPassed) {
-              var infoLabels = {
-                title: { label: 'Title', value: 1 }
-              };
-              this.addLibraryRow(lrec, infoLabels, 'srrdata');
-            }
-          } catch (e) {
-            this.srr_accession_validation_message.innerHTML = ' Your input ' + accession + ' is not valid';
-            this.srr_accession.set('value', '');
-          }
-        }));
     },
 
     destroyLibRow: function (query_id, id_type) {
@@ -392,8 +373,6 @@ define([
           read1: { label: 'Read1', value: 1 },
           read2: { label: 'Read2', value: 1 },
           interleaved: { label: 'Interleaved', value: 0 },
-          insert_size_mean: { label: 'Mean Insert Size', value: 1 },
-          insert_size_stdev: { label: 'Std. Insert Size', value: 1 },
           read_orientation_outward: { label: 'Mate Paired', value: 0 }
         };
         this.addLibraryRow(lrec, infoLabels, 'pairdata');
@@ -468,7 +447,7 @@ define([
     },
 
     checkParameterRequiredFields: function () {
-      if (this.output_path.get('value') && this.outputFileWidget.get('displayedValue') ) {
+      if (this.output_path.get('value') && this.output_file.get('displayedValue') ) {
         this.validate();
       }
       else {

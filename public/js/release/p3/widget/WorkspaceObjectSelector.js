@@ -1,20 +1,21 @@
 require({cache:{
-'url:p3/widget/templates/WorkspaceObjectSelector.html':"<div style=\"padding:0px;\" data-dojo-attach-point=\"focusNode\" class=\"object-selector\">\n  <i class=\"icon-sort-alpha-asc\" title=\"Sort Alphabetically\" data-dojo-attach-event=\"click:sortAlpha\"></i>\n  <input type=\"hidden\" />\n  <input type=\"text\" class=\"search-box\" data-dojo-attach-point=\"searchBox\" data-dojo-type=\"dijit/form/FilteringSelect\" data-dojo-attach-event=\"onChange:onSearchChange\" data-dojo-props=\"labelType: 'html', promptMessage: '${promptMessage}', missingMessage: '${missingMessage}', searchAttr: 'name'\"\n    value=\"${value}\" />&nbsp;<i data-dojo-attach-event=\"click:openChooser\" class=\"fa icon-folder-open fa-1x\" />\n</div>\n"}});
+'url:p3/widget/templates/WorkspaceObjectSelector.html':"<div style=\"padding:0px;\" data-dojo-attach-point=\"focusNode\" class=\"object-selector\">\n  <i class=\"icon-sort-alpha-asc\" title=\"Sort Alphabetically\" data-dojo-attach-event=\"click:sortAlpha\"></i>\n  <input type=\"hidden\" />\n  <input type=\"text\" class=\"search-box\" data-dojo-attach-point=\"searchBox\" data-dojo-type=\"dijit/form/FilteringSelect\" data-dojo-attach-event=\"onChange:onSearchChange, mouseenter:onMouseEnter\" data-dojo-props=\"labelType: 'html', promptMessage: '${promptMessage}', missingMessage: '${missingMessage}', searchAttr: 'name'\"\n    value=\"${value}\" />&nbsp;<i data-dojo-attach-event=\"click:openChooser\" class=\"fa icon-folder-open fa-1x\" />\n</div>\n"}});
 define("p3/widget/WorkspaceObjectSelector", [
   'dojo/_base/declare', 'dijit/_WidgetBase', 'dojo/on', 'dojo/_base/lang', 'dojo/query',
   'dojo/dom-class', 'dijit/_TemplatedMixin', 'dijit/_WidgetsInTemplateMixin',
   'dojo/text!./templates/WorkspaceObjectSelector.html',
   './FlippableDialog', 'dijit/_HasDropDown', 'dijit/layout/ContentPane', 'dijit/form/TextBox',
   './WorkspaceExplorerView', 'dojo/dom-construct', '../WorkspaceManager', 'dojo/store/Memory',
-  './Uploader', 'dijit/layout/BorderContainer', 'dojo/dom-attr',
+  './Uploader', 'dijit/layout/BorderContainer', 'dojo/dom-attr', 'dijit/TooltipDialog', 'dijit/popup',
   'dijit/form/Button', 'dojo/_base/Deferred', 'dijit/form/CheckBox', 'dojo/topic', 'dijit/Tooltip',
   'dijit/registry', 'dgrid/editor', './formatter', 'dijit/form/FilteringSelect', 'dijit/form/Select'
 ], function (
   declare, WidgetBase, on, lang, query,
   domClass, Templated, WidgetsInTemplate,
-  Template, Dialog, HasDropDown, ContentPane, TextBox,
+  Template,
+  Dialog, HasDropDown, ContentPane, TextBox,
   Grid, domConstr, WorkspaceManager, Memory,
-  Uploader, BorderContainer, domAttr,
+  Uploader, BorderContainer, domAttr, TooltipDialog, popup,
   Button, Deferred, CheckBox, Topic, Tooltip,
   registry, editor, formatter, FilteringSelect, Select
 ) {
@@ -34,13 +35,14 @@ define("p3/widget/WorkspaceObjectSelector", [
     missingMessage: 'A valid workspace item is required.',
     promptMessage: 'Please choose or upload a workspace item',
     placeHolder: '',
-    allowUpload: true,          // whether or not to add the upload button
-    uploadingSelection: '',     // uploading in progress, to be copied to selection
+    allowUpload: true,                // whether or not to add the upload button
+    uploadingSelection: '',           // uploading in progress, to be copied to selection
     title: 'Choose or Upload a Workspace Object',
-    autoSelectCurrent: false,    // if true, the folder currently being viewed is selected by default
-    onlyWritable: false,        // only list writable workspaces
-    selectionText: 'Selection', // the text used beside "selected" indicator
+    autoSelectCurrent: false,         // if true, the folder currently being viewed is selected by default
+    onlyWritable: false,              // only list writable workspaces
+    selectionText: 'Selection',       // the text used beside "selected" indicator
     allowUserSpaceSelection: false,   // this allows the user to select /user@patricbrc (for operations such as moving)
+    disableDropdownSelector: false,   // if true, don't bother fetching data for filtering select (for operations such as moving)
     reset: function () {
       this.searchBox.set('value', '');
     },
@@ -419,7 +421,12 @@ define("p3/widget/WorkspaceObjectSelector", [
 
       var cbContainer = domConstr.create('div', { style: { 'float': 'left' } });
       domConstr.place(cbContainer, buttonsPane.containerNode, 'last');
-      var showHidden = window.App.showHiddenFiles;
+
+      // show hidden folders when browsing for job results data
+      var showHidden = this.type.filter(function (t) {
+        return ['contigs'].indexOf(t) !== -1;
+      }).length > 0;
+      _self.set('showHidden', showHidden);
       this.showHiddenWidget = new CheckBox({ value: showHidden, checked: showHidden });
       this.showHiddenWidget.on('change', function (val) {
         _self.set('showHidden', val);
@@ -559,7 +566,7 @@ define("p3/widget/WorkspaceObjectSelector", [
     },
 
     refreshWorkspaceItems: function () {
-      if (this._refreshing) {
+      if (this.disableDropdownSelector || this._refreshing) {
         return;
       }
       function compare(a, b) {
@@ -572,7 +579,7 @@ define("p3/widget/WorkspaceObjectSelector", [
         return 0;
       }
 
-      this._refreshing = WorkspaceManager.getObjectsByType(this.type, true)
+      this._refreshing = WorkspaceManager.getObjectsByType(this.type)
         .then(lang.hitch(this, function (items) {
           delete this._refreshing;
 
@@ -599,6 +606,24 @@ define("p3/widget/WorkspaceObjectSelector", [
       this.onChange(value);
       this.validate(true);
     },
+
+    onMouseEnter: function (value) {
+      if (this.searchBox.value) {
+        var ihandle = new TooltipDialog({
+          content: this.searchBox.value
+        });
+        popup.open({
+          popup: ihandle,
+          around: this.searchBox.domNode,
+          orient: ['above']
+        });
+        on(this.searchBox.domNode, 'mouseleave', function () {
+          popup.close(ihandle);
+        });
+      }
+
+    },
+
     onChange: function (value) {
     },
 

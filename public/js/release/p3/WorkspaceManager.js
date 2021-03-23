@@ -28,9 +28,213 @@ define("p3/WorkspaceManager", [
       'reads', 'rxnprobs', 'string', 'svg', 'tar_gz', 'tbi',
       'transcriptomics_experiment', 'transcripts', 'txt', 'unspecified', 'vcf',
       'vcf_gz', 'wig', 'xls', 'xlsx', 'zip', 'contigset', 'xml'],
-    viewableTypes: ['txt', 'html', 'json', 'csv', 'diffexp_experiment',
+
+    viewableTypes: ['txt', 'html', 'json', 'csv', 'tsv', 'diffexp_experiment',
       'diffexp_expression', 'diffexp_mapping', 'diffexp_sample', 'pdf',
       'diffexp_input_data', 'diffexp_input_metadata', 'svg', 'gif', 'png', 'jpg'],
+
+    knownUploadTypes: {
+      unspecified: {
+        label: 'Unspecified',
+        formats: ['*.*']
+      },
+      aligned_dna_fasta: {
+        label: 'Aligned DNA FASTA',
+        formats: ['.fa', '.fasta', '.faa', '.fna', '.afa', '.xmfa'],
+        description: 'DNA sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      aligned_protein_fasta: {
+        label: 'Aligned Protein FASTA',
+        formats: ['.fa', '.fasta', '.faa', '.fna', '.afa', '.xmfa'],
+        description: 'Protein sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      bai: {
+        label: 'Indexed Sequence Alignment Data',
+        formats: ['.bai']
+      },
+      bam: {
+        label: 'Sequence Alginment Data',
+        formats: ['.bam']
+      },
+      contigs: {
+        label: 'Contigs',
+        formats: ['.fa', '.fasta', '.faa', '.fna'],
+        description: 'Contigs must be provided in fasta format (typically .fa, .fasta, .fna). Genbank formatted files are not currently accepted.'
+      },
+      csv: {
+        label: 'CSV',
+        formats: ['.csv'],
+        description: 'A CSV (comma separated values) file.'
+      },
+      diffexp_input_data: {
+        label: 'Diff. Expression Input Data',
+        formats: ['.csv', '.txt', '.xls', '.xlsx']
+      },
+      diffexp_input_metadata: {
+        label: 'Diff. Expression Input Metadata',
+        formats: ['.csv', '.txt', '.xls', '.xlsx']
+      },
+      doc: {
+        label: 'DOC',
+        formats: ['.doc']
+      },
+      docx: {
+        label: 'DOCX',
+        formats: ['.docx']
+      },
+      embl: {
+        label: 'EMBL',
+        formats: ['.embl'],
+        description: 'A DNA or protein sequence file.'
+      },
+      feature_dna_fasta: {
+        label: 'Feature DNA FASTA',
+        formats: ['.fa', '.faa', '.fasta', '.faa'],
+        description: 'DNA sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      feature_protein_fasta: {
+        label: 'Feature Protein FASTA',
+        formats: ['.fa', 'fna', '.fasta', '.faa'],
+        description: 'Protein sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      genbank_file: {
+        label: 'GBK',
+        formats: ['.gbk'],
+        description: 'A GenBank formatted file.'
+      },
+      gff: {
+        label: 'GFF',
+        formats: ['.gff', 'gtf'],
+        description: 'A General Feature Format file.'
+      },
+      gif: {
+        label: 'GIF Image',
+        formats: ['.gif'],
+        description: 'A GIF image file.'
+      },
+      jpg: {
+        label: 'JPEG Image',
+        formats: ['.jpg', '.jpeg'],
+        description: 'A JPEG image file.'
+      },
+      json: {
+        label: 'JSON',
+        formats: ['.json'],
+        description: 'A json file.'
+      },
+      nwk: {
+        label: 'Newick',
+        formats: ['.nwk'],
+        description: 'Phylogenetic tree file.'
+      },
+      pdf: {
+        label: 'PDF',
+        formats: ['.pdf'],
+        description: 'A pdf file.'
+      },
+      png: {
+        label: 'PNG Image',
+        formats: ['.png'],
+        description: 'A PNG image file.'
+      },
+      ppt: {
+        label: 'PPT',
+        formats: ['.ppt']
+      },
+      pptx: {
+        label: 'PPTX',
+        formats: ['.pptx']
+      },
+      reads: {
+        label: 'Reads',
+        formats: ['.fq', '.fastq', '.fa', '.fasta', '.gz', '.bz2'],
+        description: 'Reads must be in fasta or fastq format (typically .fa, .fasta, .fa, .fastq).  Genbank formatted files are not currently accepted.'
+      },
+      svg: {
+        label: 'SVG Image',
+        formats: ['.svg'],
+        description: 'A SVG image file.'
+      },
+      tbi: {
+        label: 'TBI',
+        formats: ['.tbi']
+      },
+      tsv: {
+        label: 'TSV',
+        formats: ['.tsv'],
+        description: 'A TSV (tab separated values) file.'
+      },
+      txt: {
+        label: 'Plain Text',
+        formats: ['.txt'],
+        description: 'A plain text file.'
+      },
+      vcf: {
+        label: 'VCF',
+        formats: ['.vcf'],
+        description: 'A Variant Call Format file.'
+      },
+      vcf_gz: {
+        label: 'VCF_GZ',
+        formats: ['.vcf.gz'],
+        description: 'A compressed Variant Call Format file.'
+      },
+      xls: {
+        label: 'XLS',
+        formats: ['.xls'],
+        description: 'An Excel file.'
+      },
+      xlsx: {
+        label: 'XLSX',
+        formats: ['.xlsx'],
+        description: 'An Excel file.'
+      },
+      xml: {
+        label: 'XML',
+        formats: ['.xml'],
+        description: 'An xml file.'
+      }
+    },
+
+    changeableTypes: {
+      aligned_dna_fasta: { label: 'aligned_dna_fasta', value: 'aligned_dna_fasta' },
+      aligned_protein_fasta: { label: 'aligned_protein_fasta', value: 'aligned_protein_fasta' },
+      bam: { label: 'bam', value: 'bam' },
+      bai: { label: 'bai', value: 'bai' },
+      contigs: { label: 'contigs', value: 'contigs' },
+      csv: { label: 'csv', value: 'csv' },
+      diffexp_input_data: { label: 'diffexp_input_data', value: 'diffexp_input_data' },
+      diffexp_input_metadata: { label: 'diffexp_input_metadata', value: 'diffexp_input_metadata' },
+      doc: { label: 'doc', value: 'doc' },
+      docx: { label: 'docx', value: 'docx' },
+      embl: { label: 'embl', value: 'embl' },
+      feature_dna_fasta: { label: 'feature_dna_fasta', value: 'feature_dna_fasta' },
+      feature_protein_fasta: { label: 'feature_protein_fasta', value: 'feature_protein_fasta' },
+      genbank_file: { label: 'genbank_file', value: 'genbank_file' },
+      gff: { label: 'gff', value: 'gff' },
+      gif: { label: 'gif', value: 'gif' },
+      jpg: { label: 'jpg', value: 'jpg' },
+      json: { label: 'json', value: 'json' },
+      nwk: { label: 'nwk', value: 'nwk' },
+      pdf: { label: 'pdf', value: 'pdf' },
+      png: { label: 'png', value: 'png' },
+      ppt: { label: 'ppt', value: 'ppt' },
+      pptx: { label: 'pptx', value: 'pptx' },
+      reads: { label: 'reads', value: 'reads' },
+      string: { label: 'string', value: 'string' },
+      svg: { label: 'svg', value: 'svg' },
+      tar_gz: { label: 'tar_gz', value: 'tar_gz' },
+      tbi: { label: 'tbi', value: 'tbi' },
+      tsv: { label: 'tsv', value: 'tsv' },
+      txt: { label: 'txt', value: 'txt' },
+      unspecified: { label: 'unspecified', value: 'unspecified' },
+      vcf: { label: 'vcf', value: 'vcf' },
+      vcf_gz: { label: 'vcf_gz', value: 'vcf_gz' },
+      wig: { label: 'wig', value: 'wig' },
+      xls: { label: 'xls', value: 'xls' },
+      xlsx: { label: 'xlsx', value: 'xlsx' },
+      xml: { label: 'xml', value: 'xml' }
+    },
 
     getDefaultFolder: function (type) {
       switch (type) {
@@ -179,15 +383,14 @@ define("p3/WorkspaceManager", [
         if (typeof res.data == 'string') {
           res.data = JSON.parse(res.data);
         }
-        // console.log("Data: ", res.data);
+
         if (res && res.data && res.data.id_list && res.data.id_list[idType]) {
-          // console.log("Group Length Before: ", res.data.id_list[idType].length, res.data.id_list[idType]);
           res.data.id_list[idType] = res.data.id_list[idType].filter(function (id) {
             return (ids.indexOf(id) < 0);
           });
-          // console.log("Group Length After: ", res.data.id_list[idType].length, res.data.id_list[idType]);
+
           return Deferred.when(_self.updateObject(res.metadata, res.data), function (r) {
-            // console.log("Publish remove from group notification message");
+
             Topic.publish('/Notification', {
               message: ids.length + ' Item removed from group ' + groupPath,
               type: 'message',
@@ -220,7 +423,6 @@ define("p3/WorkspaceManager", [
       });
       group.id_list[idType] = idsFiltered;
 
-      // console.log("Creating Group: ", group);
       return this.create({
         path: path,
         name: name,
@@ -326,7 +528,7 @@ define("p3/WorkspaceManager", [
         }
       }
 
-      return Deferred.when(All(prom, jobProms), function () {
+      return Deferred.when(All([prom, jobProms]), function () {
         Topic.publish('/Notification', {
           message: paths.length + (paths.length > 1 ? ' items' : ' item') + ' deleted',
           type: 'message'
@@ -369,9 +571,8 @@ define("p3/WorkspaceManager", [
       }));
     },
 
-    getObjectsByType: function (types, showHidden, specialPath) {
+    getObjectsByType: function (types, specialPath) {
       types = (types instanceof Array) ? types : [types];
-      // console.log("Get ObjectsByType: ", types);
 
       return Deferred.when(this.get('currentWorkspace'), lang.hitch(this, function (current) {
         var _self = this;
@@ -406,7 +607,6 @@ define("p3/WorkspaceManager", [
             return true;
           }) */
 
-          // console.log("Final getObjectsByType()", res)
           return res;
         });
       }));
@@ -485,7 +685,6 @@ define("p3/WorkspaceManager", [
           });
         }
 
-        // console.log("getObjects() res", res);
         return res;
       });
 
@@ -537,7 +736,7 @@ define("p3/WorkspaceManager", [
           move: false
         }]);
 
-        return Deferred.when(All(copyProm, jobProms), function (res) {
+        return Deferred.when(All([copyProm, jobProms]), function (res) {
           Topic.publish('/refreshWorkspace', {});
           Topic.publish('/Notification', {
             message: 'Copied contents of ' + paths.length + (paths.length > 1 ? ' items' : 'item'),
@@ -634,7 +833,7 @@ define("p3/WorkspaceManager", [
           if (isJob) {
             // if job, also need to rename hiden folder
             var jobProm = self.renameJobData(path, newName);
-            prom = All(prom, jobProm);
+            prom = All([prom, jobProm]);
           }
 
           return Deferred.when(prom);
@@ -751,11 +950,10 @@ define("p3/WorkspaceManager", [
         objects: paths,
         metadata_only: metadataOnly
       }]), function (results) {
-        // console.log("results[0]", results[0]);
+
         var objs = results[0];
         var fin = [];
         var defs = objs.map(function (obj) {
-          // console.log("obj: ", obj);
           var meta = {
             name: obj[0][0],
             type: obj[0][1],

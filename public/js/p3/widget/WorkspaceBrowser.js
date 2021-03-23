@@ -6,7 +6,7 @@ define([
   './Confirmation', './SelectionToGroup', 'dijit/Dialog', 'dijit/TooltipDialog',
   'dijit/popup', 'dijit/form/Select', './ContainerActionBar', './GroupExplore', './PerspectiveToolTip',
   'dijit/form/TextBox', './WorkspaceObjectSelector', './PermissionEditor',
-  'dojo/promise/all', '../util/encodePath',
+  'dojo/promise/all', '../util/encodePath', 'dojo/when', 'dojo/request', './TsvCsvFeatures', './viewer/JobResult',
 
   'dojo/NodeList-traverse'
 ], function (
@@ -17,7 +17,7 @@ define([
   Confirmation, SelectionToGroup, Dialog, TooltipDialog,
   popup, Select, ContainerActionBar, GroupExplore, PerspectiveToolTipDialog,
   TextBox, WSObjectSelector, PermissionEditor,
-  All, encodePath
+  All, encodePath, when, request, tsvCsvFeatures, JobResult
 ) {
 
   var mmc = '<div class="wsActionTooltip" rel="dna">Nucleotide</div><div class="wsActionTooltip" rel="protein">Amino Acid</div>';
@@ -48,6 +48,8 @@ define([
     splitter: false,
     docsServiceURL: window.App.docsServiceURL,
     tutorialLink: 'user_guides/workspaces/workspace.html',
+    tsvCsvFilename: '',
+
     startup: function () {
       var self = this;
 
@@ -93,22 +95,57 @@ define([
         domClass.toggle(icon, 'icon-chevron-circle-right');
         domClass.toggle(icon, 'icon-chevron-circle-left');
 
-        if (domClass.contains(icon, 'icon-chevron-circle-left'))
-        { domAttr.set(text, 'textContent', 'SHOW'); }
-        else
-        { domAttr.set(text, 'textContent', 'HIDE'); }
+        if (domClass.contains(icon, 'icon-chevron-circle-left')) { domAttr.set(text, 'textContent', 'SHOW'); }
+        else { domAttr.set(text, 'textContent', 'HIDE'); }
       });
 
-      this.actionPanel.addAction('UserGuide', 'fa icon-info-circle fa-2x',
-        {
-          label: 'GUIDE',
-          persistent: true,
-          validTypes: ['*'],
-          tooltip: 'Open User Guide in a new Tab'
-        },
-        lang.hitch(this, function (selection, container) {
-          window.open(PathJoin(this.docsServiceURL, this.tutorialLink));
-        }), true);
+      this.actionPanel.addAction('UserGuide', 'fa icon-info-circle fa-2x', {
+        label: 'GUIDE <i class="icon-external-link"></i>',
+        persistent: true,
+        validTypes: ['*'],
+        tooltip: 'Open User Guide in a new Tab'
+      }, function (selection, container) {
+        var type = container && '_resultType' in container ? container._resultType : null;
+        var path;
+        if (!type) {
+          path = self.tutorialLink;
+        } else if (type == 'GenomeAssembly') {
+          path = 'user_guides/services/genome_assembly_service.html#output-results';
+        } else if (type == 'GenomeAnnotation') {
+          path = 'user_guides/services/genome_annotation_service.html#output-results';
+        } else if (type == 'ComprehensiveGenomeAnalysis') {
+          path = 'user_guides/services/comprehensive_genome_analysis_service.html#output-results';
+        } else if (type == 'GenomeAlignment') {
+          path = 'user_guides/services/genome_alignment_service.html#output-results';
+        } else if (type == 'MetagenomeBinning') {
+          path = 'user_guides/services/metagenomic_binning_service.html#output-results';
+        } else if (type == 'MetagenomicReadMapping') {
+          path = 'user_guides/services/metagenomic_read_mapping_service.html#output-results';
+        } else if (type == 'TaxonomicClassification') {
+          path = 'user_guides/services/taxonomic_classification_service.html#output-results';
+        } else if (type == 'PhylogeneticTree') {
+          path = 'user_guides/services/phylogenetic_tree_building_service.html#output-results';
+        } else if (type == 'RNASeq') {
+          path = 'user_guides/services/rna_seq_analysis_service.html#output-results';
+        } else if (type == 'TnSeq') {
+          path = 'user_guides/services/tn_seq_analysis_service.html#output-results';
+        } else if (type == 'Variation') {
+          path = 'user_guides/services/variation_analysis_service.html#output-results';
+        } else if ('data' in container && container.data.type == 'model') {
+          // modeling service uses typed folders
+          path = 'user_guides/services/model_reconstruction_service.html#output-results';
+        } else if ('_appLabel' in container && container._appLabel == 'Genome Comparison') {
+          // _resultType is not set; todo: fix in job result container
+          path = 'user_guides/services/proteome_comparison_service.html#output-results';
+        } else if ('_appLabel' in container && container._appLabel == 'Differential Expression') {
+          // _resultType is not set
+          path = 'user_guides/services/expression_data_import_service.html#output-results';
+        } else {
+          path = self.tutorialLink;
+        }
+
+        window.open(PathJoin(self.docsServiceURL, path), '_blank');
+      }, true);
 
       this.actionPanel.addAction('ViewGenomeGroup', 'MultiButton fa icon-selection-GenomeList fa-2x', {
         label: 'VIEW',
@@ -253,16 +290,16 @@ define([
       this.actionPanel.addAction('DownloadItem', 'fa icon-download fa-2x', {
         label: 'DWNLD',
         multiple: false,
-        validTypes: WorkspaceManager.downloadTypes,
+        forbiddenTypes: WorkspaceManager.forbiddenDownloadTypes,
         tooltip: 'Download'
       }, function (selection) {
         WorkspaceManager.downloadFile(selection[0].path);
       }, false);
 
       var dfc = '<div>Download Table As...</div>' +
-          '<div class="wsActionTooltip" rel="text/tsv">Text</div>' +
-          '<div class="wsActionTooltip" rel="text/csv">CSV</div>' +
-          '<div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
+        '<div class="wsActionTooltip" rel="text/tsv">Text</div>' +
+        '<div class="wsActionTooltip" rel="text/csv">CSV</div>' +
+        '<div class="wsActionTooltip" rel="application/vnd.openxmlformats">Excel</div>';
       var downloadTT = new TooltipDialog({
         content: dfc,
         onMouseLeave: function () {
@@ -338,9 +375,9 @@ define([
       }, false);
 
       var dtsfc = '<div>Download Job Results:</div>' +
-          '<div class="wsActionTooltip" rel="circos.svg">SVG Image</div>' +
-          '<div class="wsActionTooltip" rel="genome_comparison.txt">Genome Comparison Table (txt)</div>' +
-          '<div class="wsActionTooltip" rel="genome_comparison.xls">Genome Comparison Table (xls)</div>';
+        '<div class="wsActionTooltip" rel="circos.svg">SVG Image</div>' +
+        '<div class="wsActionTooltip" rel="genome_comparison.txt">Genome Comparison Table (txt)</div>' +
+        '<div class="wsActionTooltip" rel="genome_comparison.xls">Genome Comparison Table (xls)</div>';
       var downloadTTSelectFile = new TooltipDialog({
         content: dtsfc,
         onMouseLeave: function () {
@@ -429,7 +466,7 @@ define([
       this.browserHeader.addAction('ViewAnnotatedGenome', 'fa icon-eye fa-2x', {
         label: 'VIEW',
         multiple: false,
-        validTypes: ['GenomeAnnotation', 'GenomeAnnotationGenbank'],
+        validTypes: ['GenomeAnnotation', 'GenomeAnnotationGenbank', 'ComprehensiveGenomeAnalysis'],
         tooltip: 'View Annotated Genome'
       }, function (selection) {
         var gid = self.actionPanel.currentContainerWidget.getGenomeId();
@@ -462,7 +499,7 @@ define([
         var isLegacy = parts[1] == 'models';
         path = parts.slice(0, -1).join('/') + '/' + (isLegacy ? '' : '.') + parts.slice(-1)[0];
 
-        var url = 'http://modelseed.theseed.org/#/model' + path + '?login=patric';
+        var url = 'https://modelseed.org/model' + path + '?login=patric';
         window.open(url, '_blank');
       }, false);
 
@@ -527,10 +564,8 @@ define([
         domClass.toggle(icon, 'icon-eye-slash');
         domClass.toggle(icon, 'icon-eye');
 
-        if (window.App.showHiddenFiles)
-        { domAttr.set(text, 'textContent', 'HIDE HIDDEN'); }
-        else
-        { domAttr.set(text, 'textContent', 'SHOW HIDDEN'); }
+        if (window.App.showHiddenFiles) { domAttr.set(text, 'textContent', 'HIDE HIDDEN'); }
+        else { domAttr.set(text, 'textContent', 'SHOW HIDDEN'); }
 
         Topic.publish('/refreshWorkspace');
       }, false);
@@ -546,27 +581,25 @@ define([
         });
       }, self.path.split('/').length < 3);
 
-      this.browserHeader.addAction('ViewCodonTree', 'fa icon-tree2 fa-2x', {
-        label: 'VIEW',
-        multiple: false,
-        validTypes: ['CodonTree'],
-        tooltip: 'View Codon Tree'
-      }, function (selection) {
-        var sel = selection[0],
-          path = sel.path + '.' + sel.name + '/codontree_treeWithGenomeIds.nwk';
-
-        Topic.publish('/navigate', { href: '/view/PhylogeneticTree/?&labelSearch=true&idType=genome_id&labelType=genome_name&wsTreeFile=' + encodePath(path) });
-      }, false);
-
       this.browserHeader.addAction('ViewTree', 'fa icon-tree2 fa-2x', {
         label: 'VIEW',
         multiple: false,
-        validTypes: ['PhylogeneticTree'],
+        validTypes: ['PhylogeneticTree', 'CodonTree'],
         tooltip: 'View Tree'
       }, function (selection) {
         var expPath = this.get('path');
         Topic.publish('/navigate', { href: '/view/PhylogeneticTree/?&labelSearch=true&idType=genome_id&labelType=genome_name&wsTreeFolder=' + encodePath(expPath) });
 
+      }, false);
+
+      this.browserHeader.addAction('ViewCGAFullGenomeReport', 'fa icon-bars fa-2x', {
+        label: 'REPORT',
+        multiple: false,
+        validTypes: ['ComprehensiveGenomeAnalysis'],
+        tooltip: 'View Full Genome Report'
+      }, function (selection) {
+        var path = self.actionPanel.currentContainerWidget.getReportPath();
+        Topic.publish('/navigate', { href: '/workspace' + path });
       }, false);
 
       this.actionPanel.addAction('ViewNwk', 'fa icon-tree2 fa-2x', {
@@ -576,7 +609,13 @@ define([
         tooltip: 'View Tree'
       }, function (selection) {
         var path = selection.map(function (obj) { return obj.path; });
-        Topic.publish('/navigate', { href: '/view/PhylogeneticTree/?&labelSearch=true&idType=genome_id&labelType=genome_name&wsTreeFile=' + encodePath(path[0]) });
+        var labelSearch = 'true';
+        var idType = 'genome_id';
+        if (encodePath(path[0]).includes('WithGenomeNames.')) {
+          labelSearch = 'false';
+          idType = 'genome_name';
+        }
+        Topic.publish('/navigate', { href: '/view/PhylogeneticTree/?&labelSearch=' + labelSearch + '&idType=' + idType + '&labelType=genome_name&wsTreeFile=' + encodePath(path[0]) });
       }, false);
 
       this.browserHeader.addAction('ViewExperimentSummary', 'fa icon-eye fa-2x', {
@@ -817,8 +856,10 @@ define([
       this.actionPanel.addAction('Rename', 'fa icon-pencil-square-o fa-2x', {
         label: 'RENAME',
         validTypes: ['*'],
-        tooltip: 'Rename the selected item'
+        disabled: true,
+        tooltip: 'Rename has been <b>temporarily disabled</b><br>while we address a technical issue.'
       }, function (sel) {
+        /*
         var path = sel[0].path,
           isJob = sel[0].type === 'job_result';
 
@@ -843,6 +884,7 @@ define([
             style: 'width: 250px;'
           }).show();
         }
+        */
       }, false);
 
       this.actionPanel.addAction('Copy', 'fa icon-files-o fa-2x', {
@@ -861,7 +903,8 @@ define([
           autoSelectCurrent: true,
           allowUserSpaceSelection: true,
           onlyWritable: true,
-          selectionText: 'Destination'
+          selectionText: 'Destination',
+          disableDropdownSelector: true
         });
         objSelector.set('type', ['folder']);
         objSelector.title = 'Copy contents of ' + selection.length +
@@ -938,7 +981,8 @@ define([
           autoSelectCurrent: true,
           allowUserSpaceSelection: true,
           onlyWritable: true,
-          selectionText: 'Destination'
+          selectionText: 'Destination',
+          disableDropdownSelector: true
         });
         objSelector.set('type', ['folder']);
         objSelector.title = 'Move contents of ' + selection.length +
@@ -1035,8 +1079,7 @@ define([
 
           if (p[0] == 'global_permission') return;
 
-          if (newUsers.indexOf(user) == -1)
-          { newPerms.push({ user: user, permission: 'n' }); }
+          if (newUsers.indexOf(user) == -1) { newPerms.push({ user: user, permission: 'n' }); }
         });
 
         Topic.publish('/Notification', {
@@ -1109,7 +1152,7 @@ define([
             var prom;
             var newName = nameInput.get('value');
             if (path.split('/').length <= 3) {
-              prom =  WorkspaceManager.renameWorkspace(path, newName);
+              prom = WorkspaceManager.renameWorkspace(path, newName);
             } else {
               prom = WorkspaceManager.rename(path, nameInput.get('value'), isJob);
             }
@@ -1148,7 +1191,7 @@ define([
       /**
        * Handle unaccepted requests
        */
-      var types = this.itemDetailPanel.changeableTypes;
+      var types = WorkspaceManager.changeableTypes;
       var options = Object.keys(types).map(function (key) { return types[key]; });
       var validTypes = options.map(function (item) { return item.value; });
 
@@ -1195,20 +1238,20 @@ define([
       // open form in dialog
       var paths = selection.map(function (obj) { return obj.path; });
       var dlg = new Confirmation({
-        title: 'Change '  + (paths.length > 1 ? paths.length + ' Object Types' : ' Object Type' ),
+        title: 'Change ' + (paths.length > 1 ? paths.length + ' Object Types' : ' Object Type'),
         okLabel: 'Save',
         content: form,
         style: { width: '300px' },
         onConfirm: function (evt) {
           var newType = typeSelector.attr('value');
           var newObjs = selection.map(function (obj) {
-            return Object.assign(obj, { type: newType } );
+            return Object.assign(obj, { type: newType });
           });
 
           Topic.publish('/Notification', {
             message: "<span class='default'>Changing " +
-              (paths.length > 1 ?  paths.length + ' types...' : ' type...') +
-            '</span>'
+              (paths.length > 1 ? paths.length + ' types...' : ' type...') +
+              '</span>'
           });
 
           WorkspaceManager.updateMetadata(newObjs)
@@ -1334,6 +1377,11 @@ define([
                 case 'TnSeq':
                   d = 'p3/widget/viewer/Seq';
                   break;
+                case 'ComprehensiveGenomeAnalysis':
+                  d = 'p3/widget/viewer/ComprehensiveGenomeAnalysis';
+                  break;
+                default:
+                  console.log('Using the default JobResult viewer. A viewer could not be found for id: ' + id);
               }
             }
             panelCtor = window.App.getConstructor(d);
@@ -1344,19 +1392,46 @@ define([
             panelCtor = window.App.getConstructor('p3/widget/viewer/ExperimentGroup');
             params.data = obj;
             break;
+          case 'csv':
+          case 'tsv':
+            var tsvCsvFilename = this.tsvCsvFilename = obj.name;
+            panelCtor = window.App.getConstructor('p3/widget/viewer/TSV_CSV');
+            params.file = { metadata: obj };
+            break;
           default:
-            panelCtor = window.App.getConstructor('p3/widget/viewer/File');
+            var tsvCsvFilename = this.tsvCsvFilename = obj.name;
+            var isTsv = false;
+            var keyList = Object.keys(tsvCsvFeatures);    // for older tsv files typed as txt
+            keyList.forEach(function (keyName) {
+              if (tsvCsvFilename.indexOf(keyName) >= 0) {
+                // key name is found
+                isTsv = true;
+              }
+            });
+            if (isTsv) {
+              panelCtor = window.App.getConstructor('p3/widget/viewer/TSV_CSV');
+            } else {
+              panelCtor = window.App.getConstructor('p3/widget/viewer/File');
+            }
             params.file = { metadata: obj };
         }
 
         Deferred.when(panelCtor, lang.hitch(this, function (Panel) {
-          if (!this.activePanel || !(this.activePanel instanceof Panel)) {
+          if ((!this.activePanel) || !(this.activePanel instanceof Panel) || this.activePanel instanceof JobResult) {
             if (this.activePanel) {
               this.removeChild(this.activePanel);
             }
 
             var newPanel = new Panel(params);
             var hideTimer;
+
+            if (newPanel.setActionPanel) { newPanel.setActionPanel(this.actionPanel); }
+
+            var _self = this;
+            Topic.subscribe('changeActionPanel', function (actionPanel) {
+              _self.actionPanel.set('selection', []);
+              _self.actionPanel.set('currentContainerWidget', newPanel);
+            });
 
             if (this.actionPanel) {
               this.actionPanel.set('currentContainerWidget', newPanel);
@@ -1413,7 +1488,7 @@ define([
             this.activePanel = newPanel;
           } else {
             this.activePanel.set('path', this.path);
-            if (this.activePaneal && 'clearSelection' in this.activePaneal) {
+            if (this.activePanel && 'clearSelection' in this.activePanel) {
               this.activePanel.clearSelection();
             }
           }
@@ -1460,5 +1535,6 @@ define([
       return this.buttons;
 
     }
+
   });
 });

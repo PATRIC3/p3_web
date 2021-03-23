@@ -13555,8 +13555,11 @@ th.dgrid-cell.wsItemMembers {
 .ActionButtonWrapper.disabled .ActionButtonText,
 .ActionButtonWrapper.disabled .ActionButton.fa,
 .ActionButtonWrapper.disabled  {
-	color: #ddd;
-	border-color: #ddd;
+	color: #ccc;
+	border: 1px solid #76a72d;
+}
+.ActionBar .ActionButtonWrapper.disabled:hover {
+	border: 1px solid #76a72d;
 }
 .ActionButtonContainer {
 	float: left;
@@ -14548,12 +14551,8 @@ div.appsublabel {
 .dgrid-cell.field-ec_description {
     width: 20%;
 }
-.dgrid-cell.field-gene_count,
-.dgrid-cell.field-ec_count,
-.dgrid-cell.field-ec_cons,
-.dgrid-cell.field-gene_cons {
+.dgrid-cell.field-pathway_id {
     width: 8%;
-    text-align: center;
 }
 .dgrid-cell.field-feature_id,
 .dgrid-cell.field-patric_id,
@@ -14743,7 +14742,6 @@ div.appsublabel {
 }
 .DataItemValue {
     vertical-align: top;
-    word-break: break-all;
 }
 .DataItemSectionNotFound {
     font-style: italic;
@@ -16695,6 +16693,10 @@ table tr.even td {
 }
 .fa:hover {
     color: #e75200;
+}
+.tutorialButton > a:hover,
+.videoButton > a:hover {
+    text-decoration: none;
 }
 .fileUploadButton {
     position: relative;
