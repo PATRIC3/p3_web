@@ -168,10 +168,10 @@ define([
 
       this.ingestAttachPoints(this.paramToAttachPt, assembly_values, true);
 
-      if (Object.prototype.hasOwnProperty.call(values, 'racon_iter') && values.racon_iter) {
+      if (Object.prototype.hasOwnProperty.call(values, 'racon_iter')) {
         assembly_values.racon_iter = values.racon_iter;
       }
-      if (Object.prototype.hasOwnProperty.call(values, 'pilon_iter') && values.pilon_iter) {
+      if (Object.prototype.hasOwnProperty.call(values, 'pilon_iter')) {
         assembly_values.pilon_iter = values.pilon_iter;
       }
       if (Object.prototype.hasOwnProperty.call(values, 'trim') && values.trim) {
