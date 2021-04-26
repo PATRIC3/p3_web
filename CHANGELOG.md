@@ -1,6 +1,11 @@
 
 # Changelog
 
+## 3.6.10 - Apr 26, 2021
+* [Minor] [#1015](https://github.com/PATRIC3/p3_web/pull/1015)
+* [Bug Fix] [#1014](https://github.com/PATRIC3/p3_web/pull/1014)
+
+
 ## 3.6.9 - Jan 19, 2021
 
 * [Minor] Disable Reconstruct Metabolic Model service UI. [#1008](https://github.com/PATRIC3/p3_web/pull/1008)
