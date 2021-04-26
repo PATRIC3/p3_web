@@ -110,7 +110,7 @@ define([
 
     queryTypes: {
 
-      subsystems: '&select(superclass,class,subclass,subsystem_name,active,subsystem_id)&group((field,subsystem_id),(format,simple),(ngroups,false),(limit,1),(facet,true))' +
+      subsystems: '&select(superclass,class,subclass,subsystem_name,active,subsystem_id)&group((field,subsystem_id),(format,simple),(limit,1),(facet,true))' +
         '&json(facet,' + encodeURIComponent(JSON.stringify({
         stat: {
           field: {
