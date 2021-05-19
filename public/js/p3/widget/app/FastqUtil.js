@@ -103,8 +103,12 @@ define([
       var align = {
         id: 'align', condition: 'align', label: 'Align', icon: this.getConditionIcon()
       };
+      var filter = {
+        id: 'paired_filter', condition: 'paired_filter', label: 'Paired_Filter', icon: this.getConditionIcon()
+      };
       // temporary until contrasts table added
       this.updateConditionStore(trim, false);
+      this.updateConditionStore(filter, false);
       this.updateConditionStore(fastqc, false);
       this.updateConditionStore(align, false);
       this.action_select.labelFunc = this.showConditionLabels;
@@ -528,6 +532,7 @@ define([
         this.activeConditionStore.put(record);
       }
     },
+
     updateConditionStore: function (record, remove) {
       // if there is no real condition specified return
       if (!record.condition.trim()) {
