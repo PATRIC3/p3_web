@@ -16,21 +16,214 @@ define([
     apiUrl: '',
     userId: '',
 
-    downloadTypes: ['bam', 'bai', 'bigwig', 'biochemistry', 'contigs', 'csv',
-      'de_novo_assembled_transcripts', 'diffexp_experiment', 'diffexp_expression',
-      'diffexp_input_data', 'diffexp_input_metadata', 'diffexp_mapping',
-      'diffexp_sample', 'doc', 'docx', 'embl', 'fba',
-      'feature_dna_fasta', 'feature_protein_fasta',
-      'feature_table', 'genbank_file', 'genome', 'genome_annotation_result',
-      'genome_comparison_table', 'gff', 'gif', 'html', 'jpg',
-      'json', 'mapping', 'media', 'model', 'modelfolder', 'model_edit',
-      'modeltemplate', 'nwk', 'pdf', 'png', 'ppt', 'pptx', 'proteomics_experiment',
-      'reads', 'rxnprobs', 'string', 'svg', 'tar_gz', 'tbi',
-      'transcriptomics_experiment', 'transcripts', 'txt', 'unspecified', 'vcf',
-      'vcf_gz', 'wig', 'xls', 'xlsx', 'zip', 'contigset', 'xml'],
+    forbiddenDownloadTypes: ['experiment_group', 'feature_group', 'genome_group', 'folder', 'job_result', 'modelfolder'],
+
     viewableTypes: ['txt', 'html', 'json', 'csv', 'tsv', 'diffexp_experiment',
       'diffexp_expression', 'diffexp_mapping', 'diffexp_sample', 'pdf',
       'diffexp_input_data', 'diffexp_input_metadata', 'svg', 'gif', 'png', 'jpg'],
+
+    knownUploadTypes: {
+      unspecified: {
+        label: 'Unspecified',
+        formats: ['*.*']
+      },
+      aligned_dna_fasta: {
+        label: 'Aligned DNA FASTA',
+        formats: ['.fa', '.fasta', '.faa', '.fna', '.afa', '.xmfa'],
+        description: 'DNA sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      aligned_protein_fasta: {
+        label: 'Aligned Protein FASTA',
+        formats: ['.fa', '.fasta', '.faa', '.fna', '.afa', '.xmfa'],
+        description: 'Protein sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      bai: {
+        label: 'Indexed Sequence Alignment Data',
+        formats: ['.bai']
+      },
+      bam: {
+        label: 'Sequence Alginment Data',
+        formats: ['.bam']
+      },
+      contigs: {
+        label: 'Contigs',
+        formats: ['.fa', '.fasta', '.faa', '.fna'],
+        description: 'Contigs must be provided in fasta format (typically .fa, .fasta, .fna). Genbank formatted files are not currently accepted.'
+      },
+      csv: {
+        label: 'CSV',
+        formats: ['.csv'],
+        description: 'A CSV (comma separated values) file.'
+      },
+      diffexp_input_data: {
+        label: 'Diff. Expression Input Data',
+        formats: ['.csv', '.txt', '.xls', '.xlsx']
+      },
+      diffexp_input_metadata: {
+        label: 'Diff. Expression Input Metadata',
+        formats: ['.csv', '.txt', '.xls', '.xlsx']
+      },
+      doc: {
+        label: 'DOC',
+        formats: ['.doc']
+      },
+      docx: {
+        label: 'DOCX',
+        formats: ['.docx']
+      },
+      embl: {
+        label: 'EMBL',
+        formats: ['.embl'],
+        description: 'A DNA or protein sequence file.'
+      },
+      feature_dna_fasta: {
+        label: 'Feature DNA FASTA',
+        formats: ['.fa', '.faa', '.fasta', '.faa'],
+        description: 'DNA sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      feature_protein_fasta: {
+        label: 'Feature Protein FASTA',
+        formats: ['.fa', 'fna', '.fasta', '.faa'],
+        description: 'Protein sequences must be provided in fasta format (typically .fa, .fasta, .faa). Genbank formatted files are not currently accepted.'
+      },
+      genbank_file: {
+        label: 'GBK',
+        formats: ['.gbk'],
+        description: 'A GenBank formatted file.'
+      },
+      gff: {
+        label: 'GFF',
+        formats: ['.gff', 'gtf'],
+        description: 'A General Feature Format file.'
+      },
+      gif: {
+        label: 'GIF Image',
+        formats: ['.gif'],
+        description: 'A GIF image file.'
+      },
+      jpg: {
+        label: 'JPEG Image',
+        formats: ['.jpg', '.jpeg'],
+        description: 'A JPEG image file.'
+      },
+      json: {
+        label: 'JSON',
+        formats: ['.json'],
+        description: 'A json file.'
+      },
+      nwk: {
+        label: 'Newick',
+        formats: ['.nwk'],
+        description: 'Phylogenetic tree file.'
+      },
+      pdf: {
+        label: 'PDF',
+        formats: ['.pdf'],
+        description: 'A pdf file.'
+      },
+      png: {
+        label: 'PNG Image',
+        formats: ['.png'],
+        description: 'A PNG image file.'
+      },
+      ppt: {
+        label: 'PPT',
+        formats: ['.ppt']
+      },
+      pptx: {
+        label: 'PPTX',
+        formats: ['.pptx']
+      },
+      reads: {
+        label: 'Reads',
+        formats: ['.fq', '.fastq', '.fa', '.fasta', '.gz', '.bz2'],
+        description: 'Reads must be in fasta or fastq format (typically .fa, .fasta, .fa, .fastq).  Genbank formatted files are not currently accepted.'
+      },
+      svg: {
+        label: 'SVG Image',
+        formats: ['.svg'],
+        description: 'A SVG image file.'
+      },
+      tbi: {
+        label: 'TBI',
+        formats: ['.tbi']
+      },
+      tsv: {
+        label: 'TSV',
+        formats: ['.tsv'],
+        description: 'A TSV (tab separated values) file.'
+      },
+      txt: {
+        label: 'Plain Text',
+        formats: ['.txt'],
+        description: 'A plain text file.'
+      },
+      vcf: {
+        label: 'VCF',
+        formats: ['.vcf'],
+        description: 'A Variant Call Format file.'
+      },
+      vcf_gz: {
+        label: 'VCF_GZ',
+        formats: ['.vcf.gz'],
+        description: 'A compressed Variant Call Format file.'
+      },
+      xls: {
+        label: 'XLS',
+        formats: ['.xls'],
+        description: 'An Excel file.'
+      },
+      xlsx: {
+        label: 'XLSX',
+        formats: ['.xlsx'],
+        description: 'An Excel file.'
+      },
+      xml: {
+        label: 'XML',
+        formats: ['.xml'],
+        description: 'An xml file.'
+      }
+    },
+
+    changeableTypes: {
+      aligned_dna_fasta: { label: 'aligned_dna_fasta', value: 'aligned_dna_fasta' },
+      aligned_protein_fasta: { label: 'aligned_protein_fasta', value: 'aligned_protein_fasta' },
+      bam: { label: 'bam', value: 'bam' },
+      bai: { label: 'bai', value: 'bai' },
+      contigs: { label: 'contigs', value: 'contigs' },
+      csv: { label: 'csv', value: 'csv' },
+      diffexp_input_data: { label: 'diffexp_input_data', value: 'diffexp_input_data' },
+      diffexp_input_metadata: { label: 'diffexp_input_metadata', value: 'diffexp_input_metadata' },
+      doc: { label: 'doc', value: 'doc' },
+      docx: { label: 'docx', value: 'docx' },
+      embl: { label: 'embl', value: 'embl' },
+      feature_dna_fasta: { label: 'feature_dna_fasta', value: 'feature_dna_fasta' },
+      feature_protein_fasta: { label: 'feature_protein_fasta', value: 'feature_protein_fasta' },
+      genbank_file: { label: 'genbank_file', value: 'genbank_file' },
+      gff: { label: 'gff', value: 'gff' },
+      gif: { label: 'gif', value: 'gif' },
+      jpg: { label: 'jpg', value: 'jpg' },
+      json: { label: 'json', value: 'json' },
+      nwk: { label: 'nwk', value: 'nwk' },
+      pdf: { label: 'pdf', value: 'pdf' },
+      png: { label: 'png', value: 'png' },
+      ppt: { label: 'ppt', value: 'ppt' },
+      pptx: { label: 'pptx', value: 'pptx' },
+      reads: { label: 'reads', value: 'reads' },
+      string: { label: 'string', value: 'string' },
+      svg: { label: 'svg', value: 'svg' },
+      tar_gz: { label: 'tar_gz', value: 'tar_gz' },
+      tbi: { label: 'tbi', value: 'tbi' },
+      tsv: { label: 'tsv', value: 'tsv' },
+      txt: { label: 'txt', value: 'txt' },
+      unspecified: { label: 'unspecified', value: 'unspecified' },
+      vcf: { label: 'vcf', value: 'vcf' },
+      vcf_gz: { label: 'vcf_gz', value: 'vcf_gz' },
+      wig: { label: 'wig', value: 'wig' },
+      xls: { label: 'xls', value: 'xls' },
+      xlsx: { label: 'xlsx', value: 'xlsx' },
+      xml: { label: 'xml', value: 'xml' }
+    },
 
     getDefaultFolder: function (type) {
       switch (type) {
@@ -125,7 +318,7 @@ define([
     addToGroup: function (groupPath, idType, ids) {
       Topic.publish('/Notification', {
         message: '<span class="default">Adding ' + ids.length +
-        ' item' + (ids.length > 1 ? 's' : '') + '...</span>'
+          ' item' + (ids.length > 1 ? 's' : '') + '...</span>'
       });
 
       var _self = this;
@@ -137,7 +330,7 @@ define([
           // add logic to remove duplicate from ids
           var idsFiltered = [];
           ids.forEach(function (id) {
-            if (idsFiltered.indexOf(id)  == -1) {
+            if (idsFiltered.indexOf(id) == -1) {
               idsFiltered.push(id);
             }
           });
@@ -213,7 +406,7 @@ define([
       // add logic to remove duplicate from ids
       var idsFiltered = [];
       ids.forEach(function (id) {
-        if (idsFiltered.indexOf(id)  == -1) {
+        if (idsFiltered.indexOf(id) == -1) {
           idsFiltered.push(id);
         }
       });
@@ -613,7 +806,7 @@ define([
       var newPath = path.slice(0, path.lastIndexOf('/')) + '/' + newName;
 
       // ensure path doesn't already exist
-      console.log('Checking for "', newPath, '" before rename...' );
+      console.log('Checking for "', newPath, '" before rename...');
       return Deferred.when(
         this.getObjects(newPath, true),
         function (response) {
@@ -696,7 +889,7 @@ define([
       var newPath = path.slice(0, path.lastIndexOf('/')) + '/.' + newName;
 
       // log what is happening so that console error is expected
-      console.log('Checking for job data "', newPath, '" before rename...' );
+      console.log('Checking for job data "', newPath, '" before rename...');
       return Deferred.when(
         this.getObjects(newPath, true),
         function (response) {
@@ -846,7 +1039,7 @@ define([
         },
 
         function (err) {
-        // console.log("Error Loading Workspace:", err);
+          // console.log("Error Loading Workspace:", err);
           _self.showError(err);
         }
       );
@@ -965,7 +1158,7 @@ define([
         }]), function (res) {
           var pathHash = res[0];
           Object.keys(pathHash).forEach(function (path) {
-          // server sometimes returns 'none' permissions, ignore them.
+            // server sometimes returns 'none' permissions, ignore them.
             var permObjs = pathHash[path].filter(function (p) {
               return p[1] != 'n' || (includeGlobal && p[0] == 'global_permission');
             }).map(function (p) {
