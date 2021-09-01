@@ -116,7 +116,7 @@ define([
 
     getSelected: function () {
       var username = this.attr('value');
-      return username.length ?  username + '@' + localStorage.getItem("realm") : null;
+      return username.length ?  username + '@' + localStorage.getItem('realm') : null;
     },
 
     labelFunc: function (item, store) {

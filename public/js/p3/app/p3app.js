@@ -356,7 +356,7 @@ define([
           this.dataAPI = this.dataAPI + '/';
         }
         DataAPI.init(this.dataAPI, this.authorizationToken || '');
-        this.api.client=DataAPI;
+        this.api.client = DataAPI;
         this.api.data = RPC(this.dataAPI, this.authorizationToken);
       }
 
@@ -364,12 +364,12 @@ define([
 
       /* istanbul ignore else */
       if (this.user && this.user.id) {
-        console.log("this.user.id: ", this.user.id)
+        // console.log('this.user.id: ', this.user.id)
         domAttr.set('YourWorkspaceLink', 'href', '/workspace/' + this.user.id);
         var n = dom.byId('signedInAs');
         /* istanbul ignore else */
         if (n) {
-          n.innerHTML = this.user.id.replace('@' + localStorage.getItem("realm"), '');
+          n.innerHTML = this.user.id.replace('@' + localStorage.getItem('realm'), '');
         }
       }
 
@@ -548,10 +548,10 @@ define([
         localStorage.setItem('auth', JSON.stringify(data));
         localStorage.setItem('tokenstring', token);
         // localStorage.setItem('tokenid', data.tokenid);
-        var parts = data.un.split("@")
-        var userid = data.un.replace("@" + parts[1], '');
+        var parts = data.un.split('@');
+        var userid = data.un.replace('@' + parts[1], '');
         localStorage.setItem('userid', userid);
-        localStorage.setItem("realm",parts[1])
+        localStorage.setItem('realm', parts[1]);
         var userServiceURL = window.App.userServiceURL;
         userServiceURL.replace(/\/+$/, '');
         xhr.get(userServiceURL + '/user/' + userid, {
@@ -563,7 +563,7 @@ define([
           .then(
             function (user) {
               var userObj = JSON.parse(user);
-              userObj.id += "@" + localStorage.getItem("realm");
+              userObj.id += '@' + localStorage.getItem('realm');
               user = JSON.stringify(userObj);
               localStorage.removeItem('userProfile');
               localStorage.setItem('userProfile', user);
@@ -603,7 +603,7 @@ define([
           function (user) {
             var userObj = JSON.parse(user);
             // console.log(userObj);
-            userObj.id += '@' + localStorage.getItem("realm");
+            userObj.id += '@' + localStorage.getItem('realm');
             // console.log(userObj);
             user = JSON.stringify(userObj);
             localStorage.removeItem('userProfile');
