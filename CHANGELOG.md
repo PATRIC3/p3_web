@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 3.6.11 - Sep 1, 2021
+* [Feature] Authentication update
+* [Bug Fix] MSA fix
+
 ## 3.6.10 - Apr 26, 2021
 * [Minor] [#1015](https://github.com/PATRIC3/p3_web/pull/1015)
 * [Bug Fix] [#1014](https://github.com/PATRIC3/p3_web/pull/1014)
