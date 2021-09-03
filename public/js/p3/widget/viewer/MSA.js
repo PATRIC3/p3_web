@@ -206,7 +206,7 @@ define([
       var q = query + '&limit(500)';
       var def = new Deferred();
       var url = PathJoin(this.apiServiceUrl, 'genome_feature') + '/';
-      console.log('CheckSeqCount URL: ', url);
+      // console.log('CheckSeqCount URL: ', url);
       xhr.post(url, {
         data: q,
         headers: {
@@ -220,7 +220,7 @@ define([
         // console.log("Check Res: ", res.response)
         // console.log("Check Res: ", res.response.numFound)
         if (res && res.response && res.response.docs && (typeof res.response.numFound != 'undefined') && (res.response.numFound < this.maxSequences)) {
-          console.log('  Amount OK');
+          // console.log('  Amount OK');
           this.numSequences = res.response.numFound;
           this.featureData = res.response.docs;
           def.resolve(res.response.numFound);
@@ -233,10 +233,10 @@ define([
       return def.promise;
     },
     onSetState: function (attr, oldVal, state) {
-      console.log('MSA Viewer onSetState: ', state);
+      // console.log('MSA Viewer onSetState: ', state);
       if (state && state.search) {
         when(this.checkSequenceCount(state.search), lang.hitch(this, function (count) {
-          console.log('CHECK SEQ COUNT ok: ', count);
+          // console.log('CHECK SEQ COUNT ok: ', count);
           if (count < 2) {
             this.showError('There must be at least two matching sequences for a query.  Your query found ' + count + ' sequences.');
           } else {
@@ -742,7 +742,7 @@ define([
     },
 
     doAlignment: function () {
-      console.log('doAlignment()');
+      // console.log('doAlignment()');
       // console.log("this.state.search ", this.state.search);
       this.set('loading', true);
       if (this.state && this.state.search) {
@@ -750,9 +750,9 @@ define([
         if (this.state.pathname.indexOf('dna') !== -1) {
           this.alignType = 'dna';
         }
-        console.log('RUN MSA Against: ', q);
+        // console.log('RUN MSA Against: ', q);
         return when(window.App.api.data('multipleSequenceAlignment', [q, this.alignType]), lang.hitch(this, function (res) {
-          console.log('MSA Results: ', res);
+          // console.log('MSA Results: ', res);
           this.set('loading', false);
           this.set('data', res);
         }));
@@ -801,16 +801,16 @@ define([
           if (children.some(function (child) {
             return this.itemDetailPanel && (child.id == this.itemDetailPanel.id);
           }, this)) {
-            console.log('Remove Item Detail Panel');
+            // console.log('Remove Item Detail Panel');
             this.removeChild(this.itemDetailPanel);
-            console.log('Button Node: ', button);
+            // console.log('Button Node: ', button);
 
             query('.ActionButtonText', button).forEach(function (node) {
               node.innerHTML = 'DETAILS';
             });
 
             query('.ActionButton', button).forEach(function (node) {
-              console.log('ActionButtonNode: ', node);
+              // console.log('ActionButtonNode: ', node);
               domClass.remove(node, 'icon-chevron-circle-right');
               domClass.add(node, 'icon-chevron-circle-left');
             });
@@ -824,7 +824,7 @@ define([
             });
 
             query('.ActionButton', button).forEach(function (node) {
-              console.log('ActionButtonNode: ', node);
+              // console.log('ActionButtonNode: ', node);
               domClass.remove(node, 'icon-chevron-circle-left');
               domClass.add(node, 'icon-chevron-circle-right');
             });
@@ -981,8 +981,8 @@ define([
           tooltip: 'Switch to Feature View. Press and Hold for more options.',
           validContainerTypes: ['*'],
           pressAndHold: function (selection, button, opts, evt) {
-            console.log('PressAndHold');
-            console.log('Selection: ', selection, selection[0]);
+            // console.log('PressAndHold');
+            // console.log('Selection: ', selection, selection[0]);
             popup.open({
               popup: new PerspectiveToolTipDialog({
                 perspective: 'Feature',
@@ -1011,8 +1011,8 @@ define([
           tooltip: 'Switch to Feature List View. Press and Hold for more options.',
           validContainerTypes: ['*'],
           pressAndHold: function (selection, button, opts, evt) {
-            console.log('PressAndHold');
-            console.log('Selection: ', selection, selection[0]);
+            // console.log('PressAndHold');
+            // console.log('Selection: ', selection, selection[0]);
             popup.open({
               popup: new PerspectiveToolTipDialog({
                 perspective: 'FeatureList',
@@ -1047,8 +1047,8 @@ define([
           ignoreDataType: true,
           validContainerTypes: ['*'],
           pressAndHold: function (selection, button, opts, evt) {
-            console.log('PressAndHold');
-            console.log('Selection: ', selection, selection[0]);
+            // console.log('PressAndHold');
+            // console.log('Selection: ', selection, selection[0]);
             popup.open({
               popup: new PerspectiveToolTipDialog({
                 perspective: 'Genome',

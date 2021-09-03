@@ -1,0 +1,8 @@
+
+To build this module:
+
+1. npm install
+2. Apply patch:
+	patch -p 1 node_modules/stat.seqs/lib/index.js < stat.seqs.patch 
+3. npm run build
+

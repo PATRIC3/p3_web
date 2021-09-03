@@ -16,10 +16,11 @@
     "cytoscape": true,
     "msa": true,
     "MauveViewer": true,
+    "BVBRCClient": true,
     "Hotmap": true
   },
   "parserOptions": {
-    "ecmaVersion": 5
+    "ecmaVersion": 6
   },
   "rules": {
     "_comment_reactivate_later": ["block-scoped-var", "no-restricted-globals", "no-redeclare",
@@ -44,12 +45,12 @@
     "one-var": 0,
     "eqeqeq": 0,
     "camelcase": 0,
-    "no-plusplus": [1, {"allowForLoopAfterthoughts": true}],
+    // "no-plusplus": [1, {"allowForLoopAfterthoughts": true}],
     "no-unused-vars": ["error", { "vars": "all", "args": "none", "ignoreRestSiblings": false }],
     "no-plusplus": 0,
     "no-lonely-if": 0,
     "no-prototype-builtins": 1,
-    "no-bitwise": ["error", { "allow": ["~"] }],
+    // "no-bitwise": ["error", { "allow": ["~"] }],
     "no-bitwise": 0,
     "radix": [1, "as-needed"],
     "global-require": 0,
@@ -82,6 +83,7 @@
     "brace-style": 0,
     "no-alert": 0,
     "no-dupe-args": 0,
+    "semi": 0,
     "function-paren-newline": 0
   }
 }

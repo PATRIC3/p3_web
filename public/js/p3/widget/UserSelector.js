@@ -116,7 +116,7 @@ define([
 
     getSelected: function () {
       var username = this.attr('value');
-      return username.length ?  username + '@patricbrc.org' : null;
+      return username.length ?  username + '@' + localStorage.getItem('realm') : null;
     },
 
     labelFunc: function (item, store) {
