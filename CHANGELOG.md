@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 3.6.12 - Sep 17, 2021
+* [Bug Fix] Authentication fix
+
+
 ## 3.6.11 - Sep 1, 2021
 * [Feature] Authentication update
 * [Bug Fix] MSA fix
