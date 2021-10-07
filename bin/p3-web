@@ -10,3 +10,4 @@ app.set('port', conf.get('http_port') || 3000);
 var server = app.listen(app.get('port'), function () {
   debug('Express server listening on port ' + server.address().port);
 });
+process.env.NODE_TLS_REJECT_UNAUTHORIZED=0;
