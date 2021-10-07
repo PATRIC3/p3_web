@@ -1,7 +1,4 @@
 var config = require('./config');
-if (config.get('newrelic_license_key')) {
-  require('newrelic');
-}
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
