@@ -1,5 +1,7 @@
 
 # Changelog
+## 3.7.0
+* [Release] Legacy PATRIC Release
 
 ## 3.6.12 - Sep 17, 2021
 * [Bug Fix] Authentication fix
