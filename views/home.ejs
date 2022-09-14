@@ -1,15 +1,17 @@
-<div id="patric-homepage">
+<div id="patric-homepage" style="padding-top: 10px;">
 
     <div class="home-banner">
-        <p class="banner-yellow">
-            <strong>Attention PATRIC Users:</strong> We are now in the final phase of transitioning from PATRIC to the <a href="https://bv-brc.org" class="navigationLinkOut">Bacterial and Viral Bioinformatics Resource Center (BV-BRC)</a>. Starting September 14, 2022, the PATRIC website will automatically redirect to the new BV-BRC website. Learn more about the transition <a href="https://www.bv-brc.org/docs/news/2022/20220816-bv-brc-patric-redirect.html" class="navigationLinkOut">here</a>.
-        </p>
-        <style>
-            .banner-yellow {
-                background-color: yellow;
-                border: 2px solid #444;
-            }
-        </style>
+        <div class="home-banner-content">
+            <p>
+                <strong>Attention PATRIC Users:</strong> Please note that PATRIC has now transitioned to the <a href="https://www.bv-brc.org" class="navigationLinkOut">Bacterial and Viral Bioinformatics Resource Center (BV-BRC)</a>, which combines the data and tools from the Legacy BRC resources: PATRIC, the bacterial BRC, and IRD and ViPR, the viral BRCs. Your PATRIC user account and your private workspace data has been transferred to the BV-BRC. We encourage you to start using BV-BRC. The PATRIC website will be decommissioned and go offline completely on <span style="font-weight: bold;">December 14, 2022</span>. Please <a href="mailto:help@bv-brc.org" style="font-weight: bold;">contact us</a> if you have any questions or issues.
+            </p>
+            <p style="padding-top: 10px;">
+                <strong>New Users:</strong> Please go to <a href="https://www.bv-brc.org" class="navigationLinkOut">BV-BRC</a> to create a new account. Registration at PATRIC is now closed.
+            </p>
+            <!-- <p>
+                Welcome to the PATRIC legacy website. This version of the application will exist until <span style="font-weight: bold;">December 14, 2022</span> at which time we will turn off the PATRIC resources. We urge PATRIC users to start using the new <a href="https://www.bv-brc.org" class="navigationLinkOut">BV-BRC Web App.</a> You can read more about the transition <a href="https://www.bv-brc.org/docs/news/2022/20220816-bv-brc-patric-redirect.html" class="navigationLinkOut">here</a>.
+            </p> -->
+        </div>
     </div>
 
     <div id="patric-homepage-container">
@@ -180,9 +182,9 @@
             </div>
         </div>
     </div>
-</div>
+  </div>
 
-<footer class="ondark linkstyle-highlight-c smallest main-footer sans-alternate footer">
+  <footer class="ondark linkstyle-highlight-c smallest main-footer sans-alternate footer">
     <div class="layer">
         <div class="container">
             <div class="column" style="border: 0px;">
@@ -190,7 +192,7 @@
                     <h3 class="close2x">BRC Program</h3>
                     <ul>
                         <li><a class="navigationLinkOut" href="https://www.niaid.nih.gov/research/bioinformatics-resource-centers">NIAID</a></li>
-                        <li><a href="https://www.patricbrc.org">PATRIC</a></li>
+                        <li><a href="https://legacy.patricbrc.org">PATRIC</a></li>
                         <li><a class="navigationLinkOut" href="https://www.viprbrc.org/brc/home.spg?decorator=vipr">ViPR</a></li>
                         <li><a class="navigationLinkOut" href="https://www.fludb.org/brc/home.spg?decorator=influenza">IRD</a></li>
                         <li><a class="navigationLinkOut" href="https://eupathdb.org/eupathdb/">EuPathDB</a></li>
@@ -237,10 +239,10 @@
             </div>
         </div>
     </div>
-</footer>
+  </footer>
 
-<!-- Hide Global Search in p3header when on new homepage -->
-<style>
+  <!-- Hide Global Search in p3header when on new homepage -->
+  <style>
     body.patric {
         min-width: 830px;
     }
@@ -248,4 +250,7 @@
     #p3header-search {
         display: none;
     }
-</style>
+    .RegistrationButton {
+        display: none;
+    }
+  </style>

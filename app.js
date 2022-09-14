@@ -42,6 +42,7 @@ app.use(function (req, res, next) {
   req.applicationOptions = {
     version: '3.0',
     gaID: config.get('gaID') || false,
+    gaID: config.get('uaID') || false,
     probModelSeedServiceURL: config.get('probModelSeedServiceURL'), // for dashboard
     shockServiceURL: config.get('shockServiceURL'), // for dashboard
     workspaceServiceURL: config.get('workspaceServiceURL'),

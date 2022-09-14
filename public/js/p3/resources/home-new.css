@@ -1,5 +1,7 @@
 /* Home New Styles */
-@import url("https://fonts.googleapis.com/css?family=Didact+Gothic|Roboto");
+@import url("https://fonts.googleapis.com/css?family=Didact+Gothic");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,700");
+
 #patric-homepage {
   color: #454545;
   font-family: "Arial", Arial, Helvetica, sans-serif;
@@ -220,13 +222,27 @@
 
 #patric-homepage .home-banner {
   width: 1220px;
-  padding-top: 5px;
   margin: 0 auto;
+  background-color: #FFC107;
+  border: 2px solid #454545;
+}
+
+#patric-homepage .home-banner .home-banner-content {
+  padding: 10px;
 }
 
 #patric-homepage .home-banner a {
   color: #454545;
-  text-decoration: underline
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-size: 15px;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+#patric-homepage .home-banner p {
+  color: #454545;
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-size: 15px;
 }
 
 @media (max-width: 991px) {
