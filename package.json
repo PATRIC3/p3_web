@@ -28,6 +28,7 @@
     "express-formidable": "^1.0.0",
     "feedparser": "^1.1.4",
     "flag-icon-css": "^2.8.0",
+    "forever": "^4.0.1",
     "formidable": "^1.1.1",
     "http-proxy": "^1.15.2",
     "jquery": "^3.3.1",
