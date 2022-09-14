@@ -3,6 +3,7 @@
 ## 3.7.0
 * [Release] Legacy PATRIC Release
 * [Package] Add forever to package.json
+* [Feature] Banner
 
 ## 3.6.12 - Sep 17, 2021
 * [Bug Fix] Authentication fix
